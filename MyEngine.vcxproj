@@ -173,6 +173,7 @@
     <ClInclude Include="FbxLoder\FbxLoader.h" />
     <ClInclude Include="FbxLoder\Model.h" />
     <ClInclude Include="Input\dxInput.h" />
+    <ClInclude Include="Physics.h" />
     <ClInclude Include="Player\Bullets.h" />
     <ClInclude Include="Player\Enemy.h" />
     <ClInclude Include="Player\Player.h" />
@@ -195,6 +196,7 @@
     <ClCompile Include="FbxLoder\FbxLoader.cpp" />
     <ClCompile Include="Input\dxInput.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Player\Bullets.cpp" />
     <ClCompile Include="Player\Enemy.cpp" />
     <ClCompile Include="Player\Player.cpp" />

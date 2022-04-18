@@ -13,6 +13,7 @@ GameScene::~GameScene()
 void GameScene::Load_textures()
 {
 	texture.LoadTexture(1, L"Resources/Image/sample_back.jpg", directx->dev.Get());
+	texture.LoadTexture(2, L"Resources/Ball.png", directx->dev.Get());
 }
 
 //サウンドだけ読み込み関数
@@ -30,6 +31,10 @@ void GameScene::Load_Sprites()
 	sample_back.size = { 1280,720 };
 	sample_back.texSize = { 1280,720 };
 	sample_back.SpriteTransferVertexBuffer(&texture, false);
+
+	BallSprite.texnumber = 2;
+	BallSprite.GenerateSprite(directx->dev.Get(), win_width, win_hight, BallSprite.texnumber, &texture);
+	BallSprite.texSize = { 1400,1400 };
 }
 
 //初期化
@@ -72,18 +77,39 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	//スプライト初期化
 	Load_Sprites();
 
-	//3dオブジェクト生成
+	ball.Pos = { 100,400,0 };
+	BallSprite.SpriteTransferVertexBuffer(&texture, false);
 }
 
 //デバッグテキスト
 void GameScene::debugs_print()
 {
+	char text[20] = "SPACE:Start";
+	char text_1[20] = "R:Reset";
+	debugtext.Print(spritecommon, &texture, text, 50, 50);
+	debugtext.Print(spritecommon, &texture, text_1, 50, 70);
 }
 
 //タイトル画面更新
 void GameScene::Title_update()
 {
+	if (input->Triger(DIK_R))
+	{
+		ball.Pos = { 100,400,0 };
+		ball.IsMove = false;
+	}
 
+	if (input->Triger(DIK_SPACE))
+	{
+		ball.Set({ 100,400,0 }, { 25,-20,0 });
+	}
+
+	ball.Update();
+
+	BallSprite.position = ball.Pos;
+	BallSprite.SpriteUpdate(spritecommon);
+
+	debugs_print();
 }
 
 //プレイ画面更新
@@ -101,7 +127,7 @@ void GameScene::Result_update()
 //タイトル画面描画
 void GameScene::Title_draw()
 {
-
+	BallSprite.DrawSprite(directx->cmdList.Get(), &texture, directx->dev.Get());
 }
 
 //プレイ画面描画
@@ -172,4 +198,6 @@ void GameScene::Draw()
 	{
 		Result_draw();
 	}
+
+	debugtext.DrawAll(directx->cmdList.Get(), spritecommon, &texture, directx->dev.Get());
 }

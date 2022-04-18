@@ -10,6 +10,7 @@
 #include"../2D/Debug_Text.h"
 #include"../camera/Camera.h"
 #include"../Player/Player.h"
+#include"../Physics.h"
 
 enum scene
 {
@@ -104,7 +105,7 @@ public:
 	//音
 
 	//スプライト(各クラスに依存しないやつ)
-
+	
 	//3dオブジェクト
 
 	SingleSprite sample_back;
@@ -116,11 +117,11 @@ public:
 	//scene scene = scene::title;
 	int scene = title;
 
-	//ウェーブ
-	bool Ischangescene = false;
-
 	bool Isclose = false;
 
 	//リザルトの表示切り替え
 	int result_count = 0;
+
+	Ball ball;
+	SingleSprite BallSprite;
 };
