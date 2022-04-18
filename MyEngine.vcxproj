@@ -126,7 +126,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libfbxsdk-md.lib;libxml2.lib;zlib-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk-md.lib;libxml2-md.lib;zlib-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <AdditionalIncludeDirectories>
@@ -170,6 +170,8 @@
     <ClInclude Include="Base\TexManager.h" />
     <ClInclude Include="Base\Window_Generate.h" />
     <ClInclude Include="camera\Camera.h" />
+    <ClInclude Include="FbxLoder\FbxLoader.h" />
+    <ClInclude Include="FbxLoder\Model.h" />
     <ClInclude Include="Input\dxInput.h" />
     <ClInclude Include="Player\Bullets.h" />
     <ClInclude Include="Player\Enemy.h" />
@@ -190,6 +192,7 @@
     <ClCompile Include="Base\TexManager.cpp" />
     <ClCompile Include="Base\Window_Generate.cpp" />
     <ClCompile Include="camera\Camera.cpp" />
+    <ClCompile Include="FbxLoder\FbxLoader.cpp" />
     <ClCompile Include="Input\dxInput.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player\Bullets.cpp" />
