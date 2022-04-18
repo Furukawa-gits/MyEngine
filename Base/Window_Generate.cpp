@@ -37,7 +37,7 @@ void Window_Generate::Win_Create()
 	//ウィンドウ生成
 	hwnd = CreateWindow(
 		w.lpszClassName,
-		L"DragShooter",
+		L"DirectXGame",
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,

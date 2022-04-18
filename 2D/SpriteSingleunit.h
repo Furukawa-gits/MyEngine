@@ -76,10 +76,10 @@ public:
 		float window_heigh,
 		UINT texnumber,
 		TexManager* tex,
-		bool sizeFlag,
-		bool isFlipX,
-		bool isFlipY,
-		bool iscutout,
+		bool sizeFlag = false,
+		bool isFlipX = false,
+		bool isFlipY = false,
+		bool iscutout = false,
 		XMFLOAT2 anchorpoint = { 0.5f,0.5f });
 
 	//スプライト更新処理
