@@ -172,6 +172,7 @@
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="FbxLoder\FbxLoader.h" />
     <ClInclude Include="FbxLoder\Model.h" />
+    <ClInclude Include="FbxLoder\Object3d.h" />
     <ClInclude Include="Input\dxInput.h" />
     <ClInclude Include="Player\Bullets.h" />
     <ClInclude Include="Player\Enemy.h" />

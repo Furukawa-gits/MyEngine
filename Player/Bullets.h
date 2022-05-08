@@ -7,7 +7,7 @@ class bullet
 {
 public:
 	float count = 0;
-	object3D object;
+	object3D_obj object;
 	XMFLOAT3 bullet_vec = { 0.0f,0.0f,0.0f };
 	bool Isarive = false;
 
@@ -29,7 +29,7 @@ class Missile
 {
 public:
 	Enemy* P_enemy = nullptr;
-	object3D object;
+	object3D_obj object;
 	XMFLOAT3 bullet_vec = { 0.0f,0.0f,0.0f };
 	bool Isarive = false;
 	bool IsTarget_set = false;

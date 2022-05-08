@@ -52,7 +52,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	camera = new Camera(1280, 720);
 
-	object3D::SetStaticData(camera, this->directx, &object3dcommon);
+	object3D_obj::SetStaticData(camera, this->directx, &object3dcommon);
 
 	//テクスチャ初期化
 	texture.Init(directx->dev.Get());

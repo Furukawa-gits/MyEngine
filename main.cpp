@@ -39,7 +39,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	input.init(Win->w, Win->hwnd);
 
 	//3dオブジェクト静的初期化
-	object3D::StaticInit();
+	object3D_obj::StaticInit();
 
 	//FPS処理
 	FpsManager fps;

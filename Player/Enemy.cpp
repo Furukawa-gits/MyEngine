@@ -3,7 +3,7 @@
 #pragma region “G‚Ì’e
 void enemy_bullet::init(int index)
 {
-	bullet_view = object3D::objectcommon->ReturnModelViewes("player_bullet.obj", 4);
+	bullet_view = object3D_obj::objectcommon->ReturnModelViewes("player_bullet.obj", 4);
 
 	object.Init3d(index);
 
@@ -74,9 +74,9 @@ void enemy_bullet::draw()
 #pragma region “G–{‘Ì
 void Enemy::init(int enemy_index, int enemy_bullet_index, TexManager* tex)
 {
-	enemy_view = object3D::objectcommon->ReturnModelViewes("enemy.obj", 3);
-	enemy_view2 = object3D::objectcommon->ReturnModelViewes("enemy2.obj", 5);
-	enemy_view3 = object3D::objectcommon->ReturnModelViewes("enemy3.obj", 6);
+	enemy_view = object3D_obj::objectcommon->ReturnModelViewes("enemy.obj", 3);
+	enemy_view2 = object3D_obj::objectcommon->ReturnModelViewes("enemy2.obj", 5);
+	enemy_view3 = object3D_obj::objectcommon->ReturnModelViewes("enemy3.obj", 6);
 
 	bullet.init(enemy_bullet_index);
 
@@ -85,7 +85,7 @@ void Enemy::init(int enemy_index, int enemy_bullet_index, TexManager* tex)
 
 	Isarive = true;
 
-	Rock_Target.GenerateSprite(object3D::directx->dev.Get(), 1280, 720, 3, tex, false, false, false, false);
+	Rock_Target.GenerateSprite(object3D_obj::directx->dev.Get(), 1280, 720, 3, tex, false, false, false, false);
 
 	enemy_collision.radius = 4.0f;
 }
@@ -226,21 +226,21 @@ void Enemy::draw(directX* directx, TexManager* tex, SpriteCommon* commonsp)
 		if (enemy_move_Pat == 1)
 		{
 			directx->depthclear();
-			object3D::objectcommon->object3DcommonBeginDraw();
+			object3D_obj::objectcommon->object3DcommonBeginDraw();
 			enemy.DrawModel_OnMaterial(enemy_view);
 			bullet.draw();
 		}
 		else if (enemy_move_Pat == 2)
 		{
 			directx->depthclear();
-			object3D::objectcommon->object3DcommonBeginDraw();
+			object3D_obj::objectcommon->object3DcommonBeginDraw();
 			enemy.DrawModel_OnMaterial(enemy_view2);
 			bullet.draw();
 		}
 		else if (enemy_move_Pat == 3)
 		{
 			directx->depthclear();
-			object3D::objectcommon->object3DcommonBeginDraw();
+			object3D_obj::objectcommon->object3DcommonBeginDraw();
 			enemy.DrawModel_OnMaterial(enemy_view3);
 			bullet.draw();
 		}

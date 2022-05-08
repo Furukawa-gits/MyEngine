@@ -3,7 +3,7 @@
 #pragma region ’Êí’e
 void bullet::init(int index)
 {
-	bullet_view = object3D::objectcommon->ReturnModelViewes("player_bullet.obj", 1);
+	bullet_view = object3D_obj::objectcommon->ReturnModelViewes("player_bullet.obj", 1);
 
 	object.Init3d(index);
 
@@ -104,7 +104,7 @@ void bullet::draw()
 #pragma region ƒ~ƒTƒCƒ‹
 void Missile::init(int index)
 {
-	misslie_view = object3D::objectcommon->ReturnModelViewes("player_bullet.obj", 2);
+	misslie_view = object3D_obj::objectcommon->ReturnModelViewes("player_bullet.obj", 2);
 
 	object.Init3d(index);
 
