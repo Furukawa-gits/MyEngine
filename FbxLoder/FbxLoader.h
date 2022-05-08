@@ -24,7 +24,7 @@ public:
 	/// <param name="device">デバイス情報</param>
 	void Initilize(ID3D12Device* device);
 
-	void LoadmodelFromFile(const string& modelName);
+	Model* LoadmodelFromFile(const string& modelName);
 
 	void ParseNodeRecursive(Model* model, FbxNode* fbxnode, Node* parent = nullptr);
 	//メッシュ読み取り
