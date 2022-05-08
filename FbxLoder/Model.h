@@ -3,6 +3,10 @@
 #include<DirectXMath.h>
 #include <vector>
 #include <DirectXTex.h>
+#include <Windows.h>
+#include <wrl.h>
+#include <d3d12.h>
+#include <d3dx12.h>
 
 struct Node
 {
@@ -23,6 +27,20 @@ struct Node
 
 class Model
 {
+private:
+	template<class T> using ComPtr =
+		Microsoft::WRL::ComPtr<T>;
+
+	using XMFLOAT2 = DirectX::XMFLOAT2;
+	using XMFLOAT3 = DirectX::XMFLOAT3;
+	using XMFLOAT4 = DirectX::XMFLOAT4;
+	using XMMATRIX = DirectX::XMMATRIX;
+	using TexMetadata = DirectX::TexMetadata;
+	using ScratchImage = DirectX::ScratchImage;
+
+	using string = std::string;
+	template<class T> using vector = std::vector<T>;
+
 public:
 	friend class FbxLoader;
 
@@ -33,7 +51,7 @@ public:
 		DirectX::XMFLOAT2 uv;
 	};
 
-	Node* mesNode = nullptr;
+	Node* meshNode = nullptr;
 
 	std::vector<VertexPosNormalUv> vertices;
 
@@ -46,6 +64,28 @@ public:
 	DirectX::TexMetadata metadata = {};
 
 	DirectX::ScratchImage scratchimg = {};
+
+private:
+
+	ComPtr<ID3D12Resource> vertBuff;
+
+	ComPtr<ID3D12Resource> indexBuff;
+
+	ComPtr<ID3D12Resource> texbuff;
+
+	D3D12_VERTEX_BUFFER_VIEW vbView = {};
+
+	D3D12_INDEX_BUFFER_VIEW idView = {};
+
+	ComPtr<ID3D12DescriptorHeap> descHeapSRV;
+
+public:
+	//バッファー生成
+	void CreateBuffers(ID3D12Device* device);
+	//描画
+	void Draw(ID3D12GraphicsCommandList* cmdList);
+	//モデルの変形行列取得
+	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
 
 private:
 	std::string name;

@@ -193,6 +193,7 @@
     <ClCompile Include="Base\Window_Generate.cpp" />
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="FbxLoder\FbxLoader.cpp" />
+    <ClCompile Include="FbxLoder\Model.cpp" />
     <ClCompile Include="Input\dxInput.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player\Bullets.cpp" />

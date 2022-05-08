@@ -55,6 +55,8 @@ void FbxLoader::LoadmodelFromFile(const string& modelName)
     ParseNodeRecursive(model, fbxscene->GetRootNode());
 
     fbxscene->Destroy();
+
+    model->CreateBuffers(device);
 }
 
 void FbxLoader::ParseNodeRecursive(Model* model, FbxNode* fbxnode, Node* parent)
@@ -99,7 +101,7 @@ void FbxLoader::ParseNodeRecursive(Model* model, FbxNode* fbxnode, Node* parent)
     {
         if (fbxnodeattribute->GetAttributeType() == FbxNodeAttribute::eMesh)
         {
-            model->mesNode = &node;
+            model->meshNode = &node;
             ParseMesh(model, fbxnode);
         }
     }
