@@ -261,7 +261,20 @@ void FbxLoader::LoadTexture(Model* model, const std::string& fullpath)
 {
     HRESULT result = S_FALSE;
 
+    TexMetadata& metadata = model->metadata;
+    ScratchImage& scratchImg = model->scratchimg;
 
+    wchar_t wfilepath[128];
+    MultiByteToWideChar(CP_ACP, 0, fullpath.c_str(), -1, wfilepath, _countof(wfilepath));
+    result = LoadFromWICFile(
+        wfilepath, WIC_FLAGS_NONE,
+        &metadata, scratchImg
+    );
+
+    if (FAILED(result))
+    {
+        assert(0);
+    }
 }
 //ディレクトリ込みのパスからファイル名抽出
 std::string FbxLoader::ExtractFileName(const std::string& path)
