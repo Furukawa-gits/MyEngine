@@ -39,6 +39,10 @@ public:
 	void LoadTexture(Model* model, const std::string& fullpath);
 	//ディレクトリ込みのパスからファイル名抽出
 	std::string ExtractFileName(const std::string& path);
+	//行列変換
+	static void ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, FbxAMatrix& src);
+	//スキニング情報読み取り
+	void ParseSkin(Model* model, FbxMesh* fbxMesh);
 
 	/// <summary>
 	/// 後始末

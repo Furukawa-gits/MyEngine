@@ -7,6 +7,7 @@
 #include <wrl.h>
 #include <d3d12.h>
 #include <d3dx12.h>
+#include<fbxsdk.h>
 
 struct Node
 {
@@ -42,18 +43,35 @@ private:
 	template<class T> using vector = std::vector<T>;
 
 public:
+	static const int MAX_BONE_INDICES = 4;
+
 	friend class FbxLoader;
 
-	struct VertexPosNormalUv
+	struct VertexPosNormalUvSkin
 	{
 		DirectX::XMFLOAT3 pos;
 		DirectX::XMFLOAT3 normal;
 		DirectX::XMFLOAT2 uv;
+		UINT boneIndex[MAX_BONE_INDICES];
+		float boneWeight[MAX_BONE_INDICES];
+	};
+
+	struct Bone
+	{
+		std::string name;
+
+		DirectX::XMMATRIX invInitialPose;
+
+		FbxCluster* fbxCluster;
+
+		Bone(const std::string& name) {
+			this->name = name;
+		}
 	};
 
 	Node* meshNode = nullptr;
 
-	std::vector<VertexPosNormalUv> vertices;
+	std::vector<VertexPosNormalUvSkin> vertices;
 
 	std::vector<unsigned short> indices;
 
@@ -87,8 +105,19 @@ public:
 	//モデルの変形行列取得
 	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
 
+	std::vector<Bone>& GetBones() { return bones; }
+
+	FbxScene* GetFbxScene() { return fbxScene; }
+
+	~Model();
+
 private:
 	std::string name;
 
 	std::vector<Node> nodes;
+
+	//ボーン配列
+	std::vector<Bone> bones;
+
+	FbxScene* fbxScene = nullptr;
 };
