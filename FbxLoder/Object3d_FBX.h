@@ -10,7 +10,7 @@
 #include <DirectXMath.h>
 #include <string>
 
-class Object3d
+class Object3d_FBX
 {
 protected:
 	template<class T> using ComPtr =
@@ -30,8 +30,8 @@ public:
 	};
 
 public:
-	static void SetDevice(ID3D12Device* device) { Object3d::device = device; }
-	static void SetCamera(Camera* camera) { Object3d::camera = camera; }
+	static void SetDevice(ID3D12Device* device) { Object3d_FBX::device = device; }
+	static void SetCamera(Camera* camera) { Object3d_FBX::camera = camera; }
 
 	void Initialize();
 

@@ -1,16 +1,16 @@
-#include "Object3d.h"
+#include "Object3d_FBX.h"
 #include <d3dcompiler.h>
 #pragma comment(lib,"d3dcompiler.lib")
 
 using namespace Microsoft::WRL;
 using namespace DirectX;
 
-ID3D12Device* Object3d::device = nullptr;
-Camera* Object3d::camera = nullptr;
-ComPtr<ID3D12RootSignature> Object3d::rootsignature;
-ComPtr<ID3D12PipelineState> Object3d::pipelinestate;
+ID3D12Device* Object3d_FBX::device = nullptr;
+Camera* Object3d_FBX::camera = nullptr;
+ComPtr<ID3D12RootSignature> Object3d_FBX::rootsignature;
+ComPtr<ID3D12PipelineState> Object3d_FBX::pipelinestate;
 
-void Object3d::Initialize()
+void Object3d_FBX::Initialize()
 {
 	HRESULT result;
 
@@ -24,7 +24,7 @@ void Object3d::Initialize()
 		IID_PPV_ARGS(&constBufferTransform));
 }
 
-void Object3d::CreateGraphicsPipeline()
+void Object3d_FBX::CreateGraphicsPipeline()
 {
 	HRESULT result = S_FALSE;
 	ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
@@ -173,7 +173,7 @@ void Object3d::CreateGraphicsPipeline()
 	if (FAILED(result)) { assert(0); }
 }
 
-void Object3d::Update()
+void Object3d_FBX::Update()
 {
 	XMMATRIX matScale, matRot, matTrans;
 
@@ -209,7 +209,7 @@ void Object3d::Update()
 	}
 }
 
-void Object3d::Draw(ID3D12GraphicsCommandList* cmdList)
+void Object3d_FBX::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	if (model = nullptr)
 	{
