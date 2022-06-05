@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Model.h"
+#include "FbxLoader.h"
 #include "../camera/Camera.h"
 
 #include <Windows.h>
@@ -22,11 +23,18 @@ protected:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
+	static const int MAX_BONES = 32;
+
 	struct ConstBufferDataTransform
 	{
 		XMMATRIX viewproj;
 		XMMATRIX world;
 		XMFLOAT3 cameraPos;
+	};
+
+	struct ConstBufferDataSkin
+	{
+		XMMATRIX bones[MAX_BONES];
 	};
 
 public:
@@ -45,6 +53,8 @@ public:
 
 protected:
 	ComPtr<ID3D12Resource> constBufferTransform;
+
+	ComPtr<ID3D12Resource> constBufferSkin;
 
 private:
 	static ID3D12Device* device;
