@@ -51,6 +51,8 @@ public:
 
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
+	void PlayAnimation();
+
 protected:
 	ComPtr<ID3D12Resource> constBufferTransform;
 
@@ -74,4 +76,14 @@ private:
 	XMMATRIX matWorld;
 
 	Model* model = nullptr;
+
+	FbxTime frameTime;
+
+	FbxTime starttime;
+
+	FbxTime endTime;
+
+	FbxTime currentTime;
+
+	bool isPlay = false;
 };
