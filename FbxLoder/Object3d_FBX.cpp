@@ -238,6 +238,16 @@ void Object3d_FBX::Update()
 		constBufferTransform->Unmap(0, nullptr);
 	}
 
+	if (isPlay)
+	{
+		currentTime += frameTime;
+
+		if (currentTime > endTime)
+		{
+			currentTime = starttime;
+		}
+	}
+
 	std::vector<Model::Bone>& bones = model->GetBones();
 
 	ConstBufferDataSkin* constMapSkin = nullptr;
@@ -254,21 +264,11 @@ void Object3d_FBX::Update()
 		constMapSkin->bones[i] = bones[i].invInitialPose * matCurrentPose;
 	}
 	constBufferSkin->Unmap(0, nullptr);
-
-	if (isPlay)
-	{
-		currentTime += frameTime;
-
-		if (currentTime > endTime)
-		{
-			currentTime = starttime;
-		}
-	}
 }
 
 void Object3d_FBX::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	if (model = nullptr)
+	if (model == nullptr)
 	{
 		return;
 	}

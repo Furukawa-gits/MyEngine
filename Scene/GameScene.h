@@ -10,6 +10,7 @@
 #include"../2D/Debug_Text.h"
 #include"../camera/Camera.h"
 #include"../Player/Player.h"
+#include"../FbxLoder/Object3d_FBX.h"
 
 enum scene
 {
@@ -106,7 +107,10 @@ public:
 	//スプライト(各クラスに依存しないやつ)
 
 	//3dオブジェクト
+	Model* model = nullptr;
+	Object3d_FBX* object = nullptr;
 
+	//背景
 	SingleSprite sample_back;
 
 	//ゲーム時間

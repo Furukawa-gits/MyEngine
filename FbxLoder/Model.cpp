@@ -43,7 +43,7 @@ void Model::CreateBuffers(ID3D12Device* device)
 		nullptr,
 		IID_PPV_ARGS(&indexBuff));
 	//インデックスデータ転送
-	VertexPosNormalUvSkin* indextMap = nullptr;
+	unsigned short* indextMap = nullptr;
 	result = indexBuff->Map(0, nullptr, (void**)&indextMap);
 	if (SUCCEEDED(result))
 	{
@@ -122,5 +122,5 @@ void Model::Draw(ID3D12GraphicsCommandList* cmdList)
 
 Model::~Model()
 {
-	fbxScene->Destroy();
+	//fbxScene->Destroy();
 }

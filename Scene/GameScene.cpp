@@ -1,4 +1,5 @@
 #include"GameScene.h"
+#include"../FbxLoder/Object3d_FBX.h"
 #include<cassert>
 
 GameScene::GameScene()
@@ -7,6 +8,8 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
+	delete(object);
+	delete(model);
 }
 
 //テクスチャ読み込みだけ関数
@@ -52,7 +55,8 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	camera = new Camera(1280, 720);
 
-	object3D_obj::SetStaticData(camera, this->directx, &object3dcommon);
+	camera->SetTarget({ 0, 2.5f, 0 });
+	camera->SetEye({ -10,5,0 });
 
 	//テクスチャ初期化
 	texture.Init(directx->dev.Get());
@@ -73,6 +77,18 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	Load_Sprites();
 
 	//3dオブジェクト生成
+	Object3d_FBX::SetDevice(directx->dev.Get());
+
+	Object3d_FBX::SetCamera(camera);
+
+	Object3d_FBX::CreateGraphicsPipeline();
+
+	model = FbxLoader::GetInstance()->LoadmodelFromFile("boneTest");
+
+	object = new Object3d_FBX;
+	object->Initialize();
+	object->SetModel(model);
+	object->PlayAnimation();
 }
 
 //デバッグテキスト
@@ -83,7 +99,7 @@ void GameScene::debugs_print()
 //タイトル画面更新
 void GameScene::Title_update()
 {
-
+	object->Update();
 }
 
 //プレイ画面更新
@@ -101,7 +117,7 @@ void GameScene::Result_update()
 //タイトル画面描画
 void GameScene::Title_draw()
 {
-
+	object->Draw(directx->cmdList.Get());
 }
 
 //プレイ画面描画

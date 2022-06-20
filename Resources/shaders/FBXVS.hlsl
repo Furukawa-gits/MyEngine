@@ -1,23 +1,12 @@
 #include"FBX.hlsli"
 
-VSOutput main(VSInput input)
-{
-	SkinOutput skinned = ComputeSkin(input);
-	float4 wnormal = normalize(nul(world, float4(skinned.normal, 0)));
-	VSOutput output;
-	output.svpos = mul(mul(viewproj, world), skinned.pos);
-	output.normal = wnormal.xyz;
-	output.uv = input.uv;
-	return output;
-}
-
 struct SkinOutput
 {
 	float4 pos;
 	float3 normal;
 };
 
-Skinoutput ComputeSkin(VSInput input)
+SkinOutput ComputeSkin(VSInput input)
 {
 	SkinOutput output = (SkinOutput)0;
 
@@ -49,5 +38,16 @@ Skinoutput ComputeSkin(VSInput input)
 	output.pos += weight * mul(m, input.pos);
 	output.normal += weight * mul((float3x3)m, input.normal);
 
+	return output;
+}
+
+VSOutput main(VSInput input)
+{
+	SkinOutput skinned = ComputeSkin(input);
+	float4 wnormal = normalize(mul(world, float4(skinned.normal, 0)));
+	VSOutput output;
+	output.svpos = mul(mul(viewproj, world), skinned.pos);
+	output.normal = wnormal.xyz;
+	output.uv = input.uv;
 	return output;
 }
