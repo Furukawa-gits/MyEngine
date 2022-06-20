@@ -1,5 +1,5 @@
 #pragma once
-#include"../Base/Window_Generate.h"
+#include"../Base/WindowGenerate.h"
 #include"../Base/DirectX_Base.h"
 #include"../Base/TexManager.h"
 #include"../2D/SpriteCommon.h"

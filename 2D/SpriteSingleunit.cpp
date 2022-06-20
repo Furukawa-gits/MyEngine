@@ -70,8 +70,7 @@ void SingleSprite::GenerateSprite(ID3D12Device* dev,
 	bool sizeFlag, 
 	bool isFlipX, 
 	bool isFlipY, 
-	bool iscutout, 
-	XMFLOAT2 anchorpoint)
+	bool iscutout)
 {
 	HRESULT result = S_FALSE;
 
@@ -101,8 +100,6 @@ void SingleSprite::GenerateSprite(ID3D12Device* dev,
 
 		size = { (float)resdesc.Width,(float)resdesc.Height };
 	}
-
-	anchorpoint = anchorpoint;
 
 	this->isFlipX = isFlipX;
 	this->isFlipY = isFlipY;

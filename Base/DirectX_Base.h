@@ -2,7 +2,7 @@
 #include<d3d12.h>
 #include<dxgi1_6.h>
 #include<wrl.h>
-#include"Window_Generate.h"
+#include"WindowGenerate.h"
 #include<vector>
 #include<string>
 #include<d3dx12.h>

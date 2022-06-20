@@ -158,6 +158,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="2D\Debug_Text.h" />
+    <ClInclude Include="2D\PostEffect.h" />
     <ClInclude Include="2D\SpriteCommon.h" />
     <ClInclude Include="2D\SpriteSingleunit.h" />
     <ClInclude Include="3D\3Dobject.h" />
@@ -168,7 +169,7 @@
     <ClInclude Include="Base\DirectX_Base.h" />
     <ClInclude Include="Base\Fps_Manager.h" />
     <ClInclude Include="Base\TexManager.h" />
-    <ClInclude Include="Base\Window_Generate.h" />
+    <ClInclude Include="Base\WindowGenerate.h" />
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="FbxLoder\FbxLoader.h" />
     <ClInclude Include="FbxLoder\Model.h" />
@@ -181,6 +182,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="2D\Debug_Text.cpp" />
+    <ClCompile Include="2D\PostEffect.cpp" />
     <ClCompile Include="2D\SpriteCommon.cpp" />
     <ClCompile Include="2D\SpriteSingleunit.cpp" />
     <ClCompile Include="3D\3Dobject.cpp" />
@@ -191,7 +193,7 @@
     <ClCompile Include="Base\DirectX_Base.cpp" />
     <ClCompile Include="Base\Fps_Manager.cpp" />
     <ClCompile Include="Base\TexManager.cpp" />
-    <ClCompile Include="Base\Window_Generate.cpp" />
+    <ClCompile Include="Base\WindowGenerate.cpp" />
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="FbxLoder\FbxLoader.cpp" />
     <ClCompile Include="FbxLoder\Model.cpp" />

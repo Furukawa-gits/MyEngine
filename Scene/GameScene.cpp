@@ -21,18 +21,14 @@ void GameScene::Load_textures()
 //サウンドだけ読み込み関数
 void GameScene::Load_sounds()
 {
-	
+
 }
 
 //スプライト(各クラスに依存しないやつ)初期化
 void GameScene::Load_Sprites()
 {
-	sample_back.texnumber = 1;
-	sample_back.GenerateSprite(directx->dev.Get(), win_width, win_hight, sample_back.texnumber, &texture);
-	sample_back.anchorpoint = { 0,0 };
 	sample_back.size = { 1280,720 };
-	sample_back.texSize = { 1280,720 };
-	sample_back.SpriteTransferVertexBuffer(&texture, false);
+	sample_back.GenerateSprite(directx->dev.Get(), win_width, win_hight, 1, &texture);
 }
 
 //初期化
@@ -105,13 +101,13 @@ void GameScene::Title_update()
 //プレイ画面更新
 void GameScene::Play_update()
 {
-	
+
 }
 
 //リザルト画面更新
 void GameScene::Result_update()
 {
-	
+
 }
 
 //タイトル画面描画
@@ -123,7 +119,7 @@ void GameScene::Title_draw()
 //プレイ画面描画
 void GameScene::Play_draw()
 {
-	
+
 }
 
 //リザルト画面描画
