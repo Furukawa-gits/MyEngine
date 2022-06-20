@@ -3,29 +3,29 @@
 /// <summary>
 /// 静的メンバ変数の実体
 /// </summary>
-Camera* object3D::camera = nullptr;
-directX* object3D::directx = nullptr;
-ObjectCommon* object3D::objectcommon = nullptr;
+Camera* object3D_obj::camera = nullptr;
+directX* object3D_obj::directx = nullptr;
+ObjectCommon* object3D_obj::objectcommon = nullptr;
 
-object3D::object3D()
+object3D_obj::object3D_obj()
 {
 }
 
-void object3D::StaticInit(Camera* camera, directX* directx)
+void object3D_obj::StaticInit(Camera* camera, directX* directx)
 {
-	object3D::camera = camera;
-	object3D::directx = directx;
+	object3D_obj::camera = camera;
+	object3D_obj::directx = directx;
 }
 
-void object3D::SetStaticData(Camera* camera, directX* directx, ObjectCommon* common)
+void object3D_obj::SetStaticData(Camera* camera, directX* directx, ObjectCommon* common)
 {
-	object3D::camera = camera;
-	object3D::directx = directx;
-	object3D::objectcommon = common;
+	object3D_obj::camera = camera;
+	object3D_obj::directx = directx;
+	object3D_obj::objectcommon = common;
 }
 
 //3Dオブジェクト初期化
-void object3D::Init3d(int index)
+void object3D_obj::Init3d(int index)
 {
 	HRESULT result;
 
@@ -92,7 +92,7 @@ void object3D::Init3d(int index)
 }
 
 //3Dオブジェクト更新処理
-void object3D::Update3d(Viewes& view, XMFLOAT4 color)
+void object3D_obj::Update3d(Viewes& view, XMFLOAT4 color)
 {
 	XMMATRIX matscale, matrot, mattrans;
 
@@ -136,7 +136,7 @@ void object3D::Update3d(Viewes& view, XMFLOAT4 color)
 }
 
 //3Dオブジェクト描画処理
-void object3D::Draw3d(ID3D12DescriptorHeap* TexdescHeap, Viewes& view, D3D12_GPU_DESCRIPTOR_HANDLE gpuDeschandleSRV, indices_num num)
+void object3D_obj::Draw3d(ID3D12DescriptorHeap* TexdescHeap, Viewes& view, D3D12_GPU_DESCRIPTOR_HANDLE gpuDeschandleSRV, indices_num num)
 {
 	directx->cmdList.Get()->IASetVertexBuffers(0, 1, &view.vbView);
 
@@ -168,7 +168,7 @@ void object3D::Draw3d(ID3D12DescriptorHeap* TexdescHeap, Viewes& view, D3D12_GPU
 }
 
 //モデル描画(マテリアル無し)
-void object3D::DrawModel(ID3D12DescriptorHeap* TexdescHeap, Viewes& view, D3D12_GPU_DESCRIPTOR_HANDLE gpuDeschandleSRV)
+void object3D_obj::DrawModel(ID3D12DescriptorHeap* TexdescHeap, Viewes& view, D3D12_GPU_DESCRIPTOR_HANDLE gpuDeschandleSRV)
 {
 	directx->cmdList.Get()->IASetVertexBuffers(0, 1, &view.vbView);
 
@@ -186,7 +186,7 @@ void object3D::DrawModel(ID3D12DescriptorHeap* TexdescHeap, Viewes& view, D3D12_
 }
 
 //モデル描画(マテリアルあり)
-void object3D::DrawModel_OnMaterial(Viewes& view)
+void object3D_obj::DrawModel_OnMaterial(Viewes& view)
 {
 	directx->cmdList.Get()->IASetVertexBuffers(0, 1, &view.vbView);
 
@@ -207,7 +207,7 @@ void object3D::DrawModel_OnMaterial(Viewes& view)
 }
 
 //ワールド座標からスクリーン座標
-XMVECTOR object3D::WorldToScreenPos(XMVECTOR World_pos)
+XMVECTOR object3D_obj::WorldToScreenPos(XMVECTOR World_pos)
 {
 	float w = (float)1280.0f / 2.0f;
 	float h = (float)720.0f / 2.0f;

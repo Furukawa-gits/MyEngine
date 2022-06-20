@@ -1,8 +1,14 @@
 #pragma once
-#include"../Base/Window_Generate.h"
 #include"SpriteCommon.h"
-#include"../Base/TexManager.h"
+#include<DirectXTex.h>
+#include<d3dx12.h>
+#include<wrl.h>
 #include<DirectXMath.h>
+#include <d3dcompiler.h>
+#include"../Base/WindowGenerate.h"
+#include"../Base/TexManager.h"
+
+#pragma comment(lib, "d3dcompiler.lib")
 
 using XMFLOAT3 = DirectX::XMFLOAT3;
 
@@ -21,6 +27,11 @@ struct VertexPosUv										//頂点構造体(スプライト用)
 
 class SingleSprite
 {
+private:
+	static ComPtr<ID3D12PipelineState> pipelinestate;//パイプラインステート
+
+	static ComPtr<ID3D12RootSignature> rootsignature;//ルートシグネチャ
+
 public:
 	//頂点バッファ
 	ComPtr<ID3D12Resource> spriteVertBuff;
@@ -50,7 +61,7 @@ public:
 	XMFLOAT2 size = { 100.0f,100.0f };
 
 	//アンカーポイント
-	XMFLOAT2 anchorpoint = { 0.5f,0.5f };
+	XMFLOAT2 anchorpoint = { 0.0f,0.0f };
 
 	//左右反転
 	bool isFlipX = false;
@@ -79,8 +90,7 @@ public:
 		bool sizeFlag = false,
 		bool isFlipX = false,
 		bool isFlipY = false,
-		bool iscutout = false,
-		XMFLOAT2 anchorpoint = { 0.5f,0.5f });
+		bool iscutout = false);
 
 	//スプライト更新処理
 	void SpriteUpdate(const SpriteCommon& spritecommon);

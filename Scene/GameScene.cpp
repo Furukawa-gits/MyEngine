@@ -1,4 +1,5 @@
 #include"GameScene.h"
+#include"../FbxLoder/Object3d_FBX.h"
 #include<cassert>
 
 GameScene::GameScene()
@@ -7,6 +8,8 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
+	delete(object);
+	delete(model);
 }
 
 //テクスチャ読み込みだけ関数
@@ -19,22 +22,23 @@ void GameScene::Load_textures()
 //サウンドだけ読み込み関数
 void GameScene::Load_sounds()
 {
-	
+
 }
 
 //スプライト(各クラスに依存しないやつ)初期化
 void GameScene::Load_Sprites()
 {
-	sample_back.texnumber = 1;
-	sample_back.GenerateSprite(directx->dev.Get(), win_width, win_hight, sample_back.texnumber, &texture);
-	sample_back.anchorpoint = { 0,0 };
 	sample_back.size = { 1280,720 };
+<<<<<<< HEAD
 	sample_back.texSize = { 1280,720 };
 	sample_back.SpriteTransferVertexBuffer(&texture, false);
 
 	BallSprite.texnumber = 2;
 	BallSprite.GenerateSprite(directx->dev.Get(), win_width, win_hight, BallSprite.texnumber, &texture);
 	BallSprite.texSize = { 1400,1400 };
+=======
+	sample_back.GenerateSprite(directx->dev.Get(), win_width, win_hight, 1, &texture);
+>>>>>>> master
 }
 
 //初期化
@@ -57,7 +61,8 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	camera = new Camera(1280, 720);
 
-	object3D::SetStaticData(camera, this->directx, &object3dcommon);
+	camera->SetTarget({ 0, 2.5f, 0 });
+	camera->SetEye({ -10,5,0 });
 
 	//テクスチャ初期化
 	texture.Init(directx->dev.Get());
@@ -77,8 +82,24 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	//スプライト初期化
 	Load_Sprites();
 
+<<<<<<< HEAD
 	ball.Pos = { 100,400,0 };
 	BallSprite.SpriteTransferVertexBuffer(&texture, false);
+=======
+	//3dオブジェクト生成
+	Object3d_FBX::SetDevice(directx->dev.Get());
+
+	Object3d_FBX::SetCamera(camera);
+
+	Object3d_FBX::CreateGraphicsPipeline();
+
+	model = FbxLoader::GetInstance()->LoadmodelFromFile("boneTest");
+
+	object = new Object3d_FBX;
+	object->Initialize();
+	object->SetModel(model);
+	object->PlayAnimation();
+>>>>>>> master
 }
 
 //デバッグテキスト
@@ -93,6 +114,7 @@ void GameScene::debugs_print()
 //タイトル画面更新
 void GameScene::Title_update()
 {
+<<<<<<< HEAD
 	if (input->Triger(DIK_R))
 	{
 		ball.Pos = { 100,400,0 };
@@ -110,30 +132,37 @@ void GameScene::Title_update()
 	BallSprite.SpriteUpdate(spritecommon);
 
 	debugs_print();
+=======
+	object->Update();
+>>>>>>> master
 }
 
 //プレイ画面更新
 void GameScene::Play_update()
 {
-	
+
 }
 
 //リザルト画面更新
 void GameScene::Result_update()
 {
-	
+
 }
 
 //タイトル画面描画
 void GameScene::Title_draw()
 {
+<<<<<<< HEAD
 	BallSprite.DrawSprite(directx->cmdList.Get(), &texture, directx->dev.Get());
+=======
+	object->Draw(directx->cmdList.Get());
+>>>>>>> master
 }
 
 //プレイ画面描画
 void GameScene::Play_draw()
 {
-	
+
 }
 
 //リザルト画面描画

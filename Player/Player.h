@@ -30,7 +30,7 @@ public:
 
 
 	//3dオブジェクト
-	object3D Player_object;
+	object3D_obj Player_object;
 	Viewes player_view;
 	Viewes old_player_view;
 

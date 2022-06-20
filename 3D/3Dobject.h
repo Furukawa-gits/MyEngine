@@ -32,7 +32,7 @@ float returnScaler(XMFLOAT3 vec);
 
 XMFLOAT3 normalized(XMFLOAT3 vec);
 
-class object3D
+class object3D_obj
 {
 public:
 
@@ -55,13 +55,13 @@ public:
 	XMMATRIX matWorld;
 
 	//親オブジェクトへのポインタ
-	object3D* parent = nullptr;
+	object3D_obj* parent = nullptr;
 
 	//フラグ
 	bool flag;
 
 	//コンストラクタ
-	object3D();
+	object3D_obj();
 
 	//静的初期化
 	static void StaticInit(Camera* camera = nullptr, directX* directx = nullptr);

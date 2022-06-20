@@ -24,7 +24,7 @@
     <ClInclude Include="Base\TexManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Window_Generate.h">
+    <ClInclude Include="Base\WindowGenerate.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="3D\3Dobject.h">
@@ -75,7 +75,14 @@
     <ClInclude Include="FbxLoder\Model.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="Physics.h">
+=======
+    <ClInclude Include="FbxLoder\Object3d_FBX.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="2D\PostEffect.h">
+>>>>>>> master
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -89,7 +96,7 @@
     <ClCompile Include="Base\TexManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Window_Generate.cpp">
+    <ClCompile Include="Base\WindowGenerate.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="3D\3Dobject.cpp">
@@ -140,7 +147,17 @@
     <ClCompile Include="FbxLoder\FbxLoader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="Physics.cpp">
+=======
+    <ClCompile Include="FbxLoder\Model.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxLoder\Object3d_FBX.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="2D\PostEffect.cpp">
+>>>>>>> master
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -152,6 +169,9 @@
       <Filter>リソース ファイル</Filter>
     </None>
     <None Include="Resources\shaders\OBJ.hlsli">
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="Resources\shaders\FBX.hlsli">
       <Filter>リソース ファイル</Filter>
     </None>
   </ItemGroup>
@@ -172,6 +192,12 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\OBJVS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\FBXPS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\FBXVS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>

@@ -1,5 +1,5 @@
 #pragma once
-#include"../Base/Window_Generate.h"
+#include"../Base/WindowGenerate.h"
 #include"../Base/DirectX_Base.h"
 #include"../Base/TexManager.h"
 #include"../2D/SpriteCommon.h"
@@ -10,7 +10,11 @@
 #include"../2D/Debug_Text.h"
 #include"../camera/Camera.h"
 #include"../Player/Player.h"
+<<<<<<< HEAD
 #include"../Physics.h"
+=======
+#include"../FbxLoder/Object3d_FBX.h"
+>>>>>>> master
 
 enum scene
 {
@@ -107,7 +111,10 @@ public:
 	//スプライト(各クラスに依存しないやつ)
 	
 	//3dオブジェクト
+	Model* model = nullptr;
+	Object3d_FBX* object = nullptr;
 
+	//背景
 	SingleSprite sample_back;
 
 	//ゲーム時間

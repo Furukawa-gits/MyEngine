@@ -8,7 +8,7 @@ struct enemy_bullet
 {
 public:
 	int count = 0;
-	object3D object;
+	object3D_obj object;
 	XMFLOAT3 bullet_vec = { 0.0f,0.0f,0.0f };
 	bool Isarive = false;
 
@@ -26,7 +26,7 @@ private:
 class Enemy
 {
 public:
-	object3D enemy;
+	object3D_obj enemy;
 	Viewes enemy_view;
 	Viewes enemy_view2;
 	Viewes enemy_view3;

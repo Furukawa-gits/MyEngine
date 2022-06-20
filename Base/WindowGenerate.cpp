@@ -1,4 +1,4 @@
-#include"Window_Generate.h"
+#include"WindowGenerate.h"
 
 //Window_Generate::Window_Generate()
 //{

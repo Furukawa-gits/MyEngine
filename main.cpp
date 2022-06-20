@@ -1,5 +1,6 @@
 #include"Scene/GameScene.h"
 #include"Base/Fps_Manager.h"
+#include"FbxLoder/FbxLoader.h"
 
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -28,6 +29,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	directx.Init(Win);
 	directx.Initializedepth();
 
+	FbxLoader::GetInstance()->Initilize(directx.dev.Get());
+
 	//音初期化
 	Audio audio;
 	audio.Initialize();
@@ -39,7 +42,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	input.init(Win->w, Win->hwnd);
 
 	//3dオブジェクト静的初期化
-	object3D::StaticInit();
+	object3D_obj::StaticInit();
 
 	//FPS処理
 	FpsManager fps;
@@ -92,6 +95,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	}
 
 	//audio.UnLoadSoundWave(&gamescene.Title_bgm);
+	FbxLoader::GetInstance()->Finalize();
 
 	// ウィンドウクラスを登録解除
 	Win->Win_Deleate();
