@@ -14,8 +14,13 @@ public:
 	/// <param name="t">時間(秒)</param>
 	float FreeFall(float y, float t);
 
-	const float Gravitationalacceleration = 9.8f;
+	//重力加速度
+	const float Gravitationalacceleration = -9.8f;
 
+	//空気抵抗
+	float Airresistance = 0.8f;
+
+	//経過時間
 	float Time;
 };
 

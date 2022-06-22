@@ -29,16 +29,11 @@ void GameScene::Load_sounds()
 void GameScene::Load_Sprites()
 {
 	sample_back.size = { 1280,720 };
-<<<<<<< HEAD
 	sample_back.texSize = { 1280,720 };
-	sample_back.SpriteTransferVertexBuffer(&texture, false);
-
-	BallSprite.texnumber = 2;
-	BallSprite.GenerateSprite(directx->dev.Get(), win_width, win_hight, BallSprite.texnumber, &texture);
-	BallSprite.texSize = { 1400,1400 };
-=======
 	sample_back.GenerateSprite(directx->dev.Get(), win_width, win_hight, 1, &texture);
->>>>>>> master
+
+	BallSprite.size = { 200,200 };
+	BallSprite.GenerateSprite(directx->dev.Get(), win_width, win_hight, 2, &texture);
 }
 
 //初期化
@@ -82,10 +77,10 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	//スプライト初期化
 	Load_Sprites();
 
-<<<<<<< HEAD
-	ball.Pos = { 100,400,0 };
+
+	ball.Pos = { 100,-400,0 };
 	BallSprite.SpriteTransferVertexBuffer(&texture, false);
-=======
+
 	//3dオブジェクト生成
 	Object3d_FBX::SetDevice(directx->dev.Get());
 
@@ -99,7 +94,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	object->Initialize();
 	object->SetModel(model);
 	object->PlayAnimation();
->>>>>>> master
+
 }
 
 //デバッグテキスト
@@ -114,27 +109,26 @@ void GameScene::debugs_print()
 //タイトル画面更新
 void GameScene::Title_update()
 {
-<<<<<<< HEAD
+
 	if (input->Triger(DIK_R))
 	{
-		ball.Pos = { 100,400,0 };
+		ball.Pos = { 100,-400,0 };
 		ball.IsMove = false;
 	}
 
 	if (input->Triger(DIK_SPACE))
 	{
-		ball.Set({ 100,400,0 }, { 25,-20,0 });
+		ball.Set({ 100,-400,0 }, { 35,30,0 });
 	}
 
 	ball.Update();
 
-	BallSprite.position = ball.Pos;
+	BallSprite.position = { ball.Pos.x,ball.Pos.y * -1,ball.Pos.z };
 	BallSprite.SpriteUpdate(spritecommon);
 
 	debugs_print();
-=======
+
 	object->Update();
->>>>>>> master
 }
 
 //プレイ画面更新
@@ -152,11 +146,10 @@ void GameScene::Result_update()
 //タイトル画面描画
 void GameScene::Title_draw()
 {
-<<<<<<< HEAD
 	BallSprite.DrawSprite(directx->cmdList.Get(), &texture, directx->dev.Get());
-=======
-	object->Draw(directx->cmdList.Get());
->>>>>>> master
+
+	//object->Draw(directx->cmdList.Get());
+
 }
 
 //プレイ画面描画

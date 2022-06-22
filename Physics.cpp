@@ -24,7 +24,23 @@ void Ball::Update()
 		Pos.y += Accel.y;
 		Pos.z += Accel.z;
 
+		//d—Í‰Á‘¬“x
 		Accel.y += Gravitationalacceleration * Time;
+
+		if (Accel.x > Airresistance)
+		{
+			Accel.x -= Airresistance;
+		}
+
+		if (Accel.y > Airresistance)
+		{
+			Accel.y -= Airresistance;
+		}
+
+		if (Accel.z > Airresistance)
+		{
+			Accel.z -= Airresistance;
+		}
 
 		Time += (1.0f / 60.0f);
 	}

@@ -10,11 +10,9 @@
 #include"../2D/Debug_Text.h"
 #include"../camera/Camera.h"
 #include"../Player/Player.h"
-<<<<<<< HEAD
 #include"../Physics.h"
-=======
 #include"../FbxLoder/Object3d_FBX.h"
->>>>>>> master
+
 
 enum scene
 {

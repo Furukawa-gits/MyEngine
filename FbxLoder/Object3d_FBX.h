@@ -67,11 +67,15 @@ private:
 
 	static ComPtr<ID3D12PipelineState> pipelinestate;
 
+public:
+
 	XMFLOAT3 scale = { 1,1,1 };
 
 	XMFLOAT3 rotation = { 0,0,0 };
 
 	XMFLOAT3 position = { 0,0,0 };
+
+private:
 
 	XMMATRIX matWorld;
 
