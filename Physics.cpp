@@ -16,32 +16,83 @@ void Ball::Set(XMFLOAT3 pos, XMFLOAT3 startspeed)
 	IsMove = true;
 }
 
-void Ball::Update()
+void Ball::Update(float friction)
 {
 	if (IsMove)
 	{
-		Pos.x += Accel.x;
-		Pos.y += Accel.y;
-		Pos.z += Accel.z;
-
-		//重力加速度
-		Accel.y += Gravitationalacceleration * Time;
-
-		if (Accel.x > Airresistance)
+		//斜方投射
+		if (IsThrow)
 		{
-			Accel.x -= Airresistance;
+			Throw();
+			Time += (1.0f / 60.0f);
+			return;
 		}
 
-		if (Accel.y > Airresistance)
+		//スライド
+		if (IsSlide)
 		{
-			Accel.y -= Airresistance;
+			Slide(friction);
+			Time += (1.0f / 60.0f);
+			return;
 		}
+	}
+}
 
-		if (Accel.z > Airresistance)
-		{
-			Accel.z -= Airresistance;
-		}
+void Ball::Throw()
+{
+	Pos.x += Accel.x;
+	Pos.y += Accel.y;
+	Pos.z += Accel.z;
 
-		Time += (1.0f / 60.0f);
+	//重力加速度
+	Accel.y += Gravitationalacceleration * Time;
+
+	//各方向の空気抵抗計算
+	if (Accel.x > Airresistance)
+	{
+		Accel.x -= Airresistance;
+	}
+	else
+	{
+		Accel.x = 0;
+	}
+
+	if (Accel.y > Airresistance)
+	{
+		Accel.y -= Airresistance;
+	}
+
+	if (Accel.z > Airresistance)
+	{
+		Accel.z -= Airresistance;
+	}
+	else
+	{
+		Accel.z = 0;
+	}
+}
+
+void Ball::Slide(float friction)
+{
+	Pos.x += Accel.x;
+	Pos.z += Accel.z;
+
+	//各方向の摩擦計算
+	if (Accel.x > friction)
+	{
+		Accel.x -= friction;
+	}
+	else
+	{
+		Accel.x = 0;
+	}
+
+	if (Accel.z > friction)
+	{
+		Accel.z -= friction;
+	}
+	else
+	{
+		Accel.z = 0;
 	}
 }

@@ -37,6 +37,10 @@ public:
 
 	bool IsMove = false;
 
+	bool IsThrow = false;
+
+	bool IsSlide = false;
+
 	/// <summary>
 	/// ボールに力を加える
 	/// </summary>
@@ -47,5 +51,16 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	void Update(float friction);
+
+	/// <summary>
+	/// 投射
+	/// </summary>
+	void Throw();
+
+	/// <summary>
+	/// スライド
+	/// </summary>
+	/// <param name="friction">摩擦係数</param>
+	void Slide(float friction);
 };

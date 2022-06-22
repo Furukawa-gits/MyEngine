@@ -79,6 +79,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 
 	ball.Pos = { 100,-400,0 };
+	ball.IsThrow = true;
 	BallSprite.SpriteTransferVertexBuffer(&texture, false);
 
 	//3dオブジェクト生成
@@ -121,7 +122,7 @@ void GameScene::Title_update()
 		ball.Set({ 100,-400,0 }, { 35,30,0 });
 	}
 
-	ball.Update();
+	ball.Update(0.8f);
 
 	BallSprite.position = { ball.Pos.x,ball.Pos.y * -1,ball.Pos.z };
 	BallSprite.SpriteUpdate(spritecommon);
