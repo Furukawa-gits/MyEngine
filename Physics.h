@@ -30,6 +30,8 @@ class Ball : public Physics
 public:
 	//à íu
 	XMFLOAT3 Pos = { 0,0,0 };
+	//îºåa
+	XMFLOAT3 Radius = { 10,10,10 };
 	//èâë¨ìx
 	XMFLOAT3 StartSpeed = { 0,0,0 };
 	//â¡ë¨ìx
