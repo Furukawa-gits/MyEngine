@@ -27,12 +27,27 @@ struct VertexPosUv										//頂点構造体(スプライト用)
 
 class SingleSprite
 {
-private:
-	static ComPtr<ID3D12PipelineState> pipelinestate;//パイプラインステート
-
-	static ComPtr<ID3D12RootSignature> rootsignature;//ルートシグネチャ
-
 public:
+	//スプライト単体頂点バッファの転送
+	void SpriteTransferVertexBuffer(TexManager* tex, bool isCutout);
+
+	//スプライト生成
+	void GenerateSprite(ID3D12Device* dev,
+		float window_width,
+		float window_heigh,
+		UINT texnumber,
+		TexManager* tex,
+		bool sizeFlag = false,
+		bool isFlipX = false,
+		bool isFlipY = false,
+		bool iscutout = false);
+
+	//スプライト更新処理
+	void SpriteUpdate(const SpriteCommon& spritecommon);
+
+	//スプライト描画コマンド
+	void DrawSprite(ID3D12GraphicsCommandList* cmdList, TexManager* texture, ID3D12Device* dev);
+
 	//頂点バッファ
 	ComPtr<ID3D12Resource> spriteVertBuff;
 
@@ -78,23 +93,12 @@ public:
 	//非表示
 	bool isInvisible = false;
 
-	//スプライト単体頂点バッファの転送
-	void SpriteTransferVertexBuffer(TexManager* tex, bool isCutout);
+public:
 
-	//スプライト生成
-	void GenerateSprite(ID3D12Device* dev,
-		float window_width,
-		float window_heigh,
-		UINT texnumber,
-		TexManager* tex,
-		bool sizeFlag = false,
-		bool isFlipX = false,
-		bool isFlipY = false,
-		bool iscutout = false);
+	static ComPtr<ID3D12PipelineState> SpritePipelinestate;//パイプラインステート
 
-	//スプライト更新処理
-	void SpriteUpdate(const SpriteCommon& spritecommon);
+	static ComPtr<ID3D12RootSignature> SpriteRootsignature;//ルートシグネチャ
 
-	//スプライト描画コマンド
-	void DrawSprite(ID3D12GraphicsCommandList* cmdList, TexManager* texture, ID3D12Device* dev);
+	//パイプライン設定
+	static void SetPipelineStagte(ID3D12Device* dev);
 };

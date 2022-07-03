@@ -59,6 +59,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	//デバッグテキストテクスチャ読み込み
 	texture.LoadTexture(debugTextnum, L"Resources/Image/Debug_Text.png", directx->dev.Get());
+	texture.LoadTexture(2, L"Resources/white1x1.png", directx->dev.Get());
 
 	//デバッグテキスト初期化
 	debugtext.Init(directx->dev.Get(), win_width, win_hight, debugTextnum, &texture);
@@ -68,6 +69,8 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	//スプライト共通データ生成
 	spritecommon.SpriteCommonCreate(directx->dev.Get(), win_width, win_hight);
+
+	SingleSprite::SetPipelineStagte(directx->dev.Get());
 
 	//スプライト初期化
 	Load_Sprites();
