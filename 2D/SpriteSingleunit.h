@@ -95,10 +95,10 @@ public:
 
 public:
 
-	static ComPtr<ID3D12PipelineState> SpritePipelinestate;//パイプラインステート
+	ComPtr<ID3D12PipelineState> SpritePipelinestate;//パイプラインステート
 
-	static ComPtr<ID3D12RootSignature> SpriteRootsignature;//ルートシグネチャ
+	ComPtr<ID3D12RootSignature> SpriteRootsignature;//ルートシグネチャ
 
 	//パイプライン設定
-	static void SetPipelineStagte(ID3D12Device* dev);
+	void SetPipelineStateSprite(ID3D12Device* dev);
 };

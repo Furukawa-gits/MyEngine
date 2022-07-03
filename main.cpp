@@ -1,7 +1,7 @@
 #include"Scene/GameScene.h"
+#include"2D/PostEffect.h"
 #include"Base/Fps_Manager.h"
 #include"FbxLoder/FbxLoader.h"
-#include"2D/PostEffect.h"
 
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -45,18 +45,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//3dオブジェクト静的初期化
 	object3D_obj::StaticInit();
 
-	//FPS処理
-	FpsManager fps;
+	//スプライト初期化
+	//SingleSprite::SetPipelineStateSprite(directx.dev.Get());
 
 	//ゲームシーン初期化
 	GameScene gamescene;
 	gamescene.Init(&directx, &input, &audio);
 
-	SingleSprite::SetPipelineStagte(directx.dev.Get());
-
 	PostEffect* posteffect = new PostEffect();
+	posteffect->Init(directx.dev.Get());
 
-	posteffect->GenerateSprite(directx.dev.Get(), 1280, 720, 2, &gamescene.texture);
+	//FPS処理
+	FpsManager fps;
 
 	//FPS調整(一回目)
 	fps.init();
@@ -85,13 +85,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//ゲームシーン更新
 		gamescene.Update();
 
-		posteffect->SpriteUpdate(gamescene.spritecommon);
-
 		//ESCキーで抜ける
 		if (input.Triger(DIK_ESCAPE) || gamescene.Isclose == true)
 		{
 			break;
 		}
+
+		posteffect->PreDrawScene(directx.cmdList.Get());
+		gamescene.Draw();
+		posteffect->PostDrawScene(directx.cmdList.Get());
 
 		// 描画処理前
 		directx.Begin_Draw();

@@ -27,6 +27,7 @@ void GameScene::Load_sounds()
 //スプライト(各クラスに依存しないやつ)初期化
 void GameScene::Load_Sprites()
 {
+	sample_back.SetPipelineStateSprite(directx->dev.Get());
 	sample_back.size = { 1280,720 };
 	sample_back.GenerateSprite(directx->dev.Get(), win_width, win_hight, 1, &texture);
 }
@@ -69,8 +70,6 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	//スプライト共通データ生成
 	spritecommon.SpriteCommonCreate(directx->dev.Get(), win_width, win_hight);
-
-	SingleSprite::SetPipelineStagte(directx->dev.Get());
 
 	//スプライト初期化
 	Load_Sprites();
@@ -169,11 +168,11 @@ void GameScene::Update()
 void GameScene::Draw()
 {
 	//背景描画
-	spritecommon.SpriteCommonBeginDraw(directx->cmdList.Get(), &texture);
-	sample_back.DrawSprite(directx->cmdList.Get(), &texture, directx->dev.Get());
+	//spritecommon.SpriteCommonBeginDraw(directx->cmdList.Get(), &texture);
+	//sample_back.DrawSprite(directx->cmdList.Get(), &texture, directx->dev.Get());
 
 	//深度バッファクリア
-	directx->depthclear();
+	//directx->depthclear();
 
 	if (scene == title)
 	{

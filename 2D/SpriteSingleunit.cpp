@@ -1,6 +1,6 @@
 #include"SpriteSingleunit.h"
 
-void SingleSprite::SetPipelineStagte(ID3D12Device* dev)
+void SingleSprite::SetPipelineStateSprite(ID3D12Device* dev)
 {
 	if (SpritePipelinestate != nullptr && SpriteRootsignature != nullptr)
 	{
