@@ -91,7 +91,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			break;
 		}
 
-		posteffect->PreDrawScene(directx.cmdList.Get());
+		posteffect->PreDrawScene(directx.cmdList.Get(), directx.dev.Get());
 		gamescene.Draw();
 		posteffect->PostDrawScene(directx.cmdList.Get());
 

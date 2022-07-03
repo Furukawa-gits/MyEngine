@@ -14,7 +14,7 @@ public:
     void Draw(ID3D12GraphicsCommandList* cmdList, TexManager* texture, ID3D12Device* dev);
 
     //描画前処理
-    void PreDrawScene(ID3D12GraphicsCommandList* cmdlist);
+    void PreDrawScene(ID3D12GraphicsCommandList* cmdlist, ID3D12Device* dev);
 
     //描画後処理
     void PostDrawScene(ID3D12GraphicsCommandList* cmdlist);
@@ -27,7 +27,7 @@ public:
     ComPtr<ID3D12RootSignature> PostRootsignature;//ルートシグネチャ
 
 
-    ComPtr<ID3D12Resource> texbuff;
+    ComPtr<ID3D12Resource> texbuff[2];
 
     ComPtr<ID3D12DescriptorHeap> descHeapSRV;
 
