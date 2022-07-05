@@ -12,7 +12,7 @@ void DebugText::Init(ID3D12Device* dev, int window_wid, int window_hei, UINT tex
 {
 	for (int i = 0; i < _countof(sprites); i++)
 	{
-		sprites[i].GenerateSprite(dev, window_wid, window_hei, texnumber, tex, false, false, false, false);
+		sprites[i].GenerateSprite(dev, texnumber, tex, false, false, false, false);
 	}
 }
 
@@ -54,7 +54,7 @@ void DebugText::DrawAll(ID3D12GraphicsCommandList* cmdlist, const SpriteCommon& 
 {
 	for (int i = 0; i < spriteIndex; i++)
 	{
-		sprites[i].DrawSprite(cmdlist, tex, dev);
+		sprites[i].DrawSprite(cmdlist, tex);
 	}
 
 	spriteIndex = 0;

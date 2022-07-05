@@ -25,13 +25,13 @@ void Player::init(dxinput* input, TexManager* tex, directX* directx)
 
 	Isarive = true;
 
-	Target.GenerateSprite(object3D_obj::directx->dev.Get(), 1280, 720, 2, tex, false, false, false, false);
+	Target.GenerateSprite(object3D_obj::directx->dev.Get(), 2, tex, false, false, false, false);
 
 	player_collision.radius = 4.0f;
 
 	for (int i = 0; i < 10; i++)
 	{
-		hp[i].GenerateSprite(object3D_obj::directx->dev.Get(), 1280, 720, 13, tex, false, false, false, false);
+		hp[i].GenerateSprite(object3D_obj::directx->dev.Get(),13, tex, false, false, false, false);
 		hp[i].anchorpoint = { 0.0f,0.0f };
 		hp[i].position = { (i * 30.0f) + 30.0f,670.0f,0.0f };
 		hp[i].size = { 40.0f,40.0f };
@@ -226,11 +226,11 @@ void Player::draw(directX* directx, TexManager* tex, SpriteCommon* commonsp)
 
 		directx->depthclear();
 		commonsp->SpriteCommonBeginDraw(directx->cmdList.Get(), tex);
-		Target.DrawSprite(directx->cmdList.Get(), tex, directx->dev.Get());
+		Target.DrawSprite(directx->cmdList.Get(), tex);
 
 		for (int i = 0; i < HP; i++)
 		{
-			hp[i].DrawSprite(directx->cmdList.Get(), tex, directx->dev.Get());
+			hp[i].DrawSprite(directx->cmdList.Get(), tex);
 		}
 	}
 }

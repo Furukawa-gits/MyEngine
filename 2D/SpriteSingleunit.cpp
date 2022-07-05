@@ -1,6 +1,11 @@
 #include"SpriteSingleunit.h"
 
-void SingleSprite::SetPipelineStateSprite(ID3D12Device* dev)
+ID3D12Device* SingleSprite::device = nullptr;
+ComPtr<ID3D12RootSignature> SingleSprite::SpriteRootsignature;
+ComPtr<ID3D12PipelineState> SingleSprite::SpritePipelinestate;
+
+//グラフィックスパイプライン生成
+void SingleSprite::SetPipelineStateSprite()
 {
 	if (SpritePipelinestate != nullptr && SpriteRootsignature != nullptr)
 	{
@@ -130,14 +135,14 @@ void SingleSprite::SetPipelineStateSprite(ID3D12Device* dev)
 	ComPtr<ID3DBlob> rootSigBlob;
 	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc,
 		D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
-	result = dev->CreateRootSignature(0, rootSigBlob->GetBufferPointer(),
+	result = device->CreateRootSignature(0, rootSigBlob->GetBufferPointer(),
 		rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&SpriteRootsignature));
 
 	//パイプラインにルートシグネチャをセット
 	gpipeline.pRootSignature = SpriteRootsignature.Get();
 
 	//パイプラインステートの生成
-	result = dev->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&SpritePipelinestate));
+	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&SpritePipelinestate));
 }
 
 //スプライト単体頂点バッファの転送
@@ -173,8 +178,8 @@ void SingleSprite::SpriteTransferVertexBuffer(TexManager* tex, bool isCutout)
 	}
 
 
-	vertices[LB].pos = {  left,bottom,0.0f };
-	vertices[LT].pos = {  left,   top,0.0f };
+	vertices[LB].pos = { left,bottom,0.0f };
+	vertices[LT].pos = { left,   top,0.0f };
 	vertices[RB].pos = { right,bottom,0.0f };
 	vertices[RT].pos = { right,   top,0.0f };
 
@@ -201,17 +206,89 @@ void SingleSprite::SpriteTransferVertexBuffer(TexManager* tex, bool isCutout)
 	this->spriteVertBuff->Unmap(0, nullptr);
 }
 
+//テクスチャ読み込み
+void SingleSprite::LoadTexture(const std::string& filename)
+{
+	HRESULT result;
+
+	const std::string baseDirectory = "Resources/Image/";
+
+	std::string fullpath = baseDirectory + filename;
+
+	wchar_t wfullpath[128];
+	MultiByteToWideChar(CP_ACP, 0, fullpath.c_str(), -1, wfullpath, _countof(wfullpath));
+
+	//WICテクスチャのロード
+	TexMetadata metadata{};
+	ScratchImage scratchImg{};
+
+	result = LoadFromWICFile(
+		wfullpath,
+		WIC_FLAGS_NONE,
+		&metadata, scratchImg);
+
+	const Image* img = scratchImg.GetImage(0, 0, 0);
+
+	//テクスチャバッファリソース設定
+	CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D(
+		metadata.format,
+		metadata.width,
+		(UINT)metadata.height,
+		(UINT16)metadata.arraySize,
+		(UINT16)metadata.mipLevels);
+
+	D3D12_DESCRIPTOR_HEAP_DESC descHeapdesc = {};
+	descHeapdesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	descHeapdesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	descHeapdesc.NumDescriptors = texSRVcount;
+	result = device->CreateDescriptorHeap(&descHeapdesc, IID_PPV_ARGS(&descHeapSRV));
+
+	//テクスチャバッファ生成
+	result = device->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0),
+		D3D12_HEAP_FLAG_NONE,
+		&texresDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&this->texbuff));
+
+	//テクスチャバッファへのデータ転送
+	result = this->texbuff->WriteToSubresource(
+		0,
+		nullptr,
+		img->pixels,
+		(UINT)img->rowPitch,
+		(UINT)img->slicePitch);
+
+	//シェーダーリソースビュー設定
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.Format = metadata.format;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+
+	//シェーダーリソースビュー作成
+	device->CreateShaderResourceView(this->texbuff.Get(),
+		&srvDesc,
+		CD3DX12_CPU_DESCRIPTOR_HANDLE(this->descHeapSRV->GetCPUDescriptorHandleForHeapStart(), 0,
+			device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)
+		)
+	);
+}
+
 //スプライト生成
-void SingleSprite::GenerateSprite(ID3D12Device* dev, 
-	float window_width, 
-	float window_heigh, 
-	UINT texnumber, 
+void SingleSprite::GenerateSprite(ID3D12Device* dev,
+	UINT texnumber,
 	TexManager* tex,
-	bool sizeFlag, 
-	bool isFlipX, 
-	bool isFlipY, 
+	bool sizeFlag,
+	bool isFlipX,
+	bool isFlipY,
 	bool iscutout)
 {
+	device = dev;
+
+	SetPipelineStateSprite();
+
 	HRESULT result = S_FALSE;
 
 	//頂点データ
@@ -287,7 +364,7 @@ void SingleSprite::SpriteUpdate(const SpriteCommon& spritecommon)
 }
 
 //スプライト描画コマンド
-void SingleSprite::DrawSprite(ID3D12GraphicsCommandList* cmdList, TexManager* texture, ID3D12Device* dev)
+void SingleSprite::DrawSprite(ID3D12GraphicsCommandList* cmdList, TexManager* texture)
 {
 	if (isInvisible == true)
 	{
@@ -301,7 +378,7 @@ void SingleSprite::DrawSprite(ID3D12GraphicsCommandList* cmdList, TexManager* te
 
 	//シェーダーリソースビューをセット
 	cmdList->SetGraphicsRootDescriptorTable(1,
-		texture->FindReturnSRV(texnumber, dev));
+		texture->FindReturnSRV(texnumber, device));
 
 	//描画コマンド
 	cmdList->DrawInstanced(4, 1, 0, 0);

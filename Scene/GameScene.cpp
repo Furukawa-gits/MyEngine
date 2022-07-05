@@ -27,9 +27,9 @@ void GameScene::Load_sounds()
 //スプライト(各クラスに依存しないやつ)初期化
 void GameScene::Load_Sprites()
 {
-	sample_back.SetPipelineStateSprite(directx->dev.Get());
+	//sample_back.SetPipelineStateSprite(directx->dev.Get());
 	sample_back.size = { 1280,720 };
-	sample_back.GenerateSprite(directx->dev.Get(), win_width, win_hight, 1, &texture);
+	sample_back.GenerateSprite(directx->dev.Get(),1, &texture);
 }
 
 //初期化

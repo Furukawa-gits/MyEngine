@@ -26,7 +26,6 @@ public:
 
     ComPtr<ID3D12RootSignature> PostRootsignature;//ルートシグネチャ
 
-
     ComPtr<ID3D12Resource> texbuff[2];
 
     ComPtr<ID3D12DescriptorHeap> descHeapSRV;

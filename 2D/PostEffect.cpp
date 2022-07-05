@@ -59,6 +59,7 @@ void PostEffect::Init(ID3D12Device* dev)
 
 	assert(SUCCEEDED(result));
 
+	//テクスチャのリソースデスク生成
 	D3D12_RESOURCE_DESC texturedesc = CD3DX12_RESOURCE_DESC::Tex2D(
 		DXGI_FORMAT_R8G8B8A8_UNORM,
 		win_width,
@@ -79,8 +80,6 @@ void PostEffect::Init(ID3D12Device* dev)
 			IID_PPV_ARGS(&texbuff[i]));
 		assert(SUCCEEDED(result));
 
-
-
 		const UINT pixelcount = win_width * win_hight;
 
 		const UINT rowPitch = sizeof(UINT) * win_width;
@@ -96,7 +95,7 @@ void PostEffect::Init(ID3D12Device* dev)
 		delete[] img;
 	}
 
-
+	//SRVデスクリプターヒープ生成
 	D3D12_DESCRIPTOR_HEAP_DESC srvDescHeapDesc = {};
 	srvDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvDescHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
@@ -113,6 +112,7 @@ void PostEffect::Init(ID3D12Device* dev)
 
 	for (int i = 0; i < 2; i++)
 	{
+		//SRV生成
 		dev->CreateShaderResourceView(texbuff[i].Get(),
 			&srvDesc,
 			CD3DX12_CPU_DESCRIPTOR_HANDLE(
@@ -122,6 +122,7 @@ void PostEffect::Init(ID3D12Device* dev)
 		);
 	}
 
+	//RTVデスクリプターヒープ生成
 	D3D12_DESCRIPTOR_HEAP_DESC rtvDescHeapDesc{};
 	rtvDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 	rtvDescHeapDesc.NumDescriptors = 2;
@@ -131,6 +132,7 @@ void PostEffect::Init(ID3D12Device* dev)
 
 	for (int i = 0; i < 2; i++)
 	{
+		//RTV生成
 		dev->CreateRenderTargetView(texbuff[i].Get(),
 			nullptr,
 			CD3DX12_CPU_DESCRIPTOR_HANDLE(
@@ -139,6 +141,7 @@ void PostEffect::Init(ID3D12Device* dev)
 		);
 	}
 
+	//深度計算
 	CD3DX12_RESOURCE_DESC depthResDesc =
 		CD3DX12_RESOURCE_DESC::Tex2D(
 			DXGI_FORMAT_D32_FLOAT,
@@ -149,6 +152,7 @@ void PostEffect::Init(ID3D12Device* dev)
 			D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL
 		);
 
+	//深度バッファ生成
 	result = dev->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 		D3D12_HEAP_FLAG_NONE,
@@ -158,6 +162,7 @@ void PostEffect::Init(ID3D12Device* dev)
 		IID_PPV_ARGS(&depthbuff));
 	assert(SUCCEEDED(result));
 
+	//DSVデスクリプターヒープ生成
 	D3D12_DESCRIPTOR_HEAP_DESC DescHeapDesc{};
 	DescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 	DescHeapDesc.NumDescriptors = 1;
