@@ -8,15 +8,15 @@ DebugText::~DebugText()
 {
 }
 
-void DebugText::Init(ID3D12Device* dev, int window_wid, int window_hei, UINT texnumber,TexManager* tex)
+void DebugText::Init()
 {
 	for (int i = 0; i < _countof(sprites); i++)
 	{
-		sprites[i].GenerateSprite(dev, texnumber, tex, false, false, false, false);
+		sprites[i].GenerateSprite("Debug_Text.png");
 	}
 }
 
-void DebugText::Print(const SpriteCommon& spritecommon,TexManager* tex, const std::string& text, float x, float y, float scale)
+void DebugText::Print(const std::string& text, float x, float y, float scale)
 {
 	for (int i = 0; i < text.size(); i++)
 	{
@@ -42,19 +42,19 @@ void DebugText::Print(const SpriteCommon& spritecommon,TexManager* tex, const st
 		sprites[spriteIndex].texSize = { FontWid,FontHei };
 		sprites[spriteIndex].size = { FontWid * scale,FontHei * scale };
 
-		sprites[spriteIndex].SpriteTransferVertexBuffer(tex, true);
+		sprites[spriteIndex].SpriteTransferVertexBuffer(true);
 
-		sprites[spriteIndex].SpriteUpdate(spritecommon);
+		sprites[spriteIndex].SpriteUpdate();
 
 		spriteIndex++;
 	}
 }
 
-void DebugText::DrawAll(ID3D12GraphicsCommandList* cmdlist, const SpriteCommon& spritecommon, TexManager* tex, ID3D12Device* dev)
+void DebugText::DrawAll(ID3D12GraphicsCommandList* cmdlist)
 {
 	for (int i = 0; i < spriteIndex; i++)
 	{
-		sprites[i].DrawSprite(cmdlist, tex);
+		sprites[i].DrawSprite(cmdlist);
 	}
 
 	spriteIndex = 0;

@@ -85,7 +85,7 @@ void Enemy::init(int enemy_index, int enemy_bullet_index, TexManager* tex)
 
 	Isarive = true;
 
-	Rock_Target.GenerateSprite(object3D_obj::directx->dev.Get(), 3, tex, false, false, false, false);
+	//Rock_Target.GenerateSprite(object3D_obj::directx->dev.Get(), 3, tex, false, false, false, false);
 
 	enemy_collision.radius = 4.0f;
 }
@@ -207,7 +207,7 @@ void Enemy::update(SpriteCommon* commonsp, XMFLOAT3 Player_pos)
 
 	Rock_Target.position.x = enemy_sc_pos.m128_f32[0];
 	Rock_Target.position.y = enemy_sc_pos.m128_f32[1];
-	Rock_Target.SpriteUpdate(*commonsp);
+	//Rock_Target.SpriteUpdate(*commonsp);
 
 	enemy_sc_pos = enemy.WorldToScreenPos(XMLoadFloat3(&enemy.position));
 
@@ -249,7 +249,7 @@ void Enemy::draw(directX* directx, TexManager* tex, SpriteCommon* commonsp)
 		{
 			directx->depthclear();
 			commonsp->SpriteCommonBeginDraw(directx->cmdList.Get(), tex);
-			Rock_Target.DrawSprite(directx->cmdList.Get(), tex);
+			//Rock_Target.DrawSprite(directx->cmdList.Get(), tex);
 		}
 	}
 }

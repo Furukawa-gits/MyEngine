@@ -12,12 +12,6 @@ GameScene::~GameScene()
 	delete(model);
 }
 
-//テクスチャ読み込みだけ関数
-void GameScene::Load_textures()
-{
-	texture.LoadTexture(1, L"Resources/Image/sample_back.jpg", directx->dev.Get());
-}
-
 //サウンドだけ読み込み関数
 void GameScene::Load_sounds()
 {
@@ -27,9 +21,8 @@ void GameScene::Load_sounds()
 //スプライト(各クラスに依存しないやつ)初期化
 void GameScene::Load_Sprites()
 {
-	//sample_back.SetPipelineStateSprite(directx->dev.Get());
 	sample_back.size = { 1280,720 };
-	sample_back.GenerateSprite(directx->dev.Get(),1, &texture);
+	sample_back.GenerateSprite("sample_back.jpg");
 }
 
 //初期化
@@ -45,33 +38,21 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	this->input = input;
 	this->audio = audio;
 
+	//音読み込み
 	Load_sounds();
-
-	//3dオブジェクト共通データ生成
-	object3dcommon.init(directx);
 
 	camera = new Camera(1280, 720);
 
 	camera->SetTarget({ 0, 2.5f, 0 });
 	camera->SetEye({ -10,5,0 });
 
-	//テクスチャ初期化
-	texture.Init(directx->dev.Get());
-
-	//デバッグテキストテクスチャ読み込み
-	texture.LoadTexture(debugTextnum, L"Resources/Image/Debug_Text.png", directx->dev.Get());
-	texture.LoadTexture(2, L"Resources/white1x1.png", directx->dev.Get());
+	//スプライトクラス初期化
+	SingleSprite::SetStaticData(directx->dev.Get());
 
 	//デバッグテキスト初期化
-	debugtext.Init(directx->dev.Get(), win_width, win_hight, debugTextnum, &texture);
+	debugtext.Init();
 
-	//テクスチャ読み込み
-	Load_textures();
-
-	//スプライト共通データ生成
-	spritecommon.SpriteCommonCreate(directx->dev.Get(), win_width, win_hight);
-
-	//スプライト初期化
+	//スプライト生成
 	Load_Sprites();
 
 	//3dオブジェクト生成
@@ -159,21 +140,23 @@ void GameScene::Update()
 		Result_update();
 	}
 
-	sample_back.SpriteUpdate(spritecommon);
+	sample_back.SpriteUpdate();
 
 	camera->Update();
 }
 
-//描画
-void GameScene::Draw()
+void GameScene::DrawBack()
 {
 	//背景描画
-	//spritecommon.SpriteCommonBeginDraw(directx->cmdList.Get(), &texture);
-	//sample_back.DrawSprite(directx->cmdList.Get(), &texture, directx->dev.Get());
+	sample_back.DrawSprite(directx->cmdList.Get());
 
 	//深度バッファクリア
 	//directx->depthclear();
+}
 
+//描画
+void GameScene::Draw3D()
+{
 	if (scene == title)
 	{
 		Title_draw();

@@ -11,7 +11,7 @@ public:
     void Init(ID3D12Device* dev);
 
     //•`‰æ
-    void Draw(ID3D12GraphicsCommandList* cmdList, TexManager* texture, ID3D12Device* dev);
+    void Draw(ID3D12GraphicsCommandList* cmdList, ID3D12Device* dev);
 
     //•`‰æ‘Oˆ—
     void PreDrawScene(ID3D12GraphicsCommandList* cmdlist, ID3D12Device* dev);

@@ -1,11 +1,8 @@
 #pragma once
 #include"../Base/WindowGenerate.h"
 #include"../Base/DirectX_Base.h"
-#include"../Base/TexManager.h"
-#include"../2D/SpriteCommon.h"
 #include"../2D/SpriteSingleunit.h"
 #include"../Input/dxInput.h"
-#include"../3D/3Dobject.h"
 #include"../Audio/Audio.h"
 #include"../2D/Debug_Text.h"
 #include"../camera/Camera.h"
@@ -49,9 +46,6 @@ public:
 	//デストラクタ
 	~GameScene();
 
-	//テクスチャ読み込みだけ関数
-	void Load_textures();
-
 	//音読み込みだけ関数
 	void Load_sounds();
 
@@ -82,7 +76,8 @@ public:
 	void Update();
 
 	//描画
-	void Draw();
+	void DrawBack();
+	void Draw3D();
 
 public:
 
@@ -98,9 +93,6 @@ public:
 	/// <summary>
 	/// ゲームに使う変数等はここに
 	/// </summary>
-	SpriteCommon spritecommon;				//スプライト共通データ
-	ObjectCommon object3dcommon;	//3dオブジェクト共通データ
-	TexManager texture;						//テクスチャ
 
 	//音
 

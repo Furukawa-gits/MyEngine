@@ -261,6 +261,7 @@ void Object3d_FBX::Update()
 
 		FbxLoader::ConvertMatrixFromFbx(&matCurrentPose, fbxCurrentPose);
 
+		//ƒƒbƒVƒ…ƒm[ƒh‚ð‚ ‚Æ‚ÅŠ|‚¯‚é—\’è
 		constMapSkin->bones[i] = bones[i].invInitialPose * matCurrentPose;
 	}
 	constBufferSkin->Unmap(0, nullptr);

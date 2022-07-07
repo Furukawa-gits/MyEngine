@@ -3,11 +3,23 @@
 ID3D12Device* SingleSprite::device = nullptr;
 ComPtr<ID3D12RootSignature> SingleSprite::SpriteRootsignature;
 ComPtr<ID3D12PipelineState> SingleSprite::SpritePipelinestate;
+XMMATRIX SingleSprite::matprojection;
+
+void SingleSprite::SetStaticData(ID3D12Device* dev)
+{
+	device = dev;
+
+	//パイプライン生成
+	SetPipelineStateSprite();
+
+	matprojection = XMMatrixOrthographicOffCenterLH(
+		0.0f, (float)win_width, (float)win_hight, 0.0f, 0.0f, 1.0f);
+}
 
 //グラフィックスパイプライン生成
 void SingleSprite::SetPipelineStateSprite()
 {
-	if (SpritePipelinestate != nullptr && SpriteRootsignature != nullptr)
+	if (SpritePipelinestate != NULL && SpriteRootsignature != NULL)
 	{
 		return;
 	}
@@ -146,7 +158,7 @@ void SingleSprite::SetPipelineStateSprite()
 }
 
 //スプライト単体頂点バッファの転送
-void SingleSprite::SpriteTransferVertexBuffer(TexManager* tex, bool isCutout)
+void SingleSprite::SpriteTransferVertexBuffer(bool isCutout)
 {
 	HRESULT result = S_FALSE;
 
@@ -186,7 +198,7 @@ void SingleSprite::SpriteTransferVertexBuffer(TexManager* tex, bool isCutout)
 	//切り抜き処理
 	if (isCutout == true)
 	{
-		D3D12_RESOURCE_DESC resdesc = tex->texBuff[this->texnumber]->GetDesc();
+		D3D12_RESOURCE_DESC resdesc = texbuff->GetDesc();
 
 		float tex_left = this->texLeftTop.x / resdesc.Width;
 		float tex_right = (this->texLeftTop.x + this->texSize.x) / resdesc.Width;
@@ -240,7 +252,7 @@ void SingleSprite::LoadTexture(const std::string& filename)
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapdesc = {};
 	descHeapdesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	descHeapdesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	descHeapdesc.NumDescriptors = texSRVcount;
+	descHeapdesc.NumDescriptors = 1;
 	result = device->CreateDescriptorHeap(&descHeapdesc, IID_PPV_ARGS(&descHeapSRV));
 
 	//テクスチャバッファ生成
@@ -277,17 +289,14 @@ void SingleSprite::LoadTexture(const std::string& filename)
 }
 
 //スプライト生成
-void SingleSprite::GenerateSprite(ID3D12Device* dev,
-	UINT texnumber,
-	TexManager* tex,
+void SingleSprite::GenerateSprite(
+	const std::string& filename,
 	bool sizeFlag,
 	bool isFlipX,
 	bool isFlipY,
 	bool iscutout)
 {
-	device = dev;
-
-	SetPipelineStateSprite();
+	LoadTexture(filename);
 
 	HRESULT result = S_FALSE;
 
@@ -300,10 +309,8 @@ void SingleSprite::GenerateSprite(ID3D12Device* dev,
 		{{100.0f,  0.0f,0.0f},{1.0f,0.0f}}	//右上
 	};
 
-	this->texnumber = texnumber;
-
 	//頂点バッファ生成
-	result = dev->CreateCommittedResource(
+	result = device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 		D3D12_HEAP_FLAG_NONE,
 		&CD3DX12_RESOURCE_DESC::Buffer(sizeof(vertices)),
@@ -313,7 +320,7 @@ void SingleSprite::GenerateSprite(ID3D12Device* dev,
 
 	if (sizeFlag == true)
 	{
-		D3D12_RESOURCE_DESC resdesc = tex->texBuff[texnumber]->GetDesc();
+		D3D12_RESOURCE_DESC resdesc = texbuff->GetDesc();
 
 		size = { (float)resdesc.Width,(float)resdesc.Height };
 	}
@@ -322,8 +329,7 @@ void SingleSprite::GenerateSprite(ID3D12Device* dev,
 	this->isFlipY = isFlipY;
 
 	//バッファへのデータ転送
-	SpriteTransferVertexBuffer(tex, iscutout);
-
+	SpriteTransferVertexBuffer(iscutout);
 
 	//頂点バッファビューの作成
 	this->spriteVBView.BufferLocation = this->spriteVertBuff->GetGPUVirtualAddress();
@@ -331,7 +337,7 @@ void SingleSprite::GenerateSprite(ID3D12Device* dev,
 	this->spriteVBView.StrideInBytes = sizeof(vertices[0]);
 
 	//定数バッファの生成
-	result = dev->CreateCommittedResource(
+	result = device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 		D3D12_HEAP_FLAG_NONE,
 		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataSP) + 0xff) & ~0xff),
@@ -348,7 +354,7 @@ void SingleSprite::GenerateSprite(ID3D12Device* dev,
 }
 
 //スプライト更新処理
-void SingleSprite::SpriteUpdate(const SpriteCommon& spritecommon)
+void SingleSprite::SpriteUpdate()
 {
 	matWorld = XMMatrixIdentity();
 
@@ -359,13 +365,22 @@ void SingleSprite::SpriteUpdate(const SpriteCommon& spritecommon)
 	ConstBufferDataSP* constMap = nullptr;
 	HRESULT result = spriteConstBuff->Map(0, nullptr, (void**)&constMap);
 	constMap->color = color;
-	constMap->mat = matWorld * spritecommon.matProjection;
+	constMap->mat = matWorld * matprojection;
 	spriteConstBuff->Unmap(0, nullptr);
 }
 
 //スプライト描画コマンド
-void SingleSprite::DrawSprite(ID3D12GraphicsCommandList* cmdList, TexManager* texture)
+void SingleSprite::DrawSprite(ID3D12GraphicsCommandList* cmdList)
 {
+	cmdList->SetPipelineState(SpritePipelinestate.Get());
+
+	cmdList->SetGraphicsRootSignature(SpriteRootsignature.Get());
+
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+	ID3D12DescriptorHeap* ppHeaps[] = { descHeapSRV.Get() };
+	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
 	if (isInvisible == true)
 	{
 		return;
@@ -377,8 +392,7 @@ void SingleSprite::DrawSprite(ID3D12GraphicsCommandList* cmdList, TexManager* te
 	cmdList->SetGraphicsRootConstantBufferView(0, spriteConstBuff->GetGPUVirtualAddress());
 
 	//シェーダーリソースビューをセット
-	cmdList->SetGraphicsRootDescriptorTable(1,
-		texture->FindReturnSRV(texnumber, device));
+	cmdList->SetGraphicsRootDescriptorTable(1, descHeapSRV->GetGPUDescriptorHandleForHeapStart());
 
 	//描画コマンド
 	cmdList->DrawInstanced(4, 1, 0, 0);

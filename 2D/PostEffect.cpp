@@ -180,7 +180,7 @@ void PostEffect::Init(ID3D12Device* dev)
 	CreateGraphicsPipelineState(dev);
 }
 
-void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList, TexManager* texture, ID3D12Device* dev)
+void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList, ID3D12Device* dev)
 {
 	//定数バッファにデータ転送
 	ConstBufferDataSP* constMap = nullptr;

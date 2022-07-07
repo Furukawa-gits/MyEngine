@@ -1,17 +1,16 @@
 #pragma once
-#include"SpriteCommon.h"
+#include"../Base/WindowGenerate.h"
 #include<DirectXTex.h>
 #include<d3dx12.h>
 #include<wrl.h>
 #include<string>
 #include<DirectXMath.h>
 #include <d3dcompiler.h>
-#include"../Base/WindowGenerate.h"
-#include"../Base/TexManager.h"
 
 #pragma comment(lib, "d3dcompiler.lib")
 
-using XMFLOAT3 = DirectX::XMFLOAT3;
+using namespace Microsoft::WRL;
+using namespace DirectX;
 
 //定数バッファ用データ構造体
 struct ConstBufferDataSP {
@@ -28,38 +27,43 @@ struct VertexPosUv
 
 class SingleSprite
 {
-public:
+private:
 	/// <summary>
 	/// パイプライン生成
 	/// </summary>
 	static void SetPipelineStateSprite();
 
 	/// <summary>
-	/// 頂点バッファへのデータ転送
-	/// </summary>
-	/// <param name="tex">テクスチャマネージャー</param>
-	/// <param name="isCutout">切り取るかどうか</param>
-	void SpriteTransferVertexBuffer(TexManager* tex, bool isCutout);
-
-	/// <summary>
 	/// テクスチャ読み込み
+	/// xxxxx.pngのみ
 	/// </summary>
 	/// <param name="filename">ファイル名</param>
 	void LoadTexture(const std::string& filename);
 
+public:
+	/// <summary>
+	/// 静的データセット
+	/// </summary>
+	/// <param name="dev">デバイス情報</param>
+	static void SetStaticData(ID3D12Device* dev);
+
+	/// <summary>
+	/// 頂点バッファへのデータ転送
+	/// </summary>
+	/// <param name="tex">テクスチャマネージャー</param>
+	/// <param name="isCutout">切り取るかどうか</param>
+	void SpriteTransferVertexBuffer(bool isCutout);
+
 	/// <summary>
 	/// スプライト生成
 	/// </summary>
-	/// <param name="dev">デバイス情報</param>
-	/// <param name="texnumber">テクスチャ番号</param>
-	/// <param name="tex">テクスチャマネージャー</param>
+	/// <param name="filename">ファイル名(xxxxx.pngのみ)</param>
 	/// <param name="sizeFlag">画像サイズに切り抜く</param>
 	/// <param name="isFlipX">左右反転</param>
 	/// <param name="isFlipY">上下反転</param>
 	/// <param name="iscutout">切り抜くかどうか</param>
-	void GenerateSprite(ID3D12Device* dev,
-		UINT texnumber,
-		TexManager* tex,
+	void GenerateSprite(
+		const std::string& filename,
 		bool sizeFlag = false,
 		bool isFlipX = false,
 		bool isFlipY = false,
@@ -69,14 +73,14 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="spritecommon">スプライト共通データ</param>
-	void SpriteUpdate(const SpriteCommon& spritecommon);
+	void SpriteUpdate();
 
 	/// <summary>
 	/// 描画
 	/// </summary>
 	/// <param name="cmdList">コマンドリスト</param>
 	/// <param name="texture">テクスチャマネージャー</param>
-	void DrawSprite(ID3D12GraphicsCommandList* cmdList, TexManager* texture);
+	void DrawSprite(ID3D12GraphicsCommandList* cmdList);
 
 public:
 	//Z軸周りの回転角
@@ -90,9 +94,6 @@ public:
 
 	//色(RGBA)
 	XMFLOAT4 color = { 1,1,1,1 };
-
-	//テクスチャ番号
-	UINT texnumber = 0;
 
 	//大きさ
 	XMFLOAT2 size = { 100.0f,100.0f };
@@ -121,6 +122,8 @@ private:
 	static ComPtr<ID3D12RootSignature> SpriteRootsignature;//ルートシグネチャ
 
 	static ComPtr<ID3D12PipelineState> SpritePipelinestate;//パイプラインステート
+
+	static XMMATRIX matprojection;
 
 	//頂点バッファ
 	ComPtr<ID3D12Resource> spriteVertBuff;

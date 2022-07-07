@@ -2,6 +2,7 @@
 //#include"Player.h"
 #include"../3D/Collision.h"
 #include"../3D/3Dobject.h"
+#include"../2D/SpriteCommon.h"
 #include"../2D/SpriteSingleunit.h"
 
 struct enemy_bullet
