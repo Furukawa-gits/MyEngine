@@ -263,6 +263,8 @@ void Object3d_FBX::Update()
 
 		//ƒƒbƒVƒ…ƒm[ƒh‚ð‚ ‚Æ‚ÅŠ|‚¯‚é—\’è
 		constMapSkin->bones[i] = bones[i].invInitialPose * matCurrentPose;
+
+		constMapSkin->bones[i] = model->GetModelTransform() * bones[i].invInitialPose * matCurrentPose * model->GetModelTransformInverse();
 	}
 	constBufferSkin->Unmap(0, nullptr);
 }

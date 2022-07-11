@@ -105,6 +105,9 @@ public:
 	//モデルの変形行列取得
 	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
 
+	//モデルの逆変換行列取得
+	const XMMATRIX& GetModelTransformInverse() { return meshNode->globalTransform; }
+
 	std::vector<Bone>& GetBones() { return bones; }
 
 	FbxScene* GetFbxScene() { return fbxScene; }
