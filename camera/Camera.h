@@ -161,4 +161,3 @@ protected: // メンバ変数
 	// アスペクト比
 	float aspectRatio = 1.0f;
 };
-
