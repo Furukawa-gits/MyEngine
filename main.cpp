@@ -93,14 +93,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		// 描画処理
 		//背景
-		directx.Begin_Draw();
-		gamescene.DrawBack();
-		directx.Finish_Draw();
+		//directx.Begin_Draw();
+		//gamescene.DrawBack();
+		//directx.Finish_Draw();
 
 		//3Dシーン
 		posteffect->PreDrawScene(directx.cmdList.Get(), directx.dev.Get());
 		gamescene.Draw3D();
-		posteffect->PostDrawScene(directx.cmdList.Get());
+		posteffect->PostDrawScene(directx.cmdList.Get(), &directx);
 
 		//ポストエフェクト
 		directx.Begin_Draw();

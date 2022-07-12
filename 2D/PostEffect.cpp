@@ -28,10 +28,10 @@ void PostEffect::Init(ID3D12Device* dev)
 	//頂点データ
 	VertexPosUv vertices[4] =
 	{
-		{{-0.5f,-0.5f,0.0f},{0.0f,1.0f}},	//左下
-		{{-0.5f,+0.5f,0.0f},{0.0f,0.0f}},	//左上
-		{{+0.5f,-0.5f,0.0f},{1.0f,1.0f}},	//右下
-		{{+0.5f,+0.5f,0.0f},{1.0f,0.0f}}	//右上
+		{{-1.0f,-1.0f,0.0f},{0.0f,1.0f}},	//左下
+		{{-1.0f,+1.0f,0.0f},{0.0f,0.0f}},	//左上
+		{{+1.0f,-1.0f,0.0f},{1.0f,1.0f}},	//右下
+		{{+1.0f,+1.0f,0.0f},{1.0f,0.0f}}	//右上
 	};
 
 	//頂点バッファへのデータ転送
@@ -230,6 +230,7 @@ void PostEffect::PreDrawScene(ID3D12GraphicsCommandList* cmdlist, ID3D12Device* 
 {
 	for (int i = 0; i < 2; i++)
 	{
+		//リソースバリアーを書き込み可能に
 		cmdlist->ResourceBarrier(1,
 			&CD3DX12_RESOURCE_BARRIER::Transition(texbuff[i].Get(),
 				D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
@@ -240,12 +241,14 @@ void PostEffect::PreDrawScene(ID3D12GraphicsCommandList* cmdlist, ID3D12Device* 
 
 	for (int i = 0; i < 2; i++)
 	{
+		// レンダーターゲットビュー用ディスクリプタヒープのハンドルを取得
 		rtvHs[i] = CD3DX12_CPU_DESCRIPTOR_HANDLE(
 			descHeapRTV->GetCPUDescriptorHandleForHeapStart(), i,
 			dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV)
 		);
 	}
 
+	//深度ステンシルビュー用デスクリプタヒープのハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvH =
 		descheapDSV->GetCPUDescriptorHandleForHeapStart();
 
@@ -271,13 +274,36 @@ void PostEffect::PreDrawScene(ID3D12GraphicsCommandList* cmdlist, ID3D12Device* 
 	cmdlist->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
-void PostEffect::PostDrawScene(ID3D12GraphicsCommandList* cmdlist)
+void PostEffect::PostDrawScene(ID3D12GraphicsCommandList* cmdlist, directX* directx)
 {
 	for (int i = 0; i < 2; i++)
 	{
+		//リソースバリアーを閉じる
 		cmdlist->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(texbuff[i].Get(),
 			D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
 	}
+
+	//// 命令のクローズ
+	//cmdlist->Close();
+
+	//// コマンドリストの実行
+	//ID3D12CommandList* cmdLists[] = { cmdlist }; // コマンドリストの配列
+	//directx->cmdQueue->ExecuteCommandLists(1, cmdLists);
+
+	//// コマンドリストの実行完了を待つ
+	//directx->cmdQueue->Signal(directx->fence.Get(), ++directx->fenceVal);
+	//if (directx->fence->GetCompletedValue() != directx->fenceVal) {
+	//	HANDLE event = CreateEvent(nullptr, false, false, nullptr);
+	//	directx->fence->SetEventOnCompletion(directx->fenceVal, event);
+	//	WaitForSingleObject(event, INFINITE);
+	//	CloseHandle(event);
+	//}
+
+	//directx->cmdAllocator->Reset(); // キューをクリア
+	//cmdlist->Reset(directx->cmdAllocator.Get(), nullptr);  // 再びコマンドリストを貯める準備
+
+	//// バッファをフリップ（裏表の入替え）
+	//directx->swapchain->Present(1, 0);
 }
 
 void PostEffect::CreateGraphicsPipelineState(ID3D12Device* dev)

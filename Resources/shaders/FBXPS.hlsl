@@ -13,7 +13,7 @@ PSOutput main(VSOutput input)
 {
 	PSOutput output;
 
-	float4 texcolor = tex.Sample(smp,input.uv);
+	float4 texcolor = tex.Sample(smp, input.uv);
 
 	float3 light = normalize(float3(1, -1, 1));
 	float diffuse = saturate(dot(-light, input.normal));
@@ -21,7 +21,8 @@ PSOutput main(VSOutput input)
 	float4 shadercolor = float4(brightness, brightness, brightness, 1.0f);
 
 	output.target0 = shadercolor * texcolor;
-	output.target1 = float4(1 - (shadercolor * texcolor).rgb, 1);
+	output.target1 = shadercolor * texcolor;
+	//output.target1 = float4(1 - (shadercolor * texcolor).rgb, 1);
 
 	return output;
 }

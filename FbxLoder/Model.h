@@ -103,10 +103,10 @@ public:
 	//描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 	//モデルの変形行列取得
-	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
+	const XMMATRIX GetModelTransform() { return meshNode->globalTransform; }
 
 	//モデルの逆変換行列取得
-	const XMMATRIX& GetModelTransformInverse() { return meshNode->globalTransform; }
+	const XMMATRIX GetModelTransformInverse() { return DirectX::XMMatrixInverse(nullptr, meshNode->globalTransform); }
 
 	std::vector<Bone>& GetBones() { return bones; }
 

@@ -63,11 +63,16 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	Object3d_FBX::CreateGraphicsPipeline();
 
 	model = FbxLoader::GetInstance()->LoadmodelFromFile("boneTest");
+	SkyModel = FbxLoader::GetInstance()->LoadmodelFromFile("skySphere");
 
 	object = new Object3d_FBX;
 	object->Initialize();
 	object->SetModel(model);
-	object->PlayAnimation();
+	//object->PlayAnimation();
+
+	SkySphere = new Object3d_FBX;
+	SkySphere->Initialize();
+	SkySphere->SetModel(SkyModel);
 }
 
 //デバッグテキスト
@@ -79,6 +84,7 @@ void GameScene::debugs_print()
 void GameScene::Title_update()
 {
 	object->Update();
+	SkySphere->Update();
 }
 
 //プレイ画面更新
@@ -96,6 +102,7 @@ void GameScene::Result_update()
 //タイトル画面描画
 void GameScene::Title_draw()
 {
+	SkySphere->Draw(directx->cmdList.Get());
 	object->Draw(directx->cmdList.Get());
 }
 

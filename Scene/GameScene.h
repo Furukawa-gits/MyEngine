@@ -100,7 +100,9 @@ public:
 
 	//3dオブジェクト
 	Model* model = nullptr;
+	Model* SkyModel = nullptr;
 	Object3d_FBX* object = nullptr;
+	Object3d_FBX* SkySphere = nullptr;
 
 	//背景
 	SingleSprite sample_back;
@@ -109,7 +111,6 @@ public:
 	int game_time = 0;
 
 	//シーン
-	//scene scene = scene::title;
 	int scene = title;
 
 	//ウェーブ
