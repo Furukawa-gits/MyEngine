@@ -171,6 +171,7 @@
     <ClInclude Include="Base\TexManager.h" />
     <ClInclude Include="Base\WindowGenerate.h" />
     <ClInclude Include="camera\Camera.h" />
+    <ClInclude Include="camera\FollowCamera.h" />
     <ClInclude Include="FbxLoder\FbxLoader.h" />
     <ClInclude Include="FbxLoder\Model.h" />
     <ClInclude Include="FbxLoder\Object3d_FBX.h" />
@@ -195,6 +196,7 @@
     <ClCompile Include="Base\TexManager.cpp" />
     <ClCompile Include="Base\WindowGenerate.cpp" />
     <ClCompile Include="camera\Camera.cpp" />
+    <ClCompile Include="camera\FollowCamera.cpp" />
     <ClCompile Include="FbxLoder\FbxLoader.cpp" />
     <ClCompile Include="FbxLoder\Model.cpp" />
     <ClCompile Include="FbxLoder\Object3d_FBX.cpp" />

@@ -41,7 +41,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	//音読み込み
 	Load_sounds();
 
-	camera = new Camera(1280, 720);
+	camera = new Camera();
 
 	camera->SetTarget({ 0, 2.5f, 0 });
 	camera->SetEye({ -10,5,0 });
@@ -73,6 +73,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	SkySphere = new Object3d_FBX;
 	SkySphere->Initialize();
 	SkySphere->SetModel(SkyModel);
+	//SkySphere->SetScale({ 5.0f,5.0f,5.0f });
 }
 
 //デバッグテキスト

@@ -1,10 +1,11 @@
 ﻿#include "Camera.h"
+#include"../Base/WindowGenerate.h"
 
 using namespace DirectX;
 
-Camera::Camera(int window_width, int window_height)
+Camera::Camera()
 {
-	aspectRatio = (float)window_width / window_height;
+	aspectRatio = (float)win_width / win_hight;
 
 	//ビュー行列の計算
 	UpdateViewMatrix();
@@ -90,32 +91,40 @@ void Camera::UpdateViewMatrix()
 	// 一つのベクトルにまとめる
 	XMVECTOR translation = XMVectorSet(tX.m128_f32[0], tY.m128_f32[1], tZ.m128_f32[2], 1.0f);
 	// ビュー行列に平行移動成分を設定
-	matView.r[3] = translation;	
+	matView.r[3] = translation;
+
+	//matView = XMMatrixLookAtLH(eyePosition, targetPosition, upVector);
 
 #pragma region 全方向ビルボード行列の計算
-	// ビルボード行列
-	matBillboard.r[0] = cameraAxisX;
-	matBillboard.r[1] = cameraAxisY;
-	matBillboard.r[2] = cameraAxisZ;
-	matBillboard.r[3] = XMVectorSet(0, 0, 0, 1);
+	if (isAllBill == true)
+	{
+		// ビルボード行列
+		matBillboard.r[0] = cameraAxisX;
+		matBillboard.r[1] = cameraAxisY;
+		matBillboard.r[2] = cameraAxisZ;
+		matBillboard.r[3] = XMVectorSet(0, 0, 0, 1);
+	}
 #pragma region
 
 #pragma region Y軸回りビルボード行列の計算
-	// カメラX軸、Y軸、Z軸
-	XMVECTOR ybillCameraAxisX, ybillCameraAxisY, ybillCameraAxisZ;
+	if (isYBill == true)
+	{
+		// カメラX軸、Y軸、Z軸
+		XMVECTOR ybillCameraAxisX, ybillCameraAxisY, ybillCameraAxisZ;
 
-	// X軸は共通
-	ybillCameraAxisX = cameraAxisX;
-	// Y軸はワールド座標系のY軸
-	ybillCameraAxisY = XMVector3Normalize(upVector);
-	// Z軸はX軸→Y軸の外積で求まる
-	ybillCameraAxisZ = XMVector3Cross(ybillCameraAxisX, ybillCameraAxisY);
+		// X軸は共通
+		ybillCameraAxisX = cameraAxisX;
+		// Y軸はワールド座標系のY軸
+		ybillCameraAxisY = XMVector3Normalize(upVector);
+		// Z軸はX軸→Y軸の外積で求まる
+		ybillCameraAxisZ = XMVector3Cross(ybillCameraAxisX, ybillCameraAxisY);
 
-	// Y軸回りビルボード行列
-	matBillboardY.r[0] = ybillCameraAxisX;
-	matBillboardY.r[1] = ybillCameraAxisY;
-	matBillboardY.r[2] = ybillCameraAxisZ;
-	matBillboardY.r[3] = XMVectorSet(0, 0, 0, 1);
+		// Y軸回りビルボード行列
+		matBillboardY.r[0] = ybillCameraAxisX;
+		matBillboardY.r[1] = ybillCameraAxisY;
+		matBillboardY.r[2] = ybillCameraAxisZ;
+		matBillboardY.r[3] = XMVectorSet(0, 0, 0, 1);
+	}
 #pragma endregion
 }
 

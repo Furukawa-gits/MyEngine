@@ -49,6 +49,12 @@ public:
 
 	void SetModel(Model* model) { this->model = model; }
 
+	void SetPosition(XMFLOAT3 pos) { this->position = pos; }
+
+	void SetRotation(XMFLOAT3 rot) { this->rotation = rot; }
+
+	void SetScale(XMFLOAT3 Scale) { this->scale = scale; }
+
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 	void PlayAnimation();
@@ -66,6 +72,8 @@ private:
 	static ComPtr<ID3D12RootSignature> rootsignature;
 
 	static ComPtr<ID3D12PipelineState> pipelinestate;
+
+	Camera* respectiveCamera = nullptr;
 
 	XMFLOAT3 scale = { 1,1,1 };
 
