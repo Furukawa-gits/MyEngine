@@ -43,7 +43,7 @@ private:
 	template<class T> using vector = std::vector<T>;
 
 public:
-	static const int MAX_BONE_INDICES = 36;
+	static const int MAX_BONE_INDICES = 4;
 
 	friend class FbxLoader;
 

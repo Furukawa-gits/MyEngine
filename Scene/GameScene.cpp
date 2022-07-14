@@ -73,7 +73,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	SkySphere = new Object3d_FBX;
 	SkySphere->Initialize();
 	SkySphere->SetModel(SkyModel);
-	//SkySphere->SetScale({ 5.0f,5.0f,5.0f });
+	SkySphere->SetScale({ 5.0f,5.0f,5.0f });
 }
 
 //デバッグテキスト
