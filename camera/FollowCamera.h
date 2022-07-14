@@ -6,6 +6,8 @@ class FollowCamera
 	:public Camera
 {
 public:
+	FollowCamera();
+
 	/// <summary>
 	/// ’Ç]‚·‚é‘ÎÛ‚ğƒZƒbƒg
 	/// </summary>

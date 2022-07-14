@@ -55,6 +55,12 @@ public:
 
 	void SetScale(XMFLOAT3 Scale) { this->scale = scale; }
 
+	XMFLOAT3 getPosition() { return position; }
+
+	XMFLOAT3 getRotation() { return rotation; }
+
+	XMFLOAT3 getScale() { return scale; }
+
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 	void PlayAnimation();

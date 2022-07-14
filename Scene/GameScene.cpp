@@ -70,6 +70,11 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	object->SetModel(model);
 	//object->PlayAnimation();
 
+
+	followcamera = new FollowCamera();
+
+	
+
 	SkySphere = new Object3d_FBX;
 	SkySphere->Initialize();
 	SkySphere->SetModel(SkyModel);

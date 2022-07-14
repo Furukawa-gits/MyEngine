@@ -8,6 +8,7 @@
 #include"../camera/Camera.h"
 #include"../Player/Player.h"
 #include"../FbxLoder/Object3d_FBX.h"
+#include"../camera/FollowCamera.h"
 
 enum scene
 {
@@ -89,6 +90,8 @@ public:
 	DebugText debugtext;
 	XMFLOAT3 MOUSE_POS;
 	Camera* camera = nullptr;
+
+	FollowCamera* followcamera = nullptr;
 
 	/// <summary>
 	/// ƒQ[ƒ€‚Ég‚¤•Ï”“™‚Í‚±‚±‚É
