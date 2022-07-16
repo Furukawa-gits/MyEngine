@@ -11,6 +11,9 @@
 #include <DirectXMath.h>
 #include <string>
 
+using namespace Microsoft::WRL;
+using namespace DirectX;
+
 class Object3d_FBX
 {
 protected:
@@ -55,11 +58,18 @@ public:
 
 	void SetScale(XMFLOAT3 Scale) { this->scale = scale; }
 
+	void setAngle(float up, float right) { 
+		this->upAngle = up;
+		this->rightAngle = right;
+	}
+
 	XMFLOAT3 getPosition() { return position; }
 
 	XMFLOAT3 getRotation() { return rotation; }
 
 	XMFLOAT3 getScale() { return scale; }
+
+	XMVECTOR getUpDirection() { return directionUp; }
 
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
@@ -86,6 +96,14 @@ private:
 	XMFLOAT3 rotation = { 0,0,0 };
 
 	XMFLOAT3 position = { 0,0,0 };
+
+	XMVECTOR directionFront = { 0,0,1,0 };
+
+	XMVECTOR directionUp = { 0,1,0,0 };
+
+	float upAngle = 0.0f;
+
+	float rightAngle = 0.0f;
 
 	XMMATRIX matWorld;
 

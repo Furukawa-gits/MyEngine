@@ -21,7 +21,7 @@ void FollowCamera::setFollowTarget(XMFLOAT3* TargetPos, XMFLOAT3* TargetAngle, f
 	this->TargetObjectAngle = TargetAngle;
 	this->TargetDistance = TargetDis;
 	target = *TargetObjectPos;
-	eye = { target.x,target.y,target.z - TargetDistance };
+	eye = { target.x,target.y,target.z + TargetDistance };
 	up = { 0,1,0 };
 }
 
@@ -29,7 +29,59 @@ void FollowCamera::Following()
 {
 	target = *TargetObjectPos;
 
-	eye = { target.x,target.y,target.z - TargetDistance };
+	XMVECTOR targetPosition = XMLoadFloat3(&target);
 
-	Update();
+	XMVECTOR noCalcVec = { 0,0,-TargetDistance,0 };
+
+
+	XMMATRIX rotM = XMMatrixIdentity();
+
+	rotM *= XMMatrixRotationX(XMConvertToRadians(-(TargetObjectAngle->x)));
+	rotM *= XMMatrixRotationY(XMConvertToRadians(TargetObjectAngle->y + 180.0f));
+
+	XMVECTOR eyePosition = targetPosition + XMVector3Transform(noCalcVec, rotM);
+
+	XMVECTOR upVector = XMLoadFloat3(&up);
+
+	
+
+	/*XMVECTOR qCameraRightAngle = DirectX::XMQuaternionRotationAxis(upVector, XMConvertToRadians(rightAngle));
+	XMFLOAT3 cameraSide;
+	XMStoreFloat3(&cameraSide, XMVector3Normalize(XMVector3Cross(upVector, targetPosition - eyePosition)));
+	XMVECTOR qCameraUpAngle = DirectX::XMQuaternionRotationAxis(XMLoadFloat3(&cameraSide), XMConvertToRadians(upAngle));
+
+	XMVECTOR q = qCameraRightAngle * qCameraUpAngle;
+
+	XMVECTOR qCameraPosition = { eye.x,eye.y,eye.z,1.0f };
+
+	XMVECTOR qq = DirectX::XMQuaternionConjugate(q);
+
+	qCameraPosition = q * qCameraPosition * qq;
+
+	eye = { qCameraPosition.m128_f32[0],qCameraPosition.m128_f32[1],qCameraPosition.m128_f32[2] };
+
+	XMVECTOR qCameraUp = { up.x,up.y,up.z,1.0f };
+	qCameraUp = q * qCameraUp * qq;
+
+	up = {
+		qCameraUp.m128_f32[0],
+		qCameraUp.m128_f32[1],
+		qCameraUp.m128_f32[2]
+	};*/
+
+	targetPosition = XMLoadFloat3(&target);
+	eyePosition = XMLoadFloat3(&eye);
+	upVector = XMLoadFloat3(&up);
+
+	matView = XMMatrixLookAtLH(eyePosition, targetPosition, upVector);
+
+	UpdateProjectionMatrix();
+
+	matViewProjection = matView * matProjection;
+
+	XMStoreFloat3(&target, targetPosition);
+	XMStoreFloat3(&eye, eyePosition);
+	XMStoreFloat3(&up, upVector);
+
+	//Update();
 }

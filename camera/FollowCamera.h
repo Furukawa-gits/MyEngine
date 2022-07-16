@@ -21,6 +21,12 @@ public:
 	/// </summary>
 	void Following();
 
+	void setAngle(float up, float right)
+	{
+		this->upAngle = up;
+		this->rightAngle = right;
+	}
+
 	//ターゲットの座標
 	XMFLOAT3* TargetObjectPos = nullptr;
 
@@ -29,4 +35,7 @@ public:
 
 	//ターゲットとの距離
 	float TargetDistance = 0.0f;
+
+	float upAngle = 0.0f;
+	float rightAngle = 0.0f;
 };

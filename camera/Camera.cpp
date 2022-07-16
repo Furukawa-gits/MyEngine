@@ -93,7 +93,7 @@ void Camera::UpdateViewMatrix()
 	// ビュー行列に平行移動成分を設定
 	matView.r[3] = translation;
 
-	//matView = XMMatrixLookAtLH(eyePosition, targetPosition, upVector);
+	matView = XMMatrixLookAtLH(eyePosition, targetPosition, upVector);
 
 #pragma region 全方向ビルボード行列の計算
 	if (isAllBill == true)

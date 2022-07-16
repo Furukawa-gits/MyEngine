@@ -93,6 +93,11 @@ public:
 
 	FollowCamera* followcamera = nullptr;
 
+	XMFLOAT3 objectRot = { 0,0,0 };
+
+	float up = 0.0f;
+	float right = 0.0f;
+
 	/// <summary>
 	/// ÉQÅ[ÉÄÇ…égÇ§ïœêîìôÇÕÇ±Ç±Ç…
 	/// </summary>
@@ -105,7 +110,8 @@ public:
 	Model* model = nullptr;
 	Model* SkyModel = nullptr;
 	Object3d_FBX* object = nullptr;
-	Object3d_FBX* SkySphere = nullptr;
+	Object3d_FBX* skySphere = nullptr;
+	Object3d_FBX* cameraObject = nullptr;
 
 	//îwåi
 	SingleSprite sample_back;

@@ -44,7 +44,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	camera = new Camera();
 
 	camera->SetTarget({ 0, 2.5f, 0 });
-	camera->SetEye({ -10,5,0 });
+	camera->SetEye({ 0,5,-50 });
 
 	//スプライトクラス初期化
 	SingleSprite::SetStaticData(directx->dev.Get());
@@ -70,15 +70,20 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	object->SetModel(model);
 	//object->PlayAnimation();
 
-
 	followcamera = new FollowCamera();
 
-	
+	followcamera->setFollowTarget(&object->getPosition(), &object->getRotation(), -30);
 
-	SkySphere = new Object3d_FBX;
-	SkySphere->Initialize();
-	SkySphere->SetModel(SkyModel);
-	SkySphere->SetScale({ 5.0f,5.0f,5.0f });
+	Object3d_FBX::SetCamera(followcamera);
+
+	skySphere = new Object3d_FBX;
+	skySphere->Initialize();
+	skySphere->SetModel(SkyModel);
+	skySphere->SetScale({ 5.0f,5.0f,5.0f });
+
+	cameraObject = new Object3d_FBX;
+	cameraObject->Initialize();
+	cameraObject->SetModel(model);
 }
 
 //デバッグテキスト
@@ -89,8 +94,46 @@ void GameScene::debugs_print()
 //タイトル画面更新
 void GameScene::Title_update()
 {
+	if (input->push(DIK_D))
+	{
+		up += 1.0f;
+	}
+
+	if (input->push(DIK_A))
+	{
+		up -= 1.0f;
+	}
+
+	if (input->push(DIK_W))
+	{
+		right += 1.0f;
+	}
+
+	if (input->push(DIK_S))
+	{
+		right -= 1.0f;
+	}
+
+	if (input->push(DIK_R))
+	{
+		up = 0;
+		right = 0;
+		objectRot = { 0,0,0 };
+	}
+
+	followcamera->setAngle(up, right);
+	object->setAngle(up, right);
+
+	followcamera->TargetObjectPos = &object->getPosition();
+	followcamera->TargetObjectAngle = &object->getRotation();
+
+	followcamera->Following();
+
 	object->Update();
-	SkySphere->Update();
+	skySphere->Update();
+	cameraObject->SetPosition(followcamera->GetEye());
+	cameraObject->SetRotation(*followcamera->TargetObjectAngle);
+	cameraObject->Update();
 }
 
 //プレイ画面更新
@@ -108,8 +151,9 @@ void GameScene::Result_update()
 //タイトル画面描画
 void GameScene::Title_draw()
 {
-	SkySphere->Draw(directx->cmdList.Get());
+	skySphere->Draw(directx->cmdList.Get());
 	object->Draw(directx->cmdList.Get());
+	//cameraObject->Draw(directx->cmdList.Get());
 }
 
 //プレイ画面描画

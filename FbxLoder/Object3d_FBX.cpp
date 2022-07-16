@@ -2,9 +2,6 @@
 #include <d3dcompiler.h>
 #pragma comment(lib,"d3dcompiler.lib")
 
-using namespace Microsoft::WRL;
-using namespace DirectX;
-
 ID3D12Device* Object3d_FBX::device = nullptr;
 Camera* Object3d_FBX::camera = nullptr;
 ComPtr<ID3D12RootSignature> Object3d_FBX::rootsignature;

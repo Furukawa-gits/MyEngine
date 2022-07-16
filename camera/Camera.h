@@ -2,6 +2,8 @@
 
 #include <DirectXMath.h>
 
+using namespace DirectX;
+
 /// <summary>
 /// カメラ基本機能
 /// </summary>
