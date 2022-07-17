@@ -63,6 +63,12 @@ public:
 		this->rightAngle = right;
 	}
 
+	void setSpeed(float speed) { this->moveSpeed = speed; }
+
+	XMFLOAT2 worldToScleen();
+
+	XMFLOAT3 screenToWorld(XMFLOAT2 screenPos);
+
 	XMFLOAT3 getPosition() { return position; }
 
 	XMFLOAT3 getRotation() { return rotation; }
@@ -71,10 +77,23 @@ public:
 
 	XMVECTOR getUpDirection() { return directionUp; }
 
+	void addMoveFront() {
+		position.x += moveVec.x;
+		position.y += moveVec.y;
+		position.z += moveVec.z;
+	}
+
+	void addMoveBack() {
+		position.x -= moveVec.x;
+		position.y -= moveVec.y;
+		position.z -= moveVec.z;
+	}
+
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 	void PlayAnimation();
 
+	XMFLOAT3 moveVec = { 0,0,1 };
 protected:
 	ComPtr<ID3D12Resource> constBufferTransform;
 
@@ -96,6 +115,9 @@ private:
 	XMFLOAT3 rotation = { 0,0,0 };
 
 	XMFLOAT3 position = { 0,0,0 };
+
+
+	float moveSpeed = 0.0f;
 
 	XMVECTOR directionFront = { 0,0,1,0 };
 

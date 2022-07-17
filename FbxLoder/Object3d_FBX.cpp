@@ -1,4 +1,5 @@
 #include "Object3d_FBX.h"
+#include"../Base/WindowGenerate.h"
 #include <d3dcompiler.h>
 #pragma comment(lib,"d3dcompiler.lib")
 
@@ -214,6 +215,12 @@ void Object3d_FBX::Update()
 	matWorld *= matRot;
 	matWorld *= matTrans;
 
+	XMVECTOR vecMoveVec = { 0,0,moveSpeed,0 };
+
+	vecMoveVec = XMVector3Transform(vecMoveVec, matWorld);
+
+	XMStoreFloat3(&moveVec, vecMoveVec);
+
 	const XMMATRIX& matViewProjection =
 		camera->GetViewProjectionMatrix();
 
@@ -262,6 +269,79 @@ void Object3d_FBX::Update()
 		constMapSkin->bones[i] = model->GetModelTransform() * bones[i].invInitialPose * matCurrentPose * model->GetModelTransformInverse();
 	}
 	constBufferSkin->Unmap(0, nullptr);
+}
+
+XMFLOAT2 Object3d_FBX::worldToScleen()
+{
+	float w = (float)win_width / 2.0f;
+	float h = (float)win_hight / 2.0f;
+	XMMATRIX viewport = {
+		w, 0, 0, 0,
+		0,-h, 0, 0,
+		0, 0, 1, 0,
+		w, h, 0, 1
+	};
+
+	XMMATRIX matVPV = camera->GetViewMatrix() * camera->GetProjectionMatrix() * viewport;
+
+	XMFLOAT3 screenPos = {};
+	XMVector3TransformCoordStream(&screenPos, sizeof(XMFLOAT3),
+		&position, sizeof(XMFLOAT3),
+		1, matVPV);
+
+	return XMFLOAT2(screenPos.x, screenPos.y);
+}
+
+XMFLOAT3 Object3d_FBX::screenToWorld(XMFLOAT2 screenPos)
+{
+	float w = (float)win_width / 2.0f;
+	float h = (float)win_hight / 2.0f;
+	XMMATRIX viewport = {
+		w, 0, 0, 0,
+		0,-h, 0, 0,
+		0, 0, 1, 0,
+		w, h, 0, 1
+	};
+
+	XMMATRIX matVPV = camera->GetViewMatrix() * camera->GetProjectionMatrix() * viewport;
+
+	XMMATRIX matVPVInv = XMMatrixInverse(nullptr, matVPV);
+
+	XMFLOAT3 posN = XMFLOAT3(screenPos.x, screenPos.y, 0);
+	XMFLOAT3 posF = XMFLOAT3(screenPos.x, screenPos.y, 1);
+
+	XMVector3TransformCoordStream(&posN, sizeof(XMFLOAT3),
+		&posN, sizeof(XMFLOAT3),
+		1, matVPVInv);
+
+	XMVector3TransformCoordStream(&posF, sizeof(XMFLOAT3),
+		&posF, sizeof(XMFLOAT3),
+		1, matVPVInv);
+
+	XMFLOAT3 rayDirection =
+	{
+		posF.x - posN.x,
+		posF.y - posN.y,
+		posF.z - posN.z
+	};
+
+	XMFLOAT3 cameraRay =
+	{
+		position.x - camera->GetEye().x,
+		position.y - camera->GetEye().y,
+		position.z - camera->GetEye().z
+	};
+
+	const float cameraRength = 10.0f;
+
+	XMFLOAT3 worldPos =
+	{
+		posN.x + (rayDirection.x * cameraRength),
+		posN.y + (rayDirection.y * cameraRength),
+		posN.z + (rayDirection.z * cameraRength)
+	};
+
+	return worldPos;
 }
 
 void Object3d_FBX::Draw(ID3D12GraphicsCommandList* cmdList)

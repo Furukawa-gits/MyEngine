@@ -10,6 +10,11 @@
 #include"../FbxLoder/Object3d_FBX.h"
 #include"../camera/FollowCamera.h"
 
+#include"../Player/Enemy.h"
+
+#include<random>
+#include<time.h>
+
 enum scene
 {
 	title = 0,
@@ -32,11 +37,11 @@ enum class wave
 };
 
 //ウェーブごとの敵の数
-const int ENEMY_NUM_1 = 8;
-
-const int ENEMY_NUM_2 = 8;
-
-const int ENEMY_NUM_3 = 20;
+//const int ENEMY_NUM_1 = 8;
+//
+//const int ENEMY_NUM_2 = 8;
+//
+//const int ENEMY_NUM_3 = 20;
 
 class GameScene
 {
@@ -79,6 +84,7 @@ public:
 	//描画
 	void DrawBack();
 	void Draw3D();
+	void DrawSP();
 
 public:
 
@@ -109,11 +115,18 @@ public:
 	//3dオブジェクト
 	Model* model = nullptr;
 	Model* SkyModel = nullptr;
-	Model* cubeModel = nullptr;
 	Object3d_FBX* object = nullptr;
 	Object3d_FBX* skySphere = nullptr;
-	Object3d_FBX* cameraObject = nullptr;
-	Object3d_FBX* testBox = nullptr;
+	Object3d_FBX* cameraobj = nullptr;
+
+	//敵(test)
+	static const int enemynum = 20;
+	Enemy testEnemys[enemynum];
+
+	//照準スプライト関連
+	int mousePressCount = 0;
+	SingleSprite target;
+	bool isTarget = false;
 
 	//背景
 	SingleSprite sample_back;

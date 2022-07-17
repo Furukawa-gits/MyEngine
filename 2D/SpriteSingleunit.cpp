@@ -358,6 +358,8 @@ void SingleSprite::SpriteUpdate()
 {
 	matWorld = XMMatrixIdentity();
 
+	//matWorld *= XMMatrixScaling(size.x, size.y, 1.0f);
+
 	matWorld *= XMMatrixRotationZ(XMConvertToRadians(rotation));
 
 	matWorld *= XMMatrixTranslation(position.x, position.y, position.z);

@@ -52,7 +52,7 @@ public:
 	/// </summary>
 	/// <param name="tex">テクスチャマネージャー</param>
 	/// <param name="isCutout">切り取るかどうか</param>
-	void SpriteTransferVertexBuffer(bool isCutout);
+	void SpriteTransferVertexBuffer(bool isCutout = false);
 
 	/// <summary>
 	/// スプライト生成

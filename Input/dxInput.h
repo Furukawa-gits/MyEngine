@@ -28,8 +28,10 @@ public:
 
 	//マウス座標
 	POINT mouse_p;
+	POINT oldmouse_p;
 
 	XMFLOAT3 mouse_position = { 0,0,0 };
+	XMFLOAT3 old_mouse_position = { 0,0,0 };
 
 	//関数軍
 	dxinput();

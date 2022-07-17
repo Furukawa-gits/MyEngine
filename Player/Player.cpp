@@ -121,7 +121,7 @@ void Player::checkrockon(Enemy& enemy)
 }
 
 //XV
-void Player::update(SpriteCommon* commonsp)
+void Player::update()
 {
 	if (Isarive == true)
 	{
@@ -206,7 +206,7 @@ void Player::update(SpriteCommon* commonsp)
 }
 
 //•`‰æ
-void Player::draw(directX* directx, TexManager* tex, SpriteCommon* commonsp)
+void Player::draw(directX* directx, TexManager* tex)
 {
 	if (Isarive == true)
 	{
@@ -225,7 +225,7 @@ void Player::draw(directX* directx, TexManager* tex, SpriteCommon* commonsp)
 		Player_object.DrawModel_OnMaterial(player_view);
 
 		directx->depthclear();
-		commonsp->SpriteCommonBeginDraw(directx->cmdList.Get(), tex);
+		//commonsp->SpriteCommonBeginDraw(directx->cmdList.Get(), tex);
 		//Target.DrawSprite(directx->cmdList.Get(), tex);
 
 		for (int i = 0; i < HP; i++)

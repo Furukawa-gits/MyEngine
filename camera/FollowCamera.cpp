@@ -69,9 +69,9 @@ void FollowCamera::Following()
 		qCameraUp.m128_f32[2]
 	};*/
 
-	targetPosition = XMLoadFloat3(&target);
-	eyePosition = XMLoadFloat3(&eye);
-	upVector = XMLoadFloat3(&up);
+	//targetPosition = XMLoadFloat3(&target);
+	//eyePosition = XMLoadFloat3(&eye);
+	//upVector = XMLoadFloat3(&up);
 
 	matView = XMMatrixLookAtLH(eyePosition, targetPosition, upVector);
 
@@ -83,5 +83,5 @@ void FollowCamera::Following()
 	XMStoreFloat3(&eye, eyePosition);
 	XMStoreFloat3(&up, upVector);
 
-	//Update();
+	Update();
 }
