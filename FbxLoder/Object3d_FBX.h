@@ -56,7 +56,7 @@ public:
 
 	void SetRotation(XMFLOAT3 rot) { this->rotation = rot; }
 
-	void SetScale(XMFLOAT3 Scale) { this->scale = scale; }
+	void SetScale(XMFLOAT3 Scale) { this->scale = Scale; }
 
 	void setAngle(float up, float right) { 
 		this->upAngle = up;
@@ -100,6 +100,8 @@ private:
 	XMVECTOR directionFront = { 0,0,1,0 };
 
 	XMVECTOR directionUp = { 0,1,0,0 };
+
+	XMMATRIX matScale, matRot, matTrans;//äeïœä∑çsóÒ
 
 	float upAngle = 0.0f;
 

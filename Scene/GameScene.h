@@ -109,9 +109,11 @@ public:
 	//3dオブジェクト
 	Model* model = nullptr;
 	Model* SkyModel = nullptr;
+	Model* cubeModel = nullptr;
 	Object3d_FBX* object = nullptr;
 	Object3d_FBX* skySphere = nullptr;
 	Object3d_FBX* cameraObject = nullptr;
+	Object3d_FBX* testBox = nullptr;
 
 	//背景
 	SingleSprite sample_back;

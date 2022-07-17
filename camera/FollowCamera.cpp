@@ -35,7 +35,7 @@ void FollowCamera::Following()
 
 
 	XMMATRIX rotM = XMMatrixIdentity();
-
+	rotM *= XMMatrixRotationZ(XMConvertToRadians(TargetObjectAngle->z + 180));
 	rotM *= XMMatrixRotationX(XMConvertToRadians(-(TargetObjectAngle->x)));
 	rotM *= XMMatrixRotationY(XMConvertToRadians(TargetObjectAngle->y + 180.0f));
 

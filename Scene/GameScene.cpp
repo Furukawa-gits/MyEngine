@@ -64,6 +64,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	model = FbxLoader::GetInstance()->LoadmodelFromFile("boneTest");
 	SkyModel = FbxLoader::GetInstance()->LoadmodelFromFile("skySphere");
+	cubeModel = FbxLoader::GetInstance()->LoadmodelFromFile("cube");
 
 	object = new Object3d_FBX;
 	object->Initialize();
@@ -74,7 +75,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	followcamera->setFollowTarget(&object->getPosition(), &object->getRotation(), -30);
 
-	Object3d_FBX::SetCamera(followcamera);
+	//Object3d_FBX::SetCamera(followcamera);
 
 	skySphere = new Object3d_FBX;
 	skySphere->Initialize();
@@ -84,6 +85,10 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	cameraObject = new Object3d_FBX;
 	cameraObject->Initialize();
 	cameraObject->SetModel(model);
+
+	testBox = new Object3d_FBX;
+	testBox->Initialize();
+	testBox->SetModel(cubeModel);
 }
 
 //デバッグテキスト
@@ -134,6 +139,10 @@ void GameScene::Title_update()
 	cameraObject->SetPosition(followcamera->GetEye());
 	cameraObject->SetRotation(*followcamera->TargetObjectAngle);
 	cameraObject->Update();
+	
+	testBox->SetPosition({ 5,0,0 });
+	testBox->SetScale({ 0.2f,0.2f,0.2f });
+	testBox->Update();
 }
 
 //プレイ画面更新
@@ -154,6 +163,7 @@ void GameScene::Title_draw()
 	skySphere->Draw(directx->cmdList.Get());
 	object->Draw(directx->cmdList.Get());
 	//cameraObject->Draw(directx->cmdList.Get());
+	testBox->Draw(directx->cmdList.Get());
 }
 
 //プレイ画面描画

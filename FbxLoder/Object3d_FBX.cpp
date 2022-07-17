@@ -202,8 +202,6 @@ void Object3d_FBX::CreateGraphicsPipeline()
 
 void Object3d_FBX::Update()
 {
-	XMMATRIX matScale, matRot, matTrans;
-
 	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
 	matRot = XMMatrixIdentity();
 	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
