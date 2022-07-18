@@ -104,6 +104,10 @@ public:
 	float up = 0.0f;
 	float right = 0.0f;
 
+	float pitch = 0.0f;
+	float yow = 0.0f;
+	float roll = 0.0f;
+
 	/// <summary>
 	/// ゲームに使う変数等はここに
 	/// </summary>
@@ -120,7 +124,7 @@ public:
 	Object3d_FBX* cameraobj = nullptr;
 
 	//敵(test)
-	static const int enemynum = 20;
+	static const int enemynum = 30;
 	Enemy testEnemys[enemynum];
 
 	//照準スプライト関連

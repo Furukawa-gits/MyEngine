@@ -43,8 +43,6 @@ void FollowCamera::Following()
 
 	XMVECTOR upVector = XMLoadFloat3(&up);
 
-	
-
 	/*XMVECTOR qCameraRightAngle = DirectX::XMQuaternionRotationAxis(upVector, XMConvertToRadians(rightAngle));
 	XMFLOAT3 cameraSide;
 	XMStoreFloat3(&cameraSide, XMVector3Normalize(XMVector3Cross(upVector, targetPosition - eyePosition)));
@@ -84,4 +82,20 @@ void FollowCamera::Following()
 	XMStoreFloat3(&up, upVector);
 
 	Update();
+
+	frontVec = {
+		target.x - eye.x,
+		target.y - eye.y,
+		target.z - eye.z
+	};
+
+	float length = sqrtf(powf(frontVec.x, 2) + powf(frontVec.y, 2) + powf(frontVec.z, 2));
+
+	length = 1 / length;
+
+	frontVec = {
+		frontVec.x * length,
+		frontVec.y * length,
+		frontVec.z * length
+	};
 }

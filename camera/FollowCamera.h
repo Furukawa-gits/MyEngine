@@ -27,6 +27,14 @@ public:
 		this->rightAngle = right;
 	}
 
+	void setFrontVec(float speed) {
+		frontVec.x *= speed;
+		frontVec.y *= speed;
+		frontVec.z *= speed;
+	}
+
+	XMFLOAT3 getFrontVec() { return frontVec; }
+
 	//ターゲットの座標
 	XMFLOAT3* TargetObjectPos = nullptr;
 
@@ -36,6 +44,11 @@ public:
 	//ターゲットとの距離
 	float TargetDistance = 0.0f;
 
+private:
+
 	float upAngle = 0.0f;
 	float rightAngle = 0.0f;
+
+	//進行方向ベクトル
+	XMFLOAT3 frontVec = { 0,0,0 };
 };

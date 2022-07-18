@@ -71,7 +71,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	object = new Object3d_FBX;
 	object->Initialize();
 	object->SetModel(model);
-	object->SetPosition({ 0,15,0 });
+	object->SetPosition({ 0,5,0 });
 	object->setSpeed(2.0f);
 	object->PlayAnimation();
 
@@ -97,7 +97,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 		testEnemys[i].init(i, i);
 		testEnemys[i].set({
 			(float)(rand() % 30 - 15),
-			(float)(rand() % 30),
+			(float)(rand() % 20),
 			(float)(rand() % 30 - 15)
 			});
 	}
@@ -106,6 +106,13 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 //デバッグテキスト
 void GameScene::debugs_print()
 {
+	debugtext.Print("W : Move Front", 10, 10, 1.0f);
+	//debugtext.Print("S : Move Back", 10, 25, 1.0f);
+	debugtext.Print("MouseDrag : Camera(Left&Right)", 10, 55, 1.0f);
+	debugtext.Print("MouseClick : Shot", 10, 70, 1.0f);
+	debugtext.Print("MousePress(Left)&Drag : Target", 10, 85, 1.0f);
+	debugtext.Print("MouseRelease : Homing", 10, 100, 1.0f);
+	debugtext.Print("R : Reset", 10, 130, 1.0f);
 }
 
 //タイトル画面更新
@@ -114,22 +121,24 @@ void GameScene::Title_update()
 	if (input->mouse_p.x >= 1000)
 	{
 		objectRot.y += 0.7f;
+		yow += 0.7f;
 	}
 
 	if (input->mouse_p.x <= 280)
 	{
 		objectRot.y -= 0.7f;
+		yow -= 0.7f;
 	}
 
 	//前に進む
 	if (input->push(DIK_W))
 	{
-		object->addMoveFront();
+		object->addMoveFront(followcamera->getFrontVec());
 	}
 	//後に下がる
 	if (input->push(DIK_S))
 	{
-		object->addMoveBack();
+		//object->addMoveBack(followcamera->getFrontVec());
 	}
 
 	if (input->push(DIK_R))
@@ -137,6 +146,10 @@ void GameScene::Title_update()
 		up = 0;
 		right = 0;
 		objectRot = { 0,0,0 };
+		object->SetPosition({ 0,5,0 });
+
+		pitch = 0.0f;
+		yow = 0.0f;
 
 		for (int i = 0; i < enemynum; i++)
 		{
@@ -144,12 +157,16 @@ void GameScene::Title_update()
 		}
 	}
 
-	object->SetRotation(objectRot);
+	object->SetRotation({ pitch,yow,roll });
+	XMVECTOR matQ = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(pitch), XMConvertToRadians(yow), XMConvertToRadians(roll));
+	object->addQRot(matQ);
 
 	followcamera->TargetObjectPos = &object->getPosition();
 	followcamera->TargetObjectAngle = &object->getRotation();
 
 	followcamera->Following();
+
+	followcamera->setFrontVec(0.5f);
 
 	object->Update();
 	skySphere->Update();
@@ -289,6 +306,8 @@ void GameScene::Update()
 	}
 
 	camera->Update();
+
+	debugs_print();
 }
 
 void GameScene::DrawBack()
@@ -325,4 +344,6 @@ void GameScene::DrawSP()
 	}
 
 	target.DrawSprite(directx->cmdList.Get());
+
+	debugtext.DrawAll(directx->cmdList.Get());
 }

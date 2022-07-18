@@ -205,21 +205,16 @@ void Object3d_FBX::Update()
 {
 	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
 	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
-	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
-	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
+	matRot = XMMatrixRotationQuaternion(qRot);
+	//matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
+	//matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
+	//matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
 	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
 
 	matWorld = XMMatrixIdentity();
 	matWorld *= matScale;
 	matWorld *= matRot;
 	matWorld *= matTrans;
-
-	XMVECTOR vecMoveVec = { 0,0,moveSpeed,0 };
-
-	vecMoveVec = XMVector3Transform(vecMoveVec, matWorld);
-
-	XMStoreFloat3(&moveVec, vecMoveVec);
 
 	const XMMATRIX& matViewProjection =
 		camera->GetViewProjectionMatrix();

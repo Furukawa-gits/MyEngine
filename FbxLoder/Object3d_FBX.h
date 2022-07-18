@@ -58,7 +58,7 @@ public:
 
 	void SetScale(XMFLOAT3 Scale) { this->scale = Scale; }
 
-	void setAngle(float up, float right) { 
+	void setAngle(float up, float right) {
 		this->upAngle = up;
 		this->rightAngle = right;
 	}
@@ -77,23 +77,27 @@ public:
 
 	XMVECTOR getUpDirection() { return directionUp; }
 
-	void addMoveFront() {
-		position.x += moveVec.x;
-		position.y += moveVec.y;
-		position.z += moveVec.z;
+	void addMoveFront(XMFLOAT3 move) {
+		position.x += move.x;
+		position.y += move.y;
+		position.z += move.z;
 	}
 
-	void addMoveBack() {
-		position.x -= moveVec.x;
-		position.y -= moveVec.y;
-		position.z -= moveVec.z;
+	void addMoveBack(XMFLOAT3 move) {
+		position.x -= move.x;
+		position.y -= move.y;
+		position.z -= move.z;
+	}
+
+	void addQRot(XMVECTOR rotQ)
+	{
+		qRot = rotQ;
 	}
 
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 	void PlayAnimation();
 
-	XMFLOAT3 moveVec = { 0,0,1 };
 protected:
 	ComPtr<ID3D12Resource> constBufferTransform;
 
@@ -112,10 +116,17 @@ private:
 
 	XMFLOAT3 scale = { 1,1,1 };
 
+	/// <summary>
+	/// ロールピッチヨー回転
+	/// </summary>
+	/// <param name="x">ピッチ</param>
+	/// <param name="y">ヨー</param>
+	/// <param name="z">ロール</param>
 	XMFLOAT3 rotation = { 0,0,0 };
 
 	XMFLOAT3 position = { 0,0,0 };
 
+	XMVECTOR qRot = XMQuaternionIdentity();
 
 	float moveSpeed = 0.0f;
 
