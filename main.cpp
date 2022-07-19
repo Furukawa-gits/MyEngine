@@ -93,26 +93,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		// 描画処理
 		//背景
-		//directx.Begin_Draw();
-		//gamescene.DrawBack();
-		//directx.Finish_Draw();
-
-		//3Dシーン
 		directx.Begin_Draw();
-		gamescene.Draw3D();
-		gamescene.DrawSP();
+		gamescene.DrawBack();
 		directx.Finish_Draw();
 
-		//ポストエフェクト
-		//directx.Begin_Draw();
-		//posteffect->Draw(directx.cmdList.Get(), directx.dev.Get());
-		//directx.Finish_Draw();
+		//3Dシーン
+		posteffect->PreDrawScene(directx.cmdList.Get(), directx.dev.Get());
+		gamescene.Draw3D();
+		posteffect->PostDrawScene(directx.cmdList.Get(), &directx);
 
-		//directx.depthclear();
+		//ポストエフェクト
+		directx.Begin_Draw();
+		posteffect->Draw(directx.cmdList.Get(), directx.dev.Get());
+		directx.Finish_Draw();
 
 		//前景スプライト
-		//directx.Begin_Draw();
-		//directx.Finish_Draw();
+		directx.Begin_Draw();
+		gamescene.DrawSP();
+		directx.Finish_Draw();
 	}
 
 	//audio.UnLoadSoundWave(&gamescene.Title_bgm);

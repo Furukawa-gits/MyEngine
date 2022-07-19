@@ -254,23 +254,28 @@ void PostEffect::PreDrawScene(ID3D12GraphicsCommandList* cmdlist, ID3D12Device* 
 
 	cmdlist->OMSetRenderTargets(2, rtvHs, false, &dsvH);
 
+	//ビューポート
 	CD3DX12_VIEWPORT viewports[2];
+	//シザー矩形
 	CD3DX12_RECT scissorRects[2];
 
 	for (int i = 0; i < 2; i++)
 	{
+		//ビューポート・シザー矩形生成
 		viewports[i] = CD3DX12_VIEWPORT(0.0f, 0.0f, win_width, win_hight);
 		scissorRects[i] = CD3DX12_RECT(0, 0, win_width, win_hight);
 	}
+	//ビューポート・シザー矩形セット
 	cmdlist->RSSetViewports(2, viewports);
-
 	cmdlist->RSSetScissorRects(2, scissorRects);
 
 	for (int i = 0; i < 2; i++)
 	{
+		//レンダーターゲットビュー生成
 		cmdlist->ClearRenderTargetView(rtvHs[i], clearColor, 0, nullptr);
 	}
 
+	//デプスステンシルビューをクリア
 	cmdlist->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
@@ -282,28 +287,6 @@ void PostEffect::PostDrawScene(ID3D12GraphicsCommandList* cmdlist, directX* dire
 		cmdlist->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(texbuff[i].Get(),
 			D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
 	}
-
-	//// 命令のクローズ
-	//cmdlist->Close();
-
-	//// コマンドリストの実行
-	//ID3D12CommandList* cmdLists[] = { cmdlist }; // コマンドリストの配列
-	//directx->cmdQueue->ExecuteCommandLists(1, cmdLists);
-
-	//// コマンドリストの実行完了を待つ
-	//directx->cmdQueue->Signal(directx->fence.Get(), ++directx->fenceVal);
-	//if (directx->fence->GetCompletedValue() != directx->fenceVal) {
-	//	HANDLE event = CreateEvent(nullptr, false, false, nullptr);
-	//	directx->fence->SetEventOnCompletion(directx->fenceVal, event);
-	//	WaitForSingleObject(event, INFINITE);
-	//	CloseHandle(event);
-	//}
-
-	//directx->cmdAllocator->Reset(); // キューをクリア
-	//cmdlist->Reset(directx->cmdAllocator.Get(), nullptr);  // 再びコマンドリストを貯める準備
-
-	//// バッファをフリップ（裏表の入替え）
-	//directx->swapchain->Present(1, 0);
 }
 
 void PostEffect::CreateGraphicsPipelineState(ID3D12Device* dev)

@@ -14,6 +14,12 @@
 using namespace Microsoft::WRL;
 using namespace DirectX;
 
+enum graphicType
+{
+	default = 0,
+	Simple = 1
+};
+
 class Object3d_FBX
 {
 protected:
@@ -108,9 +114,13 @@ private:
 
 	static Camera* camera;
 
+	//パイプライン(通常)
 	static ComPtr<ID3D12RootSignature> rootsignature;
-
 	static ComPtr<ID3D12PipelineState> pipelinestate;
+
+	//パイプライン(単色)
+	static ComPtr<ID3D12PipelineState> pipelinestateSinple;
+	static ComPtr<ID3D12RootSignature> rootsignatureSinple;
 
 	Camera* respectiveCamera = nullptr;
 

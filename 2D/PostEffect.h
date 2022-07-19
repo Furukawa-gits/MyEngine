@@ -23,8 +23,8 @@ public:
 	//パイプライン生成
 	void CreateGraphicsPipelineState(ID3D12Device* dev);
 
+	//通常
 	ComPtr<ID3D12PipelineState> PostPipelinestate;//パイプラインステート
-
 	ComPtr<ID3D12RootSignature> PostRootsignature;//ルートシグネチャ
 
 	ComPtr<ID3D12Resource> texbuff[2];

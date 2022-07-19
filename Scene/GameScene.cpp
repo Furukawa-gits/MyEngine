@@ -312,16 +312,17 @@ void GameScene::Update()
 
 void GameScene::DrawBack()
 {
-	//背景描画
+	//背景スプライト描画
 	sample_back.DrawSprite(directx->cmdList.Get());
 
 	//深度バッファクリア
-	//directx->depthclear();
+	directx->depthclear();
 }
 
 //描画
 void GameScene::Draw3D()
 {
+	//ゲーム内シーンごとの描画
 	if (scene == title)
 	{
 		Title_draw();
