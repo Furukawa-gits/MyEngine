@@ -77,7 +77,7 @@ void directX::Init(Window_Generate* Win)
 	DXGI_SWAP_CHAIN_DESC1 swapchainDesc{};
 	swapchainDesc.Width = 1280;
 	swapchainDesc.Height = 720;
-	swapchainDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;  // 色情報の書式
+	swapchainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;  // 色情報の書式
 	swapchainDesc.SampleDesc.Count = 1; // マルチサンプルしない
 	swapchainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER; // バックバッファ用
 	swapchainDesc.BufferCount = 2;  // バッファ数を２つに設定
