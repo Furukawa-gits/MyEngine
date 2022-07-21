@@ -39,6 +39,8 @@ public:
 		XMMATRIX viewproj;
 		XMMATRIX world;
 		XMFLOAT3 cameraPos;
+		float pad;
+		XMFLOAT4 color;
 	};
 
 	struct ConstBufferDataSkin
@@ -53,6 +55,7 @@ public:
 	void Initialize();
 
 	static void CreateGraphicsPipeline();
+	static void CreateGraphicsPipelineSimple();
 
 	void Update();
 
@@ -70,6 +73,8 @@ public:
 	}
 
 	void setSpeed(float speed) { this->moveSpeed = speed; }
+
+	void setColor(XMFLOAT4 col) { this->color = col; }
 
 	XMFLOAT2 worldToScleen();
 
@@ -100,9 +105,14 @@ public:
 		qRot = rotQ;
 	}
 
+	void SetPipelineSimple(ID3D12GraphicsCommandList* cmdList);
+
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 	void PlayAnimation();
+
+
+	bool isSetOtherPipeline = false;
 
 protected:
 	ComPtr<ID3D12Resource> constBufferTransform;
@@ -163,4 +173,6 @@ private:
 	FbxTime currentTime;
 
 	bool isPlay = false;
+
+	XMFLOAT4 color = { 1,0,0,1 };
 };

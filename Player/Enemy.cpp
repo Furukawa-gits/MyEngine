@@ -1,4 +1,5 @@
 #include"Enemy.h"
+#include<random>
 
 #pragma region “G‚Ì’e
 void enemy_bullet::init(int index)
@@ -34,6 +35,7 @@ void Enemy::init(int enemy_index, int enemy_bullet_index)
 	testObject->Initialize();
 	testObject->SetModel(testCube);
 	testObject->SetScale({ 0.5f,0.5f,0.5f });
+	testObject->setColor({ (float)(rand() % 100) / 100,(float)(rand() % 100) / 100 ,(float)(rand() % 100) / 100 ,1 });
 	//testObject->PlayAnimation();
 }
 

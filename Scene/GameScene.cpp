@@ -65,6 +65,8 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	Object3d_FBX::CreateGraphicsPipeline();
 
+	Object3d_FBX::CreateGraphicsPipelineSimple();
+
 	model = FbxLoader::GetInstance()->LoadmodelFromFile("boneTest");
 	SkyModel = FbxLoader::GetInstance()->LoadmodelFromFile("skySphere");
 
@@ -114,6 +116,8 @@ void GameScene::debugs_print()
 	debugtext.Print("MouseRelease : Homing", 10, 100, 1.0f);
 	debugtext.Print("R : Reset", 10, 130, 1.0f);
 }
+
+#pragma region 各シーン更新
 
 //タイトル画面更新
 void GameScene::Title_update()
@@ -183,78 +187,6 @@ void GameScene::Title_update()
 
 	//マウスカーソル非表示
 	ShowCursor(false);
-}
-
-//プレイ画面更新
-void GameScene::Play_update()
-{
-
-}
-
-//リザルト画面更新
-void GameScene::Result_update()
-{
-
-}
-
-//タイトル画面描画
-void GameScene::Title_draw()
-{
-	skySphere->Draw(directx->cmdList.Get());
-
-	//directx->depthclear();
-	object->Draw(directx->cmdList.Get());
-
-	for (int i = 0; i < enemynum; i++)
-	{
-		testEnemys[i].draw3D(directx);
-	}
-
-	//cameraobj->Draw(directx->cmdList.Get());
-}
-
-//プレイ画面描画
-void GameScene::Play_draw()
-{
-
-}
-
-//リザルト画面描画
-void GameScene::Result_draw()
-{
-}
-
-
-//更新
-void GameScene::Update()
-{
-	//マウス座標更新
-	MOUSE_POS = { (float)input->mouse_p.x,(float)input->mouse_p.y,0.0f };
-
-	//ゲーム時間カウント
-	game_time++;
-
-	//シーン切り替え
-
-	//タイトル画面
-	if (scene == title)
-	{
-		Title_update();
-	}
-
-	//プレイ画面
-	if (scene == play)
-	{
-		Play_update();
-	}
-
-	//クリア画面
-	if (scene == clear || scene == over)
-	{
-		Result_update();
-	}
-
-	sample_back.SpriteUpdate();
 
 	if (input->Mouse_LeftPush())
 	{
@@ -304,6 +236,108 @@ void GameScene::Update()
 			testEnemys[i].isHitShot({ target.position.x,target.position.y });
 		}
 	}
+
+	if (input->Triger(DIK_1) && isEnemySimple == false)
+	{
+		isEnemySimple = true;
+	}
+	else if (input->Triger(DIK_1) && isEnemySimple == true)
+	{
+		isEnemySimple = false;
+	}
+}
+
+//プレイ画面更新
+void GameScene::Play_update()
+{
+
+}
+
+//リザルト画面更新
+void GameScene::Result_update()
+{
+
+}
+
+#pragma endregion 各シーン更新
+
+#pragma region 各シーン描画
+
+//タイトル画面描画
+void GameScene::Title_draw()
+{
+	skySphere->Draw(directx->cmdList.Get());
+
+	//directx->depthclear();
+	object->Draw(directx->cmdList.Get());
+
+	if (isEnemySimple)
+	{
+		for (int i = 0; i < enemynum; i++)
+		{
+			testEnemys[i].testObject->SetPipelineSimple(directx->cmdList.Get());
+		}
+	}
+	else
+	{
+		for (int i = 0; i < enemynum; i++)
+		{
+			testEnemys[i].testObject->isSetOtherPipeline = false;
+		}
+	}
+
+	for (int i = 0; i < enemynum; i++)
+	{
+		testEnemys[i].draw3D(directx);
+	}
+
+	//cameraobj->Draw(directx->cmdList.Get());
+}
+
+//プレイ画面描画
+void GameScene::Play_draw()
+{
+
+}
+
+//リザルト画面描画
+void GameScene::Result_draw()
+{
+}
+
+#pragma endregion 各シーン描画
+
+
+//更新
+void GameScene::Update()
+{
+	//マウス座標更新
+	MOUSE_POS = { (float)input->mouse_p.x,(float)input->mouse_p.y,0.0f };
+
+	//ゲーム時間カウント
+	game_time++;
+
+	//シーン切り替え
+
+	//タイトル画面
+	if (scene == title)
+	{
+		Title_update();
+	}
+
+	//プレイ画面
+	if (scene == play)
+	{
+		Play_update();
+	}
+
+	//クリア画面
+	if (scene == clear || scene == over)
+	{
+		Result_update();
+	}
+
+	sample_back.SpriteUpdate();
 
 	camera->Update();
 

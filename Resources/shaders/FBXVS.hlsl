@@ -49,5 +49,6 @@ VSOutput main(VSInput input)
 	output.svpos = mul(mul(viewproj, world), skinned.pos);
 	output.normal = wnormal.xyz;
 	output.uv = input.uv;
+	output.color = color;
 	return output;
 }

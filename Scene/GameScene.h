@@ -86,7 +86,10 @@ public:
 	void Draw3D();
 	void DrawSP();
 
-public:
+
+	bool Isclose = false;
+
+private:
 
 	static const int debugTextnum = 0;
 	//基幹部分
@@ -126,6 +129,7 @@ public:
 	//敵(test)
 	static const int enemynum = 30;
 	Enemy testEnemys[enemynum];
+	bool isEnemySimple = false;
 
 	//照準スプライト関連
 	int mousePressCount = 0;
@@ -143,8 +147,6 @@ public:
 
 	//ウェーブ
 	bool Ischangescene = false;
-
-	bool Isclose = false;
 
 	//リザルトの表示切り替え
 	int result_count = 0;
