@@ -22,7 +22,6 @@ PSOutput main(VSOutput input)
 
 	output.target0 = shadercolor * texcolor;
 	output.target1 = shadercolor * texcolor;
-	//output.target1 = float4(1 - (shadercolor * texcolor).rgb, 1);
 
 	return output;
 }

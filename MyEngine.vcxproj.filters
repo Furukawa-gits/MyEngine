@@ -207,5 +207,6 @@
     <FxCompile Include="Resources\shaders\PostEffectTestVS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\FBXPS_Simple.hlsl" />
   </ItemGroup>
 </Project>

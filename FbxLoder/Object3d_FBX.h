@@ -119,8 +119,8 @@ private:
 	static ComPtr<ID3D12PipelineState> pipelinestate;
 
 	//パイプライン(単色)
-	static ComPtr<ID3D12PipelineState> pipelinestateSinple;
-	static ComPtr<ID3D12RootSignature> rootsignatureSinple;
+	static ComPtr<ID3D12RootSignature> rootsignatureSimple;
+	static ComPtr<ID3D12PipelineState> pipelinestateSimple;
 
 	Camera* respectiveCamera = nullptr;
 

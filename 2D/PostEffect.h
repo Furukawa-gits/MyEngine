@@ -20,6 +20,9 @@ public:
 	//描画後処理
 	void PostDrawScene(ID3D12GraphicsCommandList* cmdlist, directX* directx);
 
+	//深度バッファクリア
+	void depthClear(ID3D12GraphicsCommandList* cmdlist);
+
 	//パイプライン生成
 	void CreateGraphicsPipelineState(ID3D12Device* dev);
 
@@ -36,6 +39,8 @@ public:
 	ComPtr<ID3D12DescriptorHeap> descHeapRTV;
 
 	ComPtr<ID3D12DescriptorHeap> descheapDSV;
+
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvH;
 
 	//頂点バッファ
 	ComPtr<ID3D12Resource> PostVertBuff;

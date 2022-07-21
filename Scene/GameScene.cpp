@@ -314,9 +314,6 @@ void GameScene::DrawBack()
 {
 	//背景スプライト描画
 	sample_back.DrawSprite(directx->cmdList.Get());
-
-	//深度バッファクリア
-	directx->depthclear();
 }
 
 //描画

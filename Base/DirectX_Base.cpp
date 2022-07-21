@@ -160,7 +160,7 @@ void directX::Initializedepth()
 }
 
 //描画処理前
-void directX::Begin_Draw()
+void directX::preDraw()
 {
 	// バックバッファの番号を取得（2つなので0番か1番）
 	bbIndex = swapchain->GetCurrentBackBufferIndex();
@@ -191,12 +191,22 @@ void directX::Begin_Draw()
 }
 
 //描画処理後
-void directX::Finish_Draw()
+void directX::postDraw()
 {
 	// ５．リソースバリアを戻す
 	cmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(backBuffers[bbIndex].Get(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+}
 
+//深度バッファクリア
+void directX::depthclear()
+{
+	cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+}
+
+//最終的な描画処理
+void directX::finishDraw()
+{
 	// 命令のクローズ
 	cmdList->Close();
 
@@ -218,10 +228,4 @@ void directX::Finish_Draw()
 
 	// バッファをフリップ（裏表の入替え）
 	swapchain->Present(1, 0);
-}
-
-//深度バッファクリア
-void directX::depthclear()
-{
-	cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }

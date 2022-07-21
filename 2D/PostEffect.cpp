@@ -249,7 +249,7 @@ void PostEffect::PreDrawScene(ID3D12GraphicsCommandList* cmdlist, ID3D12Device* 
 	}
 
 	//深度ステンシルビュー用デスクリプタヒープのハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvH =
+	dsvH =
 		descheapDSV->GetCPUDescriptorHandleForHeapStart();
 
 	cmdlist->OMSetRenderTargets(2, rtvHs, false, &dsvH);
@@ -287,6 +287,11 @@ void PostEffect::PostDrawScene(ID3D12GraphicsCommandList* cmdlist, directX* dire
 		cmdlist->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(texbuff[i].Get(),
 			D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
 	}
+}
+
+void PostEffect::depthClear(ID3D12GraphicsCommandList* cmdlist)
+{
+	cmdlist->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
 void PostEffect::CreateGraphicsPipelineState(ID3D12Device* dev)
