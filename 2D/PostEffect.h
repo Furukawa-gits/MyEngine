@@ -1,5 +1,5 @@
 #pragma once
-#include"SpriteSingleunit.h"
+#include"Sprite.h"
 #include"../Base/DirectX_Base.h"
 
 class PostEffect
@@ -14,6 +14,8 @@ public:
 	//描画
 	void Draw(ID3D12GraphicsCommandList* cmdList, ID3D12Device* dev);
 
+	void setPipelineGray(ID3D12GraphicsCommandList* cmdList);
+
 	//描画前処理
 	void PreDrawScene(ID3D12GraphicsCommandList* cmdlist, ID3D12Device* dev);
 
@@ -24,11 +26,15 @@ public:
 	void depthClear(ID3D12GraphicsCommandList* cmdlist);
 
 	//パイプライン生成
-	void CreateGraphicsPipelineState(ID3D12Device* dev);
+	void CreateGraphicsPipelineState(ID3D12Device* dev);//通常
+	void CreateGraphicsPipelineStateGray(ID3D12Device* dev);//グレースケール
 
 	//通常
 	ComPtr<ID3D12PipelineState> PostPipelinestate;//パイプラインステート
 	ComPtr<ID3D12RootSignature> PostRootsignature;//ルートシグネチャ
+
+	ComPtr<ID3D12PipelineState> PostPipelinestateGray;//パイプラインステート
+	ComPtr<ID3D12RootSignature> PostRootsignatureGray;//ルートシグネチャ
 
 	ComPtr<ID3D12Resource> texbuff[2];
 
@@ -52,5 +58,7 @@ public:
 	ComPtr<ID3D12Resource> PostConstBuff;
 
 	static const float clearColor[4];
+
+	bool isSetOtherPipeline = false;
 };
 

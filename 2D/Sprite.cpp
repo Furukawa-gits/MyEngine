@@ -1,4 +1,4 @@
-#include"SpriteSingleunit.h"
+#include"Sprite.h"
 
 ID3D12Device* SingleSprite::device = nullptr;
 ComPtr<ID3D12RootSignature> SingleSprite::SpriteRootsignature;

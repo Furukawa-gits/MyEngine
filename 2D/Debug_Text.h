@@ -1,5 +1,5 @@
 #pragma once
-#include"SpriteSingleunit.h"
+#include"Sprite.h"
 
 
 class DebugText

@@ -237,6 +237,7 @@ void GameScene::Title_update()
 		}
 	}
 
+	//敵オブジェクト単色切り替え
 	if (input->Triger(DIK_1) && isEnemySimple == false)
 	{
 		isEnemySimple = true;

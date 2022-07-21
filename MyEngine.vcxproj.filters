@@ -42,7 +42,7 @@
     <ClInclude Include="2D\SpriteCommon.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="2D\SpriteSingleunit.h">
+    <ClInclude Include="2D\Sprite.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Audio\Audio.h">
@@ -113,7 +113,7 @@
     <ClCompile Include="2D\SpriteCommon.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="2D\SpriteSingleunit.cpp">
+    <ClCompile Include="2D\Sprite.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Audio\Audio.cpp">
@@ -172,7 +172,7 @@
     <None Include="Resources\shaders\FBX.hlsli">
       <Filter>リソース ファイル</Filter>
     </None>
-    <None Include="Resources\shaders\PostEffectTest.hlsli">
+    <None Include="Resources\shaders\PostEffectBace.hlsli">
       <Filter>リソース ファイル</Filter>
     </None>
   </ItemGroup>
@@ -201,12 +201,13 @@
     <FxCompile Include="Resources\shaders\FBXVS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\PostEffectTestPS.hlsl">
+    <FxCompile Include="Resources\shaders\PostEffectBacePS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\PostEffectTestVS.hlsl">
+    <FxCompile Include="Resources\shaders\PostEffectBaceVS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\FBXPS_Simple.hlsl" />
+    <FxCompile Include="Resources\shaders\PostEffectGrayPS.hlsl" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 #pragma once
 //#include"Player.h"
-#include"../2D/SpriteSingleunit.h"
+#include"../2D/Sprite.h"
 #include"../3D/3Dobject.h"
 #include"../3D/Collision.h"
 #include"../FbxLoder/Object3d_FBX.h"

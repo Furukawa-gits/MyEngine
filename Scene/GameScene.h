@@ -1,7 +1,7 @@
 #pragma once
 #include"../Base/WindowGenerate.h"
 #include"../Base/DirectX_Base.h"
-#include"../2D/SpriteSingleunit.h"
+#include"../2D/Sprite.h"
 #include"../Input/dxInput.h"
 #include"../Audio/Audio.h"
 #include"../2D/Debug_Text.h"
@@ -129,7 +129,7 @@ private:
 	//敵(test)
 	static const int enemynum = 30;
 	Enemy testEnemys[enemynum];
-	bool isEnemySimple = false;
+	bool isEnemySimple = true;
 
 	//照準スプライト関連
 	int mousePressCount = 0;

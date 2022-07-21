@@ -55,6 +55,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	PostEffect* posteffect = new PostEffect();
 	posteffect->Init(directx.dev.Get());
 
+	bool isSetGray = false;
+
 	//FPS処理
 	FpsManager fps;
 
@@ -85,6 +87,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//ゲームシーン更新
 		gamescene.Update();
 
+		//グレースケール切り替え
+		if (input.Triger(DIK_2) && isSetGray == false)
+		{
+			isSetGray = true;
+		}
+		else if (input.Triger(DIK_2) && isSetGray == true)
+		{
+			isSetGray = false;
+		}
+
 		//ESCキーで抜ける
 		if (input.Triger(DIK_ESCAPE) || gamescene.Isclose == true)
 		{
@@ -105,6 +117,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		
 		directx.preDraw();
 		//ポストエフェクト
+		if (isSetGray)
+		{
+			posteffect->setPipelineGray(directx.cmdList.Get());
+		}
+		else
+		{
+			posteffect->isSetOtherPipeline = false;
+		}
 		posteffect->Draw(directx.cmdList.Get(), directx.dev.Get());
 		//前景スプライト
 		gamescene.DrawSP();

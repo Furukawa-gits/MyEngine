@@ -160,7 +160,7 @@
     <ClInclude Include="2D\Debug_Text.h" />
     <ClInclude Include="2D\PostEffect.h" />
     <ClInclude Include="2D\SpriteCommon.h" />
-    <ClInclude Include="2D\SpriteSingleunit.h" />
+    <ClInclude Include="2D\Sprite.h" />
     <ClInclude Include="3D\3Dobject.h" />
     <ClInclude Include="3D\Collision.h" />
     <ClInclude Include="3D\CollisionPrimitive.h" />
@@ -185,7 +185,7 @@
     <ClCompile Include="2D\Debug_Text.cpp" />
     <ClCompile Include="2D\PostEffect.cpp" />
     <ClCompile Include="2D\SpriteCommon.cpp" />
-    <ClCompile Include="2D\SpriteSingleunit.cpp" />
+    <ClCompile Include="2D\Sprite.cpp" />
     <ClCompile Include="3D\3Dobject.cpp" />
     <ClCompile Include="3D\Collision.cpp" />
     <ClCompile Include="3D\CollisionPrimitive.cpp" />
@@ -211,7 +211,7 @@
     <None Include="Resources\shaders\Basic.hlsli" />
     <None Include="Resources\shaders\FBX.hlsli" />
     <None Include="Resources\shaders\OBJ.hlsli" />
-    <None Include="Resources\shaders\PostEffectTest.hlsli" />
+    <None Include="Resources\shaders\PostEffectBace.hlsli" />
     <None Include="Resources\shaders\Sprite.hlsli" />
   </ItemGroup>
   <ItemGroup>
@@ -253,16 +253,22 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\PostEffectTestPS.hlsl">
+    <FxCompile Include="Resources\shaders\PostEffectBacePS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\PostEffectTestVS.hlsl">
+    <FxCompile Include="Resources\shaders\PostEffectBaceVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\PostEffectGrayPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Resources\shaders\SpritePS.hlsl">

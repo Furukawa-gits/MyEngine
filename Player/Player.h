@@ -1,7 +1,7 @@
 #pragma once
 #include"../3D/3Dobject.h"
 #include"../3D/Collision.h"
-#include"../2D/SpriteSingleunit.h"
+#include"../2D/Sprite.h"
 #include"../Input/dxInput.h"
 #include"Bullets.h"
 
