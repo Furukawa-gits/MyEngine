@@ -209,5 +209,6 @@
     </FxCompile>
     <FxCompile Include="Resources\shaders\FBXPS_Simple.hlsl" />
     <FxCompile Include="Resources\shaders\PostEffectGrayPS.hlsl" />
+    <FxCompile Include="Resources\shaders\PostEffectGaussianPS.hlsl" />
   </ItemGroup>
 </Project>

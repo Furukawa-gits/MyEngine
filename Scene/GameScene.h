@@ -129,7 +129,7 @@ private:
 	//敵(test)
 	static const int enemynum = 30;
 	Enemy testEnemys[enemynum];
-	bool isEnemySimple = true;
+	bool isEnemySimple = false;
 
 	//照準スプライト関連
 	int mousePressCount = 0;

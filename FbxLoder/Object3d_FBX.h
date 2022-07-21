@@ -107,12 +107,11 @@ public:
 
 	void SetPipelineSimple(ID3D12GraphicsCommandList* cmdList);
 
+	void reSetPipeline();
+
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 	void PlayAnimation();
-
-
-	bool isSetOtherPipeline = false;
 
 protected:
 	ComPtr<ID3D12Resource> constBufferTransform;
@@ -175,4 +174,6 @@ private:
 	bool isPlay = false;
 
 	XMFLOAT4 color = { 1,0,0,1 };
+
+	bool isSetOtherPipeline = false;
 };

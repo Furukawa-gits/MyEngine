@@ -554,3 +554,8 @@ void Object3d_FBX::PlayAnimation()
 
 	isPlay = true;
 }
+
+void Object3d_FBX::reSetPipeline()
+{
+	isSetOtherPipeline = false;
+}
