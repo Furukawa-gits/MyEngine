@@ -115,6 +115,9 @@ void GameScene::debugs_print()
 	debugtext.Print("MousePress(Left)&Drag : Target", 10, 85, 1.0f);
 	debugtext.Print("MouseRelease : Homing", 10, 100, 1.0f);
 	debugtext.Print("R : Reset", 10, 130, 1.0f);
+
+	debugtext.Print("1 : Object Simple", 1000, 10, 1.0f);
+	debugtext.Print("2 : posteffect GrayScale", 1000, 30, 1.0f);
 }
 
 #pragma region 各シーン更新
