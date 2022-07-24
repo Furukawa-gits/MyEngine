@@ -2,6 +2,8 @@
 
 #include <DirectXMath.h>
 
+using namespace DirectX;
+
 /// <summary>
 /// カメラ基本機能
 /// </summary>
@@ -21,7 +23,7 @@ public: // メンバ関数
 	/// </summary>
 	/// <param name="window_width">画面幅</param>
 	/// <param name="window_height">画面高さ</param>
-	Camera(int window_width, int window_height);
+	Camera();
 
 	/// <summary>
 	/// デストラクタ
@@ -160,5 +162,8 @@ protected: // メンバ変数
 	XMFLOAT3 up = {0, 1, 0};
 	// アスペクト比
 	float aspectRatio = 1.0f;
-};
 
+	bool isAllBill = false;
+
+	bool isYBill = false;
+};

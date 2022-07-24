@@ -1,4 +1,5 @@
 #include"Bullets.h"
+#include"../3D/Collision.h"
 
 #pragma region ’Êí’e
 void bullet::init(int index)

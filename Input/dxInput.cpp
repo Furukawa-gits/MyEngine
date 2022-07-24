@@ -44,10 +44,13 @@ void dxinput::Update(HWND hwnd)
 	result = devmouse->Acquire();
 	result = devmouse->GetDeviceState(sizeof(mouse), &mouse);
 
+	oldmouse_p = mouse_p;
+
 	GetCursorPos(&mouse_p);
 	ScreenToClient(hwnd, &mouse_p);
 
 	mouse_position = { (float)mouse_p.x,(float)mouse_p.y,0.0f };
+	old_mouse_position = { (float)oldmouse_p.x,(float)oldmouse_p.y,0.0f };
 }
 
 bool dxinput::Triger(BYTE keyCode)

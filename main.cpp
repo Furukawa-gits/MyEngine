@@ -1,4 +1,5 @@
 #include"Scene/GameScene.h"
+#include"2D/PostEffect.h"
 #include"Base/Fps_Manager.h"
 #include"FbxLoder/FbxLoader.h"
 
@@ -44,12 +45,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//3dオブジェクト静的初期化
 	object3D_obj::StaticInit();
 
-	//FPS処理
-	FpsManager fps;
+	//スプライト初期化
+	//SingleSprite::SetPipelineStateSprite(directx.dev.Get());
 
 	//ゲームシーン初期化
 	GameScene gamescene;
 	gamescene.Init(&directx, &input, &audio);
+
+	PostEffect* posteffect = new PostEffect();
+	posteffect->Init(directx.dev.Get());
+
+	//FPS処理
+	FpsManager fps;
 
 	//FPS調整(一回目)
 	fps.init();
@@ -84,18 +91,32 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			break;
 		}
 
-		// 描画処理前
-		directx.Begin_Draw();
+		// 描画処理
+		
+		posteffect->PreDrawScene(directx.cmdList.Get(), directx.dev.Get());
+		//背景スプライト、
+		gamescene.DrawBack();
+		//深度バッファクリア
+		posteffect->depthClear(directx.cmdList.Get());
+		//3Dオブジェクト
+		gamescene.Draw3D();
+		posteffect->PostDrawScene(directx.cmdList.Get(), &directx);
 
-		//ゲームシーン描画
-		gamescene.Draw();
+		
+		directx.preDraw();
+		//ポストエフェクト
+		posteffect->Draw(directx.cmdList.Get(), directx.dev.Get());
+		//前景スプライト
+		gamescene.DrawSP();
+		directx.postDraw();
 
-		// 描画処理後
-		directx.Finish_Draw();
+		directx.finishDraw();
 	}
 
 	//audio.UnLoadSoundWave(&gamescene.Title_bgm);
 	FbxLoader::GetInstance()->Finalize();
+
+	delete posteffect;
 
 	// ウィンドウクラスを登録解除
 	Win->Win_Deleate();

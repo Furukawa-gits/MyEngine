@@ -24,9 +24,9 @@ public:
 
 	void checkrockon(Enemy& enemy);
 
-	void update(SpriteCommon* commonsp);
+	void update();
 
-	void draw(directX* directx, TexManager* tex, SpriteCommon* commonsp);
+	void draw(directX* directx, TexManager* tex);
 
 
 	//3dオブジェクト

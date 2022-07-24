@@ -1,16 +1,16 @@
 #pragma once
-#include"SpriteCommon.h"
+#include"../Base/WindowGenerate.h"
 #include<DirectXTex.h>
 #include<d3dx12.h>
 #include<wrl.h>
+#include<string>
 #include<DirectXMath.h>
 #include <d3dcompiler.h>
-#include"../Base/WindowGenerate.h"
-#include"../Base/TexManager.h"
 
 #pragma comment(lib, "d3dcompiler.lib")
 
-using XMFLOAT3 = DirectX::XMFLOAT3;
+using namespace Microsoft::WRL;
+using namespace DirectX;
 
 //定数バッファ用データ構造体
 struct ConstBufferDataSP {
@@ -18,8 +18,8 @@ struct ConstBufferDataSP {
 	XMMATRIX mat;
 };
 
-//スプライト用グローバル変数
-struct VertexPosUv										//頂点構造体(スプライト用)
+//頂点構造体(スプライト用)
+struct VertexPosUv
 {
 	XMFLOAT3 pos;
 	XMFLOAT2 uv;
@@ -28,20 +28,61 @@ struct VertexPosUv										//頂点構造体(スプライト用)
 class SingleSprite
 {
 private:
-	static ComPtr<ID3D12PipelineState> pipelinestate;//パイプラインステート
+	/// <summary>
+	/// パイプライン生成
+	/// </summary>
+	static void SetPipelineStateSprite();
 
-	static ComPtr<ID3D12RootSignature> rootsignature;//ルートシグネチャ
+	/// <summary>
+	/// テクスチャ読み込み
+	/// xxxxx.pngのみ
+	/// </summary>
+	/// <param name="filename">ファイル名</param>
+	void LoadTexture(const std::string& filename);
 
 public:
-	//頂点バッファ
-	ComPtr<ID3D12Resource> spriteVertBuff;
+	/// <summary>
+	/// 静的データセット
+	/// </summary>
+	/// <param name="dev">デバイス情報</param>
+	static void SetStaticData(ID3D12Device* dev);
 
-	//頂点バッフビュー
-	D3D12_VERTEX_BUFFER_VIEW spriteVBView{};
+	/// <summary>
+	/// 頂点バッファへのデータ転送
+	/// </summary>
+	/// <param name="tex">テクスチャマネージャー</param>
+	/// <param name="isCutout">切り取るかどうか</param>
+	void SpriteTransferVertexBuffer(bool isCutout = false);
 
-	//定数バッファ
-	ComPtr<ID3D12Resource> spriteConstBuff;
+	/// <summary>
+	/// スプライト生成
+	/// </summary>
+	/// <param name="filename">ファイル名(xxxxx.pngのみ)</param>
+	/// <param name="sizeFlag">画像サイズに切り抜く</param>
+	/// <param name="isFlipX">左右反転</param>
+	/// <param name="isFlipY">上下反転</param>
+	/// <param name="iscutout">切り抜くかどうか</param>
+	void GenerateSprite(
+		const std::string& filename,
+		bool sizeFlag = false,
+		bool isFlipX = false,
+		bool isFlipY = false,
+		bool iscutout = false);
 
+	/// <summary>
+	/// 更新
+	/// </summary>
+	/// <param name="spritecommon">スプライト共通データ</param>
+	void SpriteUpdate();
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="cmdList">コマンドリスト</param>
+	/// <param name="texture">テクスチャマネージャー</param>
+	void DrawSprite(ID3D12GraphicsCommandList* cmdList);
+
+public:
 	//Z軸周りの回転角
 	float rotation = 0.0f;
 
@@ -53,9 +94,6 @@ public:
 
 	//色(RGBA)
 	XMFLOAT4 color = { 1,1,1,1 };
-
-	//テクスチャ番号
-	UINT texnumber = 0;
 
 	//大きさ
 	XMFLOAT2 size = { 100.0f,100.0f };
@@ -78,23 +116,27 @@ public:
 	//非表示
 	bool isInvisible = false;
 
-	//スプライト単体頂点バッファの転送
-	void SpriteTransferVertexBuffer(TexManager* tex, bool isCutout);
+private:
+	static ID3D12Device* device;
 
-	//スプライト生成
-	void GenerateSprite(ID3D12Device* dev,
-		float window_width,
-		float window_heigh,
-		UINT texnumber,
-		TexManager* tex,
-		bool sizeFlag = false,
-		bool isFlipX = false,
-		bool isFlipY = false,
-		bool iscutout = false);
+	static ComPtr<ID3D12RootSignature> SpriteRootsignature;//ルートシグネチャ
 
-	//スプライト更新処理
-	void SpriteUpdate(const SpriteCommon& spritecommon);
+	static ComPtr<ID3D12PipelineState> SpritePipelinestate;//パイプラインステート
 
-	//スプライト描画コマンド
-	void DrawSprite(ID3D12GraphicsCommandList* cmdList, TexManager* texture, ID3D12Device* dev);
+	static XMMATRIX matprojection;
+
+	//頂点バッファ
+	ComPtr<ID3D12Resource> spriteVertBuff;
+
+	//頂点バッフビュー
+	D3D12_VERTEX_BUFFER_VIEW spriteVBView{};
+
+	//定数バッファ
+	ComPtr<ID3D12Resource> spriteConstBuff;
+
+	//テクスチャバッファ
+	ComPtr<ID3D12Resource> texbuff;
+
+	//シェーダーリソースビュー
+	ComPtr<ID3D12DescriptorHeap> descHeapSRV;
 };

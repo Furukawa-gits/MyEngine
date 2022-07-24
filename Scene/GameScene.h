@@ -1,17 +1,20 @@
 #pragma once
 #include"../Base/WindowGenerate.h"
 #include"../Base/DirectX_Base.h"
-#include"../Base/TexManager.h"
-#include"../2D/SpriteCommon.h"
 #include"../2D/SpriteSingleunit.h"
 #include"../Input/dxInput.h"
-#include"../3D/3Dobject.h"
 #include"../Audio/Audio.h"
 #include"../2D/Debug_Text.h"
 #include"../camera/Camera.h"
 #include"../Player/Player.h"
 #include"../Physics.h"
 #include"../FbxLoder/Object3d_FBX.h"
+#include"../camera/FollowCamera.h"
+
+#include"../Player/Enemy.h"
+
+#include<random>
+#include<time.h>
 
 
 enum scene
@@ -36,11 +39,11 @@ enum class wave
 };
 
 //ウェーブごとの敵の数
-const int ENEMY_NUM_1 = 8;
-
-const int ENEMY_NUM_2 = 8;
-
-const int ENEMY_NUM_3 = 20;
+//const int ENEMY_NUM_1 = 8;
+//
+//const int ENEMY_NUM_2 = 8;
+//
+//const int ENEMY_NUM_3 = 20;
 
 class GameScene
 {
@@ -50,9 +53,6 @@ public:
 
 	//デストラクタ
 	~GameScene();
-
-	//テクスチャ読み込みだけ関数
-	void Load_textures();
 
 	//音読み込みだけ関数
 	void Load_sounds();
@@ -84,7 +84,9 @@ public:
 	void Update();
 
 	//描画
-	void Draw();
+	void DrawBack();
+	void Draw3D();
+	void DrawSP();
 
 public:
 
@@ -97,12 +99,20 @@ public:
 	XMFLOAT3 MOUSE_POS;
 	Camera* camera = nullptr;
 
+	FollowCamera* followcamera = nullptr;
+
+	XMFLOAT3 objectRot = { 0,0,0 };
+
+	float up = 0.0f;
+	float right = 0.0f;
+
+	float pitch = 0.0f;
+	float yow = 0.0f;
+	float roll = 0.0f;
+
 	/// <summary>
 	/// ゲームに使う変数等はここに
 	/// </summary>
-	SpriteCommon spritecommon;				//スプライト共通データ
-	ObjectCommon object3dcommon;	//3dオブジェクト共通データ
-	TexManager texture;						//テクスチャ
 
 	//音
 
@@ -110,7 +120,19 @@ public:
 	
 	//3dオブジェクト
 	Model* model = nullptr;
+	Model* SkyModel = nullptr;
 	Object3d_FBX* object = nullptr;
+	Object3d_FBX* skySphere = nullptr;
+	Object3d_FBX* cameraobj = nullptr;
+
+	//敵(test)
+	static const int enemynum = 30;
+	Enemy testEnemys[enemynum];
+
+	//照準スプライト関連
+	int mousePressCount = 0;
+	SingleSprite target;
+	bool isTarget = false;
 
 	//背景
 	SingleSprite sample_back;
@@ -119,7 +141,6 @@ public:
 	int game_time = 0;
 
 	//シーン
-	//scene scene = scene::title;
 	int scene = title;
 
 	bool Isclose = false;

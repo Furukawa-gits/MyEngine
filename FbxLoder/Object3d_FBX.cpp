@@ -1,9 +1,7 @@
 #include "Object3d_FBX.h"
+#include"../Base/WindowGenerate.h"
 #include <d3dcompiler.h>
 #pragma comment(lib,"d3dcompiler.lib")
-
-using namespace Microsoft::WRL;
-using namespace DirectX;
 
 ID3D12Device* Object3d_FBX::device = nullptr;
 Camera* Object3d_FBX::camera = nullptr;
@@ -165,8 +163,9 @@ void Object3d_FBX::CreateGraphicsPipeline()
 	// 図形の形状設定（三角形）
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
-	gpipeline.NumRenderTargets = 1;    // 描画対象は1つ
+	gpipeline.NumRenderTargets = 2;    // 描画対象は1つ
 	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM; // 0～255指定のRGBA
+	gpipeline.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM; // 0～255指定のRGBA
 	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
 
 	// デスクリプタレンジ
@@ -205,13 +204,12 @@ void Object3d_FBX::CreateGraphicsPipeline()
 
 void Object3d_FBX::Update()
 {
-	XMMATRIX matScale, matRot, matTrans;
-
 	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
 	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
-	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
-	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
+	matRot = XMMatrixRotationQuaternion(qRot);
+	//matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
+	//matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
+	//matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
 	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
 
 	matWorld = XMMatrixIdentity();
@@ -261,9 +259,85 @@ void Object3d_FBX::Update()
 
 		FbxLoader::ConvertMatrixFromFbx(&matCurrentPose, fbxCurrentPose);
 
+		//メッシュノードをあとで掛ける予定
 		constMapSkin->bones[i] = bones[i].invInitialPose * matCurrentPose;
+
+		constMapSkin->bones[i] = model->GetModelTransform() * bones[i].invInitialPose * matCurrentPose * model->GetModelTransformInverse();
 	}
 	constBufferSkin->Unmap(0, nullptr);
+}
+
+XMFLOAT2 Object3d_FBX::worldToScleen()
+{
+	float w = (float)win_width / 2.0f;
+	float h = (float)win_hight / 2.0f;
+	XMMATRIX viewport = {
+		w, 0, 0, 0,
+		0,-h, 0, 0,
+		0, 0, 1, 0,
+		w, h, 0, 1
+	};
+
+	XMMATRIX matVPV = camera->GetViewMatrix() * camera->GetProjectionMatrix() * viewport;
+
+	XMFLOAT3 screenPos = {};
+	XMVector3TransformCoordStream(&screenPos, sizeof(XMFLOAT3),
+		&position, sizeof(XMFLOAT3),
+		1, matVPV);
+
+	return XMFLOAT2(screenPos.x, screenPos.y);
+}
+
+XMFLOAT3 Object3d_FBX::screenToWorld(XMFLOAT2 screenPos)
+{
+	float w = (float)win_width / 2.0f;
+	float h = (float)win_hight / 2.0f;
+	XMMATRIX viewport = {
+		w, 0, 0, 0,
+		0,-h, 0, 0,
+		0, 0, 1, 0,
+		w, h, 0, 1
+	};
+
+	XMMATRIX matVPV = camera->GetViewMatrix() * camera->GetProjectionMatrix() * viewport;
+
+	XMMATRIX matVPVInv = XMMatrixInverse(nullptr, matVPV);
+
+	XMFLOAT3 posN = XMFLOAT3(screenPos.x, screenPos.y, 0);
+	XMFLOAT3 posF = XMFLOAT3(screenPos.x, screenPos.y, 1);
+
+	XMVector3TransformCoordStream(&posN, sizeof(XMFLOAT3),
+		&posN, sizeof(XMFLOAT3),
+		1, matVPVInv);
+
+	XMVector3TransformCoordStream(&posF, sizeof(XMFLOAT3),
+		&posF, sizeof(XMFLOAT3),
+		1, matVPVInv);
+
+	XMFLOAT3 rayDirection =
+	{
+		posF.x - posN.x,
+		posF.y - posN.y,
+		posF.z - posN.z
+	};
+
+	XMFLOAT3 cameraRay =
+	{
+		position.x - camera->GetEye().x,
+		position.y - camera->GetEye().y,
+		position.z - camera->GetEye().z
+	};
+
+	const float cameraRength = 10.0f;
+
+	XMFLOAT3 worldPos =
+	{
+		posN.x + (rayDirection.x * cameraRength),
+		posN.y + (rayDirection.y * cameraRength),
+		posN.z + (rayDirection.z * cameraRength)
+	};
+
+	return worldPos;
 }
 
 void Object3d_FBX::Draw(ID3D12GraphicsCommandList* cmdList)

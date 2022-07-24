@@ -1,4 +1,4 @@
-static const int MAX_BONES = 32;
+static const int MAX_BONES = 36;
 
 cbuffer cbuff0 : register(b0)
 {

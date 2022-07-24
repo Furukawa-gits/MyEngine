@@ -11,6 +11,15 @@
 #include <DirectXMath.h>
 #include <string>
 
+using namespace Microsoft::WRL;
+using namespace DirectX;
+
+enum graphicType
+{
+	default = 0,
+	Simple = 1
+};
+
 class Object3d_FBX
 {
 protected:
@@ -49,6 +58,48 @@ public:
 
 	void SetModel(Model* model) { this->model = model; }
 
+	void SetPosition(XMFLOAT3 pos) { this->position = pos; }
+
+	void SetRotation(XMFLOAT3 rot) { this->rotation = rot; }
+
+	void SetScale(XMFLOAT3 Scale) { this->scale = Scale; }
+
+	void setAngle(float up, float right) {
+		this->upAngle = up;
+		this->rightAngle = right;
+	}
+
+	void setSpeed(float speed) { this->moveSpeed = speed; }
+
+	XMFLOAT2 worldToScleen();
+
+	XMFLOAT3 screenToWorld(XMFLOAT2 screenPos);
+
+	XMFLOAT3 getPosition() { return position; }
+
+	XMFLOAT3 getRotation() { return rotation; }
+
+	XMFLOAT3 getScale() { return scale; }
+
+	XMVECTOR getUpDirection() { return directionUp; }
+
+	void addMoveFront(XMFLOAT3 move) {
+		position.x += move.x;
+		position.y += move.y;
+		position.z += move.z;
+	}
+
+	void addMoveBack(XMFLOAT3 move) {
+		position.x -= move.x;
+		position.y -= move.y;
+		position.z -= move.z;
+	}
+
+	void addQRot(XMVECTOR rotQ)
+	{
+		qRot = rotQ;
+	}
+
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 	void PlayAnimation();
@@ -63,19 +114,49 @@ private:
 
 	static Camera* camera;
 
+	//パイプライン(通常)
 	static ComPtr<ID3D12RootSignature> rootsignature;
-
 	static ComPtr<ID3D12PipelineState> pipelinestate;
 
+<<<<<<< HEAD
 public:
+=======
+	//パイプライン(単色)
+	static ComPtr<ID3D12RootSignature> rootsignatureSimple;
+	static ComPtr<ID3D12PipelineState> pipelinestateSimple;
+
+	Camera* respectiveCamera = nullptr;
+>>>>>>> 00ae667dc1d9121a6adfcecf84baa12439cbf305
 
 	XMFLOAT3 scale = { 1,1,1 };
 
+	/// <summary>
+	/// ロールピッチヨー回転
+	/// </summary>
+	/// <param name="x">ピッチ</param>
+	/// <param name="y">ヨー</param>
+	/// <param name="z">ロール</param>
 	XMFLOAT3 rotation = { 0,0,0 };
 
 	XMFLOAT3 position = { 0,0,0 };
 
+<<<<<<< HEAD
 private:
+=======
+	XMVECTOR qRot = XMQuaternionIdentity();
+
+	float moveSpeed = 0.0f;
+
+	XMVECTOR directionFront = { 0,0,1,0 };
+
+	XMVECTOR directionUp = { 0,1,0,0 };
+
+	XMMATRIX matScale, matRot, matTrans;//各変換行列
+
+	float upAngle = 0.0f;
+
+	float rightAngle = 0.0f;
+>>>>>>> 00ae667dc1d9121a6adfcecf84baa12439cbf305
 
 	XMMATRIX matWorld;
 

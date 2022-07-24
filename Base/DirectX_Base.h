@@ -60,11 +60,14 @@ public:
 	void Initializedepth();
 
 	//描画処理前
-	void Begin_Draw();
+	void preDraw();
 
 	//描画処理後
-	void Finish_Draw();
+	void postDraw();
 
 	//深度バッファクリア
 	void depthclear();
+
+	//バッファのフリップ
+	void finishDraw();
 };
