@@ -59,8 +59,10 @@ struct Material
 //バッファビュー構造体
 struct Viewes
 {
-	D3D12_VERTEX_BUFFER_VIEW vbView{};						//頂点バッファビュー
-	D3D12_INDEX_BUFFER_VIEW idView{};						//インデックスバッファビュー
+	//頂点バッファビュー
+	D3D12_VERTEX_BUFFER_VIEW vbView{};
+	//インデックスバッファビュー
+	D3D12_INDEX_BUFFER_VIEW idView{};
 	//頂点バッファの生成
 	ComPtr<ID3D12Resource> vertBuff;
 	ComPtr<ID3D12Resource> indexBuff;

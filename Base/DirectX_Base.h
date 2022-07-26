@@ -16,7 +16,7 @@ using namespace std;
 class directX
 {
 private:
-	float clearColor[4] = { 0.2f,0.2f,0.8f,0 };
+	float clearColor[4] = { 0.0f,0.0f,0.0f,0 };
 public:
 	HRESULT result;
 	ComPtr<IDXGIFactory6> dxgiFactory;

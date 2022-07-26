@@ -158,6 +158,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="2D\Debug_Text.h" />
+    <ClInclude Include="2D\Primitive2D.h" />
     <ClInclude Include="2D\PostEffect.h" />
     <ClInclude Include="2D\SpriteCommon.h" />
     <ClInclude Include="2D\SpriteSingleunit.h" />
@@ -185,6 +186,7 @@
   <ItemGroup>
     <ClCompile Include="2D\Debug_Text.cpp" />
     <ClCompile Include="2D\PostEffect.cpp" />
+    <ClCompile Include="2D\Primitive2D.cpp" />
     <ClCompile Include="2D\SpriteCommon.cpp" />
     <ClCompile Include="2D\SpriteSingleunit.cpp" />
     <ClCompile Include="3D\3Dobject.cpp" />
