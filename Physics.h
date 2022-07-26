@@ -36,6 +36,10 @@ public:
 	XMFLOAT3 StartSpeed = { 0,0,0 };
 	//加速度
 	XMFLOAT3 Accel = { 0,0,0 };
+	//質量
+	float M = 1.0f;
+	//エネルギー
+	XMFLOAT3 E = {};
 
 	bool IsMove = false;
 
@@ -65,4 +69,10 @@ public:
 	/// </summary>
 	/// <param name="friction">摩擦係数</param>
 	void Slide(float friction);
+
+	/// <summary>
+	/// 衝突
+	/// </summary>
+	/// <param name="ball2">当てる相手</param>
+	void hitBallSlide(Ball& ball2);
 };

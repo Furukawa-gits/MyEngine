@@ -128,5 +128,7 @@ public:
 	int result_count = 0;
 
 	Ball ball;
+	Ball ball2;
 	SingleSprite BallSprite;
+	SingleSprite BallSprite2;
 };

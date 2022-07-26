@@ -25,7 +25,6 @@ void Ball::Update(float friction)
 		{
 			Throw();
 			Time += (1.0f / 60.0f);
-			return;
 		}
 
 		//スライド
@@ -33,9 +32,13 @@ void Ball::Update(float friction)
 		{
 			Slide(friction);
 			Time += (1.0f / 60.0f);
-			return;
 		}
 	}
+
+	//今持ってる運動エネルギーを求める
+	E.x = 0.5f * M * powf(fabs(Accel.x), 2);
+	E.y = 0.5f * M * powf(fabs(Accel.y), 2);
+	E.z = 0.5f * M * powf(fabs(Accel.z), 2);
 }
 
 void Ball::Throw()
@@ -74,25 +77,128 @@ void Ball::Throw()
 
 void Ball::Slide(float friction)
 {
+	//速度加算
 	Pos.x += Accel.x;
+	Pos.y += Accel.y;
 	Pos.z += Accel.z;
 
-	//各方向の摩擦計算
-	if (Accel.x > friction)
+	//速度の絶対値
+	XMFLOAT3 accelAbs =
 	{
-		Accel.x -= friction;
+		fabsf(Accel.x),
+		fabsf(Accel.y),
+		fabsf(Accel.z)
+	};
+
+	//各方向の摩擦計算
+	if (accelAbs.x > friction)
+	{
+		if (Accel.x > 0)
+		{
+			Accel.x -= friction;
+		}
+		else if (Accel.x < 0)
+		{
+			Accel.x += friction;
+		}
 	}
 	else
 	{
 		Accel.x = 0;
 	}
 
-	if (Accel.z > friction)
+	if (accelAbs.y > friction)
 	{
-		Accel.z -= friction;
+		if (Accel.y > 0)
+		{
+			Accel.y -= friction;
+		}
+		else if (Accel.y < 0)
+		{
+			Accel.y += friction;
+		}
+	}
+	else
+	{
+		Accel.y = 0;
+	}
+
+	if (accelAbs.z > friction)
+	{
+		if (Accel.z > 0)
+		{
+			Accel.z -= friction;
+		}
+		else if (Accel.z < 0)
+		{
+			Accel.z += friction;
+		}
 	}
 	else
 	{
 		Accel.z = 0;
+	}
+}
+
+void Ball::hitBallSlide(Ball& ball2)
+{
+	//2つのボールの距離
+	XMFLOAT3 dis =
+	{
+		fabsf(this->Pos.x - ball2.Pos.x),
+		fabsf(this->Pos.y - ball2.Pos.y),
+		fabsf(this->Pos.z - ball2.Pos.z)
+	};
+
+	//直線距離(上のベクトルの大きさ)
+	float disVec = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
+
+	//計算する前の速度
+	XMFLOAT3 oldAccel = Accel;
+
+	//衝突した時
+	if (disVec <= Radius.x + ball2.Radius.x)
+	{
+		//相手のボールにエネルギーを与える
+		ball2.E = this->E;
+
+		//ベクトルの向きに応じて標的にも速度を与える
+		if (Accel.x > 0)
+		{
+			ball2.Accel.x = sqrtf(ball2.E.x / (0.5 * ball2.M));
+			ball2.IsMove = true;
+		}
+		else if (Accel.x < 0)
+		{
+			ball2.Accel.x = -(sqrtf(ball2.E.x / (0.5 * ball2.M)));
+			ball2.IsMove = true;
+		}
+
+		if (Accel.y > 0)
+		{
+			ball2.Accel.y = sqrtf(ball2.E.y / (0.5 * ball2.M));
+			ball2.IsMove = true;
+		}
+		else if (Accel.y < 0)
+		{
+			ball2.Accel.y = -(sqrtf(ball2.E.y / (0.5 * ball2.M)));
+			ball2.IsMove = true;
+		}
+
+		if (Accel.z > 0)
+		{
+			ball2.Accel.z = sqrtf(ball2.E.z / (0.5 * ball2.M));
+			ball2.IsMove = true;
+		}
+		else if (Accel.z < 0)
+		{
+			ball2.Accel.z = -(sqrtf(ball2.E.z / (0.5 * ball2.M)));
+			ball2.IsMove = true;
+		}
+
+		//速度ベクトルを反転(正面衝突想定)
+		Accel.x *= -1;
+		Accel.y *= -1;
+		Accel.z *= -1;
 	}
 }

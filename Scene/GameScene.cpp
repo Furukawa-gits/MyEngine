@@ -23,8 +23,13 @@ void GameScene::Load_Sprites()
 	sample_back.size = { 1280,720 };
 	sample_back.GenerateSprite("sample_back.jpg");
 
-	BallSprite.size = { 200,200 };
+	BallSprite.anchorpoint = { 0.5f,0.5f };
+	BallSprite.size = { 100,100 };
 	BallSprite.GenerateSprite("Ball.png");
+
+	BallSprite2.anchorpoint = { 0.5f,0.5f };
+	BallSprite2.size = { 100,100 };
+	BallSprite2.GenerateSprite("Ball.png");
 }
 
 //初期化
@@ -57,8 +62,14 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	Load_Sprites();
 
 
-	ball.Pos = { 100,-400,0 };
-	ball.IsThrow = true;
+	ball.Pos = { 200,-400,0 };
+	ball.Radius = { 50,50,50 };
+	ball.IsSlide = true;
+
+	ball2.Pos = { 900,-400,0 };
+	ball2.Radius = { 50,50,50 };
+	ball2.M = 3.0f;
+	ball2.IsSlide = true;
 
 	//3dオブジェクト生成
 
@@ -69,6 +80,16 @@ void GameScene::debugs_print()
 {
 	debugtext.Print("SPACE:Start", 50, 50);
 	debugtext.Print("R:Reset", 50, 70);
+
+	char text1[30];
+	snprintf(text1, sizeof(text1), "ball:Accel=%f", ball.Accel.x);
+	debugtext.Print(text1, 50, 90);
+	debugtext.Print("ball:M=1.0", 50, 110);
+
+	char text2[30];
+	snprintf(text2, sizeof(text2), "ball2:Accel=%f", ball2.Accel.x);
+	debugtext.Print(text2, 1000, 90);
+	debugtext.Print("ball2:M=3.0", 1000, 110);
 }
 
 //タイトル画面更新
@@ -76,24 +97,30 @@ void GameScene::Title_update()
 {
 	if (input->Triger(DIK_R))
 	{
-		ball.Pos = { 100,-400,0 };
+		ball.Pos = { 200,-400,0 };
 		ball.IsMove = false;
+		ball2.Pos = { 900,-400,0 };
+		ball2.IsMove = false;
 	}
 
 	if (input->Triger(DIK_SPACE))
 	{
-		ball.Set({ 100,-400,0 }, { 35,30,0 });
+		ball.Set({ 200,-400,0 }, { 50,0,0 });
+		//ball2.Set({ 900,-400,0 }, { -50,0,0 });
 	}
 
-	ball.Update(0.8f);
+	ball.Update(1.2f);
+	ball2.Update(1.5f);
+
+	ball.hitBallSlide(ball2);
 
 	BallSprite.position = { ball.Pos.x,ball.Pos.y * -1,ball.Pos.z };
 	BallSprite.SpriteUpdate();
 
-	debugs_print();
+	BallSprite2.position = { ball2.Pos.x,ball2.Pos.y * -1,ball2.Pos.z };
+	BallSprite2.SpriteUpdate();
 
-	//マウスカーソル非表示
-	ShowCursor(false);
+	debugs_print();
 }
 
 //プレイ画面更新
@@ -112,6 +139,7 @@ void GameScene::Result_update()
 void GameScene::Title_draw()
 {
 	BallSprite.DrawSprite(directx->cmdList.Get());
+	BallSprite2.DrawSprite(directx->cmdList.Get());
 
 	//object->Draw(directx->cmdList.Get());
 
