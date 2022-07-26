@@ -99,17 +99,6 @@ public:
 	XMFLOAT3 MOUSE_POS;
 	Camera* camera = nullptr;
 
-	FollowCamera* followcamera = nullptr;
-
-	XMFLOAT3 objectRot = { 0,0,0 };
-
-	float up = 0.0f;
-	float right = 0.0f;
-
-	float pitch = 0.0f;
-	float yow = 0.0f;
-	float roll = 0.0f;
-
 	/// <summary>
 	/// ゲームに使う変数等はここに
 	/// </summary>
@@ -119,21 +108,11 @@ public:
 	//スプライト(各クラスに依存しないやつ)
 	
 	//3dオブジェクト
-	Model* model = nullptr;
-	Model* SkyModel = nullptr;
-	Object3d_FBX* object = nullptr;
-	Object3d_FBX* skySphere = nullptr;
-	Object3d_FBX* cameraobj = nullptr;
 
 	//敵(test)
-	static const int enemynum = 30;
-	Enemy testEnemys[enemynum];
 
 	//照準スプライト関連
-	int mousePressCount = 0;
-	SingleSprite target;
-	bool isTarget = false;
-
+	
 	//背景
 	SingleSprite sample_back;
 
