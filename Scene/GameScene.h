@@ -91,6 +91,8 @@ public:
 
 private:
 
+	//-------------ゲームに使う変数等はここより↓-------------
+
 	static const int debugTextnum = 0;
 	//基幹部分
 	directX* directx = nullptr;
@@ -110,11 +112,6 @@ private:
 	float pitch = 0.0f;
 	float yow = 0.0f;
 	float roll = 0.0f;
-
-	/// <summary>
-	/// ゲームに使う変数等はここに
-	/// </summary>
-
 	//音
 
 	//スプライト(各クラスに依存しないやつ)
@@ -130,6 +127,16 @@ private:
 	static const int enemynum = 30;
 	Enemy testEnemys[enemynum];
 	bool isEnemySimple = false;
+
+	/// <summary>
+	/// テスト用ボス
+	/// <para>初期化処理内でHPを30に設定</para>
+	/// <para>アップデート処理内で敵が全滅するまで待つ</para>
+	/// <para>全滅したら出現</para>
+	/// <para>HP削り切ったら消滅</para>
+	/// オブジェクトのサイズは大きくして分かりやすく
+	/// </summary>
+	Enemy testBoss;
 
 	//照準スプライト関連
 	int mousePressCount = 0;

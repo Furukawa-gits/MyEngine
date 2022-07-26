@@ -51,6 +51,7 @@ void Enemy::reSet()
 {
 	testObject->SetPosition(startPos);
 	Isarive = true;
+	HP = 1;
 	Istarget_set = false;
 }
 
@@ -121,6 +122,11 @@ void Enemy::isHitShot(XMFLOAT2 targetpos)
 
 	if (dis < 30)
 	{
-		Isarive = false;
+		HP--;
+
+		if (HP <= 0)
+		{
+			Isarive = false;
+		}
 	}
 }

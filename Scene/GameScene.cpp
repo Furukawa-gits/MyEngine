@@ -145,7 +145,7 @@ void GameScene::Title_update()
 	//Œã‚É‰º‚ª‚é
 	if (input->push(DIK_S))
 	{
-		//object->addMoveBack(followcamera->getFrontVec());
+		object->addMoveBack(followcamera->getFrontVec());
 	}
 
 	if (input->push(DIK_R))

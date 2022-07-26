@@ -24,7 +24,7 @@ private:
 class Enemy
 {
 public:
-	//g‚í‚È‚¢“z
+	//g‚í‚È‚¢“z(‘‚«Š·‚¦‚½‚Æ‚«‚É’Ç‰Á)
 	object3D_obj enemy;
 	Viewes enemy_view;
 	Viewes enemy_view2;
@@ -44,6 +44,9 @@ public:
 	bool Isarive = false;
 	bool Istarget_set = false;
 	SingleSprite Rock_Target;
+
+	//‘Ì—Í
+	int HP = 1;
 
 	XMFLOAT3 startPos = {};
 
