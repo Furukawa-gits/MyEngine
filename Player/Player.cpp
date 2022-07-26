@@ -25,16 +25,14 @@ void Player::init(dxinput* input, TexManager* tex, directX* directx)
 
 	Isarive = true;
 
-	//Target.GenerateSprite(object3D_obj::directx->dev.Get(), 2, tex, false, false, false, false);
-
 	player_collision.radius = 4.0f;
 
 	for (int i = 0; i < 10; i++)
 	{
 		//hp[i].GenerateSprite(object3D_obj::directx->dev.Get(),13, tex, false, false, false, false);
-		hp[i].anchorpoint = { 0.0f,0.0f };
-		hp[i].position = { (i * 30.0f) + 30.0f,670.0f,0.0f };
-		hp[i].size = { 40.0f,40.0f };
+		//hp[i].anchorpoint = { 0.0f,0.0f };
+		//hp[i].position = { (i * 30.0f) + 30.0f,670.0f,0.0f };
+		//hp[i].size = { 40.0f,40.0f };
 		//hp[i].SpriteTransferVertexBuffer(tex, false);
 	}
 }
@@ -43,26 +41,28 @@ void Player::Move()
 {
 	if (input->push(DIK_D) && Player_object.position.x <= Move_limit)
 	{
-		Player_object.position.x += 1.0f;
+		//Player_object.position.x += 1.0f;
 	}
 
 	if (input->push(DIK_A) && Player_object.position.x >= -Move_limit)
 	{
-		Player_object.position.x -= 1.0f;
+		//Player_object.position.x -= 1.0f;
 	}
 
 	if (input->push(DIK_W) && Player_object.position.y <= Move_limit)
 	{
-		Player_object.position.y += 1.0f;
+		//Player_object.position.y += 1.0f;
 	}
 
 	if (input->push(DIK_S) && Player_object.position.y >= -Move_limit)
 	{
-		Player_object.position.y -= 1.0f;
+		//Player_object.position.y -= 1.0f;
 	}
 }
 
-//敵とプレイヤー弾の当たり判定			※プレイヤー更新処理の中には描かない		※ゲームシーン内で書く
+//敵とプレイヤー弾の当たり判定
+//※プレイヤー更新処理の中には描かない
+//※ゲームシーン内で書く
 void Player::checkplayerbullet(Enemy* enemy)
 {
 	for (int i = 0; i < MaxPlayerBulletNum; i++)

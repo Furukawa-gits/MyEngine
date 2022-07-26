@@ -5,7 +5,7 @@
 class DebugText
 {
 public:
-	static const int MaxCharCount = 1024;
+	static const int MaxCharCount = 2000;
 	static const int FontWid = 9;
 	static const int FontHei = 18;
 	static const int FontLineCount = 14;
