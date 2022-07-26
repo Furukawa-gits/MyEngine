@@ -118,15 +118,12 @@ private:
 	static ComPtr<ID3D12RootSignature> rootsignature;
 	static ComPtr<ID3D12PipelineState> pipelinestate;
 
-<<<<<<< HEAD
 public:
-=======
 	//パイプライン(単色)
 	static ComPtr<ID3D12RootSignature> rootsignatureSimple;
 	static ComPtr<ID3D12PipelineState> pipelinestateSimple;
 
 	Camera* respectiveCamera = nullptr;
->>>>>>> 00ae667dc1d9121a6adfcecf84baa12439cbf305
 
 	XMFLOAT3 scale = { 1,1,1 };
 
@@ -140,9 +137,7 @@ public:
 
 	XMFLOAT3 position = { 0,0,0 };
 
-<<<<<<< HEAD
 private:
-=======
 	XMVECTOR qRot = XMQuaternionIdentity();
 
 	float moveSpeed = 0.0f;
@@ -156,7 +151,6 @@ private:
 	float upAngle = 0.0f;
 
 	float rightAngle = 0.0f;
->>>>>>> 00ae667dc1d9121a6adfcecf84baa12439cbf305
 
 	XMMATRIX matWorld;
 

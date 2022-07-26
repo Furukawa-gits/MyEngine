@@ -169,7 +169,7 @@ void GameScene::Update()
 void GameScene::DrawBack()
 {
 	//”wŒiƒXƒvƒ‰ƒCƒg•`‰æ
-	sample_back.DrawSprite(directx->cmdList.Get());
+	//sample_back.DrawSprite(directx->cmdList.Get());
 }
 
 //•`‰æ
