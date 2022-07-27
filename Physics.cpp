@@ -154,7 +154,8 @@ void Ball::hitBallSlide(Ball& ball2)
 	float disVec = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
 
 	//計算する前の速度
-	XMFLOAT3 oldAccel = Accel;
+	XMFLOAT3 oldAccel = this->Accel;
+	XMFLOAT3 oldAccel2 = ball2.Accel;
 
 	//衝突した時
 	if (disVec <= Radius.x + ball2.Radius.x)
@@ -163,42 +164,42 @@ void Ball::hitBallSlide(Ball& ball2)
 		ball2.E = this->E;
 
 		//ベクトルの向きに応じて標的にも速度を与える
-		if (Accel.x > 0)
+		if (oldAccel.x > 0)
 		{
 			ball2.Accel.x = sqrtf(ball2.E.x / (0.5 * ball2.M));
 			ball2.IsMove = true;
 		}
-		else if (Accel.x < 0)
+		else if (oldAccel.x < 0)
 		{
 			ball2.Accel.x = -(sqrtf(ball2.E.x / (0.5 * ball2.M)));
 			ball2.IsMove = true;
 		}
 
-		if (Accel.y > 0)
+		if (oldAccel.y > 0)
 		{
 			ball2.Accel.y = sqrtf(ball2.E.y / (0.5 * ball2.M));
 			ball2.IsMove = true;
 		}
-		else if (Accel.y < 0)
+		else if (oldAccel.y < 0)
 		{
 			ball2.Accel.y = -(sqrtf(ball2.E.y / (0.5 * ball2.M)));
 			ball2.IsMove = true;
 		}
 
-		if (Accel.z > 0)
+		if (oldAccel.z > 0)
 		{
 			ball2.Accel.z = sqrtf(ball2.E.z / (0.5 * ball2.M));
 			ball2.IsMove = true;
 		}
-		else if (Accel.z < 0)
+		else if (oldAccel.z < 0)
 		{
 			ball2.Accel.z = -(sqrtf(ball2.E.z / (0.5 * ball2.M)));
 			ball2.IsMove = true;
 		}
 
 		//速度ベクトルを反転(正面衝突想定)
-		Accel.x *= -1;
-		Accel.y *= -1;
-		Accel.z *= -1;
+		Accel.x *= -1 * repulsion;
+		Accel.y *= -1 * repulsion;
+		Accel.z *= -1 * repulsion;
 	}
 }

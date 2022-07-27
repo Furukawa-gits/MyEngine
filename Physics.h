@@ -40,6 +40,8 @@ public:
 	float M = 1.0f;
 	//ƒGƒlƒ‹ƒM[
 	XMFLOAT3 E = {};
+	//”½”­ŒW”
+	float repulsion = 1.0f;
 
 	bool IsMove = false;
 

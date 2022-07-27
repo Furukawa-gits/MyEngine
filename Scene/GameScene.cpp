@@ -85,6 +85,8 @@ void GameScene::debugs_print()
 	snprintf(text1, sizeof(text1), "ball:Accel=%f", ball.Accel.x);
 	debugtext.Print(text1, 50, 90);
 	debugtext.Print("ball:M=1.0", 50, 110);
+	snprintf(text1, sizeof(text1), "ball:Repulsion=%f", ball.repulsion);
+	debugtext.Print(text1, 50, 130);
 
 	char text2[30];
 	snprintf(text2, sizeof(text2), "ball2:Accel=%f", ball2.Accel.x);
@@ -95,10 +97,21 @@ void GameScene::debugs_print()
 //タイトル画面更新
 void GameScene::Title_update()
 {
+	if (input->Triger(DIK_UP) && ball.repulsion < 1.0f)
+	{
+		ball.repulsion += 0.1f;
+	}
+
+	if (input->Triger(DIK_DOWN) && ball.repulsion > 0.0f)
+	{
+		ball.repulsion -= 0.1f;
+	}
+
 	if (input->Triger(DIK_R))
 	{
 		ball.Pos = { 200,-400,0 };
 		ball.IsMove = false;
+		ball.repulsion = 1.0f;
 		ball2.Pos = { 900,-400,0 };
 		ball2.IsMove = false;
 	}
@@ -106,7 +119,7 @@ void GameScene::Title_update()
 	if (input->Triger(DIK_SPACE))
 	{
 		ball.Set({ 200,-400,0 }, { 50,0,0 });
-		//ball2.Set({ 900,-400,0 }, { -50,0,0 });
+		ball2.Set({ 900,-400,0 }, { 0,0,0 });
 	}
 
 	ball.Update(1.2f);
