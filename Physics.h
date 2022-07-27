@@ -77,4 +77,11 @@ public:
 	/// </summary>
 	/// <param name="ball2">当てる相手</param>
 	void hitBallSlide(Ball& ball2);
+
+	/// <summary>
+	/// 指定した座標への向心力運動
+	/// </summary>
+	/// <param name="center">中心点</param>
+	/// <param name="radius">重力</param>
+	void circularMotion2D(XMFLOAT3 center, float G);
 };

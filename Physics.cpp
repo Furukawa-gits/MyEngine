@@ -203,3 +203,8 @@ void Ball::hitBallSlide(Ball& ball2)
 		Accel.z *= -1 * repulsion;
 	}
 }
+
+void Ball::circularMotion2D(XMFLOAT3 center, float G)
+{
+
+}
