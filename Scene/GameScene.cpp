@@ -185,7 +185,7 @@ void GameScene::Title_update()
 	//敵(テスト)初期化
 	for (int i = 0; i < enemynum; i++)
 	{
-		testEnemys[i].update({ 0,0,0 });
+		testEnemys[i].update(object->getPosition());
 	}
 
 	//マウスカーソル非表示
@@ -227,7 +227,7 @@ void GameScene::Title_update()
 		{
 			if (testEnemys[i].Istarget_set)
 			{
-				testEnemys[i].Isarive = false;
+				testEnemys[i].HP--;
 			}
 		}
 	}
@@ -238,16 +238,6 @@ void GameScene::Title_update()
 		{
 			testEnemys[i].isHitShot({ target.position.x,target.position.y });
 		}
-	}
-
-	//敵オブジェクト単色切り替え
-	if (input->Triger(DIK_1) && isEnemySimple == false)
-	{
-		isEnemySimple = true;
-	}
-	else if (input->Triger(DIK_1) && isEnemySimple == true)
-	{
-		isEnemySimple = false;
 	}
 }
 

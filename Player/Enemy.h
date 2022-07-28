@@ -24,7 +24,7 @@ private:
 class Enemy
 {
 public:
-	//使わない奴(書き換えたときに随時追加)
+	//--------------------使わない奴(書き換えたときに随時追加)--------------------
 	object3D_obj enemy;
 	Viewes enemy_view;
 	Viewes enemy_view2;
@@ -33,14 +33,13 @@ public:
 	bool Isshot = false;
 	int enemy_move_Pat = 1;
 	int move_flag = 1;
-	float enemy_speed = 1.5;
 	XMFLOAT3 enemy_action = { 0.0f,0.0f,0.0f };
 	XMFLOAT3 Shot_Vec = { 0.0f,0.0f,0.0f };
 	XMVECTOR enemy_sc_pos;
 	bool IsRockon_draw = false;
 	Sphere enemy_collision;
 
-	//使うやつ
+	//--------------------使うやつ--------------------
 	bool Isarive = false;
 	bool Istarget_set = false;
 	SingleSprite Rock_Target;
@@ -48,7 +47,8 @@ public:
 	//体力
 	int HP = 1;
 
-	XMFLOAT3 startPos = {};
+	XMFLOAT3 position = {};
+	float enemy_speed = 1.5;
 
 	Model* testCube = nullptr;
 	Object3d_FBX* testObject = nullptr;
@@ -60,6 +60,8 @@ public:
 	void reSet();
 
 	void update(XMFLOAT3 Player_pos);
+
+	void chase(XMFLOAT3 pPos);
 
 	void isHitTarget(XMFLOAT2 targetpos,bool istarget);
 

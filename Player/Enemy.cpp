@@ -29,19 +29,19 @@ void Enemy::init(int enemy_index, int enemy_bullet_index)
 	Rock_Target.size = { 70,70 };
 	Rock_Target.GenerateSprite("Rock_on.png");
 
-	testCube = FbxLoader::GetInstance()->LoadmodelFromFile("boneTest");
+	testCube = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
 
 	testObject = new Object3d_FBX;
 	testObject->Initialize();
 	testObject->SetModel(testCube);
-	testObject->SetScale({ 0.5f,0.5f,0.5f });
+	testObject->SetScale({ 1.0f,1.0f,1.0f });
 	testObject->setColor({ (float)(rand() % 100) / 100,(float)(rand() % 100) / 100 ,(float)(rand() % 100) / 100 ,1 });
 	//testObject->PlayAnimation();
 }
 
 void Enemy::set(XMFLOAT3 pos)
 {
-	startPos = pos;
+	position = pos;
 	testObject->SetPosition(pos);
 	Isarive = true;
 	Istarget_set = false;
@@ -49,7 +49,7 @@ void Enemy::set(XMFLOAT3 pos)
 
 void Enemy::reSet()
 {
-	testObject->SetPosition(startPos);
+	testObject->SetPosition(position);
 	Isarive = true;
 	HP = 1;
 	Istarget_set = false;
@@ -79,6 +79,12 @@ void Enemy::update(XMFLOAT3 Player_pos)
 		return;
 	}
 
+	//HPÇ™0Ç…Ç»Ç¡ÇΩÇÁè¡ñ≈
+	if (HP <= 0)
+	{
+		Isarive = false;
+	}
+
 	if (Istarget_set)
 	{
 		Rock_Target.rotation += 1.5f;
@@ -88,6 +94,27 @@ void Enemy::update(XMFLOAT3 Player_pos)
 	Rock_Target.SpriteUpdate();
 
 	testObject->Update();
+}
+
+void Enemy::chase(XMFLOAT3 pPos)
+{
+	XMFLOAT3 dis =
+	{
+		pPos.x - position.x,
+		pPos.y - position.y,
+		pPos.z - position.z
+	};
+
+	float disLength = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
+
+	XMFLOAT3 disNormal =
+	{
+		dis.x / disLength,
+		dis.y / disLength,
+		dis.z / disLength
+	};
+
+
 }
 
 void Enemy::isHitTarget(XMFLOAT2 targetpos, bool istarget)
