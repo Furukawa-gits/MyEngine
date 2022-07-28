@@ -16,6 +16,18 @@ void Ball::Set(XMFLOAT3 pos, XMFLOAT3 startspeed)
 	IsMove = true;
 }
 
+void Ball::setTarget(XMFLOAT3 pos, XMFLOAT3 speed)
+{
+	Pos = pos;
+
+	StartSpeed = { speed.x,speed.y,speed.z };
+	Accel = StartSpeed;
+
+	Time = 0;
+
+	IsMove = true;
+}
+
 void Ball::Update(float friction)
 {
 	if (IsMove)
@@ -206,5 +218,33 @@ void Ball::hitBallSlide(Ball& ball2)
 
 void Ball::circularMotion2D(XMFLOAT3 center, float G)
 {
+	if (!IsMove)
+	{
+		return;
+	}
 
+	XMFLOAT3 dis =
+	{
+		center.x - Pos.x,
+		center.y - Pos.y,
+		center.z - Pos.z
+	};
+
+	float disLength = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
+
+	XMFLOAT3 disNormalize =
+	{
+		dis.x / disLength,
+		dis.y / disLength,
+		dis.z / disLength
+	};
+
+	Accel.x += (disNormalize.x * G);
+	Accel.y += (disNormalize.y * G);
+	Accel.z += 0.0f;
+
+	//‘¬“x‰ÁŽZ
+	Pos.x += Accel.x;
+	Pos.y += Accel.y;
+	Pos.z = 0.0f;
 }

@@ -57,6 +57,14 @@ public:
 	void Set(XMFLOAT3 pos, XMFLOAT3 startspeed);
 
 	/// <summary>
+	/// ボールに力を加える
+	/// </summary>
+	/// <param name="pos">初期位置</param>
+	/// <param name="target">座標軸ごとの速度</param>
+	/// <param name="startspeed">初速</param>
+	void setTarget(XMFLOAT3 pos, XMFLOAT3 speed);
+
+	/// <summary>
 	/// 更新
 	/// </summary>
 	void Update(float friction);
