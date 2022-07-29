@@ -149,8 +149,3 @@ void primitiveLine2D::createGP()
 	//パイプラインステートの生成
 	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&SpritePipelinestate));
 }
-
-void primitiveLine2D::init()
-{
-
-}

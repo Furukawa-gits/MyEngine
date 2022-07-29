@@ -23,14 +23,20 @@ void GameScene::Load_Sprites()
 	sample_back.size = { 1280,720 };
 	sample_back.GenerateSprite("sample_back.jpg");
 
-	BallSprite.anchorpoint = { 0.5f,0.5f };
-	BallSprite.size = { 50,50 };
-	BallSprite.GenerateSprite("Ball.png");
+	BallSprite1.anchorpoint = { 0.5f,0.5f };
+	BallSprite1.position = { 100,160,0 };
+	BallSprite1.size = { 50,50 };
+	BallSprite1.GenerateSprite("Ball.png");
 
 	BallSprite2.anchorpoint = { 0.5f,0.5f };
-	BallSprite2.position = { 640,360,0 };
-	BallSprite2.size = { 10,10 };
+	BallSprite2.position = { 100,360,0 };
+	BallSprite2.size = { 50,50 };
 	BallSprite2.GenerateSprite("Ball.png");
+
+	BallSprite3.anchorpoint = { 0.5f,0.5f };
+	BallSprite3.position = { 100,560,0 };
+	BallSprite3.size = { 50,50 };
+	BallSprite3.GenerateSprite("Ball.png");
 }
 
 //初期化
@@ -62,11 +68,6 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	//スプライト生成
 	Load_Sprites();
 
-
-	ball.Pos = { 400,-150,0 };
-	ball.Radius = { 25,25,25 };
-	ball.IsSlide = true;
-
 	//3dオブジェクト生成
 
 }
@@ -78,34 +79,40 @@ void GameScene::debugs_print()
 	debugtext.Print("R:Reset", 50, 70);
 
 	char text1[30];
-	snprintf(text1, sizeof(text1), "ball:Accel=%f", ball.Accel.x);
+	//snprintf(text1, sizeof(text1), "ball:Accel=%f", ball.Accel.x);
 	debugtext.Print(text1, 50, 90);
 	debugtext.Print("ball:M=1.0", 50, 110);
-	snprintf(text1, sizeof(text1), "ball:Repulsion=%f", ball.repulsion);
+	//snprintf(text1, sizeof(text1), "ball:Repulsion=%f", ball.repulsion);
 	debugtext.Print(text1, 50, 130);
 }
 
 //タイトル画面更新
 void GameScene::Title_update()
 {
+	//リセット
 	if (input->Triger(DIK_R))
 	{
-		ball.Pos = { 400,-150,0 };
-		ball.IsMove = false;
-		ball.repulsion = 1.0f;
+		in.isStart = false;
+		out.isStart = false;
+		inOut.isStart = false;
 	}
 
+	//スタート
 	if (input->Triger(DIK_SPACE))
 	{
-		ball.Set({ 400,-150,0 }, { -15,-15,0 });
+		in.easingSet();
+		out.easingSet();
+		inOut.easingSet();
 	}
 
-	ball.circularMotion2D({ 640,-360,0 }, 3.0f);
+	//各スプライトのX座標をイージング
+	BallSprite1.position.x = in.easeInQuad(100, 900, 60);
+	BallSprite2.position.x = out.easeOutQuad(100, 900, 60);
+	BallSprite3.position.x = inOut.easeInOutQuad(100, 900, 60);
 
-	BallSprite.position = { ball.Pos.x,ball.Pos.y * -1,ball.Pos.z };
-	BallSprite.SpriteUpdate();
-
+	BallSprite1.SpriteUpdate();
 	BallSprite2.SpriteUpdate();
+	BallSprite3.SpriteUpdate();
 }
 
 //プレイ画面更新
@@ -146,6 +153,9 @@ void GameScene::Update()
 
 	//ゲーム時間カウント
 	game_time++;
+
+	//イージング用フレームカウント更新
+	easing::easingUpdate();
 
 	//シーン切り替え
 
@@ -202,6 +212,7 @@ void GameScene::Draw3D()
 
 void GameScene::DrawSP()
 {
-	BallSprite.DrawSprite(directx->cmdList.Get());
+	BallSprite1.DrawSprite(directx->cmdList.Get());
 	BallSprite2.DrawSprite(directx->cmdList.Get());
+	BallSprite3.DrawSprite(directx->cmdList.Get());
 }

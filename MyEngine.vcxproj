@@ -168,12 +168,12 @@
     <ClInclude Include="3D\ObjectCommon.h" />
     <ClInclude Include="Audio\Audio.h" />
     <ClInclude Include="Base\DirectX_Base.h" />
+    <ClInclude Include="Base\easing.h" />
     <ClInclude Include="Base\Fps_Manager.h" />
     <ClInclude Include="Base\TexManager.h" />
     <ClInclude Include="Base\WindowGenerate.h" />
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="camera\FollowCamera.h" />
-    <ClInclude Include="easing.h" />
     <ClInclude Include="FbxLoder\FbxLoader.h" />
     <ClInclude Include="FbxLoder\Model.h" />
     <ClInclude Include="FbxLoder\Object3d_FBX.h" />
@@ -196,6 +196,7 @@
     <ClCompile Include="3D\ObjectCommon.cpp" />
     <ClCompile Include="Audio\Audio.cpp" />
     <ClCompile Include="Base\DirectX_Base.cpp" />
+    <ClCompile Include="Base\easing.cpp" />
     <ClCompile Include="Base\Fps_Manager.cpp" />
     <ClCompile Include="Base\TexManager.cpp" />
     <ClCompile Include="Base\WindowGenerate.cpp" />

@@ -40,6 +40,7 @@
     <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="2D\Primitive2D.cpp" />
+    <ClCompile Include="Base\easing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2D\Debug_Text.h" />
@@ -67,7 +68,7 @@
     <ClInclude Include="Player\Player.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="2D\Primitive2D.h" />
-    <ClInclude Include="easing.h" />
+    <ClInclude Include="Base\easing.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli" />

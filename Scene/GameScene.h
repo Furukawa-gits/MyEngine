@@ -12,6 +12,7 @@
 #include"../camera/FollowCamera.h"
 
 #include"../Player/Enemy.h"
+#include"../Base/easing.h"
 
 #include<random>
 #include<time.h>
@@ -106,12 +107,15 @@ public:
 	//音
 
 	//スプライト(各クラスに依存しないやつ)
+	SingleSprite BallSprite1;
+	SingleSprite BallSprite2;
+	SingleSprite BallSprite3;
+
+	easing in;
+	easing out;
+	easing inOut;
 	
 	//3dオブジェクト
-
-	//敵(test)
-
-	//照準スプライト関連
 	
 	//背景
 	SingleSprite sample_back;
@@ -127,7 +131,4 @@ public:
 	//リザルトの表示切り替え
 	int result_count = 0;
 
-	Ball ball;
-	SingleSprite BallSprite;
-	SingleSprite BallSprite2;
 };
