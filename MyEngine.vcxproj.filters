@@ -12,6 +12,8 @@
     <FxCompile Include="Resources\shaders\PostEffectTestVS.hlsl" />
     <FxCompile Include="Resources\shaders\SpritePS.hlsl" />
     <FxCompile Include="Resources\shaders\SpriteVS.hlsl" />
+    <FxCompile Include="Resources\shaders\LinePS.hlsl" />
+    <FxCompile Include="Resources\shaders\LineVS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="2D\Debug_Text.cpp" />
@@ -76,5 +78,6 @@
     <None Include="Resources\shaders\OBJ.hlsli" />
     <None Include="Resources\shaders\PostEffectTest.hlsli" />
     <None Include="Resources\shaders\Sprite.hlsli" />
+    <None Include="Resources\shaders\Line.hlsli" />
   </ItemGroup>
 </Project>

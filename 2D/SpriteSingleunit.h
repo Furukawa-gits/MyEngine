@@ -82,6 +82,13 @@ public:
 	/// <param name="texture">テクスチャマネージャー</param>
 	void DrawSprite(ID3D12GraphicsCommandList* cmdList);
 
+	/// <summary>
+	/// 線ごり押し
+	/// </summary>
+	/// <param name="start">始点</param>
+	/// <param name="end">終点</param>
+	void SetLineSprite(XMFLOAT3 start, XMFLOAT3 end);
+
 public:
 	//Z軸周りの回転角
 	float rotation = 0.0f;

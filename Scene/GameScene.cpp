@@ -37,6 +37,8 @@ void GameScene::Load_Sprites()
 	BallSprite3.position = { 100,560,0 };
 	BallSprite3.size = { 50,50 };
 	BallSprite3.GenerateSprite("Ball.png");
+
+	lineSprite.GenerateSprite("white1x1.png");
 }
 
 //初期化
@@ -97,6 +99,8 @@ void GameScene::Title_update()
 		inOut.isStart = false;
 	}
 
+	
+
 	//スタート
 	if (input->Triger(DIK_SPACE))
 	{
@@ -106,13 +110,15 @@ void GameScene::Title_update()
 	}
 
 	//各スプライトのX座標をイージング
-	BallSprite1.position.x = in.easeInQuad(100, 900, 60);
-	BallSprite2.position.x = out.easeOutQuad(100, 900, 60);
-	BallSprite3.position.x = inOut.easeInOutQuad(100, 900, 60);
+	BallSprite1.position = lineSprite.position;
+	BallSprite2.position = start;
+	BallSprite3.position = end;
 
 	BallSprite1.SpriteUpdate();
 	BallSprite2.SpriteUpdate();
 	BallSprite3.SpriteUpdate();
+
+	lineSprite.SetLineSprite(start, end);
 }
 
 //プレイ画面更新
@@ -215,4 +221,6 @@ void GameScene::DrawSP()
 	BallSprite1.DrawSprite(directx->cmdList.Get());
 	BallSprite2.DrawSprite(directx->cmdList.Get());
 	BallSprite3.DrawSprite(directx->cmdList.Get());
+
+	lineSprite.DrawSprite(directx->cmdList.Get());
 }

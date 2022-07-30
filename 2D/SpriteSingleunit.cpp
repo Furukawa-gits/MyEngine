@@ -399,3 +399,65 @@ void SingleSprite::DrawSprite(ID3D12GraphicsCommandList* cmdList)
 	//描画コマンド
 	cmdList->DrawInstanced(4, 1, 0, 0);
 }
+
+//線ごり押し
+void SingleSprite::SetLineSprite(XMFLOAT3 start, XMFLOAT3 end)
+{
+	anchorpoint = { 0.5f,0.5f };
+
+	XMFLOAT3 sToe =
+	{
+		end.x - start.x,
+		end.y - start.y,
+		end.z - start.z
+	};
+
+	position =
+	{
+		start.x + (sToe.x / 2),
+		start.y + (sToe.y / 2),
+		start.z
+	};
+
+	//右向き
+	XMFLOAT3 right =
+	{
+		1.0f,
+		0.0f,
+		0.0f
+	};
+
+	//左向き
+	XMFLOAT3 left =
+	{
+		-1.0f,
+		0.0f,
+		0.0f
+	};
+
+	float rightAngle =
+		(sToe.x * right.x + sToe.y * right.y + sToe.z * right.z) /
+		(sqrtf(powf(sToe.x, 2) + powf(sToe.y, 2) + powf(sToe.z, 2)) * 
+			sqrtf(powf(right.x, 2) + powf(right.y, 2) + powf(right.z, 2)));
+
+	float leftAngle=
+		(sToe.x * left.x + sToe.y * left.y + sToe.z * left.z) /
+		(sqrtf(powf(sToe.x, 2) + powf(sToe.y, 2) + powf(sToe.z, 2)) *
+			sqrtf(powf(left.x, 2) + powf(left.y, 2) + powf(left.z, 2)));
+
+	float pi = 3.14159265;
+
+	if (rightAngle < leftAngle)
+	{
+		rotation = -acosf(rightAngle) * (180 / pi);
+	}
+	else
+	{
+		rotation = -acosf(leftAngle) * (180 / pi);
+	}
+
+	size = { sqrtf(powf(sToe.x, 2) + powf(sToe.y, 2) + powf(sToe.z, 2)) ,1.0f };
+
+	SpriteTransferVertexBuffer();
+	SpriteUpdate();
+}

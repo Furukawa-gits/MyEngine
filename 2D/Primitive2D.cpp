@@ -1,18 +1,41 @@
 #include"Primitive2D.h"
 
 ID3D12Device* primitiveLine2D::device = nullptr;
-ComPtr<ID3D12RootSignature> primitiveLine2D::SpriteRootsignature;
-ComPtr<ID3D12PipelineState> primitiveLine2D::SpritePipelinestate;
+ComPtr<ID3D12RootSignature> primitiveLine2D::lineRootsignature;
+ComPtr<ID3D12PipelineState> primitiveLine2D::linePipelinestate;
 XMMATRIX primitiveLine2D::matprojection;
 
 void primitiveLine2D::SetStaticData(ID3D12Device* dev)
 {
 	device = dev;
+
+	createGP();
+
+	matprojection = XMMatrixOrthographicOffCenterLH(
+		0.0f, (float)win_width, (float)win_hight, 0.0f, 0.0f, 1.0f);
+}
+
+void primitiveLine2D::lineTransferVertexBuffer()
+{
+	HRESULT result = S_FALSE;
+
+	//頂点データ
+	VertexPos vertices[] =
+	{
+		startPos,
+		endPos
+	};
+
+	//頂点バッファへのデータ転送
+	VertexPos* vertMap = nullptr;
+	result = this->lineVertBuff->Map(0, nullptr, (void**)&vertMap);
+	memcpy(vertMap, vertices, sizeof(vertices));
+	this->lineVertBuff->Unmap(0, nullptr);
 }
 
 void primitiveLine2D::createGP()
 {
-	if (SpritePipelinestate != NULL && SpriteRootsignature != NULL)
+	if (linePipelinestate != NULL && lineRootsignature != NULL)
 	{
 		return;
 	}
@@ -25,7 +48,7 @@ void primitiveLine2D::createGP()
 
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shaders/SpriteVS.hlsl",  // シェーダファイル名
+		L"Resources/shaders/LineVS.hlsl",  // シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "vs_5_0", // エントリーポイント名、シェーダーモデル指定
@@ -35,7 +58,7 @@ void primitiveLine2D::createGP()
 
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shaders/SpritePS.hlsl",   // シェーダファイル名
+		L"Resources/shaders/LinePS.hlsl",   // シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "ps_5_0", // エントリーポイント名、シェーダーモデル指定
@@ -61,12 +84,6 @@ void primitiveLine2D::createGP()
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
 		{
 			"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
-			D3D12_APPEND_ALIGNED_ELEMENT,
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
-		},
-
-		{
-			"TEXCORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,
 			D3D12_APPEND_ALIGNED_ELEMENT,
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
 		}
@@ -103,8 +120,8 @@ void primitiveLine2D::createGP()
 	gpipeline.InputLayout.pInputElementDescs = inputLayout;
 	gpipeline.InputLayout.NumElements = _countof(inputLayout);
 
-	//図形の形状を三角形に設定
-	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	//図形の形状を線に設定
+	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
 
 	//その他の設定
 	gpipeline.NumRenderTargets = 1; //描画対象は1つ
@@ -141,11 +158,104 @@ void primitiveLine2D::createGP()
 	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc,
 		D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
 	result = device->CreateRootSignature(0, rootSigBlob->GetBufferPointer(),
-		rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&SpriteRootsignature));
+		rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&lineRootsignature));
 
 	//パイプラインにルートシグネチャをセット
-	gpipeline.pRootSignature = SpriteRootsignature.Get();
+	gpipeline.pRootSignature = lineRootsignature.Get();
 
 	//パイプラインステートの生成
-	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&SpritePipelinestate));
+	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&linePipelinestate));
+}
+
+void primitiveLine2D::init()
+{
+	HRESULT result = S_FALSE;
+
+	XMFLOAT3 a = { 0,0,0 };
+
+	//頂点データ
+	VertexPos vertices[] =
+	{
+		a,
+		a
+	};
+
+	//頂点バッファ生成
+	result = device->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer(sizeof(vertices)),
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&lineVertBuff));
+
+	//頂点バッファへのデータ転送
+	VertexPos* vertMap = nullptr;
+	result = this->lineVertBuff->Map(0, nullptr, (void**)&vertMap);
+	memcpy(vertMap, vertices, sizeof(vertices));
+	this->lineVertBuff->Unmap(0, nullptr);
+
+	//頂点バッファビューの作成
+	this->vbView.BufferLocation = this->lineVertBuff->GetGPUVirtualAddress();
+	this->vbView.SizeInBytes = sizeof(vertices);
+	this->vbView.StrideInBytes = sizeof(vertices);
+
+	//定数バッファの生成
+	result = device->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataL) + 0xff) & ~0xff),
+		D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+		IID_PPV_ARGS(&this->lineConstBuff));
+
+	//定数バッファにデータ転送
+	ConstBufferDataL* constMap = nullptr;
+	result = this->lineConstBuff->Map(0, nullptr, (void**)&constMap);
+	constMap->color = XMFLOAT4(1, 1, 1, 1);
+	constMap->startMat = XMMatrixOrthographicOffCenterLH(
+		0.0f, win_width, win_hight, 0.0f, 0.0f, 1.0f);
+	constMap->endMat = XMMatrixOrthographicOffCenterLH(
+		0.0f, win_width, win_hight, 0.0f, 0.0f, 1.0f);
+	this->lineConstBuff->Unmap(0, nullptr);
+}
+
+void primitiveLine2D::update()
+{
+	lineTransferVertexBuffer();
+
+	startMatWorld = XMMatrixIdentity();
+
+	startMatWorld *= XMMatrixTranslation(startPos.x, startPos.y, 0);
+
+	endMatWorld = XMMatrixIdentity();
+
+	endMatWorld *= XMMatrixTranslation(endPos.x, endPos.y, 0);
+
+	HRESULT result = S_FALSE;
+
+	//定数バッファにデータ転送
+	ConstBufferDataL* constMap = nullptr;
+	result = this->lineConstBuff->Map(0, nullptr, (void**)&constMap);
+	constMap->color = color;
+	constMap->startMat = endMatWorld * matprojection;
+	constMap->endMat = startMatWorld * matprojection;
+	this->lineConstBuff->Unmap(0, nullptr);
+}
+
+void primitiveLine2D::draw(ID3D12GraphicsCommandList* cmdList)
+{
+	cmdList->SetPipelineState(linePipelinestate.Get());
+
+	cmdList->SetGraphicsRootSignature(lineRootsignature.Get());
+
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+
+	//頂点バッファをセット
+	cmdList->IASetVertexBuffers(0, 1, &vbView);
+
+	//定数バッファをセット
+	cmdList->SetGraphicsRootConstantBufferView(0, lineConstBuff->GetGPUVirtualAddress());
+
+	//描画コマンド
+	cmdList->DrawInstanced(2, 1, 0, 0);
 }

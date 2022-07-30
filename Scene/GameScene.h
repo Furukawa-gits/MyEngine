@@ -114,6 +114,11 @@ public:
 	easing in;
 	easing out;
 	easing inOut;
+
+	XMFLOAT3 start = { 100,360,0 };
+	XMFLOAT3 end = { 400,600,0 };
+
+	SingleSprite lineSprite;
 	
 	//3dオブジェクト
 	
