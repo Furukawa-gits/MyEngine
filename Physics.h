@@ -1,5 +1,7 @@
 #pragma once
 #include<DirectXMath.h>
+#include"2D/SpriteSingleunit.h"
+#include"Input/dxInput.h"
 
 using namespace DirectX;
 
@@ -92,4 +94,43 @@ public:
 	/// <param name="center">íÜêSì_</param>
 	/// <param name="radius">èdóÕ</param>
 	void circularMotion2D(XMFLOAT3 center, float G);
+};
+
+const float R = 30;
+const float lengthLink = 50;
+const float hookK = 0.01f;
+const float resK = 0.1f;
+const float g = 0.2f;
+const int numHist = 10;
+
+class strings
+{
+public:
+	static dxinput* input;
+
+	int stat;
+
+	XMFLOAT2 pos;
+	XMFLOAT2 size = { 10,10 };
+	XMFLOAT2 vel;
+	XMFLOAT2 acc;
+	double m;
+	double r;
+	double dist;
+	XMFLOAT2 hp[numHist];
+	int idx_hist;
+	int idx;
+	strings* link0;
+	strings* link1;
+	int grabbed;
+
+	static void setInput(dxinput* in);
+
+	SingleSprite ball;
+	SingleSprite line;
+
+	strings();
+	void init();
+	void update();
+	void disp(ID3D12GraphicsCommandList* cmdList);
 };

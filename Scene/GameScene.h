@@ -107,18 +107,7 @@ public:
 	//音
 
 	//スプライト(各クラスに依存しないやつ)
-	SingleSprite BallSprite1;
-	SingleSprite BallSprite2;
-	SingleSprite BallSprite3;
-
-	easing in;
-	easing out;
-	easing inOut;
-
-	XMFLOAT3 start = { 100,360,0 };
-	XMFLOAT3 end = { 400,600,0 };
-
-	SingleSprite lineSprite;
+	strings objs[5];
 	
 	//3dオブジェクト
 	

@@ -23,22 +23,7 @@ void GameScene::Load_Sprites()
 	sample_back.size = { 1280,720 };
 	sample_back.GenerateSprite("sample_back.jpg");
 
-	BallSprite1.anchorpoint = { 0.5f,0.5f };
-	BallSprite1.position = { 100,160,0 };
-	BallSprite1.size = { 50,50 };
-	BallSprite1.GenerateSprite("Ball.png");
 
-	BallSprite2.anchorpoint = { 0.5f,0.5f };
-	BallSprite2.position = { 100,360,0 };
-	BallSprite2.size = { 50,50 };
-	BallSprite2.GenerateSprite("Ball.png");
-
-	BallSprite3.anchorpoint = { 0.5f,0.5f };
-	BallSprite3.position = { 100,560,0 };
-	BallSprite3.size = { 50,50 };
-	BallSprite3.GenerateSprite("Ball.png");
-
-	lineSprite.GenerateSprite("white1x1.png");
 }
 
 //初期化
@@ -70,6 +55,25 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	//スプライト生成
 	Load_Sprites();
 
+	strings::setInput(input);
+
+	for (int i = 0; i < 5; i++)
+	{
+		objs[i].init();
+	}
+
+	objs[0].stat = 0;
+	objs[0].pos = { 640,100 };
+
+	for (int i = 1; i < 5; i++)
+	{
+		objs[i].stat = 1;
+		objs[i].vel = { 0,0 };
+		objs[i].pos = objs[i - 1].pos;
+		objs[i].link0 = &objs[i - 1];
+		objs[i - 1].link1 = &objs[i];
+	}
+
 	//3dオブジェクト生成
 
 }
@@ -91,34 +95,11 @@ void GameScene::debugs_print()
 //タイトル画面更新
 void GameScene::Title_update()
 {
-	//リセット
-	if (input->Triger(DIK_R))
+	objs[0].grabbed = 1;
+	for (int i = 0; i < 5; i++)
 	{
-		in.isStart = false;
-		out.isStart = false;
-		inOut.isStart = false;
+		objs[i].update();
 	}
-
-	
-
-	//スタート
-	if (input->Triger(DIK_SPACE))
-	{
-		in.easingSet();
-		out.easingSet();
-		inOut.easingSet();
-	}
-
-	//各スプライトのX座標をイージング
-	BallSprite1.position = lineSprite.position;
-	BallSprite2.position = start;
-	BallSprite3.position = end;
-
-	BallSprite1.SpriteUpdate();
-	BallSprite2.SpriteUpdate();
-	BallSprite3.SpriteUpdate();
-
-	lineSprite.SetLineSprite(start, end);
 }
 
 //プレイ画面更新
@@ -218,9 +199,8 @@ void GameScene::Draw3D()
 
 void GameScene::DrawSP()
 {
-	BallSprite1.DrawSprite(directx->cmdList.Get());
-	BallSprite2.DrawSprite(directx->cmdList.Get());
-	BallSprite3.DrawSprite(directx->cmdList.Get());
-
-	lineSprite.DrawSprite(directx->cmdList.Get());
+	for (int i = 0; i < 5; i++)
+	{
+		objs[i].disp(directx->cmdList.Get());
+	}
 }

@@ -453,7 +453,7 @@ void SingleSprite::SetLineSprite(XMFLOAT3 start, XMFLOAT3 end)
 	}
 	else
 	{
-		rotation = -acosf(leftAngle) * (180 / pi);
+		rotation = acosf(leftAngle) * (180 / pi);
 	}
 
 	size = { sqrtf(powf(sToe.x, 2) + powf(sToe.y, 2) + powf(sToe.z, 2)) ,1.0f };

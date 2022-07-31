@@ -248,3 +248,141 @@ void Ball::circularMotion2D(XMFLOAT3 center, float G)
 	Pos.y += Accel.y;
 	Pos.z = 0.0f;
 }
+
+dxinput* strings::input = nullptr;
+
+void strings::setInput(dxinput* in)
+{
+	input = in;
+}
+
+strings::strings()
+{
+	
+}
+
+void strings::update()
+{
+	hp[idx_hist % numHist].x = pos.x;
+	hp[idx_hist % numHist].y = pos.y;
+	idx_hist++;
+
+	if (grabbed)
+	{
+		pos = { input->mouse_position.x,input->mouse_position.y };
+		if (!input->Mouse_LeftPush())
+			grabbed = 0;
+	}
+	else
+	{
+		XMFLOAT2 dis = { input->mouse_position.x - pos.x,input->mouse_position.y - pos.y };
+		double _dst = sqrtf(powf(dis.x, 2) + powf(dis.y, 2));
+		if (input->Mouse_LeftPush())
+		{
+			if (_dst < r)
+				grabbed = 1;
+		}
+
+	}
+
+	// 0:存在してない　1:存在して活動中　2:存在してて活動してない
+	if (stat == 2)
+		return;
+
+	{
+		// acc:加速度
+		acc.x = 0.0f;
+		acc.y = g;	//重力加速度（値は適当で良い）
+
+		if (link0)	//親OBJがある?
+		{
+			// 自分の1つ上のobjへのベクトル
+			XMFLOAT2 _dist = { link0->pos.x - pos.x,link0->pos.y - pos.y };
+			// ↑のベクトルの大きさ
+			double	_len = sqrtf(powf(_dist.x, 2) + powf(_dist.y, 2));
+
+			// 親objとの距離が標準距離（LENGTH_LINK）より大きければ
+			// 加速度を加算
+			if (_len > lengthLink)
+			{
+				// ベクトル(_dist)＊標準距離からの増分
+				_dist = { _dist.x * ((float)_len - lengthLink),_dist.y * ((float)_len - lengthLink)};
+
+				_dist = { _dist.x / lengthLink,_dist.y / lengthLink };
+
+				// K_HOOK:ばね定数（伸びにくさ）
+				// 質量(m)が大きいほど_distを掛けた加速度(acc)の増分は減る
+				XMFLOAT2 add_acc = { _dist.x * hookK / (float)m,_dist.y * hookK / (float)m };
+				acc.x += add_acc.x;
+				acc.y += add_acc.y;
+			}
+		}
+		if (link1)	//子OBJがある?
+		{
+			// 自分の１つ下のobjへのベクトル
+			XMFLOAT2 _dist = { link1->pos.x - pos.x,link1->pos.y - pos.y };
+			// ↑のベクトルの大きさ
+			double	_len = sqrtf(powf(_dist.x, 2) + powf(_dist.y, 2));
+
+			if (_len > lengthLink)
+			{
+				_dist = { _dist.x * ((float)_len - lengthLink) / lengthLink,_dist.y * ((float)_len - lengthLink) / lengthLink};
+				acc.x += _dist.x * hookK / m;
+				acc.y += _dist.y * hookK / m;
+			}
+		}
+
+		vel.x += acc.x;			//速度+=加速度
+		vel.y += acc.y;			//速度+=加速度
+
+		vel.x -= vel.x * resK;	//粘性抵抗
+		vel.y -= vel.y * resK;	//粘性抵抗
+								// (物体が近傍の流体を引きずることによって受ける反作用)
+
+		pos.x += vel.x;			//位置+=速度
+		pos.y += vel.y;			//位置+=速度
+	}
+
+	ball.position = { pos.x,pos.y,0 };
+	ball.SpriteUpdate();
+	if (link0)
+	{
+		line.SetLineSprite({ pos.x,pos.y,0 }, { link0->pos.x,link0->pos.y,0.0f });
+	}
+	else
+	{
+		line.SetLineSprite({ pos.x,pos.y,0 }, { pos.x,pos.y,0 });
+	}
+}
+
+void strings::disp(ID3D12GraphicsCommandList* cmdList)
+{
+	ball.DrawSprite(cmdList);
+	line.DrawSprite(cmdList);
+}
+
+void strings::init()
+{
+	pos = { 0,0 };
+	this->r = R;
+	dist = 0;
+	vel = { 0,0 };
+	acc = { 0,0 };
+	m = 1.0f;
+	stat = 0;
+	idx_hist = 0;
+	for (int i = 0; i < numHist; i++)
+	{
+		hp[i] = { 0,0 };
+	}
+	link0 = NULL;
+	link1 = NULL;
+	grabbed = 0;
+	size = { 10,10 };
+	idx = 1;
+
+	ball.anchorpoint = { 0.5f,0.5f };
+	ball.size = { (float)r,(float)r };
+	ball.GenerateSprite("Ball.png");
+	line.GenerateSprite("white1x1.png");
+}
