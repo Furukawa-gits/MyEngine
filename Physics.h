@@ -134,3 +134,28 @@ public:
 	void update();
 	void disp(ID3D12GraphicsCommandList* cmdList);
 };
+
+const float PI = 3.1415926535897932384626433832795;
+const float G = 9.81;
+
+class pendulum
+{
+public:
+	float circleP;
+	float speed;
+	float angle;
+	XMFLOAT3 center;
+	XMFLOAT3 n;
+	float length = 400;
+	float lengthC = length * 2 * PI;
+	float mass = 0.1f;
+	bool isstart = false;
+
+	SingleSprite ball;
+	SingleSprite line;
+
+	void init();
+	void set(float circlePos);
+	void update();
+	void draw(ID3D12GraphicsCommandList* cmdList);
+};

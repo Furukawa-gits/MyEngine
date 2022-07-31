@@ -57,22 +57,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	strings::setInput(input);
 
-	for (int i = 0; i < 5; i++)
-	{
-		objs[i].init();
-	}
-
-	objs[0].stat = 0;
-	objs[0].pos = { 640,100 };
-
-	for (int i = 1; i < 5; i++)
-	{
-		objs[i].stat = 1;
-		objs[i].vel = { 0,0 };
-		objs[i].pos = objs[i - 1].pos;
-		objs[i].link0 = &objs[i - 1];
-		objs[i - 1].link1 = &objs[i];
-	}
+	obj.init();
 
 	//3dオブジェクト生成
 
@@ -95,11 +80,12 @@ void GameScene::debugs_print()
 //タイトル画面更新
 void GameScene::Title_update()
 {
-	objs[0].grabbed = 1;
-	for (int i = 0; i < 5; i++)
+	if (input->Triger(DIK_SPACE))
 	{
-		objs[i].update();
+		obj.set(8.0);
 	}
+
+	obj.update();
 }
 
 //プレイ画面更新
@@ -199,8 +185,5 @@ void GameScene::Draw3D()
 
 void GameScene::DrawSP()
 {
-	for (int i = 0; i < 5; i++)
-	{
-		objs[i].disp(directx->cmdList.Get());
-	}
+	obj.draw(directx->cmdList.Get());
 }

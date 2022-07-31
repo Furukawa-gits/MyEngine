@@ -386,3 +386,63 @@ void strings::init()
 	ball.GenerateSprite("Ball.png");
 	line.GenerateSprite("white1x1.png");
 }
+
+void pendulum::init()
+{
+	circleP = lengthC / 8.0f;
+	speed = 0.0f;
+	center = { 640,100,0 };
+	angle = circleP / length + PI / 2.0f;
+	n =
+	{
+		cosf(angle) * length,
+		sinf(angle) * length,
+		0.0f
+	};
+
+	isstart = false;
+
+	ball.anchorpoint = { 0.5f,0.5f };
+	ball.size = { 50,50 };
+	ball.GenerateSprite("Ball.png");
+	line.GenerateSprite("white1x1.png");
+
+	ball.position = { center.x + n.x,center.y + n.y,0.0f };
+	ball.SpriteUpdate();
+	line.SetLineSprite(ball.position, center);
+}
+
+void pendulum::set(float circlePos)
+{
+	circleP = lengthC / 8.0f;
+	speed = 0.0f;
+	isstart = true;
+}
+
+void pendulum::update()
+{
+	if (!isstart)
+	{
+		return;
+	}
+
+	speed += -mass * G * sinf(circleP / length);
+	circleP += speed;
+	angle = circleP / length + PI / 2.0f;
+	n =
+	{
+		cosf(angle) * length,
+		sinf(angle) * length,
+		0.0f
+	};
+
+	ball.position = { center.x + n.x,center.y + n.y,0.0f };
+	ball.SpriteUpdate();
+	line.SetLineSprite(ball.position,center);
+}
+
+void pendulum::draw(ID3D12GraphicsCommandList* cmdList)
+{
+	ball.DrawSprite(cmdList);
+	line.DrawSprite(cmdList);
+}

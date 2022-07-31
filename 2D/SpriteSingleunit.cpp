@@ -445,7 +445,7 @@ void SingleSprite::SetLineSprite(XMFLOAT3 start, XMFLOAT3 end)
 		(sqrtf(powf(sToe.x, 2) + powf(sToe.y, 2) + powf(sToe.z, 2)) *
 			sqrtf(powf(left.x, 2) + powf(left.y, 2) + powf(left.z, 2)));
 
-	float pi = 3.14159265;
+	float pi = 3.1415926535897932384626433832795;
 
 	if (rightAngle < leftAngle)
 	{

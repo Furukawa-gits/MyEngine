@@ -107,7 +107,7 @@ public:
 	//音
 
 	//スプライト(各クラスに依存しないやつ)
-	strings objs[5];
+	pendulum obj;
 	
 	//3dオブジェクト
 	
