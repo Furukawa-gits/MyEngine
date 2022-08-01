@@ -40,18 +40,21 @@ public:
 	Sphere enemy_collision;
 
 	//--------------------使うやつ--------------------
-	bool Isarive = false;
-	bool Istarget_set = false;
-	SingleSprite Rock_Target;
+	bool Isarive = false;//生存
+	bool Istarget_set = false;//狙われているかどうか
+	SingleSprite Rock_Target;//マーカー
 
 	//体力
 	int HP = 1;
-
+	//座標・速度
+	XMFLOAT3 startPosition = {};
 	XMFLOAT3 position = {};
-	float enemy_speed = 1.5;
-
+	float enemy_speed = 0.05f;
+	//オブジェクト
 	Model* testCube = nullptr;
 	Object3d_FBX* testObject = nullptr;
+	//自機に向かっていくカウント
+	int homingCount = 0;
 
 	void init(int enemy_index, int enemy_bullet_index);
 

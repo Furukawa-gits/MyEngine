@@ -103,6 +103,9 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 			(float)(rand() % 30 - 15)
 			});
 	}
+
+	testBoss.init(0, 0);
+	testBoss.HP = 30;
 }
 
 //デバッグテキスト
@@ -162,6 +165,10 @@ void GameScene::Title_update()
 		{
 			testEnemys[i].reSet();
 		}
+
+		testBoss.reSet();
+		testBoss.Isarive = false;
+		testBoss.HP = 30;
 	}
 
 	object->SetRotation({ pitch,yow,roll });

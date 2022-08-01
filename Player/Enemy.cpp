@@ -25,6 +25,8 @@ void enemy_bullet::draw()
 
 void Enemy::init(int enemy_index, int enemy_bullet_index)
 {
+	Isarive = false;
+
 	Rock_Target.anchorpoint = { 0.5f,0.5f };
 	Rock_Target.size = { 70,70 };
 	Rock_Target.GenerateSprite("Rock_on.png");
@@ -42,6 +44,7 @@ void Enemy::init(int enemy_index, int enemy_bullet_index)
 void Enemy::set(XMFLOAT3 pos)
 {
 	position = pos;
+	startPosition = pos;
 	testObject->SetPosition(pos);
 	Isarive = true;
 	Istarget_set = false;
@@ -49,7 +52,8 @@ void Enemy::set(XMFLOAT3 pos)
 
 void Enemy::reSet()
 {
-	testObject->SetPosition(position);
+	testObject->SetPosition(startPosition);
+	position = startPosition;
 	Isarive = true;
 	HP = 1;
 	Istarget_set = false;
@@ -79,6 +83,32 @@ void Enemy::update(XMFLOAT3 Player_pos)
 		return;
 	}
 
+	//í«îˆÉJÉEÉìÉgâ¡éZ
+	homingCount++;
+
+	if (homingCount % 30 == 0)
+	{
+		enemy_speed = 0.1f;
+	}
+
+	if (homingCount % 40 == 0)
+	{
+		enemy_speed = 0.05f;
+	}
+
+	position = testObject->getPosition();
+	XMFLOAT3 dis = { Player_pos.x - position.x,Player_pos.y - position.y,Player_pos.z - position.z };
+
+	float lengthDis = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
+
+	dis.x /= lengthDis;
+	dis.y /= lengthDis;
+	dis.z /= lengthDis;
+
+	position.x += dis.x * enemy_speed;
+	position.y += dis.y * enemy_speed;
+	position.z += dis.z * enemy_speed;
+
 	//HPÇ™0Ç…Ç»Ç¡ÇΩÇÁè¡ñ≈
 	if (HP <= 0)
 	{
@@ -93,6 +123,7 @@ void Enemy::update(XMFLOAT3 Player_pos)
 	Rock_Target.SpriteTransferVertexBuffer();
 	Rock_Target.SpriteUpdate();
 
+	testObject->SetPosition(position);
 	testObject->Update();
 }
 
