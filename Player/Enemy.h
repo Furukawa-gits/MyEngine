@@ -1,5 +1,4 @@
 #pragma once
-//#include"Player.h"
 #include"../2D/Sprite.h"
 #include"../3D/3Dobject.h"
 #include"../3D/Collision.h"
@@ -37,12 +36,13 @@ public:
 	XMFLOAT3 Shot_Vec = { 0.0f,0.0f,0.0f };
 	XMVECTOR enemy_sc_pos;
 	bool IsRockon_draw = false;
-	Sphere enemy_collision;
 
 	//--------------------使うやつ--------------------
 	bool Isarive = false;//生存
 	bool Istarget_set = false;//狙われているかどうか
+	bool IsSetMissile = false;
 	SingleSprite Rock_Target;//マーカー
+	Sphere enemy_collision;
 
 	//体力
 	int HP = 1;

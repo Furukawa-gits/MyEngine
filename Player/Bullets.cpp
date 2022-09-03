@@ -4,45 +4,29 @@
 #pragma region ’Êí’e
 void bullet::init(int index)
 {
-	bullet_view = object3D_obj::objectcommon->ReturnModelViewes("player_bullet.obj", 1);
+	bulletModel = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
 
-	object.Init3d(index);
+	bulletObject = new Object3d_FBX;
+	bulletObject->Initialize();
+	bulletObject->SetModel(bulletModel);
+	bulletObject->SetScale({ 0.5f,0.5f,0.5f });
 
-	object.scale = { 2.0f,2.0f ,2.0f };
-
-	bullet_collision.radius = 3.0f;
+	bullet_collision.radius = 2.0f;
 }
 
 void bullet::set(XMFLOAT3 start_pos, XMFLOAT3 Target)
 {
-	object.position = { start_pos.x,start_pos.y,start_pos.z };
+	bulletObject->SetPosition({ start_pos.x,start_pos.y,start_pos.z });
 
-	XMVECTOR sc_pos = object.WorldToScreenPos(XMLoadFloat3(&start_pos));
+	XMFLOAT3 dis = {
+		Target.x - start_pos.x,
+		Target.y - start_pos.y,
+		Target.z - start_pos.z,
+	};
 
-	float xdis = Target.x - sc_pos.m128_f32[0];
-	float ydis = Target.y - sc_pos.m128_f32[1];
+	float length = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
 
-	float xy_vec = sqrtf(xdis * xdis + ydis * ydis);
-
-	XMFLOAT2 normalize;
-
-	normalize.x = xdis / xy_vec;
-	normalize.y = ydis / xy_vec;
-
-	if (xy_vec > 150)
-	{
-		bullet_vec = { normalize.x * 2.0f,-(normalize.y * 2.0f),2.0f };
-	}
-	else
-	{
-		bullet_vec = { normalize.x * 0.5f,-(normalize.y * 0.5f),2.0f };
-	}
-
-	XMFLOAT3 set_vec = { normalize.x * 2.0f,-(normalize.y * 2.0f),(1 / xy_vec) * 900.0f };
-
-	XMFLOAT3 set_vec_nml = normalized(set_vec);
-
-	bullet_vec = { set_vec_nml.x * 3.0f,(set_vec_nml.y * 3.0f),set_vec_nml.z * 3.0f };
+	bullet_vec = { (dis.x / length) * 3.0f,(dis.y / length) * 3.0f ,(dis.z / length) * 3.0f };
 
 	Isarive = true;
 }
@@ -59,7 +43,7 @@ void bullet::checkhit(Enemy* enemy)
 
 			enemy->IsRockon_draw = false;
 			enemy->Isshot = false;
-			enemy->Isarive = false;
+			enemy->HP--;
 		}
 	}
 }
@@ -68,13 +52,7 @@ void bullet::update()
 {
 	if (Isarive == true)
 	{
-		object.rotation.x += 3.0f;
-		object.rotation.y += 3.0f;
-		object.rotation.z += 3.0f;
-
-		object.position.x += bullet_vec.x;
-		object.position.y += bullet_vec.y;
-		object.position.z += bullet_vec.z;
+		bulletObject->addMoveFront(bullet_vec);
 
 		count++;
 
@@ -85,19 +63,19 @@ void bullet::update()
 		}
 	}
 
-	object.Update3d(bullet_view, { 1.0f,1.0f ,0.0f,1.0f });
+	bulletObject->Update();
 	bullet_collision.center = {
-		object.position.x,
-		object.position.y,
-		object.position.z,
+		bulletObject->getPosition().x,
+		bulletObject->getPosition().y,
+		bulletObject->getPosition().z,
 		1.0f };
 }
 
-void bullet::draw()
+void bullet::draw(directX* directx)
 {
 	if (Isarive == true)
 	{
-		object.DrawModel_OnMaterial(bullet_view);
+		bulletObject->Draw(directx->cmdList.Get());
 	}
 }
 #pragma endregion
@@ -105,9 +83,14 @@ void bullet::draw()
 #pragma region ƒ~ƒTƒCƒ‹
 void Missile::init(int index)
 {
-	misslie_view = object3D_obj::objectcommon->ReturnModelViewes("player_bullet.obj", 2);
+	bulletModel = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
 
-	object.Init3d(index);
+	bulletObject = new Object3d_FBX;
+	bulletObject->Initialize();
+	bulletObject->SetModel(bulletModel);
+	bulletObject->SetScale({ 0.5f,0.5f,0.5f });
+
+	bulletObject->setColor({ 1,1,0,1 });
 
 	missile_collision.radius = 3.0f;
 }
@@ -120,13 +103,15 @@ void Missile::setPenemy(Enemy* enemy)
 
 void Missile::start(XMFLOAT3 start_pos)
 {
-	bullet_vec = bullet_vec_index[rand() % 8];
-	object.position = start_pos;
-
-	if (P_enemy != nullptr && IsTarget_set == true)
+	if (!IsTarget_set || P_enemy == nullptr)
 	{
-		Isarive = true;
+		return;
 	}
+
+	bullet_vec = bullet_vec_index[rand() % 8];
+	bulletObject->SetPosition(start_pos);
+
+	Isarive = true;
 }
 
 void Missile::checkhit()
@@ -146,6 +131,8 @@ void Missile::checkhit()
 			P_enemy->IsRockon_draw = false;
 			P_enemy->Isshot = false;
 			P_enemy->Isarive = false;
+
+			P_enemy = nullptr;
 		}
 	}
 }
@@ -160,9 +147,9 @@ void Missile::update()
 		}
 
 		XMFLOAT3 to_enemy = {
-			P_enemy->enemy.position.x - object.position.x,
-			P_enemy->enemy.position.y - object.position.y,
-			P_enemy->enemy.position.z - object.position.z
+			P_enemy->position.x - bulletObject->getPosition().x,
+			P_enemy->position.y - bulletObject->getPosition().y,
+			P_enemy->position.z - bulletObject->getPosition().z
 		};
 
 		XMFLOAT3 bullet_vec_nml = normalized(bullet_vec);
@@ -179,15 +166,15 @@ void Missile::update()
 		};
 
 		XMFLOAT3 centripetalAccel = {
-			object.position.x - closs_bullet_vec.x,
-			object.position.y - closs_bullet_vec.y,
-			object.position.z - closs_bullet_vec.z
+			bulletObject->getPosition().x - closs_bullet_vec.x,
+			bulletObject->getPosition().y - closs_bullet_vec.y,
+			bulletObject->getPosition().z - closs_bullet_vec.z
 		};
 
 		XMFLOAT3 centri_to_enemy = {
-			P_enemy->enemy.position.x - centripetalAccel.x,
-			P_enemy->enemy.position.y - centripetalAccel.y,
-			P_enemy->enemy.position.z - centripetalAccel.z
+			P_enemy->position.x - centripetalAccel.x,
+			P_enemy->position.y - centripetalAccel.y,
+			P_enemy->position.z - centripetalAccel.z
 		};
 
 		float centri_to_enemyMagnitude = returnScaler(centri_to_enemy);
@@ -214,28 +201,26 @@ void Missile::update()
 		bullet_vec.y += Force.y;
 		bullet_vec.z += Force.z;
 
-		object.rotation.x += 50.0f;
-		object.rotation.y += 50.0f;
-		object.rotation.z += 50.0f;
+		bulletObject->addMoveFront(bullet_vec);
 
-		object.position.x += bullet_vec.x;
-		object.position.y += bullet_vec.y;
-		object.position.z += bullet_vec.z;
-		object.Update3d(misslie_view, { 0.32f,1.0f,0.562f,1.0f });
+		bulletObject->Update();
 
 		missile_collision.center = {
-		object.position.x,
-		object.position.y,
-		object.position.z,
+		bulletObject->getPosition().x,
+		bulletObject->getPosition().y,
+		bulletObject->getPosition().z,
 		1.0f };
+
+		checkhit();
 	}
 }
 
-void Missile::draw()
+void Missile::draw(directX* directx)
 {
 	if (Isarive == true)
 	{
-		object.DrawModel_OnMaterial(misslie_view);
+		bulletObject->SetPipelineSimple(directx->cmdList.Get());
+		bulletObject->Draw(directx->cmdList.Get());
 	}
 }
 #pragma endregion

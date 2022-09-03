@@ -23,10 +23,6 @@ void GameScene::Load_Sprites()
 {
 	sample_back.size = { 1280,720 };
 	sample_back.GenerateSprite("sample_back.jpg");
-
-	target.anchorpoint = { 0.5f,0.5f };
-	//target.size = { 50.0f,50.0f };
-	target.GenerateSprite("Target.png");
 }
 
 //初期化
@@ -70,18 +66,8 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	model = FbxLoader::GetInstance()->LoadmodelFromFile("boneTest");
 	SkyModel = FbxLoader::GetInstance()->LoadmodelFromFile("skySphere");
 
-	object = new Object3d_FBX;
-	object->Initialize();
-	object->SetModel(model);
-	object->SetPosition({ 0,5,0 });
-	object->setSpeed(2.0f);
-	object->PlayAnimation();
-
-	followcamera = new FollowCamera();
-
-	followcamera->setFollowTarget(&object->getPosition(), &object->getRotation(), -30);
-
-	Object3d_FBX::SetCamera(followcamera);
+	//プレイヤー初期化
+	testPlayer.init(input, nullptr, directx);
 
 	skySphere = new Object3d_FBX;
 	skySphere->Initialize();
@@ -98,9 +84,9 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	{
 		testEnemys[i].init(i, i);
 		testEnemys[i].set({
-			(float)(rand() % 30 - 15),
-			(float)(rand() % 20),
-			(float)(rand() % 30 - 15)
+			(float)(rand() % 50 - 25),
+			(float)(rand() % 30),
+			(float)(rand() % 50 - 25)
 			});
 	}
 
@@ -118,6 +104,19 @@ void GameScene::debugs_print()
 	debugtext.Print("MousePress(Left)&Drag : Target", 10, 85, 1.0f);
 	debugtext.Print("MouseRelease : Homing", 10, 100, 1.0f);
 	debugtext.Print("R : Reset", 10, 130, 1.0f);
+	
+	if (scene == title)
+	{
+		debugtext.Print("Title", 10, 160, 1.0f);
+	}
+	else if (scene == play)
+	{
+		debugtext.Print("Play", 10, 160, 1.0f);
+	}
+	else
+	{
+		debugtext.Print("Result", 10, 160, 1.0f);
+	}
 
 	debugtext.Print("1 : Object Simple", 1000, 10, 1.0f);
 	debugtext.Print("2 : posteffect GrayScale", 1000, 30, 1.0f);
@@ -128,136 +127,130 @@ void GameScene::debugs_print()
 //タイトル画面更新
 void GameScene::Title_update()
 {
-	if (input->mouse_p.x >= 1000)
-	{
-		objectRot.y += 0.7f;
-		yow += 0.7f;
-	}
-
-	if (input->mouse_p.x <= 280)
-	{
-		objectRot.y -= 0.7f;
-		yow -= 0.7f;
-	}
-
-	//前に進む
-	if (input->push(DIK_W))
-	{
-		object->addMoveFront(followcamera->getFrontVec());
-	}
-	//後に下がる
-	if (input->push(DIK_S))
-	{
-		object->addMoveBack(followcamera->getFrontVec());
-	}
-
-	if (input->push(DIK_R))
+	if (input->Triger(DIK_SPACE))
 	{
 		up = 0;
 		right = 0;
 		objectRot = { 0,0,0 };
-		object->SetPosition({ 0,5,0 });
 
 		pitch = 0.0f;
 		yow = 0.0f;
+
+		targetnum = 0;
 
 		for (int i = 0; i < enemynum; i++)
 		{
 			testEnemys[i].reSet();
 		}
 
+		testPlayer.reset();
+
 		testBoss.reSet();
 		testBoss.Isarive = false;
 		testBoss.HP = 30;
-	}
 
-	object->SetRotation({ pitch,yow,roll });
-	XMVECTOR matQ = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(pitch), XMConvertToRadians(yow), XMConvertToRadians(roll));
-	object->addQRot(matQ);
-
-	followcamera->TargetObjectPos = &object->getPosition();
-	followcamera->TargetObjectAngle = &object->getRotation();
-
-	followcamera->Following();
-
-	followcamera->setFrontVec(0.5f);
-
-	object->Update();
-	skySphere->Update();
-
-	cameraobj->SetPosition(followcamera->GetEye());
-	cameraobj->SetRotation(*followcamera->TargetObjectAngle);
-	cameraobj->Update();
-
-	//敵(テスト)初期化
-	for (int i = 0; i < enemynum; i++)
-	{
-		testEnemys[i].update(object->getPosition());
-	}
-
-	//マウスカーソル非表示
-	ShowCursor(false);
-
-	if (input->Mouse_LeftPush())
-	{
-		mousePressCount++;
-	}
-	else
-	{
-		mousePressCount = 0;
-	}
-
-	if (mousePressCount > 30)
-	{
-		target.rotation -= 5.0f;
-		isTarget = true;
-	}
-	else
-	{
-		target.rotation += 3.0f;
-		isTarget = false;
-	}
-
-	//敵がロックオンされているかどうか
-	for (int i = 0; i < enemynum; i++)
-	{
-		testEnemys[i].isHitTarget({ target.position.x,target.position.y }, isTarget);
-	}
-
-	target.position = MOUSE_POS;
-	target.SpriteTransferVertexBuffer();
-	target.SpriteUpdate();
-
-	if (input->Mouse_LeftRelease())
-	{
-		for (int i = 0; i < enemynum; i++)
-		{
-			if (testEnemys[i].Istarget_set)
-			{
-				testEnemys[i].HP--;
-			}
-		}
-	}
-
-	if (input->Mouse_LeftTriger())
-	{
-		for (int i = 0; i < enemynum; i++)
-		{
-			testEnemys[i].isHitShot({ target.position.x,target.position.y });
-		}
+		scene = play;
 	}
 }
 
 //プレイ画面更新
 void GameScene::Play_update()
 {
+	//プレイヤー更新
+	testPlayer.update();
 
+	if (input->push(DIK_R))
+	{
+		up = 0;
+		right = 0;
+		objectRot = { 0,0,0 };
+
+		pitch = 0.0f;
+		yow = 0.0f;
+
+		targetnum = 0;
+
+		for (int i = 0; i < enemynum; i++)
+		{
+			testEnemys[i].reSet();
+		}
+
+		testPlayer.reset();
+
+		testBoss.reSet();
+		testBoss.Isarive = false;
+		testBoss.HP = 30;
+	}
+
+	skySphere->Update();
+
+	cameraobj->SetPosition(testPlayer.followcamera->GetEye());
+	cameraobj->SetRotation(*testPlayer.followcamera->TargetObjectAngle);
+	cameraobj->Update();
+
+	//敵(テスト)初期化
+	for (int i = 0; i < enemynum; i++)
+	{
+		testEnemys[i].update(testPlayer.Player_object->getPosition());
+	}
+
+	//マウスカーソル非表示
+	ShowCursor(false);
+
+	//敵がロックオンされているかどうか
+	checkHitPlayerTarget();
+
+	if (input->Mouse_LeftRelease())
+	{
+		for (int i = 0; i < targetnum; i++)
+		{
+			for (int j = 0; j < enemynum; j++)
+			{
+				if (testEnemys[j].Istarget_set && !testEnemys[j].IsSetMissile)
+				{
+					testPlayer.player_missiale[i].setPenemy(&testEnemys[j]);
+					testPlayer.player_missiale[i].start(testPlayer.Player_object->getPosition());
+					testEnemys[j].IsSetMissile = true;
+					break;
+				}
+			}
+		}
+
+		targetnum = 0;
+	}
+
+
+	for (int j = 0; j < MaxPlayerBulletNum; j++)
+	{
+		for (int i = 0; i < enemynum; i++)
+		{
+			testPlayer.player_bullet[j].checkhit(&testEnemys[i]);
+		}
+	}
+
+	int count = 0;
+
+	for (int i = 0; i < enemynum; i++)
+	{
+		if (!testEnemys[i].Isarive)
+		{
+			count++;
+		}
+	}
+
+	if (count >= enemynum)
+	{
+		scene = clear;
+	}
 }
 
 //リザルト画面更新
 void GameScene::Result_update()
 {
-
+	if (input->Triger(DIK_SPACE))
+	{
+		scene = title;
+	}
 }
 
 #pragma endregion 各シーン更新
@@ -267,25 +260,16 @@ void GameScene::Result_update()
 //タイトル画面描画
 void GameScene::Title_draw()
 {
+
+}
+
+//プレイ画面描画
+void GameScene::Play_draw()
+{
 	skySphere->Draw(directx->cmdList.Get());
 
-	//directx->depthclear();
-	object->Draw(directx->cmdList.Get());
-
-	if (isEnemySimple)
-	{
-		for (int i = 0; i < enemynum; i++)
-		{
-			testEnemys[i].testObject->SetPipelineSimple(directx->cmdList.Get());
-		}
-	}
-	else
-	{
-		for (int i = 0; i < enemynum; i++)
-		{
-			testEnemys[i].testObject->reSetPipeline();
-		}
-	}
+	//プレイヤー描画
+	testPlayer.draw_3d(directx, nullptr);
 
 	for (int i = 0; i < enemynum; i++)
 	{
@@ -293,12 +277,6 @@ void GameScene::Title_draw()
 	}
 
 	//cameraobj->Draw(directx->cmdList.Get());
-}
-
-//プレイ画面描画
-void GameScene::Play_draw()
-{
-
 }
 
 //リザルト画面描画
@@ -376,7 +354,35 @@ void GameScene::DrawSP()
 		testEnemys[i].drawSp(directx);
 	}
 
-	target.DrawSprite(directx->cmdList.Get());
+	testPlayer.draw_2d(directx, nullptr);
 
 	debugtext.DrawAll(directx->cmdList.Get());
+}
+
+void GameScene::checkHitPlayerTarget()
+{
+	if (!testPlayer.Isrockon)
+	{
+		return;
+	}
+
+	if (!input->Mouse_LeftPush())
+	{
+		return;
+	}
+
+	for (int i = 0; i < enemynum; i++)
+	{
+		XMFLOAT2 screenPos = testEnemys[i].testObject->worldToScleen();
+
+		float dis = sqrtf(powf(input->mouse_position.x - screenPos.x, 2) + powf(input->mouse_position.y - screenPos.y, 2));
+
+		if (dis < 20 && !testEnemys[i].Istarget_set && targetnum < MaxPlayerMissileNum)
+		{
+			testEnemys[i].Istarget_set = true;
+			targetnum++;
+		}
+
+		testEnemys[i].Rock_Target.position = { screenPos.x,screenPos.y,0 };
+	}
 }

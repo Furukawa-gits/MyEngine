@@ -1,6 +1,8 @@
 #pragma once
 #include"Enemy.h"
 #include"../3D/3Dobject.h"
+#include"../FbxLoder/Object3d_FBX.h"
+#include"../Base/DirectX_Base.h"
 
 //í èÌíe
 class bullet
@@ -9,13 +11,17 @@ public:
 	float count = 0;
 	object3D_obj object;
 	XMFLOAT3 bullet_vec = { 0.0f,0.0f,0.0f };
+
+	Object3d_FBX* bulletObject = nullptr;
+	Model* bulletModel = nullptr;
+
 	bool Isarive = false;
 
 	void init(int index);
 	void set(XMFLOAT3 start_pos, XMFLOAT3 Target);
 	void checkhit(Enemy* enemy);
 	void update();
-	void draw();
+	void draw(directX* directx);
 
 	Sphere bullet_collision;
 
@@ -31,6 +37,9 @@ public:
 	Enemy* P_enemy = nullptr;
 	object3D_obj object;
 	XMFLOAT3 bullet_vec = { 0.0f,0.0f,0.0f };
+
+	Object3d_FBX* bulletObject = nullptr;
+	Model* bulletModel = nullptr;
 	bool Isarive = false;
 	bool IsTarget_set = false;
 
@@ -39,7 +48,7 @@ public:
 	void start(XMFLOAT3 start_pos);
 	void checkhit();
 	void update();
-	void draw();
+	void draw(directX* directx);
 	
 	Sphere missile_collision;
 

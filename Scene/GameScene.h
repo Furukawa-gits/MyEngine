@@ -6,10 +6,10 @@
 #include"../Audio/Audio.h"
 #include"../2D/Debug_Text.h"
 #include"../camera/Camera.h"
-#include"../Player/Player.h"
 #include"../FbxLoder/Object3d_FBX.h"
 #include"../camera/FollowCamera.h"
 
+#include"../Player/Player.h"
 #include"../Player/Enemy.h"
 
 #include<random>
@@ -87,23 +87,30 @@ public:
 	void DrawSP();
 
 
+	//仮
+	void checkHitPlayerTarget();
+
+
 	bool Isclose = false;
 
 private:
 
 	//-------------ゲームに使う変数等はここより↓-------------
-
 	static const int debugTextnum = 0;
-	//基幹部分
+
+#pragma region 基幹部分
 	directX* directx = nullptr;
 	dxinput* input = nullptr;
 	Audio* audio = nullptr;
 	DebugText debugtext;
 	XMFLOAT3 MOUSE_POS;
 	Camera* camera = nullptr;
+#pragma endregion
 
+	//追従カメラ
 	FollowCamera* followcamera = nullptr;
 
+	//回転量
 	XMFLOAT3 objectRot = { 0,0,0 };
 
 	float up = 0.0f;
@@ -122,6 +129,11 @@ private:
 	Object3d_FBX* object = nullptr;
 	Object3d_FBX* skySphere = nullptr;
 	Object3d_FBX* cameraobj = nullptr;
+
+	//プレイヤー
+	Player testPlayer;
+
+	int targetnum = 0;
 
 	//敵(test)
 	static const int enemynum = 30;

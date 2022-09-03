@@ -1,14 +1,15 @@
 #pragma once
-#include"../3D/3Dobject.h"
 #include"../3D/Collision.h"
 #include"../2D/Sprite.h"
 #include"../Input/dxInput.h"
 #include"Bullets.h"
+#include"../FbxLoder/Object3d_FBX.h"
+#include"../camera/FollowCamera.h"
 
 const float Move_limit = 30.0f;
 
 const int MaxPlayerBulletNum = 20;
-const int MaxPlayerMissileNum = 4;
+const int MaxPlayerMissileNum = 5;
 
 class Player
 {
@@ -20,22 +21,34 @@ public:
 
 	void checkplayerbullet(Enemy* enemy);
 
-	void checkenemybullet(enemy_bullet* bullet);
-
-	void checkrockon(Enemy& enemy);
-
 	void update();
 
-	void draw(directX* directx, TexManager* tex);
+	void reset();
+
+	void draw_3d(directX* directx, TexManager* tex);
+
+	void draw_2d(directX* directx, TexManager* tex);
 
 
 	//3dオブジェクト
-	object3D_obj Player_object;
-	Viewes player_view;
-	Viewes old_player_view;
+	Object3d_FBX* Player_object = nullptr;
+	Model* Player_model = nullptr;
 
-	//ターゲット
-	SingleSprite Target;
+	//追従カメラ
+	FollowCamera* followcamera = nullptr;
+
+	//回転量
+	XMFLOAT3 objectRot = { 0,0,0 };
+
+	float up = 0.0f;
+	float right = 0.0f;
+
+	float pitch = 0.0f;
+	float yow = 0.0f;
+	float roll = 0.0f;
+
+	//ターゲットスプライト
+	SingleSprite target;
 	int Target_count = 0;
 	int Rockon_count = 0;
 	bool Isrockon = false;
@@ -47,7 +60,7 @@ public:
 	bullet player_bullet[MaxPlayerBulletNum];
 	Missile player_missiale[MaxPlayerMissileNum];
 
-	//入力ポインタ
+	//入力
 	static dxinput* input;
 
 	Sphere player_collision;

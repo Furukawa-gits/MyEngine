@@ -101,19 +101,19 @@ public:
 		  */
 		FbxPropertyT<FbxBool> CastLight;
 
-		/** This property handles the draw volumetric light flag.
+		/** This property handles the draw_3d volumetric light flag.
 		  *
 		  * Default value is true
 		  */
 		FbxPropertyT<FbxBool> DrawVolumetricLight;
 
-		/** This property handles the draw ground projection flag.
+		/** This property handles the draw_3d ground projection flag.
 		  *
 		  * Default value is true
 		  */
 		FbxPropertyT<FbxBool> DrawGroundProjection;
 
-		/** This property handles the draw facing volumetric projection flag.
+		/** This property handles the draw_3d facing volumetric projection flag.
 		  *
 		  * Default value is false
 		  */

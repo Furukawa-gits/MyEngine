@@ -6,12 +6,25 @@ void Player::init(dxinput* input, TexManager* tex, directX* directx)
 {
 	this->input = input;
 
-	player_view = object3D_obj::objectcommon->ReturnModelViewes("RS2_Shooting.obj", 0);
+	target.anchorpoint = { 0.5f,0.5f };
+	target.GenerateSprite("Target.png");
 
-	old_player_view = player_view;
+	Player_model = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
 
-	Player_object.Init3d(0);
-	Player_object.scale = { 3.0f,3.0f,3.0f };
+	Player_object = new Object3d_FBX;
+	Player_object->Initialize();
+	Player_object->SetModel(Player_model);
+	Player_object->SetPosition({ 0,5,-10 });
+	Player_object->SetScale({ 1,1,1 });
+	Player_object->setSpeed(2.0f);
+	//Player_object->PlayAnimation();
+	Player_object->setColor({ 0,1,1,1 });
+
+	followcamera = new FollowCamera();
+
+	followcamera->setFollowTarget(&Player_object->getPosition(), &Player_object->getRotation(), -30);
+
+	Object3d_FBX::SetCamera(followcamera);
 
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
 	{
@@ -24,40 +37,45 @@ void Player::init(dxinput* input, TexManager* tex, directX* directx)
 	}
 
 	Isarive = true;
-
-	player_collision.radius = 4.0f;
-
-	for (int i = 0; i < 10; i++)
-	{
-		//hp[i].GenerateSprite(object3D_obj::directx->dev.Get(),13, tex, false, false, false, false);
-		//hp[i].anchorpoint = { 0.0f,0.0f };
-		//hp[i].position = { (i * 30.0f) + 30.0f,670.0f,0.0f };
-		//hp[i].size = { 40.0f,40.0f };
-		//hp[i].SpriteTransferVertexBuffer(tex, false);
-	}
 }
 
 void Player::Move()
 {
-	if (input->push(DIK_D) && Player_object.position.x <= Move_limit)
+	//‘O‚Éi‚Ş
+	if (input->push(DIK_W))
 	{
-		//Player_object.position.x += 1.0f;
+		Player_object->addMoveFront(followcamera->getFrontVec());
+	}
+	//Œã‚É‰º‚ª‚é
+	if (input->push(DIK_S))
+	{
+		Player_object->addMoveBack(followcamera->getFrontVec());
 	}
 
-	if (input->push(DIK_A) && Player_object.position.x >= -Move_limit)
+	if (input->mouse_p.x >= 1000)
 	{
-		//Player_object.position.x -= 1.0f;
+		objectRot.y += 0.7f;
+		yow += 0.7f;
 	}
 
-	if (input->push(DIK_W) && Player_object.position.y <= Move_limit)
+	if (input->mouse_p.x <= 280)
 	{
-		//Player_object.position.y += 1.0f;
+		objectRot.y -= 0.7f;
+		yow -= 0.7f;
 	}
 
-	if (input->push(DIK_S) && Player_object.position.y >= -Move_limit)
-	{
-		//Player_object.position.y -= 1.0f;
-	}
+	Player_object->SetRotation({ pitch,yow,roll });
+	XMVECTOR matQ = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(pitch), XMConvertToRadians(yow), XMConvertToRadians(roll));
+	Player_object->addQRot(matQ);
+
+	followcamera->TargetObjectPos = &Player_object->getPosition();
+	followcamera->TargetObjectAngle = &Player_object->getRotation();
+
+	followcamera->Following();
+
+	followcamera->setFrontVec(0.5f);
+
+	Player_object->Update();
 }
 
 //“G‚ÆƒvƒŒƒCƒ„[’e‚Ì“–‚½‚è”»’è
@@ -67,56 +85,12 @@ void Player::checkplayerbullet(Enemy* enemy)
 {
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
 	{
-		player_bullet[i].checkhit(enemy);
+		//player_bullet[i].checkhit(enemy);
 	}
 
 	for (int i = 0; i < MaxPlayerMissileNum; i++)
 	{
-		player_missiale[i].checkhit();
-	}
-}
-
-//“G‚Ì’e‚Æ‚Ì“–‚½‚è”»’è
-void Player::checkenemybullet(enemy_bullet* bullet)
-{
-	if (Collision::CheckSphere2Sphere(player_collision, bullet->bullet_collision) && bullet->Isarive == true && Isarive == true)
-	{
-		HP--;
-
-		if (HP <= 0)
-		{
-			Isarive = false;
-		}
-
-		bullet->Isarive = false;
-	}
-}
-
-//“G‚ğƒƒbƒNƒIƒ“
-void Player::checkrockon(Enemy& enemy)
-{
-	if (Isrockon == true)
-	{
-		if (Target.position.x <= enemy.enemy_sc_pos.m128_f32[0] + 40.0f && Target.position.x >= enemy.enemy_sc_pos.m128_f32[0] - 40.0f)
-		{
-			if (Target.position.y <= enemy.enemy_sc_pos.m128_f32[1] + 40.0f && Target.position.y >= enemy.enemy_sc_pos.m128_f32[1] - 40.0f)
-			{
-				if (enemy.Isarive == true && enemy.IsRockon_draw == false && enemy.enemy.position.z <= 200 && Rockon_count < MaxPlayerMissileNum)
-				{
-					enemy.IsRockon_draw = true;
-					Rockon_count++;
-
-					for (int i = 0; i < MaxPlayerMissileNum; i++)
-					{
-						if (player_missiale[i].IsTarget_set == false)
-						{
-							player_missiale[i].setPenemy(&enemy);
-							break;
-						}
-					}
-				}
-			}
-		}
+		//player_missiale[i].checkhit();
 	}
 }
 
@@ -135,7 +109,8 @@ void Player::update()
 			{
 				if (player_bullet[i].Isarive == false)
 				{
-					player_bullet[i].set(Player_object.position, input->mouse_position);
+					player_bullet[i].set(Player_object->getPosition(), 
+						Player_object->screenToWorld({ input->mouse_position.x,input->mouse_position.y }));
 					break;
 				}
 			}
@@ -155,29 +130,22 @@ void Player::update()
 			Target_count = 0;
 		}
 
-		if (Target_count > 40)
+		if (Target_count > 70)
 		{
-			Target.rotation -= 7.0f;
+			target.rotation -= 5.0f;
 			Isrockon = true;
 		}
 		else
 		{
-			Target.rotation += 3.0f;
+			target.rotation += 3.0f;
 			//Rockon_count = 0;
 			Isrockon = false;
 		}
-
-		if (input->Mouse_LeftRelease())
-		{
-			for (int i = 0; i < Rockon_count; i++)
-			{
-				player_missiale[i].start(Player_object.position);
-			}
-			Rockon_count = 0;
-		}
 	}
 
-	Player_object.Update3d(player_view);
+	target.position = { (float)input->mouse_p.x,(float)input->mouse_p.y,0.0f };
+	target.SpriteTransferVertexBuffer();
+	target.SpriteUpdate();
 
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
 	{
@@ -189,48 +157,63 @@ void Player::update()
 		player_missiale[i].update();
 	}
 
-	Target.position = input->mouse_position;
-	//Target.SpriteUpdate(*commonsp);
-
 	for (int i = 0; i < 10; i++)
 	{
-		//hp[i].SpriteUpdate(*commonsp);
+		//hp[i].SpriteUpdate();
 	}
+}
 
-	player_collision.center = {
-		Player_object.position.x,
-		Player_object.position.y,
-		Player_object.position.z,
-		1.0f
-	};
+void Player::reset()
+{
+	Isarive = true;
+	HP = 10;
+
+	up = 0;
+	right = 0;
+	objectRot = { 0,0,0 };
+	Player_object->SetPosition({ 0,5,0 });
+	pitch = 0.0f;
+	yow = 0.0f;
+
+	for (int i = 0; i < MaxPlayerMissileNum; i++)
+	{
+		player_missiale[i].P_enemy = nullptr;
+		player_missiale[i].Isarive = false;
+		player_missiale[i].IsTarget_set = false;
+	}
 }
 
 //•`‰æ
-void Player::draw(directX* directx, TexManager* tex)
+void Player::draw_3d(directX* directx, TexManager* tex)
 {
 	if (Isarive == true)
 	{
-		object3D_obj::objectcommon->object3DcommonBeginDraw();
+		Player_object->SetPipelineSimple(directx->cmdList.Get());
+		Player_object->Draw(directx->cmdList.Get());
 
 		for (int i = 0; i < MaxPlayerBulletNum; i++)
 		{
-			player_bullet[i].draw();
+			player_bullet[i].draw(directx);
 		}
 
 		for (int i = 0; i < MaxPlayerMissileNum; i++)
 		{
-			player_missiale[i].draw();
+			player_missiale[i].draw(directx);
 		}
+	}
+}
 
-		Player_object.DrawModel_OnMaterial(player_view);
+void Player::draw_2d(directX* directx, TexManager* tex)
+{
+	if (!Isarive)
+	{
+		return;
+	}
 
-		directx->depthclear();
-		//commonsp->SpriteCommonBeginDraw(directx->cmdList.Get(), tex);
-		//Target.DrawSprite(directx->cmdList.Get(), tex);
+	target.DrawSprite(directx->cmdList.Get());
 
-		for (int i = 0; i < HP; i++)
-		{
-			//hp[i].DrawSprite(directx->cmdList.Get(), tex);
-		}
+	for (int i = 0; i < HP; i++)
+	{
+		//hp[i].DrawSprite(directx->cmdList.Get(), tex);
 	}
 }

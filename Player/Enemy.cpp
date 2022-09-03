@@ -37,8 +37,8 @@ void Enemy::init(int enemy_index, int enemy_bullet_index)
 	testObject->Initialize();
 	testObject->SetModel(testCube);
 	testObject->SetScale({ 1.0f,1.0f,1.0f });
-	testObject->setColor({ (float)(rand() % 100) / 100,(float)(rand() % 100) / 100 ,(float)(rand() % 100) / 100 ,1 });
-	//testObject->PlayAnimation();
+
+	enemy_collision.radius = 2.0f;
 }
 
 void Enemy::set(XMFLOAT3 pos)
@@ -57,6 +57,7 @@ void Enemy::reSet()
 	Isarive = true;
 	HP = 1;
 	Istarget_set = false;
+	IsSetMissile = false;
 }
 
 void Enemy::draw3D(directX* directx)
@@ -65,6 +66,7 @@ void Enemy::draw3D(directX* directx)
 	{
 		return;
 	}
+	testObject->SetPipelineSimple(directx->cmdList.Get());
 	testObject->Draw(directx->cmdList.Get());
 }
 
@@ -91,7 +93,7 @@ void Enemy::update(XMFLOAT3 Player_pos)
 		enemy_speed = 0.1f;
 	}
 
-	if (homingCount % 40 == 0)
+	if (homingCount % 33 == 0)
 	{
 		enemy_speed = 0.05f;
 	}
@@ -118,12 +120,20 @@ void Enemy::update(XMFLOAT3 Player_pos)
 	if (Istarget_set)
 	{
 		Rock_Target.rotation += 1.5f;
+		XMFLOAT2 screenPos = testObject->worldToScleen();
+		Rock_Target.position = { screenPos.x,screenPos.y,0 };
 	}
 
 	Rock_Target.SpriteTransferVertexBuffer();
 	Rock_Target.SpriteUpdate();
 
-	testObject->SetPosition(position);
+	//testObject->SetPosition(position);
+	enemy_collision.center = 
+	{ 
+		testObject->getPosition().x,
+		testObject->getPosition().y,
+		testObject->getPosition().z,1.0f 
+	};
 	testObject->Update();
 }
 
