@@ -23,20 +23,6 @@ private:
 class Enemy
 {
 public:
-	//--------------------g‚í‚È‚¢“z(‘‚«Š·‚¦‚½‚Æ‚«‚É’Ç‰Á)--------------------
-	object3D_obj enemy;
-	Viewes enemy_view;
-	Viewes enemy_view2;
-	Viewes enemy_view3;
-	enemy_bullet bullet;
-	bool Isshot = false;
-	int enemy_move_Pat = 1;
-	int move_flag = 1;
-	XMFLOAT3 enemy_action = { 0.0f,0.0f,0.0f };
-	XMFLOAT3 Shot_Vec = { 0.0f,0.0f,0.0f };
-	XMVECTOR enemy_sc_pos;
-	bool IsRockon_draw = false;
-
 	//--------------------g‚¤‚â‚Â--------------------
 	bool Isarive = false;//¶‘¶
 	bool Istarget_set = false;//‘_‚í‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©

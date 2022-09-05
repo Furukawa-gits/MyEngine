@@ -49,9 +49,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	SingleSprite::SetStaticData(directx->dev.Get());
 
 	//デバッグテキスト初期化
-#if DEBUG
 	debugtext.Init();
-#endif // DEBUG
 
 
 	//スプライト生成
@@ -100,7 +98,6 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 //デバッグテキスト
 void GameScene::debugs_print()
 {
-#if DEBUG
 	debugtext.Print("W : Move Front", 10, 10, 1.0f);
 	//debugtext.Print("S : Move Back", 10, 25, 1.0f);
 	debugtext.Print("MouseDrag : Camera(Left&Right)", 10, 55, 1.0f);
@@ -124,7 +121,6 @@ void GameScene::debugs_print()
 
 	debugtext.Print("1 : Object Simple", 1000, 10, 1.0f);
 	debugtext.Print("2 : posteffect GrayScale", 1000, 30, 1.0f);
-#endif // DEBUG
 }
 
 #pragma region 各シーン更新
@@ -360,9 +356,7 @@ void GameScene::DrawSP()
 	}
 
 	testPlayer.draw_2d(directx, nullptr);
-#if DEBUG
 	debugtext.DrawAll(directx->cmdList.Get());
-#endif // DEBUG
 }
 
 void GameScene::checkHitPlayerTarget()

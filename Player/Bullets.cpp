@@ -41,8 +41,6 @@ void bullet::checkhit(Enemy* enemy)
 			count = 0;
 			Isarive = false;
 
-			enemy->IsRockon_draw = false;
-			enemy->Isshot = false;
 			enemy->HP--;
 		}
 	}
@@ -128,8 +126,6 @@ void Missile::checkhit()
 			Isarive = false;
 			IsTarget_set = false;
 
-			P_enemy->IsRockon_draw = false;
-			P_enemy->Isshot = false;
 			P_enemy->Isarive = false;
 
 			P_enemy = nullptr;
