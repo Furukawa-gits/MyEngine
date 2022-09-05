@@ -159,7 +159,7 @@ private:
 
 	float rightAngle = 0.0f;
 
-	XMMATRIX matWorld;
+	XMMATRIX matWorld = {};
 
 	Model* model = nullptr;
 

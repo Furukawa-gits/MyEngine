@@ -53,7 +53,7 @@ struct Material
 	// シェーダリソースビューのハンドル(CPU)
 	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
 
-	int material_texnumber;
+	int material_texnumber = 0;
 };
 
 //バッファビュー構造体

@@ -67,7 +67,7 @@ public:
 
 
 	//ê∂ë∂
-	bool Isarive;
+	bool Isarive = false;
 
 	int HP = 10;
 

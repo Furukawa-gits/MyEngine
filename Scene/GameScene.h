@@ -103,7 +103,7 @@ private:
 	dxinput* input = nullptr;
 	Audio* audio = nullptr;
 	DebugText debugtext;
-	XMFLOAT3 MOUSE_POS;
+	XMFLOAT3 MOUSE_POS = { 0,0,0 };
 	Camera* camera = nullptr;
 #pragma endregion
 
