@@ -153,7 +153,7 @@ bool Collision::CheckRay2Triangle(const Ray& ray, const Triangle& triangle, floa
 
 	if (!CheckRay2Plane(ray, plane, distance, &interPlane)) { return false; }
 
-	const float epsilon = 1.0e-5;
+	const float epsilon = (float)1.0e-5;
 	XMVECTOR m;
 
 	XMVECTOR pt_p0 = triangle.p0 - interPlane;

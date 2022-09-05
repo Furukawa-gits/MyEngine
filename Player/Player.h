@@ -19,7 +19,9 @@ public:
 
 	void Move();
 
-	void checkplayerbullet(Enemy* enemy);
+	void checkPlayerBullet(Enemy* enemy);
+
+	void checkPlayerEnemy(Enemy* enemy);
 
 	void update();
 
@@ -39,6 +41,9 @@ public:
 
 	//âÒì]ó 
 	XMFLOAT3 objectRot = { 0,0,0 };
+
+	//ç¿ïW
+	XMFLOAT3 position = { 0,5,30 };
 
 	float up = 0.0f;
 	float right = 0.0f;

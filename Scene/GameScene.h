@@ -104,11 +104,8 @@ private:
 	Audio* audio = nullptr;
 	DebugText debugtext;
 	XMFLOAT3 MOUSE_POS = { 0,0,0 };
-	Camera* camera = nullptr;
+	//Camera* camera = nullptr;
 #pragma endregion
-
-	//í«è]ÉJÉÅÉâ
-	FollowCamera* followcamera = nullptr;
 
 	//âÒì]ó 
 	XMFLOAT3 objectRot = { 0,0,0 };

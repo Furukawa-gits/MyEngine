@@ -95,7 +95,7 @@ void Enemy::update(XMFLOAT3 Player_pos)
 
 	if (homingCount % 33 == 0)
 	{
-		enemy_speed = 0.05f;
+		enemy_speed = 0.0f;
 	}
 
 	position = testObject->getPosition();

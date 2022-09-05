@@ -45,9 +45,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//3dオブジェクト静的初期化
 	object3D_obj::StaticInit();
 
-	//スプライト初期化
-	//SingleSprite::SetPipelineStateSprite(directx.dev.Get());
-
 	//ゲームシーン初期化
 	GameScene gamescene;
 	gamescene.Init(&directx, &input, &audio);
@@ -104,7 +101,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		}
 
 		// 描画処理
-		
 		posteffect->PreDrawScene(directx.cmdList.Get(), directx.dev.Get());
 		//背景スプライト、
 		gamescene.DrawBack();
@@ -113,8 +109,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//3Dオブジェクト
 		gamescene.Draw3D();
 		posteffect->PostDrawScene(directx.cmdList.Get(), &directx);
-
-		
 		directx.preDraw();
 		//ポストエフェクト
 		if (isSetGray)

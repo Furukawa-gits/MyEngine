@@ -108,7 +108,7 @@ public:
 
 private:
 	ComPtr<IXAudio2> xAudio2;
-	IXAudio2MasteringVoice* masterVoice;
+	IXAudio2MasteringVoice* masterVoice = nullptr;
 	XAudio2VoiceCallback voiceCallback;
 
 	float valume = 0.5f;

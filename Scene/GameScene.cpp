@@ -40,25 +40,18 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	//音読み込み
 	Load_sounds();
-
-	camera = new Camera();
-
-	camera->SetTarget({ 0, 2.5f, 0 });
-	camera->SetEye({ 0,5,-50 });
+	
 	//スプライトクラス初期化
 	SingleSprite::SetStaticData(directx->dev.Get());
 
 	//デバッグテキスト初期化
 	debugtext.Init();
 
-
 	//スプライト生成
 	Load_Sprites();
 
 	//3dオブジェクト生成
 	Object3d_FBX::SetDevice(directx->dev.Get());
-
-	Object3d_FBX::SetCamera(camera);
 
 	Object3d_FBX::CreateGraphicsPipeline();
 
@@ -67,8 +60,19 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	model = FbxLoader::GetInstance()->LoadmodelFromFile("boneTest");
 	SkyModel = FbxLoader::GetInstance()->LoadmodelFromFile("skySphere");
 
+	testPlayer.followcamera = new FollowCamera();
+
+	testPlayer.followcamera->setFollowTarget(&testPlayer.position, &testPlayer.objectRot, -30);
+
+	Object3d_FBX::SetCamera(testPlayer.followcamera);
+
 	//プレイヤー初期化
 	testPlayer.init(input, nullptr, directx);
+
+	testPlayer.followcamera->TargetObjectPos = &testPlayer.Player_object->getPosition();
+	testPlayer.followcamera->TargetObjectAngle = &testPlayer.Player_object->getRotation();
+
+	testPlayer.followcamera->Following();
 
 	skySphere = new Object3d_FBX;
 	skySphere->Initialize();
@@ -99,7 +103,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 void GameScene::debugs_print()
 {
 	debugtext.Print("W : Move Front", 10, 10, 1.0f);
-	//debugtext.Print("S : Move Back", 10, 25, 1.0f);
+	debugtext.Print("S : Move Back", 10, 25, 1.0f);
 	debugtext.Print("MouseDrag : Camera(Left&Right)", 10, 55, 1.0f);
 	debugtext.Print("MouseClick : Shot", 10, 70, 1.0f);
 	debugtext.Print("MousePress(Left)&Drag : Target", 10, 85, 1.0f);
@@ -109,6 +113,7 @@ void GameScene::debugs_print()
 	if (scene == title)
 	{
 		debugtext.Print("Title", 10, 160, 1.0f);
+		debugtext.Print("SPACE : start", 10, 190, 1.0f);
 	}
 	else if (scene == play)
 	{
@@ -118,9 +123,6 @@ void GameScene::debugs_print()
 	{
 		debugtext.Print("Result", 10, 160, 1.0f);
 	}
-
-	debugtext.Print("1 : Object Simple", 1000, 10, 1.0f);
-	debugtext.Print("2 : posteffect GrayScale", 1000, 30, 1.0f);
 }
 
 #pragma region 各シーン更新
@@ -160,6 +162,15 @@ void GameScene::Play_update()
 	//プレイヤー更新
 	testPlayer.update();
 
+	testPlayer.followcamera->TargetObjectPos = &testPlayer.Player_object->getPosition();
+	testPlayer.followcamera->TargetObjectAngle = &testPlayer.Player_object->getRotation();
+
+	testPlayer.followcamera->Following();
+
+	testPlayer.followcamera->setFrontVec(0.5f);
+
+	Object3d_FBX::SetCamera(testPlayer.followcamera);
+
 	if (input->push(DIK_R))
 	{
 		up = 0;
@@ -185,14 +196,11 @@ void GameScene::Play_update()
 
 	skySphere->Update();
 
-	cameraobj->SetPosition(testPlayer.followcamera->GetEye());
-	cameraobj->SetRotation(*testPlayer.followcamera->TargetObjectAngle);
-	cameraobj->Update();
-
-	//敵(テスト)初期化
+	//敵(テスト)更新
 	for (int i = 0; i < enemynum; i++)
 	{
 		testEnemys[i].update(testPlayer.Player_object->getPosition());
+		testPlayer.checkPlayerEnemy(&testEnemys[i]);
 	}
 
 	//マウスカーソル非表示
@@ -239,7 +247,7 @@ void GameScene::Play_update()
 		}
 	}
 
-	if (count >= enemynum)
+	if (count >= enemynum || testPlayer.HP <= 0)
 	{
 		scene = clear;
 	}
@@ -276,8 +284,6 @@ void GameScene::Play_draw()
 	{
 		testEnemys[i].draw3D(directx);
 	}
-
-	//cameraobj->Draw(directx->cmdList.Get());
 }
 
 //リザルト画面描画
@@ -319,7 +325,7 @@ void GameScene::Update()
 
 	sample_back.SpriteUpdate();
 
-	camera->Update();
+	//camera->Update();
 
 	debugs_print();
 }
@@ -355,7 +361,10 @@ void GameScene::DrawSP()
 		testEnemys[i].drawSp(directx);
 	}
 
-	testPlayer.draw_2d(directx, nullptr);
+	if (scene == play)
+	{
+		testPlayer.draw_2d(directx, nullptr);
+	}
 	debugtext.DrawAll(directx->cmdList.Get());
 }
 
