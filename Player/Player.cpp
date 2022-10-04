@@ -58,16 +58,8 @@ void Player::init(dxinput* input, TexManager* tex, directX* directx)
 
 void Player::Move()
 {
-	//前に進む
-	if (input->push(DIK_W))
-	{
-		Player_object->addMoveFront(followcamera->getFrontVec());
-	}
-	//後に下がる
-	if (input->push(DIK_S))
-	{
-		Player_object->addMoveBack(followcamera->getFrontVec());
-	}
+	//前に進み続ける
+	Player_object->addMoveFront(followcamera->getFrontVec());
 
 	if (input->mouse_p.x >= 1000)
 	{
@@ -84,6 +76,8 @@ void Player::Move()
 	Player_object->SetRotation({ pitch,yow,roll });
 	XMVECTOR matQ = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(pitch), XMConvertToRadians(yow), XMConvertToRadians(roll));
 	Player_object->addQRot(matQ);
+
+	
 
 	/*followcamera->TargetObjectPos = &Player_object->getPosition();
 	followcamera->TargetObjectAngle = &Player_object->getRotation();
