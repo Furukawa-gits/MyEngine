@@ -73,18 +73,32 @@ void Player::Move()
 		yow -= 0.7f;
 	}
 
+	if (input->mouse_p.y >= 620)
+	{
+
+	}
+
+	if (input->mouse_p.y <= 100)
+	{
+
+	}
+
+	XMMATRIX test = XMMatrixIdentity();
+	float test1 = 5;
+	XMMATRIX test2 = XMMatrixIdentity();
+
 	Player_object->SetRotation({ pitch,yow,roll });
 	XMVECTOR matQ = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(pitch), XMConvertToRadians(yow), XMConvertToRadians(roll));
 	Player_object->addQRot(matQ);
 
-	
-
-	/*followcamera->TargetObjectPos = &Player_object->getPosition();
+	followcamera->TargetObjectPos = &Player_object->getPosition();
 	followcamera->TargetObjectAngle = &Player_object->getRotation();
 
 	followcamera->Following();
 
-	followcamera->setFrontVec(0.5f);*/
+	followcamera->setFrontVec(0.5f);
+
+	Object3d_FBX::SetCamera(followcamera);
 
 	Player_object->Update();
 	player_collision.center =

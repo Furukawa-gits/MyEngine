@@ -162,15 +162,6 @@ void GameScene::Play_update()
 	//プレイヤー更新
 	testPlayer.update();
 
-	testPlayer.followcamera->TargetObjectPos = &testPlayer.Player_object->getPosition();
-	testPlayer.followcamera->TargetObjectAngle = &testPlayer.Player_object->getRotation();
-
-	testPlayer.followcamera->Following();
-
-	testPlayer.followcamera->setFrontVec(0.5f);
-
-	Object3d_FBX::SetCamera(testPlayer.followcamera);
-
 	if (input->push(DIK_R))
 	{
 		up = 0;
