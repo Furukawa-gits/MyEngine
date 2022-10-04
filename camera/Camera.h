@@ -1,5 +1,5 @@
 ﻿#pragma once
-
+#include"../FbxLoder/Quaternion.h"
 #include <DirectXMath.h>
 
 using namespace DirectX;

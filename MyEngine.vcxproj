@@ -183,6 +183,7 @@
     <ClInclude Include="FbxLoder\FbxLoader.h" />
     <ClInclude Include="FbxLoder\Model.h" />
     <ClInclude Include="FbxLoder\Object3d_FBX.h" />
+    <ClInclude Include="FbxLoder\Quaternion.h" />
     <ClInclude Include="Input\dxInput.h" />
     <ClInclude Include="Player\Bullets.h" />
     <ClInclude Include="Player\Enemy.h" />
@@ -208,6 +209,7 @@
     <ClCompile Include="FbxLoder\FbxLoader.cpp" />
     <ClCompile Include="FbxLoder\Model.cpp" />
     <ClCompile Include="FbxLoder\Object3d_FBX.cpp" />
+    <ClCompile Include="FbxLoder\Quaternion.cpp" />
     <ClCompile Include="Input\dxInput.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player\Bullets.cpp" />

@@ -105,6 +105,11 @@ public:
 		qRot = rotQ;
 	}
 
+	void setRotMatrix(XMMATRIX rotM)
+	{
+		mRot = rotM;
+	}
+
 	void SetPipelineSimple(ID3D12GraphicsCommandList* cmdList);
 
 	void reSetPipeline();
@@ -146,6 +151,8 @@ private:
 	XMFLOAT3 position = { 0,0,0 };
 
 	XMVECTOR qRot = XMQuaternionIdentity();
+
+	XMMATRIX mRot = XMMatrixIdentity();
 
 	float moveSpeed = 0.0f;
 

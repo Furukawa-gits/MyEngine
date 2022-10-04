@@ -1,4 +1,5 @@
 #include"Player.h"
+#include"../FbxLoder/Quaternion.h"
 
 dxinput* Player::input = nullptr;
 
@@ -75,12 +76,12 @@ void Player::Move()
 
 	if (input->mouse_p.y >= 620)
 	{
-
+		pitch += 0.7;
 	}
 
 	if (input->mouse_p.y <= 100)
 	{
-
+		pitch -= 0.7;
 	}
 
 	XMMATRIX test = XMMatrixIdentity();
