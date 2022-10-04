@@ -42,6 +42,13 @@ public:
 	//‰ñ“]—Ê
 	XMFLOAT3 objectRot = { 0,0,0 };
 
+	//Šî€‰ñ“]²
+	XMFLOAT3 unitX;
+	XMFLOAT3 unitY;
+	XMFLOAT3 unitZ;
+
+	Quaternion qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
+
 	//À•W
 	XMFLOAT3 position = { 0,5,30 };
 

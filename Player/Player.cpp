@@ -21,7 +21,7 @@ void Player::init(dxinput* input, TexManager* tex, directX* directx)
 	//Player_object->PlayAnimation();
 	Player_object->setColor({ 0,1,1,1 });
 
-	/*followcamera = new FollowCamera();
+	followcamera = new FollowCamera();
 
 	followcamera->setFollowTarget(&Player_object->getPosition(), &Player_object->getRotation(), -30);
 
@@ -30,7 +30,7 @@ void Player::init(dxinput* input, TexManager* tex, directX* directx)
 	followcamera->TargetObjectPos = &Player_object->getPosition();
 	followcamera->TargetObjectAngle = &Player_object->getRotation();
 
-	followcamera->Following();*/
+	followcamera->Following();
 	
 
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
@@ -64,29 +64,37 @@ void Player::Move()
 
 	if (input->mouse_p.x >= 1000)
 	{
-		objectRot.y += 0.7f;
-		yow += 0.7f;
+		yow = 0.7f;
 	}
 
 	if (input->mouse_p.x <= 280)
 	{
-		objectRot.y -= 0.7f;
-		yow -= 0.7f;
+		yow = -0.7f;
 	}
 
 	if (input->mouse_p.y >= 620)
 	{
-		pitch += 0.7;
+		pitch = 0.7;
 	}
 
 	if (input->mouse_p.y <= 100)
 	{
-		pitch -= 0.7;
+		pitch = -0.7;
 	}
 
-	XMMATRIX test = XMMatrixIdentity();
-	float test1 = 5;
-	XMMATRIX test2 = XMMatrixIdentity();
+	XMFLOAT3 vSideAxis = getAxis(quaternion(unitX, qLocal));
+	XMFLOAT3 vUpAxis = getAxis(quaternion(unitY, qLocal));
+	XMFLOAT3 vForwordAxis = getAxis(quaternion(unitZ, qLocal));
+
+	Quaternion qRoll = quaternion(vUpAxis, roll);
+	Quaternion qPitch = quaternion(vSideAxis, pitch);
+	Quaternion qYow = quaternion(vForwordAxis, yow);
+
+	qLocal = qRoll * qLocal;
+	qLocal = qPitch * qLocal;
+	qLocal = qYow * qLocal;
+
+	Player_object->setRotMatrix(rotate(qLocal));
 
 	Player_object->SetRotation({ pitch,yow,roll });
 	XMVECTOR matQ = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(pitch), XMConvertToRadians(yow), XMConvertToRadians(roll));
@@ -98,8 +106,6 @@ void Player::Move()
 	followcamera->Following();
 
 	followcamera->setFrontVec(0.5f);
-
-	Object3d_FBX::SetCamera(followcamera);
 
 	Player_object->Update();
 	player_collision.center =

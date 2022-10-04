@@ -69,11 +69,6 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	//ƒvƒŒƒCƒ„[‰Šú‰»
 	testPlayer.init(input, nullptr, directx);
 
-	testPlayer.followcamera->TargetObjectPos = &testPlayer.Player_object->getPosition();
-	testPlayer.followcamera->TargetObjectAngle = &testPlayer.Player_object->getRotation();
-
-	testPlayer.followcamera->Following();
-
 	skySphere = new Object3d_FBX;
 	skySphere->Initialize();
 	skySphere->SetModel(SkyModel);
