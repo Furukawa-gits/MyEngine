@@ -1,6 +1,7 @@
 #pragma once
-#include"Vector3.h"
-#include"Matrix4.h"
+#include<DirectXMath.h>
+
+using namespace DirectX;
 
 struct Quaternion
 {
@@ -12,8 +13,8 @@ struct Quaternion
 
 //クオータニオンを作成
 Quaternion quaternion(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 1.0f);
-Quaternion quaternion(const Vector3& v, float angle);
-Quaternion quaternion(const Vector3& v, const Quaternion& q);
+Quaternion quaternion(const XMFLOAT3& v, float angle);
+Quaternion quaternion(const XMFLOAT3& v, const Quaternion& q);
 
 //内積
 float dot(const Quaternion& q1, const Quaternion& q2);
@@ -49,6 +50,6 @@ Quaternion operator / (const Quaternion& q, float s);
 
 Quaternion slerp(const Quaternion& q1, const Quaternion& q2, float t);
 Quaternion lerp(const Quaternion& q1, const Quaternion& q2, float t);
-Matrix4    rotate(const Quaternion& q);
-Quaternion quaternion(const Matrix4& m);
-Vector3    getAxis(const Quaternion& q);
+XMMATRIX    rotate(const Quaternion& q);
+Quaternion quaternion(const XMMATRIX& m);
+XMFLOAT3    getAxis(const Quaternion& q);

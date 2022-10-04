@@ -1,5 +1,4 @@
 #include"Quaternion.h"
-#include"Matrix4.h"
 #include<cmath>
 
 //クォータニオン作成(成分指定)
@@ -10,13 +9,13 @@ Quaternion quaternion(float x, float y, float z, float w)
 }
 
 //任意軸周りの回転の指定からクォータニオン作成
-Quaternion quaternion(const Vector3& v, float angle)
+Quaternion quaternion(const XMFLOAT3& v, float angle)
 {
 	float _sin = sin(angle / 2.0f);
 	return quaternion(_sin * v.x, _sin * v.y, _sin * v.z, cos(angle / 2.0f));
 }
 
-Quaternion quaternion(const Vector3& v, const Quaternion& q)
+Quaternion quaternion(const XMFLOAT3& v, const Quaternion& q)
 {
 	Quaternion qq = conjugate(q);
 	Quaternion qv = quaternion(v.x, v.y, v.z, 0);
@@ -195,7 +194,7 @@ Quaternion lerp(const Quaternion& q1, const Quaternion& q2, float t)
 }
 
 //クォータニオンから回転行列への変換
-Matrix4 rotate(const Quaternion& q)
+XMMATRIX rotate(const Quaternion& q)
 {
 	float xx = q.x * q.x * 2.0f;
 	float yy = q.y * q.y * 2.0f;
@@ -207,7 +206,7 @@ Matrix4 rotate(const Quaternion& q)
 	float wy = q.w * q.y * 2.0f;
 	float wz = q.w * q.z * 2.0f;
 
-	Matrix4 result = {
+	XMMATRIX result = {
 		1.0f - yy - zz, xy + wz       , xz - wy       , 0.0f,
 		xy - wz       , 1.0f - xx - zz, yz + wx       , 0.0f,
 		xz + wy       , yz - wx       , 1.0f - xx - yy, 0.0f,
@@ -217,40 +216,40 @@ Matrix4 rotate(const Quaternion& q)
 }
 
 //回転行列からクォータニオン生成
-Quaternion quaternion(const Matrix4& m)
+Quaternion quaternion(const XMMATRIX& m)
 {
 	Quaternion result;
-	float tr = m.m[0][0] + m.m[1][1] + m.m[2][2] + m.m[3][3];
+	float tr = m.r[0].m128_f32[0]+ m.r[1].m128_f32[1]+ m.r[2].m128_f32[2]+ m.r[3].m128_f32[3];
 
 	if (tr >= 1.0f)
 	{
 		float fourD = 2.0f * sqrt(tr);
-		result.x = (m.m[1][2] - m.m[2][1]) / fourD;
-		result.y = (m.m[2][0] - m.m[0][2]) / fourD;
-		result.z = (m.m[0][1] - m.m[1][0]) / fourD;
+		result.x = (m.r[1].m128_f32[2] - m.r[2].m128_f32[1]) / fourD;
+		result.y = (m.r[2].m128_f32[0] - m.r[0].m128_f32[2]) / fourD;
+		result.z = (m.r[0].m128_f32[1] - m.r[1].m128_f32[0]) / fourD;
 		result.w = fourD / 4.0f;
 		return result;
 	}
 	int i = 0;
-	if (m.m[0][0] <= m.m[1][1])
+	if (m.r[0].m128_f32[0] <= m.r[1].m128_f32[1])
 	{
 		i = 1;
 	}
-	if (m.m[2][2] > m.m[i][i])
+	if (m.r[2].m128_f32[2] > m.r[i].m128_f32[i])
 	{
 		i = 2;
 	}
 
 	int j = (i + 1) % 3;
 	int k = (j + 1) % 3;
-	tr = m.m[i][i] - m.m[j][j] - m.m[k][k] + 1.0f;
+	tr = m.r[i].m128_f32[i] - m.r[j].m128_f32[j] - m.r[k].m128_f32[k] + 1.0f;
 
 	float fourD = 2.0f * sqrt(tr);
 	float qa[4];
 	qa[i] = fourD / 4.0f;
-	qa[j] = (m.m[j][i] + m.m[i][j]) / fourD;
-	qa[k] = (m.m[k][i] + m.m[i][k]) / fourD;
-	qa[3] = (m.m[j][k] - m.m[k][j]) / fourD;
+	qa[j] = (m.r[j].m128_f32[i] + m.r[i].m128_f32[j]) / fourD;
+	qa[k] = (m.r[k].m128_f32[i] + m.r[i].m128_f32[k]) / fourD;
+	qa[3] = (m.r[j].m128_f32[k] - m.r[k].m128_f32[j]) / fourD;
 	result.x = qa[0];
 	result.y = qa[1];
 	result.z = qa[2];
@@ -259,9 +258,9 @@ Quaternion quaternion(const Matrix4& m)
 }
 
 //回転軸の算出
-Vector3 getAxis(const Quaternion& q)
+XMFLOAT3 getAxis(const Quaternion& q)
 {
-	Vector3 result;
+	XMFLOAT3 result;
 
 	float x = q.x;
 	float y = q.y;
