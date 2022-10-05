@@ -1,5 +1,4 @@
 #include"Player.h"
-#include"../FbxLoder/Quaternion.h"
 
 dxinput* Player::input = nullptr;
 
@@ -24,6 +23,9 @@ void Player::init(dxinput* input, TexManager* tex, directX* directx)
 	followcamera = new FollowCamera();
 
 	followcamera->setFollowTarget(&Player_object->getPosition(), &Player_object->getRotation(), -30);
+
+	/*followcamera->SetEye({ 0,5,-10 });
+	followcamera->SetTarget({ 0,5,0 });*/
 
 	Object3d_FBX::SetCamera(followcamera);
 
@@ -60,7 +62,7 @@ void Player::init(dxinput* input, TexManager* tex, directX* directx)
 void Player::Move()
 {
 	//前に進み続ける
-	Player_object->addMoveFront(followcamera->getFrontVec());
+	//Player_object->addMoveFront(followcamera->getFrontVec());
 
 	if (input->mouse_p.x >= 1000)
 	{
@@ -94,19 +96,24 @@ void Player::Move()
 	qLocal = qPitch * qLocal;
 	qLocal = qYow * qLocal;
 
+	//角度をセット
 	Player_object->setRotMatrix(rotate(qLocal));
 
-	Player_object->SetRotation({ pitch,yow,roll });
+	/*Player_object->SetRotation({ pitch,yow,roll });
 	XMVECTOR matQ = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(pitch), XMConvertToRadians(yow), XMConvertToRadians(roll));
-	Player_object->addQRot(matQ);
+	Player_object->addQRot(matQ);*/
 
+	//追従カメラのターゲットをセット
 	followcamera->TargetObjectPos = &Player_object->getPosition();
 	followcamera->TargetObjectAngle = &Player_object->getRotation();
 
+	//追従
 	followcamera->Following();
 
+	//前に進むベクトルを計算
 	followcamera->setFrontVec(0.5f);
 
+	//オブジェクトの更新
 	Player_object->Update();
 	player_collision.center =
 	{
@@ -224,7 +231,7 @@ void Player::reset()
 	up = 0;
 	right = 0;
 	objectRot = { 0,0,0 };
-	Player_object->SetPosition({ 0,5,0 });
+	Player_object->SetPosition({ 0,5,30 });
 	pitch = 0.0f;
 	yow = 0.0f;
 
@@ -241,6 +248,7 @@ void Player::draw_3d(directX* directx, TexManager* tex)
 {
 	if (Isarive == true)
 	{
+		//単色シェーダをセットして描画
 		Player_object->SetPipelineSimple(directx->cmdList.Get());
 		Player_object->Draw(directx->cmdList.Get());
 
