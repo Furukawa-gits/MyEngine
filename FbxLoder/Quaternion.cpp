@@ -11,7 +11,7 @@ Quaternion quaternion(float x, float y, float z, float w)
 //任意軸周りの回転の指定からクォータニオン作成
 Quaternion quaternion(const XMFLOAT3& v, float angle)
 {
-	float _sin = sin(angle / 2.0f);
+	float _sin = sinf(angle / 2.0f);
 	return quaternion(_sin * v.x, _sin * v.y, _sin * v.z, cos(angle / 2.0f));
 }
 
@@ -32,7 +32,7 @@ float dot(const Quaternion& q1, const Quaternion& q2)
 //長さ
 float length(const Quaternion& q)
 {
-	return (float)sqrt(dot(q, q));
+	return (float)sqrtf(dot(q, q));
 }
 
 //正規化
@@ -172,8 +172,8 @@ Quaternion slerp(const Quaternion& q1, const Quaternion& q2, float t)
 	if ((1.0f - cos) > 0.001f)
 	{
 		float theta = (float)acos(cos);
-		k0 = (float)(sin(theta * k0) / sin(theta));
-		k1 = (float)(sin(theta * k1) / sin(theta));
+		k0 = (float)(sinf(theta * k0) / sinf(theta));
+		k1 = (float)(sinf(theta * k1) / sinf(theta));
 	}
 	return q1 * k0 + t2 * k1;
 }
@@ -223,7 +223,7 @@ Quaternion quaternion(const XMMATRIX& m)
 
 	if (tr >= 1.0f)
 	{
-		float fourD = 2.0f * sqrt(tr);
+		float fourD = 2.0f * sqrtf(tr);
 		result.x = (m.r[1].m128_f32[2] - m.r[2].m128_f32[1]) / fourD;
 		result.y = (m.r[2].m128_f32[0] - m.r[0].m128_f32[2]) / fourD;
 		result.z = (m.r[0].m128_f32[1] - m.r[1].m128_f32[0]) / fourD;
@@ -244,7 +244,7 @@ Quaternion quaternion(const XMMATRIX& m)
 	int k = (j + 1) % 3;
 	tr = m.r[i].m128_f32[i] - m.r[j].m128_f32[j] - m.r[k].m128_f32[k] + 1.0f;
 
-	float fourD = 2.0f * sqrt(tr);
+	float fourD = 2.0f * sqrtf(tr);
 	float qa[4];
 	qa[i] = fourD / 4.0f;
 	qa[j] = (m.r[j].m128_f32[i] + m.r[i].m128_f32[j]) / fourD;

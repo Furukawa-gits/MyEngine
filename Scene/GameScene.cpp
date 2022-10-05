@@ -60,12 +60,6 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	model = FbxLoader::GetInstance()->LoadmodelFromFile("boneTest");
 	SkyModel = FbxLoader::GetInstance()->LoadmodelFromFile("skySphere");
 
-	testPlayer.followcamera = new FollowCamera();
-
-	testPlayer.followcamera->setFollowTarget(&testPlayer.position, &testPlayer.objectRot, -30);
-
-	Object3d_FBX::SetCamera(testPlayer.followcamera);
-
 	//ƒvƒŒƒCƒ„[‰Šú‰»
 	testPlayer.init(input, nullptr, directx);
 
@@ -268,7 +262,7 @@ void GameScene::Play_draw()
 
 	for (int i = 0; i < enemynum; i++)
 	{
-		testEnemys[i].draw3D(directx);
+		//testEnemys[i].draw3D(directx);
 	}
 }
 

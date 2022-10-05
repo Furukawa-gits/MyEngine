@@ -1,21 +1,11 @@
 ﻿#pragma once
 #include"../FbxLoder/Quaternion.h"
-#include <DirectXMath.h>
-
-using namespace DirectX;
 
 /// <summary>
 /// カメラ基本機能
 /// </summary>
 class Camera
 {
-protected: // エイリアス
-	// DirectX::を省略
-	using XMFLOAT2 = DirectX::XMFLOAT2;
-	using XMFLOAT3 = DirectX::XMFLOAT3;
-	using XMFLOAT4 = DirectX::XMFLOAT4;
-	using XMVECTOR = DirectX::XMVECTOR;
-	using XMMATRIX = DirectX::XMMATRIX;
 
 public: // メンバ関数
 	/// <summary>
