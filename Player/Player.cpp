@@ -32,9 +32,6 @@ void Player::init(dxinput* input, TexManager* tex, directX* directx)
 	followcamera->TargetObjectPos = &Player_object->getPosition();
 	followcamera->TargetObjectAngle = &Player_object->getRotation();
 
-	followcamera->Following();
-	
-
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
 	{
 		player_bullet[i].init(i + 1);
@@ -90,14 +87,17 @@ void Player::Move()
 		pitch = 0.0f;
 	}
 
+	//右・上・前方向のベクトル
 	XMFLOAT3 vSideAxis = getAxis(quaternion(unitX, qLocal));
 	XMFLOAT3 vUpAxis = getAxis(quaternion(unitY, qLocal));
 	XMFLOAT3 vForwordAxis = getAxis(quaternion(unitZ, qLocal));
 
+	//ロール・ピッチ・ヨーの回転角度を求める
 	Quaternion qRoll = quaternion(vForwordAxis, roll);
 	Quaternion qPitch = quaternion(vSideAxis, pitch);
 	Quaternion qYow = quaternion(vUpAxis, yow);
 
+	//順番にかけていく
 	qLocal = qRoll * qLocal;
 	qLocal = qPitch * qLocal;
 	qLocal = qYow * qLocal;

@@ -18,7 +18,11 @@ public:
 
 	/// <summary>
 	/// 追従処理
+	/// カメラの座標軸：クォータニオンの回転軸をセット
+	/// カメラの座標：前方向の回転軸から逆算
 	/// </summary>
+	/// <param name="upVector">上方向の回転軸</param>
+	/// <param name="forwordVector">前方向の回転軸</param>
 	void Following();
 
 	void setAngle(float up, float right)
