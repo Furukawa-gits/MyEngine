@@ -14,7 +14,7 @@ void Player::init(dxinput* input, TexManager* tex, directX* directx)
 	Player_object = new Object3d_FBX;
 	Player_object->Initialize();
 	Player_object->SetModel(Player_model);
-	Player_object->SetPosition({ 0,5,+30 });
+	Player_object->SetPosition({ 0,5,0 });
 	Player_object->SetScale({ 1,1,1 });
 	Player_object->setSpeed(2.0f);
 	//Player_object->PlayAnimation();
@@ -24,8 +24,8 @@ void Player::init(dxinput* input, TexManager* tex, directX* directx)
 
 	followcamera->setFollowTarget(&Player_object->getPosition(), &Player_object->getRotation(), -30);
 
-	/*followcamera->SetEye({ 0,5,-10 });
-	followcamera->SetTarget({ 0,5,0 });*/
+	followcamera->SetEye({ 0,5,-10 });
+	followcamera->SetTarget({ 0,5,0 });
 
 	Object3d_FBX::SetCamera(followcamera);
 
@@ -66,49 +66,53 @@ void Player::Move()
 
 	if (input->mouse_p.x >= 1000)
 	{
-		yow = 0.7f;
+		yow = angleMoveSpeed;
 	}
-
-	if (input->mouse_p.x <= 280)
+	else if (input->mouse_p.x <= 280)
 	{
-		yow = -0.7f;
+		yow = -angleMoveSpeed;
+	}
+	else
+	{
+		yow = 0.0f;
 	}
 
 	if (input->mouse_p.y >= 620)
 	{
-		pitch = 0.7;
+		pitch = angleMoveSpeed;
 	}
-
-	if (input->mouse_p.y <= 100)
+	else if (input->mouse_p.y <= 100)
 	{
-		pitch = -0.7;
+		pitch = -angleMoveSpeed;
+	}
+	else
+	{
+		pitch = 0.0f;
 	}
 
 	XMFLOAT3 vSideAxis = getAxis(quaternion(unitX, qLocal));
 	XMFLOAT3 vUpAxis = getAxis(quaternion(unitY, qLocal));
 	XMFLOAT3 vForwordAxis = getAxis(quaternion(unitZ, qLocal));
 
-	Quaternion qRoll = quaternion(vUpAxis, roll);
+	Quaternion qRoll = quaternion(vForwordAxis, roll);
 	Quaternion qPitch = quaternion(vSideAxis, pitch);
-	Quaternion qYow = quaternion(vForwordAxis, yow);
+	Quaternion qYow = quaternion(vUpAxis, yow);
 
 	qLocal = qRoll * qLocal;
 	qLocal = qPitch * qLocal;
 	qLocal = qYow * qLocal;
 
-	//角度をセット
+	//回転行列をセット
 	Player_object->setRotMatrix(rotate(qLocal));
-
-	/*Player_object->SetRotation({ pitch,yow,roll });
-	XMVECTOR matQ = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(pitch), XMConvertToRadians(yow), XMConvertToRadians(roll));
-	Player_object->addQRot(matQ);*/
 
 	//追従カメラのターゲットをセット
 	followcamera->TargetObjectPos = &Player_object->getPosition();
 	followcamera->TargetObjectAngle = &Player_object->getRotation();
 
 	//追従
-	followcamera->Following();
+	//followcamera->Following();
+	followcamera->SetEye({ 0,5,-30 });
+	followcamera->SetTarget({ 0,5,0 });
 
 	//前に進むベクトルを計算
 	followcamera->setFrontVec(0.5f);
@@ -223,6 +227,7 @@ void Player::update()
 	}
 }
 
+//リセット
 void Player::reset()
 {
 	Isarive = true;
@@ -230,10 +235,11 @@ void Player::reset()
 
 	up = 0;
 	right = 0;
-	objectRot = { 0,0,0 };
-	Player_object->SetPosition({ 0,5,30 });
+	Player_object->SetPosition({ 0,5,0 });
 	pitch = 0.0f;
 	yow = 0.0f;
+
+	qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
 
 	for (int i = 0; i < MaxPlayerMissileNum; i++)
 	{

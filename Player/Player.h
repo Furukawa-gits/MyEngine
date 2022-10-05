@@ -40,12 +40,12 @@ public:
 	FollowCamera* followcamera = nullptr;
 
 	//âÒì]ó 
-	XMFLOAT3 objectRot = { 0,0,0 };
+	float angleMoveSpeed = 0.05f;
 
 	//äÓèÄâÒì]é≤
-	XMFLOAT3 unitX;
-	XMFLOAT3 unitY;
-	XMFLOAT3 unitZ;
+	const XMFLOAT3 unitX = { 1,0,0 };
+	const XMFLOAT3 unitY = { 0,1,0 };
+	const XMFLOAT3 unitZ = { 0,0,1 };
 
 	Quaternion qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
 

@@ -33,7 +33,6 @@ void FollowCamera::Following()
 
 	XMVECTOR noCalcVec = { 0,0,-TargetDistance,0 };
 
-
 	XMMATRIX rotM = XMMatrixIdentity();
 	rotM *= XMMatrixRotationZ(XMConvertToRadians(TargetObjectAngle->z + 180));
 	rotM *= XMMatrixRotationX(XMConvertToRadians(-(TargetObjectAngle->x)));
@@ -42,34 +41,6 @@ void FollowCamera::Following()
 	XMVECTOR eyePosition = targetPosition + XMVector3Transform(noCalcVec, rotM);
 
 	XMVECTOR upVector = XMLoadFloat3(&up);
-
-	/*XMVECTOR qCameraRightAngle = DirectX::XMQuaternionRotationAxis(upVector, XMConvertToRadians(rightAngle));
-	XMFLOAT3 cameraSide;
-	XMStoreFloat3(&cameraSide, XMVector3Normalize(XMVector3Cross(upVector, targetPosition - eyePosition)));
-	XMVECTOR qCameraUpAngle = DirectX::XMQuaternionRotationAxis(XMLoadFloat3(&cameraSide), XMConvertToRadians(upAngle));
-
-	XMVECTOR q = qCameraRightAngle * qCameraUpAngle;
-
-	XMVECTOR qCameraPosition = { eye.x,eye.y,eye.z,1.0f };
-
-	XMVECTOR qq = DirectX::XMQuaternionConjugate(q);
-
-	qCameraPosition = q * qCameraPosition * qq;
-
-	eye = { qCameraPosition.m128_f32[0],qCameraPosition.m128_f32[1],qCameraPosition.m128_f32[2] };
-
-	XMVECTOR qCameraUp = { up.x,up.y,up.z,1.0f };
-	qCameraUp = q * qCameraUp * qq;
-
-	up = {
-		qCameraUp.m128_f32[0],
-		qCameraUp.m128_f32[1],
-		qCameraUp.m128_f32[2]
-	};*/
-
-	//targetPosition = XMLoadFloat3(&target);
-	//eyePosition = XMLoadFloat3(&eye);
-	//upVector = XMLoadFloat3(&up);
 
 	matView = XMMatrixLookAtLH(eyePosition, targetPosition, upVector);
 
