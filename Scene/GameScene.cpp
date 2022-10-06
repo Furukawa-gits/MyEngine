@@ -61,7 +61,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	SkyModel = FbxLoader::GetInstance()->LoadmodelFromFile("skySphere");
 
 	//プレイヤー初期化
-	testPlayer.init(input, nullptr, directx);
+	testPlayer.init(input, directx);
 
 	skySphere = new Object3d_FBX;
 	skySphere->Initialize();
@@ -258,7 +258,7 @@ void GameScene::Play_draw()
 	skySphere->Draw(directx->cmdList.Get());
 
 	//プレイヤー描画
-	testPlayer.draw_3d(directx, nullptr);
+	testPlayer.draw_3d(directx);
 
 	for (int i = 0; i < enemynum; i++)
 	{
@@ -343,7 +343,7 @@ void GameScene::DrawSP()
 
 	if (scene == play)
 	{
-		testPlayer.draw_2d(directx, nullptr);
+		testPlayer.draw_2d(directx);
 	}
 	debugtext.DrawAll(directx->cmdList.Get());
 }

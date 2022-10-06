@@ -15,7 +15,7 @@ class Player
 {
 public:
 
-	void init(dxinput* input, TexManager* tex, directX* directx);
+	void init(dxinput* input, directX* directx);
 
 	void Move();
 
@@ -27,9 +27,9 @@ public:
 
 	void reset();
 
-	void draw_3d(directX* directx, TexManager* tex);
+	void draw_3d(directX* directx);
 
-	void draw_2d(directX* directx, TexManager* tex);
+	void draw_2d(directX* directx);
 
 
 	//3dオブジェクト

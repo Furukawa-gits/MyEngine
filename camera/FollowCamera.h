@@ -14,7 +14,7 @@ public:
 	/// <param name="TargetPos">ターゲットの座標</param>
 	/// <param name="TargetAngle">ターゲットの向き</param>
 	/// <param name="TargetDis">ターゲットまでの距離</param>
-	void setFollowTarget(XMFLOAT3* TargetPos, XMFLOAT3* TargetAngle, float TargetDis);
+	void setFollowTarget(const XMFLOAT3* TargetPos, const XMFLOAT3* TargetAngle, const float TargetDis);
 
 	/// <summary>
 	/// 追従処理
@@ -31,13 +31,21 @@ public:
 		this->rightAngle = right;
 	}
 
-	void setFrontVec(float speed) {
+	void setFrontVec(const float speed) {
 		frontVec.x *= speed;
 		frontVec.y *= speed;
 		frontVec.z *= speed;
 	}
 
+	void setTargets(const XMFLOAT3 pos, const XMFLOAT3 angle)
+	{
+		*TargetObjectPos = pos;
+		*TargetObjectAngle = angle;
+	}
+
 	XMFLOAT3 getFrontVec() { return frontVec; }
+
+private:
 
 	//ターゲットの座標
 	XMFLOAT3* TargetObjectPos = nullptr;
@@ -47,8 +55,6 @@ public:
 
 	//ターゲットとの距離
 	float TargetDistance = 0.0f;
-
-private:
 
 	float upAngle = 0.0f;
 	float rightAngle = 0.0f;

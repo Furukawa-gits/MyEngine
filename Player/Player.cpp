@@ -2,7 +2,7 @@
 
 dxinput* Player::input = nullptr;
 
-void Player::init(dxinput* input, TexManager* tex, directX* directx)
+void Player::init(dxinput* input,directX* directx)
 {
 	this->input = input;
 
@@ -27,10 +27,9 @@ void Player::init(dxinput* input, TexManager* tex, directX* directx)
 	followcamera->SetEye({ 0,5,-10 });
 	followcamera->SetTarget({ 0,5,0 });
 
-	Object3d_FBX::SetCamera(followcamera);
+	followcamera->setTargets(Player_object->getPosition(), Player_object->getRotation());
 
-	followcamera->TargetObjectPos = &Player_object->getPosition();
-	followcamera->TargetObjectAngle = &Player_object->getRotation();
+	Object3d_FBX::SetCamera(followcamera);
 
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
 	{
@@ -105,13 +104,9 @@ void Player::Move()
 	//回転行列をセット
 	Player_object->setRotMatrix(rotate(qLocal));
 
-	//追従カメラのターゲットをセット
-	followcamera->TargetObjectPos = &Player_object->getPosition();
-	followcamera->TargetObjectAngle = &Player_object->getRotation();
-
 	//追従
 	//followcamera->Following();
-	followcamera->SetEye({ 0,5,-30 });
+	followcamera->SetEye({ 0,5,-10 });
 	followcamera->SetTarget({ 0,5,0 });
 
 	//前に進むベクトルを計算
@@ -250,7 +245,7 @@ void Player::reset()
 }
 
 //描画
-void Player::draw_3d(directX* directx, TexManager* tex)
+void Player::draw_3d(directX* directx)
 {
 	if (Isarive == true)
 	{
@@ -270,7 +265,7 @@ void Player::draw_3d(directX* directx, TexManager* tex)
 	}
 }
 
-void Player::draw_2d(directX* directx, TexManager* tex)
+void Player::draw_2d(directX* directx)
 {
 	if (!Isarive)
 	{

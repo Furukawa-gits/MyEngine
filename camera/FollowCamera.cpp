@@ -15,11 +15,11 @@ FollowCamera::FollowCamera()
 	matViewProjection = matView * matProjection;
 }
 
-void FollowCamera::setFollowTarget(XMFLOAT3* TargetPos, XMFLOAT3* TargetAngle, float TargetDis)
+void FollowCamera::setFollowTarget(const XMFLOAT3* TargetPos, const XMFLOAT3* TargetAngle, const float TargetDis)
 {
-	this->TargetObjectPos = TargetPos;
-	this->TargetObjectAngle = TargetAngle;
-	this->TargetDistance = TargetDis;
+	*TargetObjectPos = *TargetPos;
+	*TargetObjectAngle = *TargetAngle;
+	TargetDistance = TargetDis;
 	target = *TargetObjectPos;
 	eye = { target.x,target.y,target.z + TargetDistance };
 	up = { 0,1,0 };
