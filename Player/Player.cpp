@@ -22,7 +22,7 @@ void Player::init(dxinput* input,directX* directx)
 
 	followcamera = new FollowCamera();
 
-	followcamera->setFollowTarget(&Player_object->getPosition(), &Player_object->getRotation(), -30);
+	followcamera->setFollowTarget(Player_object->getPosition(), Player_object->getRotation(), -30);
 
 	followcamera->SetEye({ 0,5,-10 });
 	followcamera->SetTarget({ 0,5,0 });
@@ -58,7 +58,7 @@ void Player::init(dxinput* input,directX* directx)
 void Player::Move()
 {
 	//前に進み続ける
-	//Player_object->addMoveFront(followcamera->getFrontVec());
+	Player_object->addMoveFront(followcamera->getFrontVec());
 
 	if (input->mouse_p.x >= 1000)
 	{
@@ -105,12 +105,10 @@ void Player::Move()
 	Player_object->setRotMatrix(rotate(qLocal));
 
 	//追従
-	//followcamera->Following();
-	followcamera->SetEye({ 0,5,-10 });
-	followcamera->SetTarget({ 0,5,0 });
+	followcamera->Following(vUpAxis, vForwordAxis, Player_object->getPosition());
 
 	//前に進むベクトルを計算
-	followcamera->setFrontVec(0.5f);
+	followcamera->setFrontVec(0.1f);
 
 	//オブジェクトの更新
 	Player_object->Update();

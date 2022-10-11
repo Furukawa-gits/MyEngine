@@ -15,34 +15,37 @@ FollowCamera::FollowCamera()
 	matViewProjection = matView * matProjection;
 }
 
-void FollowCamera::setFollowTarget(const XMFLOAT3* TargetPos, const XMFLOAT3* TargetAngle, const float TargetDis)
+void FollowCamera::setFollowTarget(XMFLOAT3 TargetPos,XMFLOAT3 TargetAngle, const float TargetDis)
 {
-	*TargetObjectPos = *TargetPos;
-	*TargetObjectAngle = *TargetAngle;
+	TargetObjectPos = &TargetPos;
+	TargetObjectAngle = &TargetAngle;
 	TargetDistance = TargetDis;
 	target = *TargetObjectPos;
 	eye = { target.x,target.y,target.z + TargetDistance };
 	up = { 0,1,0 };
 }
 
-void FollowCamera::Following()
+void FollowCamera::Following(XMFLOAT3 upVector, XMFLOAT3 forwordVector, XMFLOAT3 targetPos)
 {
-	target = *TargetObjectPos;
+	target = targetPos;
 
 	XMVECTOR targetPosition = XMLoadFloat3(&target);
 
-	XMVECTOR noCalcVec = { 0,0,-TargetDistance,0 };
+	XMFLOAT3 backVector = { -forwordVector.x,-forwordVector.y ,-forwordVector.z };
 
-	XMMATRIX rotM = XMMatrixIdentity();
-	rotM *= XMMatrixRotationZ(XMConvertToRadians(TargetObjectAngle->z + 180));
-	rotM *= XMMatrixRotationX(XMConvertToRadians(-(TargetObjectAngle->x)));
-	rotM *= XMMatrixRotationY(XMConvertToRadians(TargetObjectAngle->y + 180.0f));
+	float backLength = sqrtf(powf(backVector.x, 2) + powf(backVector.y, 2) + powf(backVector.z, 2));
 
-	XMVECTOR eyePosition = targetPosition + XMVector3Transform(noCalcVec, rotM);
+	backLength = 1 / backLength;
 
-	XMVECTOR upVector = XMLoadFloat3(&up);
+	backVector = {
+		backVector.x * backLength * TargetDistance,
+		backVector.y * backLength * TargetDistance,
+		backVector.z * backLength * TargetDistance
+	};
 
-	matView = XMMatrixLookAtLH(eyePosition, targetPosition, upVector);
+	XMVECTOR eyePosition = targetPosition + XMLoadFloat3(&backVector);
+
+	matView = XMMatrixLookAtLH(eyePosition, targetPosition, XMLoadFloat3(&upVector));
 
 	UpdateProjectionMatrix();
 
@@ -50,7 +53,7 @@ void FollowCamera::Following()
 
 	XMStoreFloat3(&target, targetPosition);
 	XMStoreFloat3(&eye, eyePosition);
-	XMStoreFloat3(&up, upVector);
+	XMStoreFloat3(&up, XMLoadFloat3(&upVector));
 
 	Update();
 

@@ -262,7 +262,7 @@ void GameScene::Play_draw()
 
 	for (int i = 0; i < enemynum; i++)
 	{
-		//testEnemys[i].draw3D(directx);
+		testEnemys[i].draw3D(directx);
 	}
 }
 

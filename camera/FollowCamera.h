@@ -14,7 +14,7 @@ public:
 	/// <param name="TargetPos">ターゲットの座標</param>
 	/// <param name="TargetAngle">ターゲットの向き</param>
 	/// <param name="TargetDis">ターゲットまでの距離</param>
-	void setFollowTarget(const XMFLOAT3* TargetPos, const XMFLOAT3* TargetAngle, const float TargetDis);
+	void setFollowTarget(XMFLOAT3 TargetPos, XMFLOAT3 TargetAngle, const float TargetDis);
 
 	/// <summary>
 	/// 追従処理
@@ -23,7 +23,7 @@ public:
 	/// </summary>
 	/// <param name="upVector">上方向の回転軸</param>
 	/// <param name="forwordVector">前方向の回転軸</param>
-	void Following();
+	void Following(XMFLOAT3 upVector, XMFLOAT3 forwordVector, XMFLOAT3 targetPos);
 
 	void setAngle(float up, float right)
 	{

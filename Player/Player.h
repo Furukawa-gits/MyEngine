@@ -40,7 +40,7 @@ public:
 	FollowCamera* followcamera = nullptr;
 
 	//‰ñ“]—Ê
-	float angleMoveSpeed = 0.05f;
+	float angleMoveSpeed = 0.01f;
 
 	//Šî€‰ñ“]²
 	const XMFLOAT3 unitX = { 1,0,0 };
