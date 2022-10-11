@@ -23,6 +23,7 @@ public:
 	/// </summary>
 	/// <param name="upVector">上方向の回転軸</param>
 	/// <param name="forwordVector">前方向の回転軸</param>
+	/// <param name="targetPos">追従する対象の座標</param>
 	void Following(XMFLOAT3 upVector, XMFLOAT3 forwordVector, XMFLOAT3 targetPos);
 
 	void setAngle(float up, float right)
@@ -55,9 +56,6 @@ private:
 
 	//ターゲットとの距離
 	float TargetDistance = 0.0f;
-
-	float upAngle = 0.0f;
-	float rightAngle = 0.0f;
 
 	//進行方向ベクトル
 	XMFLOAT3 frontVec = { 0,0,0 };

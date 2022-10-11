@@ -58,13 +58,13 @@ void Player::init(dxinput* input, directX* directx)
 //移動
 void Player::Move()
 {
-	//前に進み続ける
+	//自動で前に進み続ける
 	Player_object->addMoveFront(followcamera->getFrontVec());
 
 	//カメラワーク
 	cameraMove();
 
-	//右・上・前方向のベクトル
+	//「プレイヤーから見て」右・上・前方向のベクトル
 	XMFLOAT3 vSideAxis = getAxis(quaternion(unitX, qLocal));
 	XMFLOAT3 vUpAxis = getAxis(quaternion(unitY, qLocal));
 	XMFLOAT3 vForwordAxis = getAxis(quaternion(unitZ, qLocal));
@@ -79,7 +79,7 @@ void Player::Move()
 	qLocal = qPitch * qLocal;
 	qLocal = qYow * qLocal;
 
-	//回転行列をセット
+	//XMMATRIXに変換したクォータニオンをプレイヤーの回転行列にセット
 	Player_object->setRotMatrix(rotate(qLocal));
 
 	//追従

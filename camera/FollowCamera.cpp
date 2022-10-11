@@ -61,7 +61,7 @@ void FollowCamera::Following(XMFLOAT3 upVector, XMFLOAT3 forwordVector, XMFLOAT3
 	XMStoreFloat3(&eye, eyePosition);
 	XMStoreFloat3(&up, XMLoadFloat3(&upVector));
 
-	//基地カメラクラスの更新処理
+	//基底カメラクラスの更新処理
 	Update();
 
 	//向いている方向に進む正規化ベクトルを生成
