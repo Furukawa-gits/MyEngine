@@ -453,6 +453,27 @@ XMFLOAT2 Object3d_FBX::worldToScleen()
 	return XMFLOAT2(screenPos.x, screenPos.y);
 }
 
+XMFLOAT2 Object3d_FBX::worldToScleenSpecifyPosition(XMFLOAT3 pos)
+{
+	float w = (float)win_width / 2.0f;
+	float h = (float)win_hight / 2.0f;
+	XMMATRIX viewport = {
+		w, 0, 0, 0,
+		0,-h, 0, 0,
+		0, 0, 1, 0,
+		w, h, 0, 1
+	};
+
+	XMMATRIX matVPV = camera->GetViewMatrix() * camera->GetProjectionMatrix() * viewport;
+
+	XMFLOAT3 screenPos = {};
+	XMVector3TransformCoordStream(&screenPos, sizeof(XMFLOAT3),
+		&pos, sizeof(XMFLOAT3),
+		1, matVPV);
+
+	return XMFLOAT2(screenPos.x, screenPos.y);
+}
+
 XMFLOAT3 Object3d_FBX::screenToWorld(XMFLOAT2 screenPos)
 {
 	float w = (float)win_width / 2.0f;

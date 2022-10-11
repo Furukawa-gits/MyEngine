@@ -78,6 +78,8 @@ public:
 
 	XMFLOAT2 worldToScleen();
 
+	XMFLOAT2 worldToScleenSpecifyPosition(XMFLOAT3 pos);
+
 	XMFLOAT3 screenToWorld(XMFLOAT2 screenPos);
 
 	XMFLOAT3 getPosition() { return position; }
