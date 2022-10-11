@@ -55,6 +55,7 @@ void Player::init(dxinput* input, directX* directx)
 	Isarive = true;
 }
 
+//移動
 void Player::Move()
 {
 	//前に進み続ける
@@ -98,6 +99,7 @@ void Player::Move()
 	};
 }
 
+//カメラ移動
 void Player::cameraMove()
 {
 	//ヨー回転
@@ -257,7 +259,6 @@ void Player::update()
 		else
 		{
 			target.rotation += 3.0f;
-			//Rockon_count = 0;
 			Isrockon = false;
 		}
 	}
@@ -266,7 +267,8 @@ void Player::update()
 	target.SpriteTransferVertexBuffer();
 	target.SpriteUpdate();
 
-	//XMFLOAT3 test = Player_object->screenToWorld({ target.position.x,target.position.y });
+	XMFLOAT3 targetWorldPosition = Player_object->screenToWorld({ target.position.x,target.position.y });
+
 
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
 	{
@@ -290,8 +292,6 @@ void Player::reset()
 	Isarive = true;
 	HP = 10;
 
-	up = 0;
-	right = 0;
 	Player_object->SetPosition({ 0,5,0 });
 	pitch = 0.0f;
 	yow = 0.0f;

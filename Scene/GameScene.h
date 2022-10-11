@@ -64,13 +64,9 @@ public:
 	//デバッグテキスト更新
 	void debugs_print();
 
-	//タイトル画面アニメーション
+	//シーンごとの更新
 	void Title_update();
-
-	//プレイ画面更新
 	void Play_update();
-
-	//リザルト画面更新
 	void Result_update();
 
 	//シーンごとの描画

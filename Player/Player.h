@@ -55,17 +55,16 @@ public:
 	const XMFLOAT3 unitY = { 0,1,0 };
 	const XMFLOAT3 unitZ = { 0,0,1 };
 
+	//クォータニオン回転行列
 	Quaternion qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
+
+	//クォータニオン回転角度
+	float roll = 0.0f;
+	float pitch = 0.0f;
+	float yow = 0.0f;
 
 	//座標
 	XMFLOAT3 position = { 0,5,30 };
-
-	float up = 0.0f;
-	float right = 0.0f;
-
-	float pitch = 0.0f;
-	float yow = 0.0f;
-	float roll = 0.0f;
 
 	//ターゲットスプライト
 	SingleSprite target;
@@ -84,7 +83,6 @@ public:
 	static dxinput* input;
 
 	Sphere player_collision;
-
 
 	//生存
 	bool Isarive = false;
