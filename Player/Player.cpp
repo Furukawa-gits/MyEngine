@@ -58,7 +58,7 @@ void Player::init(dxinput* input, directX* directx)
 void Player::Move()
 {
 	//前に進み続ける
-	//Player_object->addMoveFront(followcamera->getFrontVec());
+	Player_object->addMoveFront(followcamera->getFrontVec());
 
 	//カメラワーク
 	cameraMove();
@@ -103,57 +103,83 @@ void Player::cameraMove()
 	//ヨー回転
 	if (input->mouse_p.x >= 1000)
 	{
-		yow = yowRotateSpeed;
-
-		if (yowRotateSpeed < limitRotateSpeed)
+		if (yowRotateSpeedPositive < limitRotateSpeed)
 		{
-			yowRotateSpeed += addRotateSpeed;
-		}
-	}
-	else if (input->mouse_p.x <= 280)
-	{
-		yow = yowRotateSpeed;
-
-		if (-yowRotateSpeed > -limitRotateSpeed)
-		{
-			yowRotateSpeed += addRotateSpeed;
+			yowRotateSpeedPositive += addRotateSpeed;
 		}
 	}
 	else
 	{
-		yow = yowRotateSpeed;
-		if (yowRotateSpeed > 0)
+		if (yowRotateSpeedPositive > 0)
 		{
-			yowRotateSpeed += subRotateSpeed;
+			yowRotateSpeedPositive += subRotateSpeed;
 		}
+	}
+
+	if (input->mouse_p.x <= 280)
+	{
+		if (yowRotateSpeedNegative > -limitRotateSpeed)
+		{
+			yowRotateSpeedNegative -= addRotateSpeed;
+		}
+	}
+	else
+	{
+		if (yowRotateSpeedNegative < 0)
+		{
+			yowRotateSpeedNegative -= subRotateSpeed;
+		}
+	}
+
+	//影響が大きい方を適用(いずれ0になるので減速していく)
+	if (fabsf(yowRotateSpeedPositive) > fabsf(yowRotateSpeedNegative))
+	{
+		yow = yowRotateSpeedPositive;
+	}
+	else
+	{
+		yow = yowRotateSpeedNegative;
 	}
 
 	//ピッチ回転
 	if (input->mouse_p.y >= 620)
 	{
-		pitch = pitchRotateSpeed;
-
-		if (pitchRotateSpeed < limitRotateSpeed)
+		if (pitchRotateSpeedPositive < limitRotateSpeed)
 		{
-			pitchRotateSpeed += addRotateSpeed;
-		}
-	}
-	else if (input->mouse_p.y <= 100)
-	{
-		pitch = -pitchRotateSpeed;
-
-		if (pitchRotateSpeed < limitRotateSpeed)
-		{
-			pitchRotateSpeed += addRotateSpeed;
+			pitchRotateSpeedPositive += addRotateSpeed;
 		}
 	}
 	else
 	{
-		pitch = pitchRotateSpeed;
-		if (pitchRotateSpeed > 0)
+		if (pitchRotateSpeedPositive > 0)
 		{
-			pitchRotateSpeed += subRotateSpeed;
+			pitchRotateSpeedPositive += subRotateSpeed;
 		}
+	}
+
+	if (input->mouse_p.y <= 100)
+	{
+		if (pitchRotateSpeedNegative > -limitRotateSpeed)
+		{
+			pitchRotateSpeedNegative -= addRotateSpeed;
+		}
+	}
+	else
+	{
+		if (pitchRotateSpeedNegative < 0)
+		{
+			pitchRotateSpeedNegative -= subRotateSpeed;
+		}
+	}
+
+	//影響が大きい方を適用(いずれ0になるので減速していく)
+	if (fabsf(pitchRotateSpeedPositive) > fabsf(pitchRotateSpeedNegative))
+	{
+		pitch = pitchRotateSpeedPositive;
+	}
+	else
+	{
+		pitch = pitchRotateSpeedNegative;
 	}
 }
 

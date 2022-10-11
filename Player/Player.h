@@ -42,8 +42,10 @@ public:
 	FollowCamera* followcamera = nullptr;
 
 	//‰ñ“]—Ê
-	float yowRotateSpeed = 0.0f;
-	float pitchRotateSpeed = 0.0f;
+	float yowRotateSpeedPositive = 0.0f;
+	float yowRotateSpeedNegative = 0.0f;
+	float pitchRotateSpeedPositive = 0.0f;
+	float pitchRotateSpeedNegative = 0.0f;
 	float addRotateSpeed = 0.01f;
 	float subRotateSpeed = -0.002f;
 	float limitRotateSpeed = 0.05f;
