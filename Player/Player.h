@@ -66,6 +66,9 @@ public:
 	//座標
 	XMFLOAT3 position = { 0,5,30 };
 
+	//移動スピード
+	float moveSpeed = 0.3f;
+
 	//ターゲットスプライト
 	SingleSprite target;
 	int Target_count = 0;

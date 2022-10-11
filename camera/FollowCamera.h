@@ -28,8 +28,8 @@ public:
 
 	void setAngle(float up, float right)
 	{
-		this->upAngle = up;
-		this->rightAngle = right;
+		/*this->upAngle = up;
+		this->rightAngle = right;*/
 	}
 
 	void setFrontVec(const float speed) {

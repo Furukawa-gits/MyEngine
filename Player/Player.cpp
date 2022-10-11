@@ -85,8 +85,8 @@ void Player::Move()
 	//追従
 	followcamera->Following(vUpAxis, vForwordAxis, Player_object->getPosition());
 
-	//前に進むベクトルを計算
-	followcamera->setFrontVec(0.1f);
+	//前への移動量を計算
+	followcamera->setFrontVec(moveSpeed);
 
 	//オブジェクトの更新
 	Player_object->Update();
@@ -267,7 +267,16 @@ void Player::update()
 	target.SpriteTransferVertexBuffer();
 	target.SpriteUpdate();
 
+	//ターゲットカーソルのワールド座標
 	XMFLOAT3 targetWorldPosition = Player_object->screenToWorld({ target.position.x,target.position.y });
+
+	XMFLOAT3 halfPlayerToTarget =
+	{
+			(targetWorldPosition.x - Player_object->getPosition().x) / 2,
+			(targetWorldPosition.y - Player_object->getPosition().y) / 2,
+			(targetWorldPosition.z - Player_object->getPosition().z) / 2
+	};
+
 
 
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
