@@ -277,7 +277,12 @@ void Player::update()
 			(targetWorldPosition.z - Player_object->getPosition().z) / 2
 	};
 
-
+	XMFLOAT3 secondTargetWorldPosition =
+	{
+		Player_object->getPosition().x + targetWorldPosition.x,
+		Player_object->getPosition().y + targetWorldPosition.y,
+		Player_object->getPosition().z + targetWorldPosition.z
+	};
 
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
 	{
