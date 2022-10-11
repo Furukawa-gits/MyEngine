@@ -19,6 +19,8 @@ public:
 
 	void Move();
 
+	void cameraMove();
+
 	void checkPlayerBullet(Enemy* enemy);
 
 	void checkPlayerEnemy(Enemy* enemy);
@@ -40,7 +42,11 @@ public:
 	FollowCamera* followcamera = nullptr;
 
 	//‰ñ“]—Ê
-	float angleMoveSpeed = 0.01f;
+	float yowRotateSpeed = 0.0f;
+	float pitchRotateSpeed = 0.0f;
+	float addRotateSpeed = 0.01f;
+	float subRotateSpeed = -0.002f;
+	float limitRotateSpeed = 0.05f;
 
 	//Šî€‰ñ“]²
 	const XMFLOAT3 unitX = { 1,0,0 };

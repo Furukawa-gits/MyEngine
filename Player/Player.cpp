@@ -2,7 +2,7 @@
 
 dxinput* Player::input = nullptr;
 
-void Player::init(dxinput* input,directX* directx)
+void Player::init(dxinput* input, directX* directx)
 {
 	this->input = input;
 
@@ -58,33 +58,10 @@ void Player::init(dxinput* input,directX* directx)
 void Player::Move()
 {
 	//前に進み続ける
-	Player_object->addMoveFront(followcamera->getFrontVec());
+	//Player_object->addMoveFront(followcamera->getFrontVec());
 
-	if (input->mouse_p.x >= 1000)
-	{
-		yow = angleMoveSpeed;
-	}
-	else if (input->mouse_p.x <= 280)
-	{
-		yow = -angleMoveSpeed;
-	}
-	else
-	{
-		yow = 0.0f;
-	}
-
-	if (input->mouse_p.y >= 620)
-	{
-		pitch = angleMoveSpeed;
-	}
-	else if (input->mouse_p.y <= 100)
-	{
-		pitch = -angleMoveSpeed;
-	}
-	else
-	{
-		pitch = 0.0f;
-	}
+	//カメラワーク
+	cameraMove();
 
 	//右・上・前方向のベクトル
 	XMFLOAT3 vSideAxis = getAxis(quaternion(unitX, qLocal));
@@ -119,6 +96,65 @@ void Player::Move()
 		Player_object->getPosition().z,
 		1.0f
 	};
+}
+
+void Player::cameraMove()
+{
+	//ヨー回転
+	if (input->mouse_p.x >= 1000)
+	{
+		yow = yowRotateSpeed;
+
+		if (yowRotateSpeed < limitRotateSpeed)
+		{
+			yowRotateSpeed += addRotateSpeed;
+		}
+	}
+	else if (input->mouse_p.x <= 280)
+	{
+		yow = yowRotateSpeed;
+
+		if (-yowRotateSpeed > -limitRotateSpeed)
+		{
+			yowRotateSpeed += addRotateSpeed;
+		}
+	}
+	else
+	{
+		yow = yowRotateSpeed;
+		if (yowRotateSpeed > 0)
+		{
+			yowRotateSpeed += subRotateSpeed;
+		}
+	}
+
+	//ピッチ回転
+	if (input->mouse_p.y >= 620)
+	{
+		pitch = pitchRotateSpeed;
+
+		if (pitchRotateSpeed < limitRotateSpeed)
+		{
+			pitchRotateSpeed += addRotateSpeed;
+		}
+	}
+	else if (input->mouse_p.y <= 100)
+	{
+		pitch = -pitchRotateSpeed;
+
+		if (pitchRotateSpeed < limitRotateSpeed)
+		{
+			pitchRotateSpeed += addRotateSpeed;
+		}
+	}
+	else
+	{
+		pitch = pitchRotateSpeed;
+		if (pitchRotateSpeed > 0)
+		{
+			pitchRotateSpeed += subRotateSpeed;
+		}
+	}
 }
 
 //敵とプレイヤー弾の当たり判定
@@ -203,6 +239,8 @@ void Player::update()
 	target.position = { (float)input->mouse_p.x,(float)input->mouse_p.y,0.0f };
 	target.SpriteTransferVertexBuffer();
 	target.SpriteUpdate();
+
+	//XMFLOAT3 test = Player_object->screenToWorld({ target.position.x,target.position.y });
 
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
 	{
