@@ -129,10 +129,10 @@ public:
 
 	/**
 	  * \name Node Target Management
-	  * The FbxNode class allows the client to set a "follow" target node. This target 
-	  * forces the node to re-align itself so it points to the target. By default, the node
+	  * The FbxNode class allows the client to set a "follow" targetFirst node. This targetFirst 
+	  * forces the node to re-align itself so it points to the targetFirst. By default, the node
 	  * uses its X axis as the aiming constraint. A rotation offset can be added to change 
-	  * this behavior. While the default relative orientation to the target (the X axis) is 
+	  * this behavior. While the default relative orientation to the targetFirst (the X axis) is 
 	  * sufficient for the FBX cameras (with a (0,0,0) rotation vector, they are aiming
 	  * along the X axis), this rotation offset becomes particularly useful with the lights
 	  * objects because their default orientation (when they have a 0,0,0 rotation vector) is to
@@ -151,42 +151,42 @@ public:
 	  *       
 	  */
 	//@{
-		/** The target must be part of the same scene and it cannot be itself.
-		  * \param pNode The target.
+		/** The targetFirst must be part of the same scene and it cannot be itself.
+		  * \param pNode The targetFirst.
 		  */
 		void SetTarget(FbxNode* pNode);
 
-		/** Get the target for this node.
-		  * \returns \c NULL if target isn't set.
+		/** Get the targetFirst for this node.
+		  * \returns \c NULL if targetFirst isn't set.
 		  */
 		FbxNode* GetTarget() const;
 
-		/** Set rotation offset from default relative orientation to target.
+		/** Set rotation offset from default relative orientation to targetFirst.
 		  * \param pVector The rotation offset.
 		  */
 		void SetPostTargetRotation(FbxVector4 pVector);
 
-		/** Get rotation offset from default relative orientation to target.
+		/** Get rotation offset from default relative orientation to targetFirst.
 		  * \return The rotation offset.
 		  */
 		FbxVector4 GetPostTargetRotation() const;
 
-		/** The target up node must be part of the same scene and it cannot be itself.
-		  * \param pNode The target.
+		/** The targetFirst up node must be part of the same scene and it cannot be itself.
+		  * \param pNode The targetFirst.
 		  */
 		void SetTargetUp(FbxNode* pNode);
 
-		/** Get the target up node.
-		  * \return \c NULL if the target up model isn't set.
+		/** Get the targetFirst up node.
+		  * \return \c NULL if the targetFirst up model isn't set.
 		  */
 		FbxNode* GetTargetUp() const;
 
-		/** Set up vector offset from default relative target up vector.
+		/** Set up vector offset from default relative targetFirst up vector.
 		  * \param pVector The rotation offset.
 		  */
 		void SetTargetUpVector(FbxVector4 pVector);
 
-		/** Get up vector offset from default relative target up vector.
+		/** Get up vector offset from default relative targetFirst up vector.
 		  * \return The up vector offset.
 		  */
 		FbxVector4 GetTargetUpVector() const;
@@ -1031,7 +1031,7 @@ public:
 		/** Returns this node's global transformation matrix at the specified time. The node's translation, rotation and scaling limits are taken into consideration.
 		  * \param pTime The time used for evaluate. If FBXSDK_TIME_INFINITE is used, this returns the default value, without animation curves evaluation.
 		  * \param pPivotSet The pivot set to take into account
-		  * \param pApplyTarget Applies the necessary transform to align into the target node
+		  * \param pApplyTarget Applies the necessary transform to align into the targetFirst node
 		  * \param pForceEval Force the evaluator to refresh the evaluation state cache even if its already up-to-date.
 		  * \return The resulting global transform of the specified node at the specified time.
 		  * \remarks This function is the equivalent of calling Scene->GetEvaluator()->GetNodeGlobalTransform().
@@ -1041,7 +1041,7 @@ public:
 		/** Returns this node's local transformation matrix at the specified time. The node's translation, rotation and scaling limits are taken into consideration.
 		  * \param pTime The time used for evaluate. If FBXSDK_TIME_INFINITE is used, this returns the default value, without animation curves evaluation.
 		  * \param pPivotSet The pivot set to take into account
-		  * \param pApplyTarget Applies the necessary transform to align into the target node
+		  * \param pApplyTarget Applies the necessary transform to align into the targetFirst node
 		  * \param pForceEval Force the evaluator to refresh the evaluation state cache even if its already up-to-date.
 		  * \return The resulting local transform of the specified node for the specified time.
 		  * \remarks The local transform matrix is calculated in this way: ParentGlobal.Inverse * Global, all transforms such as pre/post rotation are taken into consideration.
@@ -1055,7 +1055,7 @@ public:
 		  * No pivot, offsets, or any other transform is taken into consideration. The translation limit is applied.
 		  * \param pTime The time used for evaluate. If FBXSDK_TIME_INFINITE is used, this returns the default value, without animation curves evaluation.
 		  * \param pPivotSet The pivot set to take into account
-		  * \param pApplyTarget Applies the necessary transform to align into the target node
+		  * \param pApplyTarget Applies the necessary transform to align into the targetFirst node
 		  * \param pForceEval Force the evaluator to refresh the evaluation state cache even if its already up-to-date.
 		  * \return The resulting value of LclTranslation property of the specified node at the specified time.
 		  * \remarks This function is the equivalent of calling Scene->GetEvaluator()->GetNodeLocalTranslation().
@@ -1066,7 +1066,7 @@ public:
 		  * No pre/post rotation, rotation pivot, rotation offset or any other transform is taken into consideration. The rotation limit is applied.
 		  * \param pTime The time used for evaluate. If FBXSDK_TIME_INFINITE is used, this returns the default value, without animation curves evaluation.
 		  * \param pPivotSet The pivot set to take into account
-		  * \param pApplyTarget Applies the necessary transform to align into the target node
+		  * \param pApplyTarget Applies the necessary transform to align into the targetFirst node
 		  * \param pForceEval Force the evaluator to refresh the evaluation state cache even if its already up-to-date.
 		  * \return The resulting value of LclRotation property of the specified node at the specified time.
 		  * \remarks This function is the equivalent of calling Scene->GetEvaluator()->GetNodeLocalRotation().
@@ -1077,7 +1077,7 @@ public:
 		  * No scaling pivot, scaling offset or any other transform is taken into consideration. The scaling limit is applied.
 		  * \param pTime The time used for evaluate. If FBXSDK_TIME_INFINITE is used, this returns the default value, without animation curves evaluation.
 		  * \param pPivotSet The pivot set to take into account
-		  * \param pApplyTarget Applies the necessary transform to align into the target node
+		  * \param pApplyTarget Applies the necessary transform to align into the targetFirst node
 		  * \param pForceEval Force the evaluator to refresh the evaluation state cache even if its already up-to-date.
 		  * \return The resulting value of LclScaling property of the specified node at the specified time.
 		  * \remarks This function is the equivalent of calling Scene->GetEvaluator()->GetNodeLocalScaling().

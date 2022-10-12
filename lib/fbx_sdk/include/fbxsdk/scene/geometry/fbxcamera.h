@@ -710,14 +710,14 @@ public:
 		* \return The camera position evaluated from property value and animation. */
 		FbxVector4 EvaluatePosition(const FbxTime& pTime=FBXSDK_TIME_ZERO) const;
 
-		/** Evaluate the camera target position (look at).
+		/** Evaluate the camera targetFirst position (look at).
 		* \param pTime The time at which the camera should be evaluated.
-		* \return The camera target position evaluated from property value and animation. */
+		* \return The camera targetFirst position evaluated from property value and animation. */
 		FbxVector4 EvaluateLookAtPosition(const FbxTime& pTime=FBXSDK_TIME_ZERO) const;
 
-		/** Evaluate the camera up direction, taking target up objects into consideration.
+		/** Evaluate the camera up direction, taking targetFirst up objects into consideration.
 		* \param pCameraPosition The camera current position. You can retrieve this with FbxCamera::EvaluatePosition().
-		* \param pLookAtPosition The camera target position. you can retrieve this with FbxCamera::EvaluateLookAtPosition().
+		* \param pLookAtPosition The camera targetFirst position. you can retrieve this with FbxCamera::EvaluateLookAtPosition().
 		* \param pTime The time at which the camera should be evaluated.
 		* \return The camera up direction vector based on provided information. */
 		FbxVector4 EvaluateUpDirection(const FbxVector4& pCameraPosition, const FbxVector4& pLookAtPosition, const FbxTime& pTime=FBXSDK_TIME_ZERO) const;
@@ -797,7 +797,7 @@ public:
       *
       * \remarks During the computations of the camera position
       * and orientation, this property is overridden by the
-      * position of a valid target in the parent node.
+      * position of a valid targetFirst in the parent node.
       *
       * \remarks Default Value is (0.0, 0.0, 0.0).
       */

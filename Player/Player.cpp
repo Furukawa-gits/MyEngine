@@ -6,8 +6,13 @@ void Player::init(dxinput* input, directX* directx)
 {
 	this->input = input;
 
-	target.anchorpoint = { 0.5f,0.5f };
-	target.GenerateSprite("Target.png");
+	targetFirst.anchorpoint = { 0.5f,0.5f };
+	targetFirst.size = { 64,64 };
+	targetFirst.GenerateSprite("Target.png");
+
+	targetSecond.anchorpoint = { 0.5f,0.5f };
+	targetSecond.size = { 64,64 };
+	targetSecond.GenerateSprite("Target.png");
 
 	Player_model = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
 
@@ -59,7 +64,7 @@ void Player::init(dxinput* input, directX* directx)
 void Player::Move()
 {
 	//自動で前に進み続ける
-	Player_object->addMoveFront(followcamera->getFrontVec());
+	//Player_object->addMoveFront(followcamera->getFrontVec());
 
 	//カメラワーク
 	cameraMove();
@@ -218,57 +223,59 @@ void Player::checkPlayerEnemy(Enemy* enemy)
 //更新
 void Player::update()
 {
-	if (Isarive == true)
+	if (!Isarive)
 	{
-		//移動
-		Move();
+		return;
+	}
 
-		if (input->Mouse_LeftTriger())
+	//移動
+	Move();
+
+	if (input->Mouse_LeftTriger())
+	{
+		//弾を撃つ
+		for (int i = 0; i < MaxPlayerBulletNum; i++)
 		{
-			//弾を撃つ
-			for (int i = 0; i < MaxPlayerBulletNum; i++)
+			if (player_bullet[i].Isarive == false)
 			{
-				if (player_bullet[i].Isarive == false)
-				{
-					player_bullet[i].set(Player_object->getPosition(),
-						Player_object->screenToWorld({ input->mouse_position.x,input->mouse_position.y }));
-					break;
-				}
+				player_bullet[i].set(Player_object->getPosition(),
+					Player_object->screenToWorld({ input->mouse_position.x,input->mouse_position.y }));
+				break;
 			}
-		}
-
-		if (HP <= 0)
-		{
-			Isarive = false;
-		}
-
-		if (input->Mouse_LeftPush())
-		{
-			Target_count++;
-		}
-		else
-		{
-			Target_count = 0;
-		}
-
-		if (Target_count > 70)
-		{
-			target.rotation -= 5.0f;
-			Isrockon = true;
-		}
-		else
-		{
-			target.rotation += 3.0f;
-			Isrockon = false;
 		}
 	}
 
-	target.position = { (float)input->mouse_p.x,(float)input->mouse_p.y,0.0f };
-	target.SpriteTransferVertexBuffer();
-	target.SpriteUpdate();
+	if (HP <= 0)
+	{
+		Isarive = false;
+	}
+
+	if (input->Mouse_LeftPush())
+	{
+		Target_count++;
+	}
+	else
+	{
+		Target_count = 0;
+	}
+
+	if (Target_count > 70)
+	{
+		targetFirst.rotation -= 5.0f;
+		Isrockon = true;
+	}
+	else
+	{
+		targetFirst.rotation += 3.0f;
+		Isrockon = false;
+	}
+
+	targetFirst.position = { (float)input->mouse_p.x,(float)input->mouse_p.y,0.0f };
+	targetFirst.SpriteTransferVertexBuffer();
+	targetFirst.SpriteUpdate();
 
 	//ターゲットカーソルのワールド座標
-	XMFLOAT3 targetWorldPosition = Player_object->screenToWorld({ target.position.x,target.position.y });
+	XMFLOAT3 targetWorldPosition = Player_object->screenToWorld({ targetFirst.position.x,targetFirst.position.y });
 
 	XMFLOAT3 halfPlayerToTarget =
 	{
@@ -279,10 +286,19 @@ void Player::update()
 
 	XMFLOAT3 secondTargetWorldPosition =
 	{
-		Player_object->getPosition().x + targetWorldPosition.x,
-		Player_object->getPosition().y + targetWorldPosition.y,
-		Player_object->getPosition().z + targetWorldPosition.z
+		Player_object->getPosition().x + halfPlayerToTarget.x,
+		Player_object->getPosition().y + halfPlayerToTarget.y,
+		Player_object->getPosition().z + halfPlayerToTarget.z
 	};
+
+	targetSecond.position =
+	{
+		Player_object->worldToScleenSpecifyPosition(secondTargetWorldPosition).x,
+		Player_object->worldToScleenSpecifyPosition(secondTargetWorldPosition).y,
+		0.0f
+	};
+	targetSecond.SpriteTransferVertexBuffer();
+	targetSecond.SpriteUpdate();
 
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
 	{
@@ -348,7 +364,8 @@ void Player::draw_2d(directX* directx)
 		return;
 	}
 
-	target.DrawSprite(directx->cmdList.Get());
+	targetFirst.DrawSprite(directx->cmdList.Get());
+	targetSecond.DrawSprite(directx->cmdList.Get());
 
 	for (int i = 0; i < HP; i++)
 	{

@@ -23,14 +23,14 @@ class FbxShape;
 class FbxBlendShape;
 
 /** Class for blend shape channels. 
-  * A blend shape channel is a sub-deformer to help blend shape deformer to organize the target shapes.
+  * A blend shape channel is a sub-deformer to help blend shape deformer to organize the targetFirst shapes.
   * One blend shape deformer can have multiple blend shape channels in parallel, and each of them can 
-  * control one or multiple target shapes. If there are multiple target shapes connected to one channel,
-  * each target shape could have its own full deformation percentage. For example, given a channel that 
-  * has 3 target shapes, whose full deform percentage are 30, to 80 to 100 separately, then when the percent 
-  * changes from 0 to 100, the base geometry will deform from the first target shape to the last one. 
+  * control one or multiple targetFirst shapes. If there are multiple targetFirst shapes connected to one channel,
+  * each targetFirst shape could have its own full deformation percentage. For example, given a channel that 
+  * has 3 targetFirst shapes, whose full deform percentage are 30, to 80 to 100 separately, then when the percent 
+  * changes from 0 to 100, the base geometry will deform from the first targetFirst shape to the last one. 
   * This is called in-between blend shapes or progressive morph.
-  * The property DeformPercent of blend shape channel will control the deform level of each target shape or 
+  * The property DeformPercent of blend shape channel will control the deform level of each targetFirst shape or 
   * in-between blend shape on it.
   *\nosubgrouping
   */
@@ -59,45 +59,45 @@ public:
 	*/
 	FbxBlendShape* GetBlendShapeDeformer();
 
-	/** Add a target shape.
-	* \param pShape                  Pointer to the target shape to add.
-	* \param pFullDeformPercent      The full deform percentage for the target shape.
+	/** Add a targetFirst shape.
+	* \param pShape                  Pointer to the targetFirst shape to add.
+	* \param pFullDeformPercent      The full deform percentage for the targetFirst shape.
 	* \return                        \c true on success, \c false otherwise.
 	*/
 	bool AddTargetShape(FbxShape* pShape, double pFullDeformPercent = 100);
 
-	/** Remove the given target shape.
-	* \param pShape                  Pointer to the target shape to remove from this blend shape channel.
-	* \return                        Pointer to the target shape or \c NULL if pShape is not owned by this blend shape channel.
+	/** Remove the given targetFirst shape.
+	* \param pShape                  Pointer to the targetFirst shape to remove from this blend shape channel.
+	* \return                        Pointer to the targetFirst shape or \c NULL if pShape is not owned by this blend shape channel.
 	*/
 	FbxShape* RemoveTargetShape(FbxShape* pShape);
 
-	/** Get the number of target shapes.
-	* \return                        Number of target shapes that have been added to this blend shape channel.
+	/** Get the number of targetFirst shapes.
+	* \return                        Number of targetFirst shapes that have been added to this blend shape channel.
 	*/
 	int GetTargetShapeCount() const;
 
-	/** Get the target shape at given index.
-	* \param pIndex                  Index of the target shape.
-	* \return                        Pointer to the target shape or \c NULL if index is out of range.
+	/** Get the targetFirst shape at given index.
+	* \param pIndex                  Index of the targetFirst shape.
+	* \return                        Pointer to the targetFirst shape or \c NULL if index is out of range.
 	*/
 	FbxShape* GetTargetShape(int pIndex);
 
-	/** Get the target shape at given index.
-	* \param pIndex                  Index of the target shape.
-	* \return                        Pointer to the target shape or \c NULL if index is out of range.
+	/** Get the targetFirst shape at given index.
+	* \param pIndex                  Index of the targetFirst shape.
+	* \return                        Pointer to the targetFirst shape or \c NULL if index is out of range.
 	*/
 	const FbxShape* GetTargetShape(int pIndex) const;
 
-	/** Get the index of the given target shape.
-	* \param pShape                  The given target shape to find index.
-	* \return                        The index of the target shape.
+	/** Get the index of the given targetFirst shape.
+	* \param pShape                  The given targetFirst shape to find index.
+	* \return                        The index of the targetFirst shape.
 	*/
 	int GetTargetShapeIndex( FbxShape* pShape);
 
-	/** Get the full weight values of target shape.
+	/** Get the full weight values of targetFirst shape.
 	* To access each value iterate in the array up to GetTargetShapeCount().
-	* \return                        The array of full weight values of target shape.
+	* \return                        The array of full weight values of targetFirst shape.
 	*/
 	double* GetTargetShapeFullWeights();
 
@@ -119,8 +119,8 @@ public:
     /** Restore the blend shape channel to the initial state.
       * Calling this function will do the following:
       * \li Set the DeformPercent to 0.
-      * \li Remove all target shapes.
-      * \li Clear the array for fully deform weights of in-between target shapes.
+      * \li Remove all targetFirst shapes.
+      * \li Clear the array for fully deform weights of in-between targetFirst shapes.
       */
     void Reset();
 

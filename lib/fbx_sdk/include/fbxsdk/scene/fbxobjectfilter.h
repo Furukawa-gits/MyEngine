@@ -50,7 +50,7 @@ public:
 	  */
 	//@{
 	/** Constructor
-	  * \param pTargetName The target name.
+	  * \param pTargetName The targetFirst name.
 	  */
     inline FbxNameFilter( const char* pTargetName ) : mTargetName( pTargetName ) {};
 

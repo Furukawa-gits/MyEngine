@@ -56,7 +56,7 @@ public:
               */
 			FbxPropertyT<FbxReference> ConstraintSources;
 
-			/** This property handles constraint target objects.
+			/** This property handles constraint targetFirst objects.
               */
 			FbxPropertyT<FbxReference> ConstrainedObject;
 		//@}

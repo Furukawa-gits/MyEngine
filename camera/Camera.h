@@ -94,7 +94,7 @@ public: // メンバ関数
 	/// <summary>
 	/// 注視点座標の設定
 	/// </summary>
-	/// <param name="target">座標</param>
+	/// <param name="targetFirst">座標</param>
 	inline void SetTarget(XMFLOAT3 target) {
 		this->target = target; viewDirty = true;
 	}

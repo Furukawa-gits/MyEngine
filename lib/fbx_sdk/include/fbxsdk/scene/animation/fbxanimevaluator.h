@@ -67,7 +67,7 @@ public:
 	* \param pNode The node to evaluate.
 	* \param pTime The time used for evaluate. If FBXSDK_TIME_INFINITE is used, this returns the default value, without animation curves evaluation.
 	* \param pPivotSet The pivot set to take into account
-	* \param pApplyTarget Applies the necessary transform to align into the target node
+	* \param pApplyTarget Applies the necessary transform to align into the targetFirst node
 	* \param pForceEval Force the evaluator to refresh the evaluation state cache even if its already up-to-date.
 	* \return The resulting global transform of the specified node at the specified time. */
 	FbxAMatrix& GetNodeGlobalTransform(FbxNode* pNode, const FbxTime& pTime=FBXSDK_TIME_INFINITE, FbxNode::EPivotSet pPivotSet=FbxNode::eSourcePivot, bool pApplyTarget=false, bool pForceEval=false);
@@ -76,7 +76,7 @@ public:
 	* \param pNode The node to evaluate.
 	* \param pTime The time used for evaluate. If FBXSDK_TIME_INFINITE is used, this returns the default value, without animation curves evaluation.
 	* \param pPivotSet The pivot set to take into account
-	* \param pApplyTarget Applies the necessary transform to align into the target node
+	* \param pApplyTarget Applies the necessary transform to align into the targetFirst node
 	* \param pForceEval Force the evaluator to refresh the evaluation state cache even if its already up-to-date.
 	* \return The resulting local transform of the specified node for the specified time.
 	* \remarks The local transform matrix is calculated in this way: ParentGlobal.Inverse * Global, all transforms such as pre/post rotation are taken into consideration.
@@ -89,7 +89,7 @@ public:
 	* \param pNode The transform node to evaluate.
 	* \param pTime The time used for evaluate. If FBXSDK_TIME_INFINITE is used, this returns the default value, without animation curves evaluation.
 	* \param pPivotSet The pivot set to take into account
-	* \param pApplyTarget Applies the necessary transform to align into the target node
+	* \param pApplyTarget Applies the necessary transform to align into the targetFirst node
 	* \param pForceEval Force the evaluator to refresh the evaluation state cache even if its already up-to-date.
 	* \return The resulting value of LclTranslation property of the specified node at the specified time. */
 	FbxVector4& GetNodeLocalTranslation(FbxNode* pNode, const FbxTime& pTime=FBXSDK_TIME_INFINITE, FbxNode::EPivotSet pPivotSet=FbxNode::eSourcePivot, bool pApplyTarget=false, bool pForceEval=false);
@@ -99,7 +99,7 @@ public:
 	* \param pNode The transform node to evaluate.
 	* \param pTime The time used for evaluate. If FBXSDK_TIME_INFINITE is used, this returns the default value, without animation curves evaluation.
 	* \param pPivotSet The pivot set to take into account
-	* \param pApplyTarget Applies the necessary transform to align into the target node
+	* \param pApplyTarget Applies the necessary transform to align into the targetFirst node
 	* \param pForceEval Force the evaluator to refresh the evaluation state cache even if its already up-to-date.
 	* \return The resulting value of LclRotation property of the specified node at the specified time. */
 	FbxVector4& GetNodeLocalRotation(FbxNode* pNode, const FbxTime& pTime=FBXSDK_TIME_INFINITE, FbxNode::EPivotSet pPivotSet=FbxNode::eSourcePivot, bool pApplyTarget=false, bool pForceEval=false);
@@ -109,7 +109,7 @@ public:
 	* \param pNode The transform node to evaluate.
 	* \param pTime The time used for evaluate. If FBXSDK_TIME_INFINITE is used, this returns the default value, without animation curves evaluation.
 	* \param pPivotSet The pivot set to take into account
-	* \param pApplyTarget Applies the necessary transform to align into the target node
+	* \param pApplyTarget Applies the necessary transform to align into the targetFirst node
 	* \param pForceEval Force the evaluator to refresh the evaluation state cache even if its already up-to-date.
 	* \return The resulting value of LclScaling property of the specified node at the specified time. */
 	FbxVector4& GetNodeLocalScaling(FbxNode* pNode, const FbxTime& pTime=FBXSDK_TIME_INFINITE, FbxNode::EPivotSet pPivotSet=FbxNode::eSourcePivot, bool pApplyTarget=false, bool pForceEval=false);
@@ -164,7 +164,7 @@ public:
 	* \param pGX Global transformation state.
 	* \param pTime The time used for evaluate.If FBXSDK_TIME_INFINITE is used, this returns the default value, without animation curves evaluation.
 	* \param pPivotSet The pivot set to take into account.
-	* \param pApplyTarget Applies the necessary transform to align into the target node.
+	* \param pApplyTarget Applies the necessary transform to align into the targetFirst node.
 	* \param pForceEval Force the evaluator to refresh the evaluation state cache even if its already up-to-date. */
 	void ComputeLocalTRSFromGlobal(FbxVector4& pRetLT, FbxVector4& pRetLR, FbxVector4& pRetLS, FbxNode* pNode, FbxAMatrix& pGX, const FbxTime& pTime=FBXSDK_TIME_INFINITE, FbxNode::EPivotSet pPivotSet=FbxNode::eSourcePivot, bool pApplyTarget=false, bool pForceEval=false);
 

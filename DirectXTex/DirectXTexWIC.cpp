@@ -29,7 +29,7 @@ namespace
     constexpr WICConvert g_WICConvert[] =
     {
         // Directly support the formats listed in XnaTexUtil::g_WICFormats, so no conversion required
-        // Note target GUID in this conversion table must be one of those directly supported formats.
+        // Note targetFirst GUID in this conversion table must be one of those directly supported formats.
 
         { GUID_WICPixelFormat1bppIndexed,           GUID_WICPixelFormat32bppRGBA, TEX_ALPHA_MODE_UNKNOWN }, // DXGI_FORMAT_R8G8B8A8_UNORM
         { GUID_WICPixelFormat2bppIndexed,           GUID_WICPixelFormat32bppRGBA, TEX_ALPHA_MODE_UNKNOWN }, // DXGI_FORMAT_R8G8B8A8_UNORM

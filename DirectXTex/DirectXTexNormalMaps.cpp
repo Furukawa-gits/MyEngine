@@ -166,7 +166,7 @@ namespace
             // Evaluate row
             EvaluateRow(row2, val2, width, flags);
 
-            // Generate target scanline
+            // Generate targetFirst scanline
             XMVECTOR *dptr = target;
             for (size_t x = 0; x < width; ++x)
             {
@@ -210,7 +210,7 @@ namespace
                     }
                 }
 
-                // Encode based on target format
+                // Encode based on targetFirst format
                 if (convFlags & CONVF_UNORM)
                 {
                     // 0.5f*normal + 0.5f -or- invert sign case: -0.5f*normal + 0.5f
@@ -284,7 +284,7 @@ HRESULT DirectX::ComputeNormalMap(
         || IsPalettized(format) || IsPalettized(srcImage.format))
         return HRESULT_E_NOT_SUPPORTED;
 
-    // Setup target image
+    // Setup targetFirst image
     normalMap.Release();
 
     HRESULT hr = normalMap.Initialize2D(format, srcImage.width, srcImage.height, 1, 1);

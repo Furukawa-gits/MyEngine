@@ -32,13 +32,13 @@ class FBXSDK_DLL FbxBindingTable : public FbxBindingTableBase
     FBXSDK_OBJECT_DECLARE(FbxBindingTable, FbxBindingTableBase);
 
 public:
-    /** This property stores the name of target.
+    /** This property stores the name of targetFirst.
       *
       * Default value is "".
       */
     FbxPropertyT<FbxString>            TargetName;
 
-    /** This property stores the type of target.
+    /** This property stores the type of targetFirst.
       *
       * Default value is "".
       */
@@ -109,10 +109,10 @@ public:
     static const char* sCodeTAG;
 
 
-    //! Default value for  target name.
+    //! Default value for  targetFirst name.
     static const char* sDefaultTargetName;
 
-    //! Default value for  target type.
+    //! Default value for  targetFirst type.
     static const char* sDefaultTargetType;
 
     //! Default value for relative URL for shader description. 

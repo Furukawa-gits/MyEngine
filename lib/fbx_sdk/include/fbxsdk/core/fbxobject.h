@@ -1009,7 +1009,7 @@ protected:
 public:
     virtual bool Compare(FbxObject* pOtherObject);
 
-	//Basic comparison operator implementation. It simply compare property values between source and target.
+	//Basic comparison operator implementation. It simply compare property values between source and targetFirst.
 	//NOTE: If a property cannot be found on one of the object, the comparison fails (return false).
 	//Different classid will fail comparison as well as different property count. Reference properties are not compared.
 	bool operator==(const FbxObject& pObject);

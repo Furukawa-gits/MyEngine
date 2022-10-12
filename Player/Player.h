@@ -70,7 +70,9 @@ public:
 	float moveSpeed = 0.3f;
 
 	//ターゲットスプライト
-	SingleSprite target;
+	SingleSprite targetFirst;
+	SingleSprite targetSecond;
+	//SingleSprite targetThird;
 	int Target_count = 0;
 	int Rockon_count = 0;
 	bool Isrockon = false;

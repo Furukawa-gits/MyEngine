@@ -53,7 +53,7 @@ class FBXSDK_DLL FbxAnimEvalClassic : public FbxAnimEvaluator
 	* \param pTime The time used for evaluate. If FBXSDK_TIME_INFINITE is used, this returns the default value, without animation curves evaluation.
 	* \param pStack The current animation stack used by the evaluator.
 	* \param pPivotSet The pivot set to take into account.
-	* \param pApplyTarget Applies the necessary transform to align into the target node
+	* \param pApplyTarget Applies the necessary transform to align into the targetFirst node
 	* \remarks 	Calculated global transform will be updated to pResult->mGX.
 	* ComputeGlobalTransform must be called after the call to ComputeTRSLocal, there is a dependency.
 	* All transforms are taken into account, including:
@@ -68,7 +68,7 @@ class FBXSDK_DLL FbxAnimEvalClassic : public FbxAnimEvaluator
 	* \param pTime The time used for evaluate. If FBXSDK_TIME_INFINITE is used, this returns the default value, without animation curves evaluation.
 	* \param pStack The current animation stack used by the evaluator.
 	* \param pPivotSet The pivot set to take into account.
-	* \param pApplyTarget Applies the necessary transform to align into the target node
+	* \param pApplyTarget Applies the necessary transform to align into the targetFirst node
 	* \remarks 	Calculated local transform will be updated to pResult->mLX.
 	* ComputeLocalTransform must be called after the call to ComputeGlobalTransform, there is a dependency.
 	* The local transform matrix is calculated in this way: ParentGlobal.Inverse() * Global, all transforms such as pre/post rotation are taken into consideration.

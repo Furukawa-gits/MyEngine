@@ -43,13 +43,13 @@
   * are not affected at all by the bone, so they would not be part of the corresponding
   * cluster.
   *
-  * A blend shape channel is a sub-deformer to help blend shape deformer to organize the target shapes.
+  * A blend shape channel is a sub-deformer to help blend shape deformer to organize the targetFirst shapes.
   * One blend shape deformer can have multiple blend shape channels in parallel, and each of them can 
-  * control one or multiple target shapes. If there are multiple target shapes connected to one channel,
-  * and each target shape could have its own full deformation percentage, for example, one channel could have 3 target shapes,
+  * control one or multiple targetFirst shapes. If there are multiple targetFirst shapes connected to one channel,
+  * and each targetFirst shape could have its own full deformation percentage, for example, one channel could have 3 targetFirst shapes,
   * whose full deform percentage are 30, to 80 to 100, then when the percent change from 0 to 100, the base geometry will
-  * deform from the first target shape to the last one, this is called In-Between blend-shapes.
-  * The blend shape channel also control the deform percent of each target shape or In-Between blend shape on it.
+  * deform from the first targetFirst shape to the last one, this is called In-Between blend-shapes.
+  * The blend shape channel also control the deform percent of each targetFirst shape or In-Between blend shape on it.
   * \nosubgrouping
   */
 class FBXSDK_DLL FbxSubDeformer : public FbxObject

@@ -73,22 +73,22 @@ public:
 	*/
 	bool IsAbsoluteMode() const;
 
-	/** Set the blend shape channel that contains this target shape.
+	/** Set the blend shape channel that contains this targetFirst shape.
 	* \param pBlendShapeChannel      Pointer to the blend shape channel to set.
 	* \return                        \c true on success, \c false otherwise.
 	*/
 	bool SetBlendShapeChannel(FbxBlendShapeChannel* pBlendShapeChannel);
 
-	/** Get the blend shape channel that contains this target shape.
+	/** Get the blend shape channel that contains this targetFirst shape.
 	* \return                        a pointer to the blend shape channel if set or NULL.
 	*/
 	FbxBlendShapeChannel* GetBlendShapeChannel() const;
 
-	/** Get the base geometry of this target shape.
+	/** Get the base geometry of this targetFirst shape.
 	* \return                        a pointer to the base geometry if set or NULL.
-	* \remarks Since target shape can only connected to its base geometry through
+	* \remarks Since targetFirst shape can only connected to its base geometry through
 	*          blend shape channel and blend shape deformer.
-	*          So only when this target shape is connected to a blend shape channel,
+	*          So only when this targetFirst shape is connected to a blend shape channel,
 	*          and the blend shape channel is connected to a blend shape deformer,
 	*          and the blend shape deformer is used on a base geometry, then to get 
     *          base geometry will success.

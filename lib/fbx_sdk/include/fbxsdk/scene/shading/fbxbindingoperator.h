@@ -140,7 +140,7 @@ public:
 	  */
     FbxPropertyT<FbxString> FunctionName;
 
-	/** This property stores the name of target.
+	/** This property stores the name of targetFirst.
 	*
 	* Default value is "".
 	*/
@@ -157,7 +157,7 @@ public:
 
     //! Default value for function name.
     static const char* sDefaultFunctionName;
-	//! Default value for target name.
+	//! Default value for targetFirst name.
     static const char* sDefaultTargetName;
 
 
@@ -176,7 +176,7 @@ public:
     static void UnregisterFunctions();
 
 
-    /** It represents a binding relationship between current object and the target.
+    /** It represents a binding relationship between current object and the targetFirst.
       * Any binding operation need to specify a certain kind of binding function.
       * \nosubgrouping
       */

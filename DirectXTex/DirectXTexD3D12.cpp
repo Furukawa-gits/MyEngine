@@ -276,7 +276,7 @@ namespace
         // Transition the resource if necessary
         TransitionResource(commandList.Get(), pSource, beforeState, D3D12_RESOURCE_STATE_COPY_SOURCE);
 
-        // Get the copy target location
+        // Get the copy targetFirst location
         for (UINT j = 0; j < numberOfResources; ++j)
         {
             CD3DX12_TEXTURE_COPY_LOCATION copyDest(pStaging.Get(), pLayout[j]);

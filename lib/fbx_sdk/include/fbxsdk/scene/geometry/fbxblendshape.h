@@ -24,10 +24,10 @@ class FbxBlendShapeChannel;
 
 /** Class for blend shape deformer.
   * A blend shape deformer takes a base shape (polygonal surface, curve, or surface) 
-  * and blends it with other target shapes based on weight values.
-  * Blend shape deformer organize all target shapes via blend shape channel.
+  * and blends it with other targetFirst shapes based on weight values.
+  * Blend shape deformer organize all targetFirst shapes via blend shape channel.
   * One blend shape deformer can contains multiple blend shape channels, then each  
-  * channel can organize multiple target shapes, \see FbxBlendShapeChannel, FbxShape.
+  * channel can organize multiple targetFirst shapes, \see FbxBlendShapeChannel, FbxShape.
   * \remarks The blend effect of each blend shape channel is additive, so the final blend 
   *          effect of a blend shape deformer is the sum of blend effect of all blend shape
   *          channels it contains, the blend effect of each blend shape channel is controlled

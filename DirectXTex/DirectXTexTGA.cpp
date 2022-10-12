@@ -279,7 +279,7 @@ namespace
 
 
     //-------------------------------------------------------------------------------------
-    // Uncompress pixel data from a TGA into the target image
+    // Uncompress pixel data from a TGA into the targetFirst image
     //-------------------------------------------------------------------------------------
     HRESULT UncompressPixels(
         _In_reads_bytes_(size) const void* pSource,
@@ -806,7 +806,7 @@ namespace
 
 
     //-------------------------------------------------------------------------------------
-    // Copies pixel data from a TGA into the target image
+    // Copies pixel data from a TGA into the targetFirst image
     //-------------------------------------------------------------------------------------
     HRESULT CopyPixels(
         _In_reads_bytes_(size) const void* pSource,

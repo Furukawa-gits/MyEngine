@@ -753,7 +753,7 @@ namespace
         if (FAILED(hr))
             return hr;
 
-        // Resize base image to each target mip level
+        // Resize base image to each targetFirst mip level
         for (size_t level = 1; level < levels; ++level)
         {
             const Image *img = mipChain.GetImage(level, item, 0);
@@ -911,7 +911,7 @@ namespace
 
         XMVECTOR* row = target + width;
 
-        // Resize base image to each target mip level
+        // Resize base image to each targetFirst mip level
         for (size_t level = 1; level < levels; ++level)
         {
 #ifdef _DEBUG
@@ -1002,7 +1002,7 @@ namespace
         const XMVECTOR* urow2 = urow0 + 1;
         const XMVECTOR* urow3 = urow1 + 1;
 
-        // Resize base image to each target mip level
+        // Resize base image to each targetFirst mip level
         for (size_t level = 1; level < levels; ++level)
         {
             if (height <= 1)
@@ -1097,7 +1097,7 @@ namespace
         XMVECTOR* row0 = target + width;
         XMVECTOR* row1 = target + width * 2;
 
-        // Resize base image to each target mip level
+        // Resize base image to each targetFirst mip level
         for (size_t level = 1; level < levels; ++level)
         {
             // 2D linear filter
@@ -1210,7 +1210,7 @@ namespace
         XMVECTOR* row2 = target + width * 3;
         XMVECTOR* row3 = target + width * 4;
 
-        // Resize base image to each target mip level
+        // Resize base image to each targetFirst mip level
         for (size_t level = 1; level < levels; ++level)
         {
             // 2D cubic filter
@@ -1394,7 +1394,7 @@ namespace
 
         XMVECTOR* row = scanline.get();
 
-        // Resize base image to each target mip level
+        // Resize base image to each targetFirst mip level
         for (size_t level = 1; level < levels; ++level)
         {
             // 2D triangle filter
@@ -1657,7 +1657,7 @@ namespace
 
         XMVECTOR* row = target + width;
 
-        // Resize base image to each target mip level
+        // Resize base image to each targetFirst mip level
         for (size_t level = 1; level < levels; ++level)
         {
 #ifdef _DEBUG
@@ -1814,7 +1814,7 @@ namespace
         const XMVECTOR* vrow2 = vrow0 + 1;
         const XMVECTOR* vrow3 = vrow1 + 1;
 
-        // Resize base image to each target mip level
+        // Resize base image to each targetFirst mip level
         for (size_t level = 1; level < levels; ++level)
         {
             if (height <= 1)
@@ -1986,7 +1986,7 @@ namespace
         XMVECTOR* vrow0 = target + width * 3;
         XMVECTOR* vrow1 = target + width * 4;
 
-        // Resize base image to each target mip level
+        // Resize base image to each targetFirst mip level
         for (size_t level = 1; level < levels; ++level)
         {
             size_t nwidth = (width > 1) ? (width >> 1) : 1;
@@ -2188,7 +2188,7 @@ namespace
             trow[j] = ptr;  ptr += width;
         }
 
-        // Resize base image to each target mip level
+        // Resize base image to each targetFirst mip level
         for (size_t level = 1; level < levels; ++level)
         {
             size_t nwidth = (width > 1) ? (width >> 1) : 1;
@@ -2555,7 +2555,7 @@ namespace
 
         XMVECTOR* row = scanline.get();
 
-        // Resize base image to each target mip level
+        // Resize base image to each targetFirst mip level
         for (size_t level = 1; level < levels; ++level)
         {
             size_t nwidth = (width > 1) ? (width >> 1) : 1;

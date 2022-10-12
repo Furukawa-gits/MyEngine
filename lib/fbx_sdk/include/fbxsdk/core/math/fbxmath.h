@@ -78,7 +78,7 @@ public:
     // the FbxAMatrix. This value should only be changed when the user system stores
     // single floating point values into the FbxAMatrix with a very low precision.
     // In this case, the default threshold value would be too small for a proper detection
-    // and the extracted values can quickly become off target by a huge amount.
+    // and the extracted values can quickly become off targetFirst by a huge amount.
 	static void SetDegenerateThreshold(double pThreshold=16.0*FBXSDK_FLOAT_EPSILON);
     static inline double DegenerateThreshold() { return FbxEuler::mDegenerateThreshold; }
 

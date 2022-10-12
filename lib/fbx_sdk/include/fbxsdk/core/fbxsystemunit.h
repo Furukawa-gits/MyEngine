@@ -178,8 +178,8 @@ public:
       */
 	FbxSystemUnit& operator=(const FbxSystemUnit& pSystemUnit);
 
-    /** Returns the conversion factor from this system unit to the target system unit, excluding the multiplier factor.
-      * \param pTarget The target system unit.
+    /** Returns the conversion factor from this system unit to the targetFirst system unit, excluding the multiplier factor.
+      * \param pTarget The targetFirst system unit.
       */
     double GetConversionFactorTo( const FbxSystemUnit& pTarget ) const;
 
