@@ -112,6 +112,13 @@ public:
 		mRot = rotM;
 	}
 
+	void setRotMatrix(float rotZ, float rotX, float rotY)
+	{
+		mRot *= XMMatrixRotationZ(rotZ);
+		mRot *= XMMatrixRotationX(rotX);
+		mRot *= XMMatrixRotationY(rotY);
+	}
+
 	void SetPipelineSimple(ID3D12GraphicsCommandList* cmdList);
 
 	void reSetPipeline();

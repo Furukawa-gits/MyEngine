@@ -369,11 +369,7 @@ void Object3d_FBX::Update()
 {
 	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
 	matRot = XMMatrixIdentity();
-	//matRot = XMMatrixRotationQuaternion(qRot);
 	matRot = mRot;
-	//matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
-	//matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
-	//matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
 	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
 
 	matWorld = XMMatrixIdentity();

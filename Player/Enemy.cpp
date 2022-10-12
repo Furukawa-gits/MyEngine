@@ -29,6 +29,7 @@ void enemyBullet::draw()
 }
 #pragma endregion
 
+#pragma region “G–{‘Ì
 Enemy::Enemy()
 {
 }
@@ -76,23 +77,25 @@ void Enemy::reSet()
 	isSetMissile = false;
 }
 
-void Enemy::draw3D(directX* directx)
+void Enemy::chase(XMFLOAT3 pPos)
 {
-	if (!Isarive)
+	XMFLOAT3 dis =
 	{
-		return;
-	}
+		pPos.x - position.x,
+		pPos.y - position.y,
+		pPos.z - position.z
+	};
 
-	testObject->SetPipelineSimple(directx->cmdList.Get());
-	testObject->Draw(directx->cmdList.Get());
-}
+	float disLength = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
 
-void Enemy::draw2D(directX* directx)
-{
-	if (Isarive && isTargetSet)
+	XMFLOAT3 disNormal =
 	{
-		rockTarget.DrawSprite(directx->cmdList.Get());
-	}
+		dis.x / disLength,
+		dis.y / disLength,
+		dis.z / disLength
+	};
+
+
 }
 
 void Enemy::update(XMFLOAT3 Player_pos)
@@ -152,27 +155,8 @@ void Enemy::update(XMFLOAT3 Player_pos)
 		testObject->getPosition().z,1.0f 
 	};
 	testObject->Update();
-}
 
-void Enemy::chase(XMFLOAT3 pPos)
-{
-	XMFLOAT3 dis =
-	{
-		pPos.x - position.x,
-		pPos.y - position.y,
-		pPos.z - position.z
-	};
-
-	float disLength = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
-
-	XMFLOAT3 disNormal =
-	{
-		dis.x / disLength,
-		dis.y / disLength,
-		dis.z / disLength
-	};
-
-
+	return;
 }
 
 void Enemy::isHitTarget(XMFLOAT2 targetpos, bool istarget)
@@ -215,3 +199,23 @@ void Enemy::isHitShot(XMFLOAT2 targetpos)
 		}
 	}
 }
+
+void Enemy::draw3D(directX* directx)
+{
+	if (!Isarive)
+	{
+		return;
+	}
+
+	testObject->SetPipelineSimple(directx->cmdList.Get());
+	testObject->Draw(directx->cmdList.Get());
+}
+
+void Enemy::draw2D(directX* directx)
+{
+	if (Isarive && isTargetSet)
+	{
+		rockTarget.DrawSprite(directx->cmdList.Get());
+	}
+}
+#pragma endregion
