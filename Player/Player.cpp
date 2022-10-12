@@ -2,20 +2,30 @@
 
 dxinput* Player::input = nullptr;
 
+Player::Player()
+{
+}
+
+Player::~Player()
+{
+	delete(Player_object);
+	delete(followcamera);
+}
+
 void Player::init(dxinput* input, directX* directx)
 {
 	this->input = input;
 
 	targetFirst.anchorpoint = { 0.5f,0.5f };
-	targetFirst.size = { 50,50 };
+	targetFirst.size = { 40,40 };
 	targetFirst.GenerateSprite("Target.png");
 
 	targetSecond.anchorpoint = { 0.5f,0.5f };
-	targetSecond.size = { 75,75 };
+	targetSecond.size = { 60,60 };
 	targetSecond.GenerateSprite("Target.png");
 
 	targetThird.anchorpoint = { 0.5f,0.5f };
-	targetThird.size = { 100,100 };
+	targetThird.size = { 80,80 };
 	targetThird.GenerateSprite("Target.png");
 
 	Player_model = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
@@ -265,14 +275,16 @@ void Player::update()
 
 	if (Target_count > 70)
 	{
-		targetFirst.rotation -= 5.0f;
-		targetSecond.rotation += 5.0f;
+		targetFirst.rotation -= 7.0f;
+		targetSecond.rotation += 7.0f;
+		targetThird.rotation -= 7.0f;
 		Isrockon = true;
 	}
 	else
 	{
-		targetFirst.rotation += 3.0f;
-		targetSecond.rotation -= 3.0f;
+		targetFirst.rotation += 4.0f;
+		targetSecond.rotation -= 4.0f;
+		targetThird.rotation += 4.0f;
 		Isrockon = false;
 	}
 
@@ -285,9 +297,9 @@ void Player::update()
 
 	XMFLOAT3 halfPlayerToTarget =
 	{
-		(targetWorldPosition.x - Player_object->getPosition().x) / 100 / 2,
-		(targetWorldPosition.y - Player_object->getPosition().y) / 100 / 2,
-		(targetWorldPosition.z - Player_object->getPosition().z) / 100 / 2
+		(targetWorldPosition.x - Player_object->getPosition().x) / 100 / 1.2f,
+		(targetWorldPosition.y - Player_object->getPosition().y) / 100 / 1.2f,
+		(targetWorldPosition.z - Player_object->getPosition().z) / 100 / 1.2f
 	};
 
 	targetSecond.position =
@@ -298,6 +310,22 @@ void Player::update()
 	};
 	targetSecond.SpriteTransferVertexBuffer();
 	targetSecond.SpriteUpdate();
+
+	halfPlayerToTarget =
+	{
+		(targetWorldPosition.x - Player_object->getPosition().x) / 100 / 3,
+		(targetWorldPosition.y - Player_object->getPosition().y) / 100 / 3,
+		(targetWorldPosition.z - Player_object->getPosition().z) / 100 / 3
+	};
+
+	targetThird.position =
+	{
+		Player_object->worldToScleenSpecifyPosition(halfPlayerToTarget).x,
+		Player_object->worldToScleenSpecifyPosition(halfPlayerToTarget).y,
+		0.0f
+	};
+	targetThird.SpriteTransferVertexBuffer();
+	targetThird.SpriteUpdate();
 
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
 	{
@@ -338,21 +366,23 @@ void Player::reset()
 //描画
 void Player::draw_3d(directX* directx)
 {
-	if (Isarive == true)
+	if (!Isarive)
 	{
-		//単色シェーダをセットして描画
-		Player_object->SetPipelineSimple(directx->cmdList.Get());
-		Player_object->Draw(directx->cmdList.Get());
+		return;
+	}
 
-		for (int i = 0; i < MaxPlayerBulletNum; i++)
-		{
-			player_bullet[i].draw(directx);
-		}
+	//単色シェーダをセットして描画
+	Player_object->SetPipelineSimple(directx->cmdList.Get());
+	Player_object->Draw(directx->cmdList.Get());
 
-		for (int i = 0; i < MaxPlayerMissileNum; i++)
-		{
-			player_missiale[i].draw(directx);
-		}
+	for (int i = 0; i < MaxPlayerBulletNum; i++)
+	{
+		player_bullet[i].draw(directx);
+	}
+
+	for (int i = 0; i < MaxPlayerMissileNum; i++)
+	{
+		player_missiale[i].draw(directx);
 	}
 }
 
@@ -363,6 +393,7 @@ void Player::draw_2d(directX* directx)
 		return;
 	}
 
+	targetThird.DrawSprite(directx->cmdList.Get());
 	targetSecond.DrawSprite(directx->cmdList.Get());
 	targetFirst.DrawSprite(directx->cmdList.Get());
 

@@ -10,6 +10,8 @@ GameScene::~GameScene()
 {
 	delete(object);
 	delete(model);
+	delete(skySphere);
+	delete(cameraobj);
 }
 
 //ƒTƒEƒ“ƒh‚¾‚¯“Ç‚İ‚İŠÖ”

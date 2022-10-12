@@ -4,7 +4,7 @@
 #include"../3D/Collision.h"
 #include"../FbxLoder/Object3d_FBX.h"
 
-struct enemy_bullet
+class enemy_bullet
 {
 public:
 	int count = 0;
@@ -23,7 +23,6 @@ private:
 class Enemy
 {
 public:
-	//--------------------g‚¤‚â‚Â--------------------
 	bool Isarive = false;//¶‘¶
 	bool Istarget_set = false;//‘_‚í‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©
 	bool IsSetMissile = false;

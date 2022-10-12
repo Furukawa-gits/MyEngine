@@ -14,6 +14,8 @@ const int MaxPlayerMissileNum = 5;
 class Player
 {
 public:
+	Player();
+	~Player();
 
 	void init(dxinput* input, directX* directx);
 
