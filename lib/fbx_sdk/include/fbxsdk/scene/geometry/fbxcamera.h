@@ -1023,7 +1023,7 @@ public:
     // Frame
     // -----------------------------------------------------------------------
 
-    /** This property stores a flag that indicates to draw_3d a border with color around the camera's viewable area or not.
+    /** This property stores a flag that indicates to draw3D a border with color around the camera's viewable area or not.
       * To access this property do: UseFrameColor.Get().
       * To set this property do: UseFrameColor.Set(FbxBool).
       *
@@ -1062,7 +1062,7 @@ public:
       */
     FbxPropertyT<FbxBool>                         ShowInfoOnMoving;
 
-    /** This property handles the flag to draw_3d floor grid or not.
+    /** This property handles the flag to draw3D floor grid or not.
       *
       * To access this property do: ShowGrid.Get().
       * To set this property do: ShowGrid.Set(FbxBool).

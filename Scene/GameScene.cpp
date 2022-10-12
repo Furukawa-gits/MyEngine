@@ -197,11 +197,11 @@ void GameScene::Play_update()
 		{
 			for (int j = 0; j < enemynum; j++)
 			{
-				if (testEnemys[j].Istarget_set && !testEnemys[j].IsSetMissile)
+				if (testEnemys[j].isTargetSet && !testEnemys[j].isSetMissile)
 				{
 					testPlayer.player_missiale[i].setPenemy(&testEnemys[j]);
 					testPlayer.player_missiale[i].start(testPlayer.Player_object->getPosition());
-					testEnemys[j].IsSetMissile = true;
+					testEnemys[j].isSetMissile = true;
 					break;
 				}
 			}
@@ -233,6 +233,11 @@ void GameScene::Play_update()
 	{
 		scene = clear;
 	}
+
+	if (input->Triger(DIK_N))
+	{
+		scene = clear;
+	}
 }
 
 //リザルト画面更新
@@ -260,7 +265,7 @@ void GameScene::Play_draw()
 	skySphere->Draw(directx->cmdList.Get());
 
 	//プレイヤー描画
-	testPlayer.draw_3d(directx);
+	testPlayer.draw3D(directx);
 
 	for (int i = 0; i < enemynum; i++)
 	{
@@ -336,16 +341,16 @@ void GameScene::Draw3D()
 	}
 }
 
-void GameScene::DrawSP()
+void GameScene::Draw2D()
 {
 	for (int i = 0; i < enemynum; i++)
 	{
-		testEnemys[i].drawSp(directx);
+		testEnemys[i].draw2D(directx);
 	}
 
 	if (scene == play)
 	{
-		testPlayer.draw_2d(directx);
+		testPlayer.draw2D(directx);
 	}
 	debugtext.DrawAll(directx->cmdList.Get());
 }
@@ -368,12 +373,12 @@ void GameScene::checkHitPlayerTarget()
 
 		float dis = sqrtf(powf(input->mouse_position.x - screenPos.x, 2) + powf(input->mouse_position.y - screenPos.y, 2));
 
-		if (dis < 20 && !testEnemys[i].Istarget_set && targetnum < MaxPlayerMissileNum)
+		if (dis < 20 && !testEnemys[i].isTargetSet && targetnum < MaxPlayerMissileNum)
 		{
-			testEnemys[i].Istarget_set = true;
+			testEnemys[i].isTargetSet = true;
 			targetnum++;
 		}
 
-		testEnemys[i].Rock_Target.position = { screenPos.x,screenPos.y,0 };
+		testEnemys[i].rockTarget.position = { screenPos.x,screenPos.y,0 };
 	}
 }

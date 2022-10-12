@@ -71,14 +71,14 @@ void Player::init(dxinput* input, directX* directx)
 	player_collision.radius = 2.0f;
 
 	HP = 10;
-	Isarive = true;
+	isArive = true;
 }
 
 //移動
 void Player::Move()
 {
 	//自動で前に進み続ける
-	//Player_object->addMoveFront(followcamera->getFrontVec());
+	Player_object->addMoveFront(followcamera->getFrontVec());
 
 	//カメラワーク
 	cameraMove();
@@ -165,31 +165,31 @@ void Player::cameraMove()
 	//ピッチ回転
 	if (input->mouse_p.y >= 620)
 	{
-		if (pitchRotateSpeedPositive < limitRotateSpeed)
+		if (pitchRotateSpeedPositive > -limitRotateSpeed)
 		{
-			pitchRotateSpeedPositive += addRotateSpeed;
+			pitchRotateSpeedPositive -= addRotateSpeed;
 		}
 	}
 	else
 	{
-		if (pitchRotateSpeedPositive > 0)
+		if (pitchRotateSpeedPositive < 0)
 		{
-			pitchRotateSpeedPositive += subRotateSpeed;
+			pitchRotateSpeedPositive -= subRotateSpeed;
 		}
 	}
 
 	if (input->mouse_p.y <= 100)
 	{
-		if (pitchRotateSpeedNegative > -limitRotateSpeed)
+		if (pitchRotateSpeedNegative < limitRotateSpeed)
 		{
-			pitchRotateSpeedNegative -= addRotateSpeed;
+			pitchRotateSpeedNegative += addRotateSpeed;
 		}
 	}
 	else
 	{
-		if (pitchRotateSpeedNegative < 0)
+		if (pitchRotateSpeedNegative > 0)
 		{
-			pitchRotateSpeedNegative -= subRotateSpeed;
+			pitchRotateSpeedNegative += subRotateSpeed;
 		}
 	}
 
@@ -227,7 +227,7 @@ void Player::checkPlayerEnemy(Enemy* enemy)
 		return;
 	}
 
-	if (Collision::CheckSphere2Sphere(player_collision, enemy->enemy_collision))
+	if (Collision::CheckSphere2Sphere(player_collision, enemy->enemyCollision))
 	{
 		HP--;
 		enemy->Isarive = false;
@@ -237,7 +237,7 @@ void Player::checkPlayerEnemy(Enemy* enemy)
 //更新
 void Player::update()
 {
-	if (!Isarive)
+	if (!isArive)
 	{
 		return;
 	}
@@ -250,7 +250,7 @@ void Player::update()
 		//弾を撃つ
 		for (int i = 0; i < MaxPlayerBulletNum; i++)
 		{
-			if (player_bullet[i].Isarive == false)
+			if (player_bullet[i].isArive == false)
 			{
 				player_bullet[i].set(Player_object->getPosition(),
 					Player_object->screenToWorld({ input->mouse_position.x,input->mouse_position.y }));
@@ -261,7 +261,7 @@ void Player::update()
 
 	if (HP <= 0)
 	{
-		Isarive = false;
+		isArive = false;
 	}
 
 	if (input->Mouse_LeftPush())
@@ -346,7 +346,7 @@ void Player::update()
 //リセット
 void Player::reset()
 {
-	Isarive = true;
+	isArive = true;
 	HP = 10;
 
 	Player_object->SetPosition({ 0,5,0 });
@@ -364,9 +364,9 @@ void Player::reset()
 }
 
 //描画
-void Player::draw_3d(directX* directx)
+void Player::draw3D(directX* directx)
 {
-	if (!Isarive)
+	if (!isArive)
 	{
 		return;
 	}
@@ -386,15 +386,15 @@ void Player::draw_3d(directX* directx)
 	}
 }
 
-void Player::draw_2d(directX* directx)
+void Player::draw2D(directX* directx)
 {
-	if (!Isarive)
+	if (!isArive)
 	{
 		return;
 	}
 
-	targetThird.DrawSprite(directx->cmdList.Get());
-	targetSecond.DrawSprite(directx->cmdList.Get());
+	//targetThird.DrawSprite(directx->cmdList.Get());
+	//targetSecond.DrawSprite(directx->cmdList.Get());
 	targetFirst.DrawSprite(directx->cmdList.Get());
 
 	for (int i = 0; i < HP; i++)

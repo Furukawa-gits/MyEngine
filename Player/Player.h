@@ -6,10 +6,9 @@
 #include"../FbxLoder/Object3d_FBX.h"
 #include"../camera/FollowCamera.h"
 
-const float Move_limit = 30.0f;
 
 const int MaxPlayerBulletNum = 20;
-const int MaxPlayerMissileNum = 5;
+const int MaxPlayerMissileNum = 8;
 
 class Player
 {
@@ -31,9 +30,9 @@ public:
 
 	void reset();
 
-	void draw_3d(directX* directx);
+	void draw3D(directX* directx);
 
-	void draw_2d(directX* directx);
+	void draw2D(directX* directx);
 
 
 	//3dオブジェクト
@@ -50,7 +49,7 @@ public:
 	float pitchRotateSpeedNegative = 0.0f;
 	float addRotateSpeed = 0.01f;
 	float subRotateSpeed = -0.002f;
-	float limitRotateSpeed = 0.05f;
+	float limitRotateSpeed = 0.03f;
 
 	//基準回転軸
 	const XMFLOAT3 unitX = { 1,0,0 };
@@ -92,7 +91,7 @@ public:
 	Sphere player_collision;
 
 	//生存
-	bool Isarive = false;
+	bool isArive = false;
 
 	int HP = 10;
 

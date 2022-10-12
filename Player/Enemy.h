@@ -8,33 +8,34 @@ class enemy_bullet
 {
 public:
 	int count = 0;
-	XMFLOAT3 bullet_vec = { 0.0f,0.0f,0.0f };
-	bool Isarive = false;
+	XMFLOAT3 bulletVec = { 0.0f,0.0f,0.0f };
+	bool isArive = false;
 
 	void init(int index);
 	void set(XMFLOAT3 start_pos, XMFLOAT3 Target);
 	void update();
 	void draw();
 
-	Sphere bullet_collision;
+	Sphere bulletCollision;
 private:
 };
 
 class Enemy
 {
 public:
-	bool Isarive = false;//生存
-	bool Istarget_set = false;//狙われているかどうか
-	bool IsSetMissile = false;
-	SingleSprite Rock_Target;//マーカー
-	Sphere enemy_collision;
+	bool isDraw = false;
+	bool Isarive = false;//生存フラグ
+	bool isTargetSet = false;//狙われているかどうか
+	bool isSetMissile = false;//ミサイルが自分にセットされているか
+	SingleSprite rockTarget;//マーカー
+	Sphere enemyCollision;
 
 	//体力
 	int HP = 1;
 	//座標・速度
 	XMFLOAT3 startPosition = {};
 	XMFLOAT3 position = {};
-	float enemy_speed = 0.05f;
+	float enemySpeed = 0.05f;
 	//オブジェクト
 	Model* testCube = nullptr;
 	Object3d_FBX* testObject = nullptr;
@@ -57,5 +58,5 @@ public:
 
 	void draw3D(directX* directx);
 
-	void drawSp(directX* directx);
+	void draw2D(directX* directx);
 };

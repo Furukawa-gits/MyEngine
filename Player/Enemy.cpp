@@ -27,9 +27,9 @@ void Enemy::init(int enemy_index, int enemy_bullet_index)
 {
 	Isarive = false;
 
-	Rock_Target.anchorpoint = { 0.5f,0.5f };
-	Rock_Target.size = { 70,70 };
-	Rock_Target.GenerateSprite("Rock_on.png");
+	rockTarget.anchorpoint = { 0.5f,0.5f };
+	rockTarget.size = { 70,70 };
+	rockTarget.GenerateSprite("Rock_on.png");
 
 	testCube = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
 
@@ -38,7 +38,7 @@ void Enemy::init(int enemy_index, int enemy_bullet_index)
 	testObject->SetModel(testCube);
 	testObject->SetScale({ 1.0f,1.0f,1.0f });
 
-	enemy_collision.radius = 2.0f;
+	enemyCollision.radius = 2.0f;
 }
 
 void Enemy::set(XMFLOAT3 pos)
@@ -47,7 +47,7 @@ void Enemy::set(XMFLOAT3 pos)
 	startPosition = pos;
 	testObject->SetPosition(pos);
 	Isarive = true;
-	Istarget_set = false;
+	isTargetSet = false;
 }
 
 void Enemy::reSet()
@@ -56,8 +56,8 @@ void Enemy::reSet()
 	position = startPosition;
 	Isarive = true;
 	HP = 1;
-	Istarget_set = false;
-	IsSetMissile = false;
+	isTargetSet = false;
+	isSetMissile = false;
 }
 
 void Enemy::draw3D(directX* directx)
@@ -66,15 +66,16 @@ void Enemy::draw3D(directX* directx)
 	{
 		return;
 	}
+
 	testObject->SetPipelineSimple(directx->cmdList.Get());
 	testObject->Draw(directx->cmdList.Get());
 }
 
-void Enemy::drawSp(directX* directx)
+void Enemy::draw2D(directX* directx)
 {
-	if (Isarive && Istarget_set)
+	if (Isarive && isTargetSet)
 	{
-		Rock_Target.DrawSprite(directx->cmdList.Get());
+		rockTarget.DrawSprite(directx->cmdList.Get());
 	}
 }
 
@@ -90,12 +91,12 @@ void Enemy::update(XMFLOAT3 Player_pos)
 
 	if (homingCount % 30 == 0)
 	{
-		enemy_speed = 0.1f;
+		enemySpeed = 0.1f;
 	}
 
 	if (homingCount % 33 == 0)
 	{
-		enemy_speed = 0.0f;
+		enemySpeed = 0.0f;
 	}
 
 	position = testObject->getPosition();
@@ -107,9 +108,9 @@ void Enemy::update(XMFLOAT3 Player_pos)
 	dis.y /= lengthDis;
 	dis.z /= lengthDis;
 
-	position.x += dis.x * enemy_speed;
-	position.y += dis.y * enemy_speed;
-	position.z += dis.z * enemy_speed;
+	position.x += dis.x * enemySpeed;
+	position.y += dis.y * enemySpeed;
+	position.z += dis.z * enemySpeed;
 
 	//HPÇ™0Ç…Ç»Ç¡ÇΩÇÁè¡ñ≈
 	if (HP <= 0)
@@ -117,18 +118,18 @@ void Enemy::update(XMFLOAT3 Player_pos)
 		Isarive = false;
 	}
 
-	if (Istarget_set)
+	if (isTargetSet)
 	{
-		Rock_Target.rotation += 1.5f;
+		rockTarget.rotation += 1.5f;
 		XMFLOAT2 screenPos = testObject->worldToScleen();
-		Rock_Target.position = { screenPos.x,screenPos.y,0 };
+		rockTarget.position = { screenPos.x,screenPos.y,0 };
 	}
 
-	Rock_Target.SpriteTransferVertexBuffer();
-	Rock_Target.SpriteUpdate();
+	rockTarget.SpriteTransferVertexBuffer();
+	rockTarget.SpriteUpdate();
 
 	//testObject->SetPosition(position);
-	enemy_collision.center = 
+	enemyCollision.center = 
 	{ 
 		testObject->getPosition().x,
 		testObject->getPosition().y,
@@ -169,12 +170,12 @@ void Enemy::isHitTarget(XMFLOAT2 targetpos, bool istarget)
 
 	float dis = sqrtf(powf(targetpos.x - screenPos.x, 2) + powf(targetpos.y - screenPos.y, 2));
 
-	if (dis < 20 && istarget && !Istarget_set)
+	if (dis < 20 && istarget && !isTargetSet)
 	{
-		Istarget_set = true;
+		isTargetSet = true;
 	}
 
-	Rock_Target.position = { screenPos.x,screenPos.y,0 };
+	rockTarget.position = { screenPos.x,screenPos.y,0 };
 }
 
 void Enemy::isHitShot(XMFLOAT2 targetpos)

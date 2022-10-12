@@ -80,12 +80,10 @@ public:
 	//•`‰æ
 	void DrawBack();
 	void Draw3D();
-	void DrawSP();
-
+	void Draw2D();
 
 	//‰¼
 	void checkHitPlayerTarget();
-
 
 	bool Isclose = false;
 

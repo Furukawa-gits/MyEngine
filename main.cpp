@@ -121,7 +121,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		}
 		posteffect->Draw(directx.cmdList.Get(), directx.dev.Get());
 		//前景スプライト
-		gamescene.DrawSP();
+		gamescene.Draw2D();
 		directx.postDraw();
 
 		directx.finishDraw();

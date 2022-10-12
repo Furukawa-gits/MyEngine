@@ -15,7 +15,7 @@ public:
 	Object3d_FBX* bulletObject = nullptr;
 	Model* bulletModel = nullptr;
 
-	bool Isarive = false;
+	bool isArive = false;
 
 	void init(int index);
 	void set(XMFLOAT3 start_pos, XMFLOAT3 Target);
