@@ -72,7 +72,7 @@ public:
 	//ターゲットスプライト
 	SingleSprite targetFirst;
 	SingleSprite targetSecond;
-	//SingleSprite targetThird;
+	SingleSprite targetThird;
 	int Target_count = 0;
 	int Rockon_count = 0;
 	bool Isrockon = false;

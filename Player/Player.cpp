@@ -7,12 +7,16 @@ void Player::init(dxinput* input, directX* directx)
 	this->input = input;
 
 	targetFirst.anchorpoint = { 0.5f,0.5f };
-	targetFirst.size = { 64,64 };
+	targetFirst.size = { 50,50 };
 	targetFirst.GenerateSprite("Target.png");
 
 	targetSecond.anchorpoint = { 0.5f,0.5f };
-	targetSecond.size = { 64,64 };
+	targetSecond.size = { 75,75 };
 	targetSecond.GenerateSprite("Target.png");
+
+	targetThird.anchorpoint = { 0.5f,0.5f };
+	targetThird.size = { 100,100 };
+	targetThird.GenerateSprite("Target.png");
 
 	Player_model = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
 
@@ -262,11 +266,13 @@ void Player::update()
 	if (Target_count > 70)
 	{
 		targetFirst.rotation -= 5.0f;
+		targetSecond.rotation += 5.0f;
 		Isrockon = true;
 	}
 	else
 	{
 		targetFirst.rotation += 3.0f;
+		targetSecond.rotation -= 3.0f;
 		Isrockon = false;
 	}
 
@@ -279,22 +285,15 @@ void Player::update()
 
 	XMFLOAT3 halfPlayerToTarget =
 	{
-			(targetWorldPosition.x - Player_object->getPosition().x) / 2,
-			(targetWorldPosition.y - Player_object->getPosition().y) / 2,
-			(targetWorldPosition.z - Player_object->getPosition().z) / 2
-	};
-
-	XMFLOAT3 secondTargetWorldPosition =
-	{
-		Player_object->getPosition().x + halfPlayerToTarget.x,
-		Player_object->getPosition().y + halfPlayerToTarget.y,
-		Player_object->getPosition().z + halfPlayerToTarget.z
+		(targetWorldPosition.x - Player_object->getPosition().x) / 100 / 2,
+		(targetWorldPosition.y - Player_object->getPosition().y) / 100 / 2,
+		(targetWorldPosition.z - Player_object->getPosition().z) / 100 / 2
 	};
 
 	targetSecond.position =
 	{
-		Player_object->worldToScleenSpecifyPosition(secondTargetWorldPosition).x,
-		Player_object->worldToScleenSpecifyPosition(secondTargetWorldPosition).y,
+		Player_object->worldToScleenSpecifyPosition(halfPlayerToTarget).x,
+		Player_object->worldToScleenSpecifyPosition(halfPlayerToTarget).y,
 		0.0f
 	};
 	targetSecond.SpriteTransferVertexBuffer();
@@ -364,8 +363,8 @@ void Player::draw_2d(directX* directx)
 		return;
 	}
 
-	targetFirst.DrawSprite(directx->cmdList.Get());
 	targetSecond.DrawSprite(directx->cmdList.Get());
+	targetFirst.DrawSprite(directx->cmdList.Get());
 
 	for (int i = 0; i < HP; i++)
 	{
