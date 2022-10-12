@@ -2,26 +2,42 @@
 #include<random>
 
 #pragma region “G‚Ì’e
-void enemy_bullet::init(int index)
+enemyBullet::enemyBullet()
+{
+}
+enemyBullet::~enemyBullet()
+{
+}
+void enemyBullet::init(int index)
 {
 
 }
 
-void enemy_bullet::set(XMFLOAT3 start_pos, XMFLOAT3 Target)
+void enemyBullet::set(XMFLOAT3 start_pos, XMFLOAT3 Target)
 {
 
 }
 
-void enemy_bullet::update()
+void enemyBullet::update()
 {
 
 }
 
-void enemy_bullet::draw()
+void enemyBullet::draw()
 {
 
 }
 #pragma endregion
+
+Enemy::Enemy()
+{
+}
+
+Enemy::~Enemy()
+{
+	delete(testCube);
+	delete(testObject);
+}
 
 void Enemy::init(int enemy_index, int enemy_bullet_index)
 {

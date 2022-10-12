@@ -2,6 +2,14 @@
 #include"../3D/Collision.h"
 
 #pragma region ’Êí’e
+bullet::bullet()
+{
+}
+bullet::~bullet()
+{
+	delete(bulletObject);
+	delete(bulletModel);
+}
 void bullet::init(int index)
 {
 	bulletModel = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
@@ -83,6 +91,14 @@ void bullet::draw(directX* directx)
 #pragma endregion
 
 #pragma region ƒ~ƒTƒCƒ‹
+Missile::Missile()
+{
+}
+Missile::~Missile()
+{
+	delete(bulletObject);
+	delete(bulletModel);
+}
 void Missile::init(int index)
 {
 	bulletModel = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");

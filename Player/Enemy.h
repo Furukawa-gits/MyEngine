@@ -4,20 +4,20 @@
 #include"../3D/Collision.h"
 #include"../FbxLoder/Object3d_FBX.h"
 
-class enemy_bullet
+class enemyBullet
 {
 public:
 	int count = 0;
 	XMFLOAT3 bulletVec = { 0.0f,0.0f,0.0f };
 	bool isArive = false;
+	Sphere bulletCollision;
 
+	enemyBullet();
+	~enemyBullet();
 	void init(int index);
 	void set(XMFLOAT3 start_pos, XMFLOAT3 Target);
 	void update();
 	void draw();
-
-	Sphere bulletCollision;
-private:
 };
 
 class Enemy
@@ -41,6 +41,10 @@ public:
 	Object3d_FBX* testObject = nullptr;
 	//自機に向かっていくカウント
 	int homingCount = 0;
+
+	Enemy();
+
+	~Enemy();
 
 	void init(int enemy_index, int enemy_bullet_index);
 

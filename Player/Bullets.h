@@ -17,16 +17,16 @@ public:
 
 	bool isArive = false;
 
+	Sphere bullet_collision;
+
+	bullet();
+	~bullet();
+
 	void init(int index);
 	void set(XMFLOAT3 start_pos, XMFLOAT3 Target);
 	void checkhit(Enemy* enemy);
 	void update();
 	void draw(directX* directx);
-
-	Sphere bullet_collision;
-
-private:
-	Viewes bullet_view;
 };
 
 
@@ -42,13 +42,6 @@ public:
 	Model* bulletModel = nullptr;
 	bool Isarive = false;
 	bool IsTarget_set = false;
-
-	void init(int index);
-	void setPenemy(Enemy* enemy);
-	void start(XMFLOAT3 start_pos);
-	void checkhit();
-	void update();
-	void draw(directX* directx);
 	
 	Sphere missile_collision;
 
@@ -63,6 +56,13 @@ public:
 		{ -10.0f,-10.0f,0.0f }
 	};
 
-private:
-	Viewes misslie_view;
+	Missile();
+	~Missile();
+
+	void init(int index);
+	void setPenemy(Enemy* enemy);
+	void start(XMFLOAT3 start_pos);
+	void checkhit();
+	void update();
+	void draw(directX* directx);
 };
