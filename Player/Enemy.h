@@ -23,7 +23,7 @@ public:
 class Enemy
 {
 public:
-	bool isDraw = false;
+	bool isDraw = true;//描画フラグ
 	bool Isarive = false;//生存フラグ
 	bool isTargetSet = false;//狙われているかどうか
 	bool isSetMissile = false;//ミサイルが自分にセットされているか
@@ -35,6 +35,7 @@ public:
 	//座標・速度
 	XMFLOAT3 startPosition = {};
 	XMFLOAT3 position = {};
+	XMFLOAT3 rot = {};
 	float enemySpeed = 0.05f;
 	//オブジェクト
 	Model* testCube = nullptr;
@@ -46,7 +47,7 @@ public:
 
 	~Enemy();
 
-	void init(int enemy_index, int enemy_bullet_index);
+	void init();
 
 	void set(XMFLOAT3 pos);
 

@@ -293,35 +293,33 @@ void Player::update()
 	targetFirst.SpriteUpdate();
 
 	//ターゲットカーソルのワールド座標
-	XMFLOAT3 targetWorldPosition = Player_object->screenToWorld({ targetFirst.position.x,targetFirst.position.y });
+	XMFLOAT2 PlayerScreenPosition = Player_object->worldToScleen();
 
-	XMFLOAT3 halfPlayerToTarget =
+	XMFLOAT2 secondTargetPos =
 	{
-		(targetWorldPosition.x - Player_object->getPosition().x) / 100 / 1.2f,
-		(targetWorldPosition.y - Player_object->getPosition().y) / 100 / 1.2f,
-		(targetWorldPosition.z - Player_object->getPosition().z) / 100 / 1.2f
+		PlayerScreenPosition.x + (targetFirst.position.x - PlayerScreenPosition.x) * 0.666f,
+		PlayerScreenPosition.y + (targetFirst.position.y - PlayerScreenPosition.y) * 0.666f,
 	};
 
 	targetSecond.position =
 	{
-		Player_object->worldToScleenSpecifyPosition(halfPlayerToTarget).x,
-		Player_object->worldToScleenSpecifyPosition(halfPlayerToTarget).y,
+		secondTargetPos.x,
+		secondTargetPos.y,
 		0.0f
 	};
 	targetSecond.SpriteTransferVertexBuffer();
 	targetSecond.SpriteUpdate();
 
-	halfPlayerToTarget =
+	XMFLOAT2 thirdTargetPos =
 	{
-		(targetWorldPosition.x - Player_object->getPosition().x) / 100 / 3,
-		(targetWorldPosition.y - Player_object->getPosition().y) / 100 / 3,
-		(targetWorldPosition.z - Player_object->getPosition().z) / 100 / 3
+		PlayerScreenPosition.x + (targetFirst.position.x - PlayerScreenPosition.x) * 0.333f,
+		PlayerScreenPosition.y + (targetFirst.position.y - PlayerScreenPosition.y) * 0.333f,
 	};
 
 	targetThird.position =
 	{
-		Player_object->worldToScleenSpecifyPosition(halfPlayerToTarget).x,
-		Player_object->worldToScleenSpecifyPosition(halfPlayerToTarget).y,
+		thirdTargetPos.x,
+		thirdTargetPos.y,
 		0.0f
 	};
 	targetThird.SpriteTransferVertexBuffer();
@@ -393,8 +391,8 @@ void Player::draw2D(directX* directx)
 		return;
 	}
 
-	//targetThird.DrawSprite(directx->cmdList.Get());
-	//targetSecond.DrawSprite(directx->cmdList.Get());
+	targetThird.DrawSprite(directx->cmdList.Get());
+	targetSecond.DrawSprite(directx->cmdList.Get());
 	targetFirst.DrawSprite(directx->cmdList.Get());
 
 	for (int i = 0; i < HP; i++)

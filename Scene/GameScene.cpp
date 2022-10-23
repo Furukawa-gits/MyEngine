@@ -42,7 +42,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	//音読み込み
 	Load_sounds();
-	
+
 	//スプライトクラス初期化
 	SingleSprite::SetStaticData(directx->dev.Get());
 
@@ -78,15 +78,15 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	for (int i = 0; i < enemynum; i++)
 	{
-		testEnemys[i].init(i, i);
+		testEnemys[i].init();
 		testEnemys[i].set({
 			(float)(rand() % 50 - 25),
-			(float)(rand() % 30),
+			(float)(rand() % 30 + 15),
 			(float)(rand() % 50 - 25)
 			});
 	}
 
-	testBoss.init(0, 0);
+	testBoss.init();
 	testBoss.HP = 30;
 }
 

@@ -40,7 +40,7 @@ Enemy::~Enemy()
 	delete(testObject);
 }
 
-void Enemy::init(int enemy_index, int enemy_bullet_index)
+void Enemy::init()
 {
 	Isarive = false;
 
@@ -75,6 +75,7 @@ void Enemy::reSet()
 	HP = 1;
 	isTargetSet = false;
 	isSetMissile = false;
+	isDraw = true;
 }
 
 void Enemy::chase(XMFLOAT3 pPos)
@@ -100,60 +101,77 @@ void Enemy::chase(XMFLOAT3 pPos)
 
 void Enemy::update(XMFLOAT3 Player_pos)
 {
-	if (!Isarive)
+	if (!isDraw)
 	{
 		return;
 	}
 
-	//追尾カウント加算
-	homingCount++;
-
-	if (homingCount % 30 == 0)
+	if (!Isarive)
 	{
-		enemySpeed = 0.1f;
-	}
+		position.y -= 0.5f;
+		rot.x += 7;
+		rot.y += 7;
+		rot.z += 7;
+		testObject->setRotMatrix(rot.x, rot.y, rot.z);
 
-	if (homingCount % 33 == 0)
+		if (position.y <= 0)
+		{
+			isDraw = false;
+		}
+	}
+	else
 	{
-		enemySpeed = 0.0f;
+		//追尾カウント加算
+		homingCount++;
+
+		if (homingCount % 30 == 0)
+		{
+			enemySpeed = 0.1f;
+		}
+
+		if (homingCount % 33 == 0)
+		{
+			enemySpeed = 0.0f;
+		}
+
+		position = testObject->getPosition();
+		XMFLOAT3 dis = { Player_pos.x - position.x,Player_pos.y - position.y,Player_pos.z - position.z };
+
+		float lengthDis = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
+
+		dis.x /= lengthDis;
+		dis.y /= lengthDis;
+		dis.z /= lengthDis;
+
+		//position.x += dis.x * enemySpeed;
+		//position.y += dis.y * enemySpeed;
+		//position.z += dis.z * enemySpeed;
+
+		//HPが0になったら消滅
+		if (HP <= 0)
+		{
+			Isarive = false;
+		}
+
+		if (isTargetSet)
+		{
+			rockTarget.rotation += 1.5f;
+			XMFLOAT2 screenPos = testObject->worldToScleen();
+			rockTarget.position = { screenPos.x,screenPos.y,0 };
+		}
+
+		rockTarget.SpriteTransferVertexBuffer();
+		rockTarget.SpriteUpdate();
+
+		testObject->SetPosition(position);
+		enemyCollision.center =
+		{
+			testObject->getPosition().x,
+			testObject->getPosition().y,
+			testObject->getPosition().z,1.0f
+		};
 	}
-
-	position = testObject->getPosition();
-	XMFLOAT3 dis = { Player_pos.x - position.x,Player_pos.y - position.y,Player_pos.z - position.z };
-
-	float lengthDis = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
-
-	dis.x /= lengthDis;
-	dis.y /= lengthDis;
-	dis.z /= lengthDis;
-
-	position.x += dis.x * enemySpeed;
-	position.y += dis.y * enemySpeed;
-	position.z += dis.z * enemySpeed;
-
-	//HPが0になったら消滅
-	if (HP <= 0)
-	{
-		Isarive = false;
-	}
-
-	if (isTargetSet)
-	{
-		rockTarget.rotation += 1.5f;
-		XMFLOAT2 screenPos = testObject->worldToScleen();
-		rockTarget.position = { screenPos.x,screenPos.y,0 };
-	}
-
-	rockTarget.SpriteTransferVertexBuffer();
-	rockTarget.SpriteUpdate();
-
-	//testObject->SetPosition(position);
-	enemyCollision.center = 
-	{ 
-		testObject->getPosition().x,
-		testObject->getPosition().y,
-		testObject->getPosition().z,1.0f 
-	};
+	
 	testObject->Update();
 
 	return;
@@ -202,7 +220,7 @@ void Enemy::isHitShot(XMFLOAT2 targetpos)
 
 void Enemy::draw3D(directX* directx)
 {
-	if (!Isarive)
+	if (!isDraw)
 	{
 		return;
 	}
