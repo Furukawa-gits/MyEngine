@@ -93,9 +93,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 //デバッグテキスト
 void GameScene::debugs_print()
 {
-	debugtext.Print("W : Move Front", 10, 10, 1.0f);
-	debugtext.Print("S : Move Back", 10, 25, 1.0f);
-	debugtext.Print("MouseDrag : Camera(Left&Right)", 10, 55, 1.0f);
+	debugtext.Print("MouseDrag : Camera", 10, 55, 1.0f);
 	debugtext.Print("MouseClick : Shot", 10, 70, 1.0f);
 	debugtext.Print("MousePress(Left)&Drag : Target", 10, 85, 1.0f);
 	debugtext.Print("MouseRelease : Homing", 10, 100, 1.0f);
