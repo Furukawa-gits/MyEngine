@@ -82,7 +82,7 @@ public:
 	void Draw3D();
 	void Draw2D();
 
-	//仮
+	//ホーミングターゲットのセッティング
 	void checkHitPlayerTarget();
 
 	bool Isclose = false;

@@ -20,6 +20,12 @@ public:
 	void draw();
 };
 
+enum class enemyPattern
+{
+	chase = 1,
+	shot = 2
+};
+
 class Enemy
 {
 public:
@@ -28,20 +34,25 @@ public:
 	bool isTargetSet = false;//狙われているかどうか
 	bool isSetMissile = false;//ミサイルが自分にセットされているか
 	SingleSprite rockTarget;//マーカー
-	Sphere enemyCollision;
+	Sphere enemyCollision;//敵の当たり判定
 
 	//体力
 	int HP = 1;
-	//座標・速度
-	XMFLOAT3 startPosition = {};
+	//座標・初期位置・速度・回転
 	XMFLOAT3 position = {};
-	XMFLOAT3 rot = {};
+	XMFLOAT3 startPosition = {};
 	float enemySpeed = 0.004f;
+	XMFLOAT3 rot = {};
 	//オブジェクト
 	Model* testCube = nullptr;
 	Object3d_FBX* testObject = nullptr;
-	//自機に向かっていくカウント
-	int homingCount = 0;
+	//一定の周期で自機に向かっていくカウント
+	int chaseCount = 0;
+	int waitCount = 0;
+	bool isChase = false;
+	bool isWait = false;
+	//敵の行動パターン
+	enemyPattern enemyMovePattern = enemyPattern::chase;
 
 	Enemy();
 
@@ -49,7 +60,7 @@ public:
 
 	void init();
 
-	void set(XMFLOAT3 pos);
+	void set(XMFLOAT3 pos, enemyPattern pattern);
 
 	void reSet();
 
@@ -61,7 +72,7 @@ public:
 
 	void chase(XMFLOAT3 pPos);
 
-	void isHitTarget(XMFLOAT2 targetpos,bool istarget);
+	void isHitTarget(XMFLOAT2 targetpos, bool istarget);
 
 	void isHitShot(XMFLOAT2 targetpos);
 

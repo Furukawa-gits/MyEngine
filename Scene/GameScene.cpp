@@ -83,7 +83,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 			(float)(rand() % 50 - 25),
 			(float)(rand() % 30 + 15),
 			(float)(rand() % 50 - 25)
-			});
+			}, enemyPattern::chase);
 	}
 
 	testBoss.init();
@@ -197,8 +197,8 @@ void GameScene::Play_update()
 			{
 				if (testEnemys[j].isTargetSet && !testEnemys[j].isSetMissile)
 				{
-					testPlayer.player_missiale[i].setPenemy(&testEnemys[j]);
-					testPlayer.player_missiale[i].start(testPlayer.Player_object->getPosition());
+					testPlayer.playerMissiale[i].setPenemy(&testEnemys[j]);
+					testPlayer.playerMissiale[i].start(testPlayer.Player_object->getPosition());
 					testEnemys[j].isSetMissile = true;
 					break;
 				}
@@ -213,7 +213,7 @@ void GameScene::Play_update()
 	{
 		for (int i = 0; i < enemynum; i++)
 		{
-			testPlayer.player_bullet[j].checkhit(&testEnemys[i]);
+			testPlayer.playerBullet[j].checkhit(&testEnemys[i]);
 		}
 	}
 
@@ -227,7 +227,7 @@ void GameScene::Play_update()
 		}
 	}
 
-	if (count >= enemynum || testPlayer.HP <= 0)
+	if (count >= enemynum || testPlayer.playerHP <= 0)
 	{
 		scene = clear;
 	}

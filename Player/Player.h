@@ -2,9 +2,9 @@
 #include"../3D/Collision.h"
 #include"../2D/Sprite.h"
 #include"../Input/dxInput.h"
-#include"Bullets.h"
 #include"../FbxLoder/Object3d_FBX.h"
 #include"../camera/FollowCamera.h"
+#include"Bullets.h"
 
 
 const int MaxPlayerBulletNum = 20;
@@ -79,11 +79,11 @@ public:
 	bool Isrockon = false;
 
 	//Hpスプライト
-	SingleSprite hp[10];
+	SingleSprite hitPointUI[10];
 
 	//弾
-	bullet player_bullet[MaxPlayerBulletNum];
-	Missile player_missiale[MaxPlayerMissileNum];
+	bullet playerBullet[MaxPlayerBulletNum];
+	Missile playerMissiale[MaxPlayerMissileNum];
 
 	//入力
 	static dxinput* input;
@@ -93,6 +93,6 @@ public:
 	//生存
 	bool isArive = false;
 
-	int HP = 10;
+	int playerHP = 10;
 
 };

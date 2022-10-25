@@ -10,6 +10,14 @@ ComPtr<ID3D12PipelineState> Object3d_FBX::pipelinestate;
 ComPtr<ID3D12RootSignature> Object3d_FBX::rootsignatureSimple;
 ComPtr<ID3D12PipelineState> Object3d_FBX::pipelinestateSimple;
 
+Object3d_FBX::Object3d_FBX()
+{
+}
+
+Object3d_FBX::~Object3d_FBX()
+{
+}
+
 void Object3d_FBX::Initialize()
 {
 	HRESULT result;

@@ -1,8 +1,7 @@
 #pragma once
-#include"Enemy.h"
-#include"../3D/3Dobject.h"
 #include"../FbxLoder/Object3d_FBX.h"
 #include"../Base/DirectX_Base.h"
+#include"Enemy.h"
 
 //í èÌíe
 class bullet

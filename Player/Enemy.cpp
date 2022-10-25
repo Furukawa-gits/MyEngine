@@ -58,21 +58,28 @@ void Enemy::init()
 	enemyCollision.radius = 2.0f;
 }
 
-void Enemy::set(XMFLOAT3 pos)
+void Enemy::set(XMFLOAT3 pos, enemyPattern pattern)
 {
 	position = pos;
 	startPosition = pos;
 	testObject->SetPosition(pos);
 	Isarive = true;
 	isTargetSet = false;
-	homingCount = 0;
+	chaseCount = 0;
+	waitCount = 0;
+	isChase = false;
+	isWait = true;
+	enemyMovePattern = pattern;
 }
 
 void Enemy::reSet()
 {
 	testObject->SetPosition(startPosition);
 	position = startPosition;
-	homingCount = 0;
+	chaseCount = 0;
+	waitCount = 0;
+	isChase = false;
+	isWait = true;
 	Isarive = true;
 	HP = 1;
 	isTargetSet = false;
@@ -82,21 +89,46 @@ void Enemy::reSet()
 
 void Enemy::chase(XMFLOAT3 pPos)
 {
-	XMFLOAT3 dis =
+	//追跡
+	if (isChase)
 	{
-		pPos.x - position.x,
-		pPos.y - position.y,
-		pPos.z - position.z
-	};
+		//追尾カウント加算
+		chaseCount++;
+		enemySpeed = 0.4f;
+		if (chaseCount >= 20)
+		{
+			isChase = false;
+			chaseCount = 0;
+			isWait = true;
+		}
+	}
 
-	float disLength = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
-
-	XMFLOAT3 disNormal =
+	//待機
+	if (isWait)
 	{
-		dis.x / disLength,
-		dis.y / disLength,
-		dis.z / disLength
-	};
+		//待機カウント加算
+		waitCount++;
+		enemySpeed = 0.0f;
+		if (waitCount >= 30)
+		{
+			isWait = false;
+			waitCount = 0;
+			isChase = true;
+		}
+	}
+
+	position = testObject->getPosition();
+	XMFLOAT3 dis = { pPos.x - position.x,pPos.y - position.y,pPos.z - position.z };
+
+	float lengthDis = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
+
+	dis.x /= lengthDis;
+	dis.y /= lengthDis;
+	dis.z /= lengthDis;
+
+	position.x += dis.x * enemySpeed;
+	position.y += dis.y * enemySpeed;
+	position.z += dis.z * enemySpeed;
 }
 
 void Enemy::update(XMFLOAT3 playerPos)
@@ -124,31 +156,7 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 		return;
 	}
 
-	//追尾カウント加算
-	homingCount++;
-
-	if (homingCount % 30 == 0)
-	{
-		enemySpeed = 0.1f;
-	}
-
-	if (homingCount % 33 == 0)
-	{
-		enemySpeed = 0.0f;
-	}
-
-	position = testObject->getPosition();
-	XMFLOAT3 dis = { playerPos.x - position.x,playerPos.y - position.y,playerPos.z - position.z };
-
-	float lengthDis = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
-
-	dis.x /= lengthDis;
-	dis.y /= lengthDis;
-	dis.z /= lengthDis;
-
-	position.x += dis.x * enemySpeed;
-	position.y += dis.y * enemySpeed;
-	position.z += dis.z * enemySpeed;
+	chase(playerPos);
 
 	//HPが0になったら消滅
 	if (HP <= 0)

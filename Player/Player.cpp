@@ -52,25 +52,25 @@ void Player::init(dxinput* input, directX* directx)
 
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
 	{
-		player_bullet[i].init(i + 1);
+		playerBullet[i].init(i + 1);
 	}
 
 	for (int i = 0; i < MaxPlayerMissileNum; i++)
 	{
-		player_missiale[i].init(i + 21);
+		playerMissiale[i].init(i + 21);
 	}
 
 	for (int i = 0; i < 10; i++)
 	{
-		hp[i].GenerateSprite("Player_HP.png");
-		hp[i].size = { 40,80 };
-		hp[i].position = { i * 30.0f + 10.0f,650.0f,0.0f };
-		hp[i].SpriteTransferVertexBuffer(false);
+		hitPointUI[i].GenerateSprite("Player_HP.png");
+		hitPointUI[i].size = { 40,80 };
+		hitPointUI[i].position = { i * 30.0f + 10.0f,650.0f,0.0f };
+		hitPointUI[i].SpriteTransferVertexBuffer(false);
 	}
 
 	player_collision.radius = 2.0f;
 
-	HP = 10;
+	playerHP = 10;
 	isArive = true;
 }
 
@@ -229,7 +229,7 @@ void Player::checkPlayerEnemy(Enemy* enemy)
 
 	if (Collision::CheckSphere2Sphere(player_collision, enemy->enemyCollision))
 	{
-		HP--;
+		playerHP--;
 		enemy->Isarive = false;
 	}
 }
@@ -250,16 +250,16 @@ void Player::update()
 		//’e‚ðŒ‚‚Â
 		for (int i = 0; i < MaxPlayerBulletNum; i++)
 		{
-			if (player_bullet[i].isArive == false)
+			if (playerBullet[i].isArive == false)
 			{
-				player_bullet[i].set(Player_object->getPosition(),
+				playerBullet[i].set(Player_object->getPosition(),
 					Player_object->screenToWorld({ input->mouse_position.x,input->mouse_position.y }));
 				break;
 			}
 		}
 	}
 
-	if (HP <= 0)
+	if (playerHP <= 0)
 	{
 		isArive = false;
 	}
@@ -327,17 +327,17 @@ void Player::update()
 
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
 	{
-		player_bullet[i].update();
+		playerBullet[i].update();
 	}
 
 	for (int i = 0; i < MaxPlayerMissileNum; i++)
 	{
-		player_missiale[i].update();
+		playerMissiale[i].update();
 	}
 
 	for (int i = 0; i < 10; i++)
 	{
-		hp[i].SpriteUpdate();
+		hitPointUI[i].SpriteUpdate();
 	}
 }
 
@@ -345,7 +345,7 @@ void Player::update()
 void Player::reset()
 {
 	isArive = true;
-	HP = 10;
+	playerHP = 10;
 
 	Player_object->SetPosition({ 0,5,0 });
 	pitch = 0.0f;
@@ -355,9 +355,9 @@ void Player::reset()
 
 	for (int i = 0; i < MaxPlayerMissileNum; i++)
 	{
-		player_missiale[i].P_enemy = nullptr;
-		player_missiale[i].Isarive = false;
-		player_missiale[i].IsTarget_set = false;
+		playerMissiale[i].P_enemy = nullptr;
+		playerMissiale[i].Isarive = false;
+		playerMissiale[i].IsTarget_set = false;
 	}
 }
 
@@ -375,12 +375,12 @@ void Player::draw3D(directX* directx)
 
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
 	{
-		player_bullet[i].draw(directx);
+		playerBullet[i].draw(directx);
 	}
 
 	for (int i = 0; i < MaxPlayerMissileNum; i++)
 	{
-		player_missiale[i].draw(directx);
+		playerMissiale[i].draw(directx);
 	}
 }
 
@@ -395,8 +395,8 @@ void Player::draw2D(directX* directx)
 	targetSecond.DrawSprite(directx->cmdList.Get());
 	targetFirst.DrawSprite(directx->cmdList.Get());
 
-	for (int i = 0; i < HP; i++)
+	for (int i = 0; i < playerHP; i++)
 	{
-		hp[i].DrawSprite(directx->cmdList.Get());
+		hitPointUI[i].DrawSprite(directx->cmdList.Get());
 	}
 }

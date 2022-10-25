@@ -49,6 +49,9 @@ public:
 	};
 
 public:
+	Object3d_FBX();
+	~Object3d_FBX();
+
 	static void SetDevice(ID3D12Device* device) { Object3d_FBX::device = device; }
 	static void SetCamera(Camera* camera) { Object3d_FBX::camera = camera; }
 
