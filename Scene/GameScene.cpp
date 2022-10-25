@@ -369,9 +369,9 @@ void GameScene::checkHitPlayerTarget()
 	{
 		XMFLOAT2 screenPos = testEnemys[i].testObject->worldToScleen();
 
-		float dis = sqrtf(powf(input->mouse_position.x - screenPos.x, 2) + powf(input->mouse_position.y - screenPos.y, 2));
+		float dis = sqrtf(powf(testPlayer.targetFirst.position.x - screenPos.x, 2) + powf(testPlayer.targetFirst.position.y - screenPos.y, 2));
 
-		if (dis < 20 && !testEnemys[i].isTargetSet && targetnum < MaxPlayerMissileNum)
+		if (dis < 56.5685f && !testEnemys[i].isTargetSet && targetnum < MaxPlayerMissileNum)
 		{
 			testEnemys[i].isTargetSet = true;
 			targetnum++;

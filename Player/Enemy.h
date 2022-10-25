@@ -1,37 +1,15 @@
 #pragma once
 #include"../2D/Sprite.h"
-#include"../3D/3Dobject.h"
 #include"../3D/Collision.h"
 #include"../FbxLoder/Object3d_FBX.h"
-
-//ìGÇÃíe
-class enemyBullet
-{
-public:
-	//ÉÇÉfÉã
-	Model* enemyBulletModel = nullptr;
-	Object3d_FBX* enemyBulletObject = nullptr;
-
-	//
-	bool isArive = false;
-	int count = 0;
-	XMFLOAT3 position = { 0.0f,0.0f,0.0f };
-	XMFLOAT3 bulletVec = { 0.0f,0.0f,0.0f };
-	Sphere enemyBulletCollision;
-
-	enemyBullet();
-	~enemyBullet();
-	void init(int index);
-	void set(XMFLOAT3 start_pos, XMFLOAT3 Target);
-	void update();
-	void draw();
-};
+#include"../Base/DirectX_Base.h"
 
 //ìGÇÃçsìÆÉpÉ^Å[Éì
 enum class enemyPattern
 {
 	chase = 1,
-	shot = 2
+	shot = 2,
+	bullet = 3
 };
 
 //ìG
@@ -89,6 +67,8 @@ public:
 	void chase(XMFLOAT3 pPos);
 
 	void shot(XMFLOAT3 pPos);
+
+	void bullet();
 
 	void isHitTarget(XMFLOAT2 targetpos, bool istarget);
 

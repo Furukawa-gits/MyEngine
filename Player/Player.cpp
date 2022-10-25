@@ -245,6 +245,33 @@ void Player::update()
 	//移動
 	Move();
 
+	//ターゲットカーソルの処理
+	targetUpdate();
+
+	if (playerHP <= 0)
+	{
+		isArive = false;
+	}
+
+	for (int i = 0; i < MaxPlayerBulletNum; i++)
+	{
+		playerBullet[i].update();
+	}
+
+	for (int i = 0; i < MaxPlayerMissileNum; i++)
+	{
+		playerMissiale[i].update();
+	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		hitPointUI[i].SpriteUpdate();
+	}
+}
+
+void Player::targetUpdate()
+{
+	//左クリックで通常弾
 	if (input->Mouse_LeftTriger())
 	{
 		//弾を撃つ
@@ -259,11 +286,7 @@ void Player::update()
 		}
 	}
 
-	if (playerHP <= 0)
-	{
-		isArive = false;
-	}
-
+	//ロックオンモードに切り替え
 	if (input->Mouse_LeftPush())
 	{
 		Target_count++;
@@ -289,10 +312,29 @@ void Player::update()
 	}
 
 	targetFirst.position = { (float)input->mouse_p.x,(float)input->mouse_p.y,0.0f };
+
+	//ターゲットカーソルが場外にいかないように制御
+	if (targetFirst.position.x <= 29)
+	{
+		targetFirst.position.x = 29;
+	}
+	if (targetFirst.position.x >= 1251)
+	{
+		targetFirst.position.x = 1251;
+	}
+	if (targetFirst.position.y <= 29)
+	{
+		targetFirst.position.y = 29;
+	}
+	if (targetFirst.position.y >= 691)
+	{
+		targetFirst.position.y = 691;
+	}
+
 	targetFirst.SpriteTransferVertexBuffer();
 	targetFirst.SpriteUpdate();
 
-	//ターゲットカーソルのワールド座標
+	//プレイヤーのスクリーン座標
 	XMFLOAT2 PlayerScreenPosition = Player_object->worldToScleen();
 
 	XMFLOAT2 secondTargetPos =
@@ -324,21 +366,6 @@ void Player::update()
 	};
 	targetThird.SpriteTransferVertexBuffer();
 	targetThird.SpriteUpdate();
-
-	for (int i = 0; i < MaxPlayerBulletNum; i++)
-	{
-		playerBullet[i].update();
-	}
-
-	for (int i = 0; i < MaxPlayerMissileNum; i++)
-	{
-		playerMissiale[i].update();
-	}
-
-	for (int i = 0; i < 10; i++)
-	{
-		hitPointUI[i].SpriteUpdate();
-	}
 }
 
 //リセット

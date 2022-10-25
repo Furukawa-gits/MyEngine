@@ -1,34 +1,6 @@
 #include"Enemy.h"
 #include<random>
 
-#pragma region ìGÇÃíe
-enemyBullet::enemyBullet()
-{
-}
-enemyBullet::~enemyBullet()
-{
-}
-void enemyBullet::init(int index)
-{
-
-}
-
-void enemyBullet::set(XMFLOAT3 start_pos, XMFLOAT3 Target)
-{
-
-}
-
-void enemyBullet::update()
-{
-
-}
-
-void enemyBullet::draw()
-{
-
-}
-#pragma endregion
-
 #pragma region ìGñ{ëÃ
 Enemy::Enemy()
 {
@@ -142,6 +114,12 @@ void Enemy::chase(XMFLOAT3 pPos)
 
 void Enemy::shot(XMFLOAT3 pPos)
 {
+
+}
+
+void Enemy::bullet()
+{
+
 }
 
 void Enemy::update(XMFLOAT3 playerPos)
@@ -175,7 +153,11 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 	}
 	else if (enemyMovePattern == enemyPattern::shot)
 	{
-
+		shot(playerPos);
+	}
+	else if (enemyMovePattern == enemyPattern::bullet)
+	{
+		bullet();
 	}
 
 	//HPÇ™0Ç…Ç»Ç¡ÇΩÇÁè¡ñ≈

@@ -43,7 +43,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	input.init(Win->w, Win->hwnd);
 
 	//3dオブジェクト静的初期化
-	object3D_obj::StaticInit();
+	//object3D_obj::StaticInit();
 
 	//ゲームシーン初期化
 	GameScene gamescene;

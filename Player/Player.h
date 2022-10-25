@@ -28,6 +28,8 @@ public:
 
 	void update();
 
+	void targetUpdate();
+
 	void reset();
 
 	void draw3D(directX* directx);

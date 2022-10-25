@@ -8,7 +8,6 @@ class bullet
 {
 public:
 	float count = 0;
-	object3D_obj object;
 	XMFLOAT3 bullet_vec = { 0.0f,0.0f,0.0f };
 
 	Object3d_FBX* bulletObject = nullptr;
@@ -34,7 +33,6 @@ class Missile
 {
 public:
 	Enemy* P_enemy = nullptr;
-	object3D_obj object;
 	XMFLOAT3 bullet_vec = { 0.0f,0.0f,0.0f };
 
 	Object3d_FBX* bulletObject = nullptr;

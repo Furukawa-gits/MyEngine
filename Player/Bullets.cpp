@@ -1,5 +1,6 @@
 #include"Bullets.h"
 #include"../3D/Collision.h"
+#include"../3D/3Dobject.h"
 
 #pragma region í èÌíe
 bullet::bullet()
