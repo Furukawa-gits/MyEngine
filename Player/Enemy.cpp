@@ -65,12 +65,14 @@ void Enemy::set(XMFLOAT3 pos)
 	testObject->SetPosition(pos);
 	Isarive = true;
 	isTargetSet = false;
+	homingCount = 0;
 }
 
 void Enemy::reSet()
 {
 	testObject->SetPosition(startPosition);
 	position = startPosition;
+	homingCount = 0;
 	Isarive = true;
 	HP = 1;
 	isTargetSet = false;
@@ -95,86 +97,101 @@ void Enemy::chase(XMFLOAT3 pPos)
 		dis.y / disLength,
 		dis.z / disLength
 	};
-
-
 }
 
-void Enemy::update(XMFLOAT3 Player_pos)
+void Enemy::update(XMFLOAT3 playerPos)
 {
 	if (!isDraw)
 	{
 		return;
 	}
 
-	if (!Isarive)
-	{
-		position.y -= 0.5f;
-		rot.x += 7;
-		rot.y += 7;
-		rot.z += 7;
-		testObject->setRotMatrix(rot.x, rot.y, rot.z);
+	//ìGÇ™ê∂ë∂
+	ariveMove(playerPos);
 
-		if (position.y <= 0)
-		{
-			isDraw = false;
-		}
-	}
-	else
-	{
-		//í«îˆÉJÉEÉìÉgâ¡éZ
-		homingCount++;
-
-		if (homingCount % 30 == 0)
-		{
-			enemySpeed = 0.1f;
-		}
-
-		if (homingCount % 33 == 0)
-		{
-			enemySpeed = 0.0f;
-		}
-
-		position = testObject->getPosition();
-		XMFLOAT3 dis = { Player_pos.x - position.x,Player_pos.y - position.y,Player_pos.z - position.z };
-
-		float lengthDis = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
-
-		dis.x /= lengthDis;
-		dis.y /= lengthDis;
-		dis.z /= lengthDis;
-
-		//position.x += dis.x * enemySpeed;
-		//position.y += dis.y * enemySpeed;
-		//position.z += dis.z * enemySpeed;
-
-		//HPÇ™0Ç…Ç»Ç¡ÇΩÇÁè¡ñ≈
-		if (HP <= 0)
-		{
-			Isarive = false;
-		}
-
-		if (isTargetSet)
-		{
-			rockTarget.rotation += 1.5f;
-			XMFLOAT2 screenPos = testObject->worldToScleen();
-			rockTarget.position = { screenPos.x,screenPos.y,0 };
-		}
-
-		rockTarget.SpriteTransferVertexBuffer();
-		rockTarget.SpriteUpdate();
-
-		testObject->SetPosition(position);
-		enemyCollision.center =
-		{
-			testObject->getPosition().x,
-			testObject->getPosition().y,
-			testObject->getPosition().z,1.0f
-		};
-	}
+	//ìGÇ™åÇíƒ
+	deathMove();
 	
 	testObject->Update();
 
 	return;
+}
+
+void Enemy::ariveMove(XMFLOAT3 playerPos)
+{
+	if (!Isarive)
+	{
+		return;
+	}
+
+	//í«îˆÉJÉEÉìÉgâ¡éZ
+	homingCount++;
+
+	if (homingCount % 30 == 0)
+	{
+		enemySpeed = 0.1f;
+	}
+
+	if (homingCount % 33 == 0)
+	{
+		enemySpeed = 0.0f;
+	}
+
+	position = testObject->getPosition();
+	XMFLOAT3 dis = { playerPos.x - position.x,playerPos.y - position.y,playerPos.z - position.z };
+
+	float lengthDis = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
+
+	dis.x /= lengthDis;
+	dis.y /= lengthDis;
+	dis.z /= lengthDis;
+
+	position.x += dis.x * enemySpeed;
+	position.y += dis.y * enemySpeed;
+	position.z += dis.z * enemySpeed;
+
+	//HPÇ™0Ç…Ç»Ç¡ÇΩÇÁè¡ñ≈
+	if (HP <= 0)
+	{
+		Isarive = false;
+	}
+
+	if (isTargetSet)
+	{
+		rockTarget.rotation += 1.5f;
+		XMFLOAT2 screenPos = testObject->worldToScleen();
+		rockTarget.position = { screenPos.x,screenPos.y,0 };
+	}
+
+	rockTarget.SpriteTransferVertexBuffer();
+	rockTarget.SpriteUpdate();
+
+	testObject->SetPosition(position);
+	enemyCollision.center =
+	{
+		testObject->getPosition().x,
+		testObject->getPosition().y,
+		testObject->getPosition().z,1.0f
+	};
+}
+
+void Enemy::deathMove()
+{
+	if (Isarive)
+	{
+		return;
+	}
+
+	position.y -= 0.2f;
+	rot.x += 4;
+	rot.y += 4;
+	rot.z += 4;
+	testObject->setRotMatrix(rot.x, rot.y, rot.z);
+
+	if (position.y <= 0)
+	{
+		isDraw = false;
+	}
 }
 
 void Enemy::isHitTarget(XMFLOAT2 targetpos, bool istarget)

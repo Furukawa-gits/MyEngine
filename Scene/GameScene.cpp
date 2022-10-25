@@ -221,7 +221,7 @@ void GameScene::Play_update()
 
 	for (int i = 0; i < enemynum; i++)
 	{
-		if (!testEnemys[i].Isarive)
+		if (!testEnemys[i].isDraw)
 		{
 			count++;
 		}

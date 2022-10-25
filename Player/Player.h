@@ -47,9 +47,9 @@ public:
 	float yowRotateSpeedNegative = 0.0f;
 	float pitchRotateSpeedPositive = 0.0f;
 	float pitchRotateSpeedNegative = 0.0f;
-	float addRotateSpeed = 0.01f;
+	float addRotateSpeed = 0.002f;
 	float subRotateSpeed = -0.002f;
-	float limitRotateSpeed = 0.03f;
+	float limitRotateSpeed = 0.02f;
 
 	//Šî€‰ñ“]²
 	const XMFLOAT3 unitX = { 1,0,0 };

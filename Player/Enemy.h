@@ -36,7 +36,7 @@ public:
 	XMFLOAT3 startPosition = {};
 	XMFLOAT3 position = {};
 	XMFLOAT3 rot = {};
-	float enemySpeed = 0.05f;
+	float enemySpeed = 0.004f;
 	//オブジェクト
 	Model* testCube = nullptr;
 	Object3d_FBX* testObject = nullptr;
@@ -53,7 +53,11 @@ public:
 
 	void reSet();
 
-	void update(XMFLOAT3 Player_pos);
+	void update(XMFLOAT3 playerPos);
+
+	void ariveMove(XMFLOAT3 playerPos);
+
+	void deathMove();
 
 	void chase(XMFLOAT3 pPos);
 
