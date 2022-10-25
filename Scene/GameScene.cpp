@@ -76,7 +76,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	srand(time(NULL));
 
-	for (int i = 0; i < enemynum; i++)
+	for (int i = 0; i < maxEnemyNum; i++)
 	{
 		testEnemys[i].init();
 		testEnemys[i].set({
@@ -130,7 +130,7 @@ void GameScene::Title_update()
 
 		targetnum = 0;
 
-		for (int i = 0; i < enemynum; i++)
+		for (int i = 0; i < maxEnemyNum; i++)
 		{
 			testEnemys[i].reSet();
 		}
@@ -162,7 +162,7 @@ void GameScene::Play_update()
 
 		targetnum = 0;
 
-		for (int i = 0; i < enemynum; i++)
+		for (int i = 0; i < maxEnemyNum; i++)
 		{
 			testEnemys[i].reSet();
 		}
@@ -177,7 +177,7 @@ void GameScene::Play_update()
 	skySphere->Update();
 
 	//敵(テスト)更新
-	for (int i = 0; i < enemynum; i++)
+	for (int i = 0; i < maxEnemyNum; i++)
 	{
 		testEnemys[i].update(testPlayer.Player_object->getPosition());
 		testPlayer.checkPlayerEnemy(&testEnemys[i]);
@@ -193,7 +193,7 @@ void GameScene::Play_update()
 	{
 		for (int i = 0; i < targetnum; i++)
 		{
-			for (int j = 0; j < enemynum; j++)
+			for (int j = 0; j < maxEnemyNum; j++)
 			{
 				if (testEnemys[j].isTargetSet && !testEnemys[j].isSetMissile)
 				{
@@ -211,7 +211,7 @@ void GameScene::Play_update()
 
 	for (int j = 0; j < MaxPlayerBulletNum; j++)
 	{
-		for (int i = 0; i < enemynum; i++)
+		for (int i = 0; i < maxEnemyNum; i++)
 		{
 			testPlayer.playerBullet[j].checkhit(&testEnemys[i]);
 		}
@@ -219,7 +219,7 @@ void GameScene::Play_update()
 
 	int count = 0;
 
-	for (int i = 0; i < enemynum; i++)
+	for (int i = 0; i < maxEnemyNum; i++)
 	{
 		if (!testEnemys[i].isDraw)
 		{
@@ -227,7 +227,7 @@ void GameScene::Play_update()
 		}
 	}
 
-	if (count >= enemynum || testPlayer.playerHP <= 0)
+	if (count >= maxEnemyNum || testPlayer.playerHP <= 0)
 	{
 		scene = clear;
 	}
@@ -265,7 +265,7 @@ void GameScene::Play_draw()
 	//プレイヤー描画
 	testPlayer.draw3D(directx);
 
-	for (int i = 0; i < enemynum; i++)
+	for (int i = 0; i < maxEnemyNum; i++)
 	{
 		testEnemys[i].draw3D(directx);
 	}
@@ -343,7 +343,7 @@ void GameScene::Draw2D()
 {
 	if (scene == play)
 	{
-		for (int i = 0; i < enemynum; i++)
+		for (int i = 0; i < maxEnemyNum; i++)
 		{
 			testEnemys[i].draw2D(directx);
 		}
@@ -365,7 +365,7 @@ void GameScene::checkHitPlayerTarget()
 		return;
 	}
 
-	for (int i = 0; i < enemynum; i++)
+	for (int i = 0; i < maxEnemyNum; i++)
 	{
 		XMFLOAT2 screenPos = testEnemys[i].testObject->worldToScleen();
 

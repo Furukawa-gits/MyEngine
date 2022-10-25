@@ -45,13 +45,13 @@ public:
 	FollowCamera* followcamera = nullptr;
 
 	//‰ñ“]—Ê
-	float yowRotateSpeedPositive = 0.0f;
-	float yowRotateSpeedNegative = 0.0f;
-	float pitchRotateSpeedPositive = 0.0f;
-	float pitchRotateSpeedNegative = 0.0f;
-	float addRotateSpeed = 0.002f;
-	float subRotateSpeed = -0.002f;
-	float limitRotateSpeed = 0.02f;
+	float yowRotateSpeedPositive = 0.0f;//ƒˆ[‰ñ“](³•ûŒü)
+	float yowRotateSpeedNegative = 0.0f;//ƒˆ[‰ñ“](•‰•ûŒü)
+	float pitchRotateSpeedPositive = 0.0f;//ƒsƒbƒ`‰ñ“](³•ûŒü)
+	float pitchRotateSpeedNegative = 0.0f;//ƒsƒbƒ`‰ñ“](•‰•ûŒü)
+	float addRotateSpeed = 0.002f;//‰ÁZ—Ê
+	float subRotateSpeed = -0.002f;//Œ¸Z—Ê
+	float limitRotateSpeed = 0.02f;//Å‘å‰ñ“]‘¬“x
 
 	//Šî€‰ñ“]²
 	const XMFLOAT3 unitX = { 1,0,0 };
