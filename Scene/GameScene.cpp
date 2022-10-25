@@ -341,13 +341,13 @@ void GameScene::Draw3D()
 
 void GameScene::Draw2D()
 {
-	for (int i = 0; i < enemynum; i++)
-	{
-		testEnemys[i].draw2D(directx);
-	}
-
 	if (scene == play)
 	{
+		for (int i = 0; i < enemynum; i++)
+		{
+			testEnemys[i].draw2D(directx);
+		}
+
 		testPlayer.draw2D(directx);
 	}
 	debugtext.DrawAll(directx->cmdList.Get());

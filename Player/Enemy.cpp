@@ -70,6 +70,12 @@ void Enemy::set(XMFLOAT3 pos, enemyPattern pattern)
 	isChase = false;
 	isWait = true;
 	enemyMovePattern = pattern;
+	if (enemyMovePattern == enemyPattern::chase)
+	{
+		waitCount = rand() % 40;
+		isChase = false;
+		isWait = true;
+	}
 }
 
 void Enemy::reSet()
@@ -94,8 +100,8 @@ void Enemy::chase(XMFLOAT3 pPos)
 	{
 		//追尾カウント加算
 		chaseCount++;
-		enemySpeed = 0.4f;
-		if (chaseCount >= 20)
+		enemySpeed = 0.25f;
+		if (chaseCount >= 1)
 		{
 			isChase = false;
 			chaseCount = 0;
@@ -108,8 +114,11 @@ void Enemy::chase(XMFLOAT3 pPos)
 	{
 		//待機カウント加算
 		waitCount++;
-		enemySpeed = 0.0f;
-		if (waitCount >= 30)
+		if (enemySpeed > 0.0f)
+		{
+			enemySpeed -= 0.01f;
+		}
+		if (waitCount >= 40)
 		{
 			isWait = false;
 			waitCount = 0;
@@ -131,6 +140,10 @@ void Enemy::chase(XMFLOAT3 pPos)
 	position.z += dis.z * enemySpeed;
 }
 
+void Enemy::shot(XMFLOAT3 pPos)
+{
+}
+
 void Enemy::update(XMFLOAT3 playerPos)
 {
 	if (!isDraw)
@@ -143,7 +156,7 @@ void Enemy::update(XMFLOAT3 playerPos)
 
 	//敵が撃墜
 	deathMove();
-	
+
 	testObject->Update();
 
 	return;
@@ -156,12 +169,20 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 		return;
 	}
 
-	chase(playerPos);
+	if (enemyMovePattern == enemyPattern::chase)
+	{
+		chase(playerPos);
+	}
+	else if (enemyMovePattern == enemyPattern::shot)
+	{
+
+	}
 
 	//HPが0になったら消滅
 	if (HP <= 0)
 	{
 		Isarive = false;
+		fallDownCount = 0;
 	}
 
 	if (isTargetSet)
@@ -190,15 +211,18 @@ void Enemy::deathMove()
 		return;
 	}
 
+	fallDownCount++;
+
 	position.y -= 0.2f;
-	rot.x += 4;
-	rot.y += 4;
-	rot.z += 4;
+	rot.x += 2;
+	rot.y += 2;
+	rot.z += 2;
 	testObject->setRotMatrix(rot.x, rot.y, rot.z);
 
-	if (position.y <= 0)
+	if (fallDownCount >= 90)
 	{
 		isDraw = false;
+		fallDownCount = 0;
 	}
 }
 
