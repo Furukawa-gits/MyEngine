@@ -16,7 +16,7 @@ public:
 
 	bool isArive = false;
 
-	Sphere bullet_collision;
+	Sphere bulletCollision;
 
 	bullet();
 	~bullet();
@@ -34,17 +34,17 @@ public:
 class Missile
 {
 public:
-	Enemy* P_enemy = nullptr;
-	XMFLOAT3 bullet_vec = { 0.0f,0.0f,0.0f };
+	Enemy* enemyPointer = nullptr;
+	XMFLOAT3 bulletVec = { 0.0f,0.0f,0.0f };
 
 	Object3d_FBX* bulletObject = nullptr;
 	Model* bulletModel = nullptr;
-	bool Isarive = false;
-	bool IsTarget_set = false;
+	bool isArive = false;
+	bool isTargetSet = false;
 	
-	Sphere missile_collision;
+	Sphere missileCollision;
 
-	XMFLOAT3 bullet_vec_index[8] = {
+	XMFLOAT3 bulletVecIndex[8] = {
 		{  10.0f,  0.0f,0.0f },
 		{ -10.0f,  0.0f,0.0f },
 		{   0.0f, 10.0f,0.0f },

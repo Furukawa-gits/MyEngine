@@ -403,9 +403,9 @@ void Player::reset()
 
 	for (int i = 0; i < MaxPlayerMissileNum; i++)
 	{
-		playerMissiale[i].P_enemy = nullptr;
-		playerMissiale[i].Isarive = false;
-		playerMissiale[i].IsTarget_set = false;
+		playerMissiale[i].enemyPointer = nullptr;
+		playerMissiale[i].isArive = false;
+		playerMissiale[i].isTargetSet = false;
 	}
 }
 

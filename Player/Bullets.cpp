@@ -22,7 +22,7 @@ void bullet::init(int index)
 	bulletObject->SetModel(bulletModel);
 	bulletObject->SetScale({ 0.5f,0.5f,0.5f });
 
-	bullet_collision.radius = 2.0f;
+	bulletCollision.radius = 2.0f;
 }
 
 void bullet::set(XMFLOAT3 start_pos, XMFLOAT3 Target)
@@ -49,7 +49,7 @@ void bullet::checkHitEnemy(Enemy* enemy)
 		return;
 	}
 
-	if (Collision::CheckSphere2Sphere(this->bullet_collision, enemy->enemyCollision))
+	if (Collision::CheckSphere2Sphere(this->bulletCollision, enemy->enemyCollision))
 	{
 		count = 0;
 		isArive = false;
@@ -75,7 +75,7 @@ void bullet::checkHitEnemyBullet(Enemy* enemy)
 		return;
 	}
 
-	if (Collision::CheckSphere2Sphere(this->bullet_collision, enemy->bullet.bulletCollision))
+	if (Collision::CheckSphere2Sphere(this->bulletCollision, enemy->bullet.bulletCollision))
 	{
 		count = 0;
 		isArive = false;
@@ -103,7 +103,7 @@ void bullet::update()
 	}
 
 	bulletObject->Update();
-	bullet_collision.center = {
+	bulletCollision.center = {
 		bulletObject->getPosition().x,
 		bulletObject->getPosition().y,
 		bulletObject->getPosition().z,
@@ -143,73 +143,73 @@ void Missile::init(int index)
 
 	bulletObject->setColor({ 1,1,0,1 });
 
-	missile_collision.radius = 3.0f;
+	missileCollision.radius = 3.0f;
 }
 
 void Missile::setPenemy(Enemy* enemy)
 {
-	P_enemy = enemy;
-	IsTarget_set = true;
+	enemyPointer = enemy;
+	isTargetSet = true;
 }
 
 void Missile::start(XMFLOAT3 start_pos)
 {
-	if (!IsTarget_set || P_enemy == nullptr)
+	if (!isTargetSet || enemyPointer == nullptr)
 	{
 		return;
 	}
 
-	bullet_vec = bullet_vec_index[rand() % 8];
+	bulletVec = bulletVecIndex[rand() % 8];
 	bulletObject->SetPosition(start_pos);
 
-	Isarive = true;
+	isArive = true;
 }
 
 void Missile::checkhit()
 {
-	if (P_enemy == nullptr)
+	if (enemyPointer == nullptr)
 	{
 		return;
 	}
 
-	if (P_enemy->Isarive == true && Isarive == true)
+	if (enemyPointer->Isarive == true && isArive == true)
 	{
-		if (Collision::CheckSphere2Sphere(this->missile_collision, P_enemy->enemyCollision))
+		if (Collision::CheckSphere2Sphere(this->missileCollision, enemyPointer->enemyCollision))
 		{
-			Isarive = false;
-			IsTarget_set = false;
+			isArive = false;
+			isTargetSet = false;
 
-			P_enemy->Isarive = false;
+			enemyPointer->Isarive = false;
 
-			P_enemy = nullptr;
+			enemyPointer = nullptr;
 		}
 	}
 }
 
 void Missile::update()
 {
-	if (!Isarive)
+	if (!isArive)
 	{
 		return;
 	}
 
-	if (P_enemy->Isarive == false)
+	if (enemyPointer->Isarive == false)
 	{
-		Isarive = false;
+		isArive = false;
 	}
 
 	XMFLOAT3 to_enemy = {
-		P_enemy->position.x - bulletObject->getPosition().x,
-		P_enemy->position.y - bulletObject->getPosition().y,
-		P_enemy->position.z - bulletObject->getPosition().z
+		enemyPointer->position.x - bulletObject->getPosition().x,
+		enemyPointer->position.y - bulletObject->getPosition().y,
+		enemyPointer->position.z - bulletObject->getPosition().z
 	};
 
-	XMFLOAT3 bullet_vec_nml = normalized(bullet_vec);
+	XMFLOAT3 bullet_vec_nml = normalized(bulletVec);
 
 	float dot_ene_bullet =
-		to_enemy.x * bullet_vec.x +
-		to_enemy.y * bullet_vec.y +
-		to_enemy.z * bullet_vec.z;
+		to_enemy.x * bulletVec.x +
+		to_enemy.y * bulletVec.y +
+		to_enemy.z * bulletVec.z;
 
 	XMFLOAT3 closs_bullet_vec = {
 		bullet_vec_nml.x * dot_ene_bullet,
@@ -224,9 +224,9 @@ void Missile::update()
 	};
 
 	XMFLOAT3 centri_to_enemy = {
-		P_enemy->position.x - centripetalAccel.x,
-		P_enemy->position.y - centripetalAccel.y,
-		P_enemy->position.z - centripetalAccel.z
+		enemyPointer->position.x - centripetalAccel.x,
+		enemyPointer->position.y - centripetalAccel.y,
+		enemyPointer->position.z - centripetalAccel.z
 	};
 
 	float centri_to_enemyMagnitude = returnScaler(centri_to_enemy);
@@ -245,19 +245,19 @@ void Missile::update()
 	Force.y += bullet_vec_nml.y * 0.7f;
 	Force.z += bullet_vec_nml.z * 0.7f;
 
-	Force.x -= bullet_vec.x * 1.2f;
-	Force.y -= bullet_vec.y * 1.2f;
-	Force.z -= bullet_vec.z * 1.2f;
+	Force.x -= bulletVec.x * 1.2f;
+	Force.y -= bulletVec.y * 1.2f;
+	Force.z -= bulletVec.z * 1.2f;
 
-	bullet_vec.x += Force.x;
-	bullet_vec.y += Force.y;
-	bullet_vec.z += Force.z;
+	bulletVec.x += Force.x;
+	bulletVec.y += Force.y;
+	bulletVec.z += Force.z;
 
-	bulletObject->addMoveFront(bullet_vec);
+	bulletObject->addMoveFront(bulletVec);
 
 	bulletObject->Update();
 
-	missile_collision.center = {
+	missileCollision.center = {
 	bulletObject->getPosition().x,
 	bulletObject->getPosition().y,
 	bulletObject->getPosition().z,
@@ -269,7 +269,7 @@ void Missile::update()
 
 void Missile::draw(directX* directx)
 {
-	if (!Isarive)
+	if (!isArive)
 	{
 		return;
 	}
