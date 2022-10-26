@@ -8,8 +8,8 @@ Player::Player()
 
 Player::~Player()
 {
-	delete(Player_object);
-	delete(followcamera);
+	delete(playerObject);
+	delete(followCamera);
 }
 
 void Player::init(dxinput* input, directX* directx)
@@ -28,27 +28,27 @@ void Player::init(dxinput* input, directX* directx)
 	targetThird.size = { 80,80 };
 	targetThird.GenerateSprite("Target.png");
 
-	Player_model = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
+	playerModel = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
 
-	Player_object = new Object3d_FBX;
-	Player_object->Initialize();
-	Player_object->SetModel(Player_model);
-	Player_object->SetPosition({ 0,5,0 });
-	Player_object->SetScale({ 1,1,1 });
-	Player_object->setSpeed(2.0f);
+	playerObject = new Object3d_FBX;
+	playerObject->Initialize();
+	playerObject->SetModel(playerModel);
+	playerObject->SetPosition({ 0,5,0 });
+	playerObject->SetScale({ 1,1,1 });
+	playerObject->setSpeed(2.0f);
 	//Player_object->PlayAnimation();
-	Player_object->setColor({ 0,1,1,1 });
+	playerObject->setColor({ 0,1,1,1 });
 
-	followcamera = new FollowCamera();
+	followCamera = new FollowCamera();
 
-	followcamera->setFollowTarget(Player_object->getPosition(), Player_object->getRotation(), -30);
+	followCamera->setFollowTarget(playerObject->getPosition(), playerObject->getRotation(), -30);
 
-	followcamera->SetEye({ 0,5,-10 });
-	followcamera->SetTarget({ 0,5,0 });
+	followCamera->SetEye({ 0,5,-10 });
+	followCamera->SetTarget({ 0,5,0 });
 
-	followcamera->setTargets(Player_object->getPosition(), Player_object->getRotation());
+	followCamera->setTargets(playerObject->getPosition(), playerObject->getRotation());
 
-	Object3d_FBX::SetCamera(followcamera);
+	Object3d_FBX::SetCamera(followCamera);
 
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
 	{
@@ -68,7 +68,7 @@ void Player::init(dxinput* input, directX* directx)
 		hitPointUI[i].SpriteTransferVertexBuffer(false);
 	}
 
-	player_collision.radius = 2.0f;
+	playerCollision.radius = 2.0f;
 
 	playerHP = 10;
 	isArive = true;
@@ -78,7 +78,7 @@ void Player::init(dxinput* input, directX* directx)
 void Player::Move()
 {
 	//自動で前に進み続ける
-	Player_object->addMoveFront(followcamera->getFrontVec());
+	playerObject->addMoveFront(followCamera->getFrontVec());
 
 	//カメラワーク
 	cameraMove();
@@ -99,21 +99,21 @@ void Player::Move()
 	qLocal = qYow * qLocal;
 
 	//XMMATRIXに変換したクォータニオンをプレイヤーの回転行列にセット
-	Player_object->setRotMatrix(rotate(qLocal));
+	playerObject->setRotMatrix(rotate(qLocal));
 
 	//追従
-	followcamera->Following(vUpAxis, vForwordAxis, Player_object->getPosition());
+	followCamera->Following(vUpAxis, vForwordAxis, playerObject->getPosition());
 
 	//前への移動量を計算
-	followcamera->setFrontVec(moveSpeed);
+	followCamera->setFrontVec(moveSpeed);
 
 	//オブジェクトの更新
-	Player_object->Update();
-	player_collision.center =
+	playerObject->Update();
+	playerCollision.center =
 	{
-		Player_object->getPosition().x,
-		Player_object->getPosition().y,
-		Player_object->getPosition().z,
+		playerObject->getPosition().x,
+		playerObject->getPosition().y,
+		playerObject->getPosition().z,
 		1.0f
 	};
 }
@@ -122,7 +122,7 @@ void Player::Move()
 void Player::cameraMove()
 {
 	//ヨー回転
-	if (input->mouse_p.x >= 1000)
+	if (targetFirst.position.x >= 1000)
 	{
 		if (yowRotateSpeedPositive < limitRotateSpeed)
 		{
@@ -137,7 +137,7 @@ void Player::cameraMove()
 		}
 	}
 
-	if (input->mouse_p.x <= 280)
+	if (targetFirst.position.x <= 280)
 	{
 		if (yowRotateSpeedNegative > -limitRotateSpeed)
 		{
@@ -163,7 +163,7 @@ void Player::cameraMove()
 	}
 
 	//ピッチ回転
-	if (input->mouse_p.y >= 620)
+	if (targetFirst.position.y >= 620)
 	{
 		if (pitchRotateSpeedPositive > -limitRotateSpeed)
 		{
@@ -178,7 +178,7 @@ void Player::cameraMove()
 		}
 	}
 
-	if (input->mouse_p.y <= 100)
+	if (targetFirst.position.y <= 100)
 	{
 		if (pitchRotateSpeedNegative < limitRotateSpeed)
 		{
@@ -220,6 +220,7 @@ void Player::checkPlayerBullet(Enemy* enemy)
 	}
 }
 
+//敵との衝突判定
 void Player::checkPlayerEnemy(Enemy* enemy)
 {
 	if (enemy->Isarive == false)
@@ -227,10 +228,30 @@ void Player::checkPlayerEnemy(Enemy* enemy)
 		return;
 	}
 
-	if (Collision::CheckSphere2Sphere(player_collision, enemy->enemyCollision))
+	if (Collision::CheckSphere2Sphere(playerCollision, enemy->enemyCollision))
 	{
 		playerHP--;
 		enemy->Isarive = false;
+	}
+}
+
+void Player::checkPlayerEnemyBullet(Enemy* enemy)
+{
+	if (enemy->enemyMovePattern != enemyPattern::shot)
+	{
+		return;
+	}
+
+	if (!enemy->bullet.isBulletArive())
+	{
+		return;
+	}
+
+	if (Collision::CheckSphere2Sphere(playerCollision, enemy->bullet.getCollision()))
+	{
+		playerHP--;
+		enemy->bullet.isArive = false;
+		enemy->bullet.ariveTime = 0;
 	}
 }
 
@@ -279,8 +300,8 @@ void Player::targetUpdate()
 		{
 			if (playerBullet[i].isArive == false)
 			{
-				playerBullet[i].set(Player_object->getPosition(),
-					Player_object->screenToWorld({ input->mouse_position.x,input->mouse_position.y }));
+				playerBullet[i].set(playerObject->getPosition(),
+					playerObject->screenToWorld({ targetFirst.position.x,targetFirst.position.y }));
 				break;
 			}
 		}
@@ -289,26 +310,26 @@ void Player::targetUpdate()
 	//ロックオンモードに切り替え
 	if (input->Mouse_LeftPush())
 	{
-		Target_count++;
+		targetCount++;
 	}
 	else
 	{
-		Target_count = 0;
+		targetCount = 0;
 	}
 
-	if (Target_count > 70)
+	if (targetCount > 70)
 	{
 		targetFirst.rotation -= 7.0f;
 		targetSecond.rotation += 7.0f;
 		targetThird.rotation -= 7.0f;
-		Isrockon = true;
+		isRockOn = true;
 	}
 	else
 	{
 		targetFirst.rotation += 4.0f;
 		targetSecond.rotation -= 4.0f;
 		targetThird.rotation += 4.0f;
-		Isrockon = false;
+		isRockOn = false;
 	}
 
 	targetFirst.position = { (float)input->mouse_p.x,(float)input->mouse_p.y,0.0f };
@@ -335,7 +356,7 @@ void Player::targetUpdate()
 	targetFirst.SpriteUpdate();
 
 	//プレイヤーのスクリーン座標
-	XMFLOAT2 PlayerScreenPosition = Player_object->worldToScleen();
+	XMFLOAT2 PlayerScreenPosition = playerObject->worldToScleen();
 
 	XMFLOAT2 secondTargetPos =
 	{
@@ -374,7 +395,7 @@ void Player::reset()
 	isArive = true;
 	playerHP = 10;
 
-	Player_object->SetPosition({ 0,5,0 });
+	playerObject->SetPosition({ 0,5,0 });
 	pitch = 0.0f;
 	yow = 0.0f;
 
@@ -397,8 +418,8 @@ void Player::draw3D(directX* directx)
 	}
 
 	//単色シェーダをセットして描画
-	Player_object->SetPipelineSimple(directx->cmdList.Get());
-	Player_object->Draw(directx->cmdList.Get());
+	playerObject->SetPipelineSimple(directx->cmdList.Get());
+	playerObject->Draw(directx->cmdList.Get());
 
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
 	{

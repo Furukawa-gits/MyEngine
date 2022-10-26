@@ -34,7 +34,7 @@ void Enemy::init(enemyPattern pattern)
 	if (enemyMovePattern == enemyPattern::shot)
 	{
 		bullet.init();
-		shotCount = rand() % 10;
+		//shotCount = rand() % 10;
 	}
 }
 
@@ -131,7 +131,25 @@ void Enemy::shot(XMFLOAT3 pPos)
 		return;
 	}
 
-	if (!bullet.isBulletArive())
+	XMFLOAT3 startToTarget =
+	{
+		pPos.x - this->position.x,
+		pPos.y - this->position.y,
+		pPos.z - this->position.z
+	};
+
+	float length = sqrtf(powf(startToTarget.x, 2) + powf(startToTarget.y, 2) + powf(startToTarget.z, 2));
+
+	if (length <= 42)
+	{
+		isInRange = true;
+	}
+	else
+	{
+		isInRange = false;
+	}
+
+	if (!bullet.isBulletArive() && isInRange)
 	{
 		shotCount++;
 	}
@@ -316,7 +334,9 @@ void enemyBullet::init()
 	bulletObject->SetModel(buletModel);
 	bulletObject->SetScale({ 0.3f,0.3f,0.3f });
 
-	bulletCollision.radius = 1.0f;
+	bulletObject->setColor({ 0,0,1,1 });
+
+	bulletCollision.radius = 0.3f;
 }
 
 void enemyBullet::set(XMFLOAT3 playerpos, XMFLOAT3 shotpos)
@@ -339,6 +359,7 @@ void enemyBullet::set(XMFLOAT3 playerpos, XMFLOAT3 shotpos)
 		startToTarget.z / length
 	};
 
+	ariveTime = 0;
 	isArive = true;
 }
 
@@ -363,6 +384,13 @@ void enemyBullet::update()
 	bulletObject->SetPosition(position);
 	bulletObject->Update();
 
+	bulletCollision.center =
+	{
+		bulletObject->getPosition().x,
+		bulletObject->getPosition().y,
+		bulletObject->getPosition().z,1.0f
+	};
+
 	if (ariveTime >= 100)
 	{
 		isArive = false;
@@ -377,6 +405,7 @@ void enemyBullet::draw(directX* directx)
 		return;
 	}
 
+	bulletObject->SetPipelineSimple(directx->cmdList.Get());
 	bulletObject->Draw(directx->cmdList.Get());
 }
 #pragma endregion

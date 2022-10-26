@@ -26,6 +26,8 @@ public:
 
 	void checkPlayerEnemy(Enemy* enemy);
 
+	void checkPlayerEnemyBullet(Enemy* enemy);
+
 	void update();
 
 	void targetUpdate();
@@ -38,11 +40,11 @@ public:
 
 
 	//3dオブジェクト
-	Object3d_FBX* Player_object = nullptr;
-	Model* Player_model = nullptr;
+	Object3d_FBX* playerObject = nullptr;
+	Model* playerModel = nullptr;
 
 	//追従カメラ
-	FollowCamera* followcamera = nullptr;
+	FollowCamera* followCamera = nullptr;
 
 	//回転量
 	float yowRotateSpeedPositive = 0.0f;//ヨー回転(正方向)
@@ -76,9 +78,9 @@ public:
 	SingleSprite targetFirst;
 	SingleSprite targetSecond;
 	SingleSprite targetThird;
-	int Target_count = 0;
-	int Rockon_count = 0;
-	bool Isrockon = false;
+	int targetCount = 0;
+	int rockOnCount = 0;
+	bool isRockOn = false;
 
 	//Hpスプライト
 	SingleSprite hitPointUI[10];
@@ -90,7 +92,7 @@ public:
 	//入力
 	static dxinput* input;
 
-	Sphere player_collision;
+	Sphere playerCollision;
 
 	//生存
 	bool isArive = false;

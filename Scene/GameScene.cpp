@@ -150,6 +150,7 @@ void GameScene::Play_update()
 	//プレイヤー更新
 	testPlayer.update();
 
+	//リセット
 	if (input->push(DIK_R))
 	{
 		up = 0;
@@ -178,8 +179,9 @@ void GameScene::Play_update()
 	//敵(テスト)更新
 	for (int i = 0; i < maxEnemyNum; i++)
 	{
-		testEnemys[i].update(testPlayer.Player_object->getPosition());
+		testEnemys[i].update(testPlayer.playerObject->getPosition());
 		testPlayer.checkPlayerEnemy(&testEnemys[i]);
+		testPlayer.checkPlayerEnemyBullet(&testEnemys[i]);
 	}
 
 	//マウスカーソル非表示
@@ -188,6 +190,7 @@ void GameScene::Play_update()
 	//敵がロックオンされているかどうか
 	checkHitPlayerTarget();
 
+	//ホーミング弾発射
 	if (input->Mouse_LeftRelease())
 	{
 		for (int i = 0; i < targetnum; i++)
@@ -197,7 +200,7 @@ void GameScene::Play_update()
 				if (testEnemys[j].isTargetSet && !testEnemys[j].isSetMissile)
 				{
 					testPlayer.playerMissiale[i].setPenemy(&testEnemys[j]);
-					testPlayer.playerMissiale[i].start(testPlayer.Player_object->getPosition());
+					testPlayer.playerMissiale[i].start(testPlayer.playerObject->getPosition());
 					testEnemys[j].isSetMissile = true;
 					break;
 				}
@@ -207,12 +210,13 @@ void GameScene::Play_update()
 		targetnum = 0;
 	}
 
-
+	//通常弾当たり判定
 	for (int j = 0; j < MaxPlayerBulletNum; j++)
 	{
 		for (int i = 0; i < maxEnemyNum; i++)
 		{
-			testPlayer.playerBullet[j].checkhit(&testEnemys[i]);
+			testPlayer.playerBullet[j].checkHitEnemy(&testEnemys[i]);
+			testPlayer.playerBullet[j].checkHitEnemyBullet(&testEnemys[i]);
 		}
 	}
 
@@ -276,7 +280,6 @@ void GameScene::Result_draw()
 }
 
 #pragma endregion 各シーン描画
-
 
 //更新
 void GameScene::Update()
@@ -354,7 +357,7 @@ void GameScene::Draw2D()
 
 void GameScene::checkHitPlayerTarget()
 {
-	if (!testPlayer.Isrockon)
+	if (!testPlayer.isRockOn)
 	{
 		return;
 	}

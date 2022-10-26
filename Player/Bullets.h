@@ -12,6 +12,7 @@ public:
 
 	Object3d_FBX* bulletObject = nullptr;
 	Model* bulletModel = nullptr;
+	float bulletSpeed = 3.0f;
 
 	bool isArive = false;
 
@@ -22,7 +23,8 @@ public:
 
 	void init(int index);
 	void set(XMFLOAT3 start_pos, XMFLOAT3 Target);
-	void checkhit(Enemy* enemy);
+	void checkHitEnemy(Enemy* enemy);
+	void checkHitEnemyBullet(Enemy* enemy);
 	void update();
 	void draw(directX* directx);
 };

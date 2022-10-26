@@ -37,22 +37,51 @@ void bullet::set(XMFLOAT3 start_pos, XMFLOAT3 Target)
 
 	float length = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
 
-	bullet_vec = { (dis.x / length) * 3.0f,(dis.y / length) * 3.0f ,(dis.z / length) * 3.0f };
+	bullet_vec = { (dis.x / length) * bulletSpeed,(dis.y / length) * bulletSpeed ,(dis.z / length) * bulletSpeed };
 
 	isArive = true;
 }
 
-void bullet::checkhit(Enemy* enemy)
+void bullet::checkHitEnemy(Enemy* enemy)
 {
-	if (enemy->Isarive == true && isArive == true)
+	if (!enemy->Isarive || !isArive)
 	{
-		if (Collision::CheckSphere2Sphere(this->bullet_collision, enemy->enemyCollision))
-		{
-			count = 0;
-			isArive = false;
+		return;
+	}
 
-			enemy->HP--;
-		}
+	if (Collision::CheckSphere2Sphere(this->bullet_collision, enemy->enemyCollision))
+	{
+		count = 0;
+		isArive = false;
+
+		enemy->HP--;
+	}
+}
+
+void bullet::checkHitEnemyBullet(Enemy* enemy)
+{
+	if (enemy->enemyMovePattern != enemyPattern::shot)
+	{
+		return;
+	}
+
+	if (!enemy->bullet.isBulletArive())
+	{
+		return;
+	}
+
+	if (!isArive)
+	{
+		return;
+	}
+
+	if (Collision::CheckSphere2Sphere(this->bullet_collision, enemy->bullet.bulletCollision))
+	{
+		count = 0;
+		isArive = false;
+
+		enemy->bullet.isArive = false;
+		enemy->bullet.ariveTime = 0;
 	}
 }
 

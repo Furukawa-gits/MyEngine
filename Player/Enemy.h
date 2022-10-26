@@ -24,10 +24,10 @@ public:
 		return (bulletObject != nullptr) && isArive;
 	}
 
-private:
-	//モデル・オブジェクト
-	Model* buletModel = nullptr;
-	Object3d_FBX* bulletObject = nullptr;
+	Sphere getCollision()
+	{
+		return bulletCollision;
+	}
 
 	//生存フラグ
 	bool isArive = false;
@@ -35,14 +35,19 @@ private:
 	//生存時間
 	int ariveTime = 0;
 
+	//当たり判定
+	Sphere bulletCollision;
+
+private:
+	//モデル・オブジェクト
+	Model* buletModel = nullptr;
+	Object3d_FBX* bulletObject = nullptr;
+
 	//座標・方向・弾速
 	XMFLOAT3 position = {};
 	XMFLOAT3 bulletVec = {};
 	float bulletSpeed = 0.5f;
 	XMFLOAT3 rot = {};
-
-	//当たり判定
-	Sphere bulletCollision;
 };
 
 //敵の行動パターン
@@ -91,6 +96,7 @@ public:
 	//パターン２：射撃
 	bool isShot = false;//射撃フラグ
 	int shotCount = 0;//次の射撃までの待機時間
+	bool isInRange = false;//射程範囲内かどうか
 
 	//弾
 	enemyBullet bullet;
