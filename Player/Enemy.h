@@ -4,12 +4,52 @@
 #include"../FbxLoder/Object3d_FBX.h"
 #include"../Base/DirectX_Base.h"
 
+//敵の弾
+class enemyBullet
+{
+public:
+	enemyBullet();
+	~enemyBullet();
+
+	void init();
+
+	void set(XMFLOAT3 playerpos,XMFLOAT3 shotpos);
+
+	void update();
+
+	void draw(directX* directx);
+
+	bool isBulletArive()
+	{
+		return (bulletObject != nullptr) && isArive;
+	}
+
+private:
+	//モデル・オブジェクト
+	Model* buletModel = nullptr;
+	Object3d_FBX* bulletObject = nullptr;
+
+	//生存フラグ
+	bool isArive = false;
+
+	//生存時間
+	int ariveTime = 0;
+
+	//座標・方向・弾速
+	XMFLOAT3 position = {};
+	XMFLOAT3 bulletVec = {};
+	float bulletSpeed = 0.5f;
+	XMFLOAT3 rot = {};
+
+	//当たり判定
+	Sphere bulletCollision;
+};
+
 //敵の行動パターン
 enum class enemyPattern
 {
 	chase = 1,
-	shot = 2,
-	bullet = 3
+	shot = 2
 };
 
 //敵
@@ -17,8 +57,8 @@ class Enemy
 {
 public:
 	//オブジェクト
-	Model* testCube = nullptr;
-	Object3d_FBX* testObject = nullptr;
+	Model* enemyModel = nullptr;
+	Object3d_FBX* enemyObject = nullptr;
 
 	bool isDraw = true;//描画フラグ
 	bool Isarive = false;//生存フラグ
@@ -52,22 +92,22 @@ public:
 	bool isShot = false;//射撃フラグ
 	int shotCount = 0;//次の射撃までの待機時間
 
-	//パターン３：弾
-	int ariveTime = 0;
+	//弾
+	enemyBullet bullet;
 
 	Enemy();
 
 	~Enemy();
 
 	//初期化
-	void init();
+	void init(enemyPattern pattern);
 
 	/// <summary>
 	/// セッティング
 	/// </summary>
 	/// <param name="pos">初期位置</param>
 	/// <param name="pattern">行動パターン</param>
-	void set(XMFLOAT3 pos, enemyPattern pattern);
+	void set(XMFLOAT3 pos);
 
 	//リセット
 	void reSet();
@@ -98,9 +138,6 @@ public:
 	/// </summary>
 	/// <param name="pPos">プレイヤーの座標</param>
 	void shot(XMFLOAT3 pPos);
-
-	//パターン３：弾
-	void bullet();
 
 	void isHitTarget(XMFLOAT2 targetpos, bool istarget);
 

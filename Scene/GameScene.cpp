@@ -78,15 +78,14 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	for (int i = 0; i < maxEnemyNum; i++)
 	{
-		testEnemys[i].init();
+		testEnemys[i].init(enemyPattern::shot);
 		testEnemys[i].set({
 			(float)(rand() % 50 - 25),
 			(float)(rand() % 30 + 15),
-			(float)(rand() % 50 - 25)
-			}, enemyPattern::chase);
+			(float)(rand() % 50 - 25) });
 	}
 
-	testBoss.init();
+	testBoss.init(enemyPattern::chase);
 	testBoss.HP = 30;
 }
 
@@ -315,9 +314,9 @@ void GameScene::Update()
 	debugs_print();
 }
 
+//”wŒiƒXƒvƒ‰ƒCƒg•`‰æ
 void GameScene::DrawBack()
 {
-	//”wŒiƒXƒvƒ‰ƒCƒg•`‰æ
 	sample_back.DrawSprite(directx->cmdList.Get());
 }
 
@@ -367,7 +366,7 @@ void GameScene::checkHitPlayerTarget()
 
 	for (int i = 0; i < maxEnemyNum; i++)
 	{
-		XMFLOAT2 screenPos = testEnemys[i].testObject->worldToScleen();
+		XMFLOAT2 screenPos = testEnemys[i].enemyObject->worldToScleen();
 
 		float dis = sqrtf(powf(testPlayer.targetFirst.position.x - screenPos.x, 2) + powf(testPlayer.targetFirst.position.y - screenPos.y, 2));
 

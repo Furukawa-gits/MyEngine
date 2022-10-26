@@ -6,11 +6,13 @@
 bullet::bullet()
 {
 }
+
 bullet::~bullet()
 {
 	delete(bulletObject);
 	delete(bulletModel);
 }
+
 void bullet::init(int index)
 {
 	bulletModel = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
@@ -40,7 +42,6 @@ void bullet::set(XMFLOAT3 start_pos, XMFLOAT3 Target)
 	isArive = true;
 }
 
-//“G‚Æ‚Ì“–‚½‚è”»’è
 void bullet::checkhit(Enemy* enemy)
 {
 	if (enemy->Isarive == true && isArive == true)
@@ -95,11 +96,13 @@ void bullet::draw(directX* directx)
 Missile::Missile()
 {
 }
+
 Missile::~Missile()
 {
 	delete(bulletObject);
 	delete(bulletModel);
 }
+
 void Missile::init(int index)
 {
 	bulletModel = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");

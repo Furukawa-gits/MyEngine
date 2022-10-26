@@ -8,11 +8,11 @@ Enemy::Enemy()
 
 Enemy::~Enemy()
 {
-	delete(testCube);
-	delete(testObject);
+	delete(enemyModel);
+	delete(enemyObject);
 }
 
-void Enemy::init()
+void Enemy::init(enemyPattern pattern)
 {
 	Isarive = false;
 
@@ -20,28 +20,35 @@ void Enemy::init()
 	rockTarget.size = { 70,70 };
 	rockTarget.GenerateSprite("Rock_on.png");
 
-	testCube = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
+	enemyModel = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
 
-	testObject = new Object3d_FBX;
-	testObject->Initialize();
-	testObject->SetModel(testCube);
-	testObject->SetScale({ 1.0f,1.0f,1.0f });
+	enemyObject = new Object3d_FBX;
+	enemyObject->Initialize();
+	enemyObject->SetModel(enemyModel);
+	enemyObject->SetScale({ 1.0f,1.0f,1.0f });
 
 	enemyCollision.radius = 2.0f;
+
+	enemyMovePattern = pattern;
+
+	if (enemyMovePattern == enemyPattern::shot)
+	{
+		bullet.init();
+		shotCount = rand() % 10;
+	}
 }
 
-void Enemy::set(XMFLOAT3 pos, enemyPattern pattern)
+void Enemy::set(XMFLOAT3 pos)
 {
 	position = pos;
 	startPosition = pos;
-	testObject->SetPosition(pos);
+	enemyObject->SetPosition(pos);
 	Isarive = true;
 	isTargetSet = false;
 	chaseCount = 0;
 	waitCount = 0;
 	isChase = false;
 	isWait = true;
-	enemyMovePattern = pattern;
 	if (enemyMovePattern == enemyPattern::chase)
 	{
 		waitCount = rand() % 40;
@@ -52,7 +59,7 @@ void Enemy::set(XMFLOAT3 pos, enemyPattern pattern)
 
 void Enemy::reSet()
 {
-	testObject->SetPosition(startPosition);
+	enemyObject->SetPosition(startPosition);
 	position = startPosition;
 	chaseCount = 0;
 	waitCount = 0;
@@ -67,6 +74,11 @@ void Enemy::reSet()
 
 void Enemy::chase(XMFLOAT3 pPos)
 {
+	if (enemyMovePattern != enemyPattern::chase)
+	{
+		return;
+	}
+
 	//í«ê’
 	if (isChase)
 	{
@@ -98,7 +110,7 @@ void Enemy::chase(XMFLOAT3 pPos)
 		}
 	}
 
-	position = testObject->getPosition();
+	position = enemyObject->getPosition();
 	XMFLOAT3 dis = { pPos.x - position.x,pPos.y - position.y,pPos.z - position.z };
 
 	float lengthDis = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
@@ -114,12 +126,33 @@ void Enemy::chase(XMFLOAT3 pPos)
 
 void Enemy::shot(XMFLOAT3 pPos)
 {
+	if (enemyMovePattern != enemyPattern::shot)
+	{
+		return;
+	}
 
-}
+	if (!bullet.isBulletArive())
+	{
+		shotCount++;
+	}
 
-void Enemy::bullet()
-{
+	if (shotCount >= 10 && bullet.isBulletArive() == false)
+	{
+		isShot = true;
+		shotCount = 0;
+	}
+	else
+	{
+		isShot = false;
+	}
 
+	if (isShot)
+	{
+		bullet.set(pPos, this->position);
+		isShot = false;
+	}
+
+	bullet.update();
 }
 
 void Enemy::update(XMFLOAT3 playerPos)
@@ -135,7 +168,7 @@ void Enemy::update(XMFLOAT3 playerPos)
 	//ìGÇ™åÇíƒ
 	deathMove();
 
-	testObject->Update();
+	enemyObject->Update();
 
 	return;
 }
@@ -147,18 +180,9 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 		return;
 	}
 
-	if (enemyMovePattern == enemyPattern::chase)
-	{
-		chase(playerPos);
-	}
-	else if (enemyMovePattern == enemyPattern::shot)
-	{
-		shot(playerPos);
-	}
-	else if (enemyMovePattern == enemyPattern::bullet)
-	{
-		bullet();
-	}
+	chase(playerPos);
+
+	shot(playerPos);
 
 	//HPÇ™0Ç…Ç»Ç¡ÇΩÇÁè¡ñ≈
 	if (HP <= 0)
@@ -170,19 +194,19 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 	if (isTargetSet)
 	{
 		rockTarget.rotation += 1.5f;
-		XMFLOAT2 screenPos = testObject->worldToScleen();
+		XMFLOAT2 screenPos = enemyObject->worldToScleen();
 		rockTarget.position = { screenPos.x,screenPos.y,0 };
 	}
 
 	rockTarget.SpriteTransferVertexBuffer();
 	rockTarget.SpriteUpdate();
 
-	testObject->SetPosition(position);
+	enemyObject->SetPosition(position);
 	enemyCollision.center =
 	{
-		testObject->getPosition().x,
-		testObject->getPosition().y,
-		testObject->getPosition().z,1.0f
+		enemyObject->getPosition().x,
+		enemyObject->getPosition().y,
+		enemyObject->getPosition().z,1.0f
 	};
 }
 
@@ -199,7 +223,7 @@ void Enemy::deathMove()
 	rot.x += 2;
 	rot.y += 2;
 	rot.z += 2;
-	testObject->setRotMatrix(rot.x, rot.y, rot.z);
+	enemyObject->setRotMatrix(rot.x, rot.y, rot.z);
 
 	if (fallDownCount >= 90)
 	{
@@ -215,7 +239,7 @@ void Enemy::isHitTarget(XMFLOAT2 targetpos, bool istarget)
 		return;
 	}
 
-	XMFLOAT2 screenPos = testObject->worldToScleen();
+	XMFLOAT2 screenPos = enemyObject->worldToScleen();
 
 	float dis = sqrtf(powf(targetpos.x - screenPos.x, 2) + powf(targetpos.y - screenPos.y, 2));
 
@@ -234,7 +258,7 @@ void Enemy::isHitShot(XMFLOAT2 targetpos)
 		return;
 	}
 
-	XMFLOAT2 screenPos = testObject->worldToScleen();
+	XMFLOAT2 screenPos = enemyObject->worldToScleen();
 
 	float dis = sqrtf(powf(targetpos.x - screenPos.x, 2) + powf(targetpos.y - screenPos.y, 2));
 
@@ -256,8 +280,13 @@ void Enemy::draw3D(directX* directx)
 		return;
 	}
 
-	testObject->SetPipelineSimple(directx->cmdList.Get());
-	testObject->Draw(directx->cmdList.Get());
+	enemyObject->SetPipelineSimple(directx->cmdList.Get());
+	enemyObject->Draw(directx->cmdList.Get());
+
+	if (enemyMovePattern == enemyPattern::shot)
+	{
+		bullet.draw(directx);
+	}
 }
 
 void Enemy::draw2D(directX* directx)
@@ -266,5 +295,88 @@ void Enemy::draw2D(directX* directx)
 	{
 		rockTarget.DrawSprite(directx->cmdList.Get());
 	}
+}
+#pragma endregion
+
+#pragma region ìGÇÃíe
+enemyBullet::enemyBullet()
+{
+}
+
+enemyBullet::~enemyBullet()
+{
+}
+
+void enemyBullet::init()
+{
+	buletModel = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
+
+	bulletObject = new Object3d_FBX;
+	bulletObject->Initialize();
+	bulletObject->SetModel(buletModel);
+	bulletObject->SetScale({ 0.3f,0.3f,0.3f });
+
+	bulletCollision.radius = 1.0f;
+}
+
+void enemyBullet::set(XMFLOAT3 playerpos, XMFLOAT3 shotpos)
+{
+	position = shotpos;
+
+	XMFLOAT3 startToTarget =
+	{
+		playerpos.x - shotpos.x,
+		playerpos.y - shotpos.y,
+		playerpos.z - shotpos.z
+	};
+
+	float length = sqrtf(powf(startToTarget.x, 2) + powf(startToTarget.y, 2) + powf(startToTarget.z, 2));
+
+	bulletVec =
+	{
+		startToTarget.x / length,
+		startToTarget.y / length,
+		startToTarget.z / length
+	};
+
+	isArive = true;
+}
+
+void enemyBullet::update()
+{
+	if (!isArive)
+	{
+		return;
+	}
+
+	ariveTime++;
+
+	position.x += bulletVec.x * bulletSpeed;
+	position.y += bulletVec.y * bulletSpeed;
+	position.z += bulletVec.z * bulletSpeed;
+
+	rot.x += 4;
+	rot.y += 4;
+	rot.z += 4;
+	bulletObject->setRotMatrix(rot.x, rot.y, rot.z);
+
+	bulletObject->SetPosition(position);
+	bulletObject->Update();
+
+	if (ariveTime >= 100)
+	{
+		isArive = false;
+		ariveTime = 0;
+	}
+}
+
+void enemyBullet::draw(directX* directx)
+{
+	if (!isArive)
+	{
+		return;
+	}
+
+	bulletObject->Draw(directx->cmdList.Get());
 }
 #pragma endregion
