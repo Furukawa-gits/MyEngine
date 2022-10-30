@@ -78,7 +78,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	for (int i = 0; i < maxEnemyNum; i++)
 	{
-		testEnemys[i].init(enemyPattern::shot);
+		testEnemys[i].init(enemyPattern::chase);
 		testEnemys[i].set({
 			(float)(rand() % 50 - 25),
 			(float)(rand() % 30 + 15),

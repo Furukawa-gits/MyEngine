@@ -80,7 +80,7 @@ void Player::Move()
 	//自動で前に進み続ける
 	playerObject->addMoveFront(followCamera->getFrontVec());
 
-	//カメラワーク
+	//マウスでのカメラ操作
 	cameraMove();
 
 	//「プレイヤーから見て」右・上・前方向のベクトル
