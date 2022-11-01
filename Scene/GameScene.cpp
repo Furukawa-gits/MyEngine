@@ -85,8 +85,8 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 			(float)(rand() % 50 - 25) });
 	}
 
-	testBoss.init(enemyPattern::chase);
-	testBoss.HP = 30;
+	//ボスの初期化
+	
 }
 
 //デバッグテキスト
@@ -184,6 +184,9 @@ void GameScene::Play_update()
 		testPlayer.checkPlayerEnemyBullet(&testEnemys[i]);
 	}
 
+	//ボス更新
+
+
 	//マウスカーソル非表示
 	ShowCursor(false);
 
@@ -220,6 +223,9 @@ void GameScene::Play_update()
 		}
 	}
 
+	//通常弾とボスの当たり判定
+
+
 	int count = 0;
 
 	for (int i = 0; i < maxEnemyNum; i++)
@@ -230,7 +236,12 @@ void GameScene::Play_update()
 		}
 	}
 
-	if (count >= maxEnemyNum || testPlayer.playerHP <= 0)
+	if (count >= maxEnemyNum)
+	{
+		testBoss.set({ 0,5,0 });
+	}
+
+	if (!testBoss.isDraw || testPlayer.playerHP <= 0)
 	{
 		scene = clear;
 	}
@@ -272,6 +283,9 @@ void GameScene::Play_draw()
 	{
 		testEnemys[i].draw3D(directx);
 	}
+
+	//ボス描画
+	
 }
 
 //リザルト画面描画
@@ -349,6 +363,8 @@ void GameScene::Draw2D()
 		{
 			testEnemys[i].draw2D(directx);
 		}
+
+		//ボス描画(2d)
 
 		testPlayer.draw2D(directx);
 	}

@@ -15,6 +15,7 @@ Enemy::~Enemy()
 void Enemy::init(enemyPattern pattern)
 {
 	Isarive = false;
+	isDraw = false;
 
 	rockTarget.anchorpoint = { 0.5f,0.5f };
 	rockTarget.size = { 70,70 };
@@ -49,6 +50,7 @@ void Enemy::set(XMFLOAT3 pos)
 	waitCount = 0;
 	isChase = false;
 	isWait = true;
+	isDraw = true;
 	if (enemyMovePattern == enemyPattern::chase)
 	{
 		waitCount = rand() % 40;

@@ -53,9 +53,6 @@ public:
 	float pitch = 0.0f;
 	float yow = 0.0f;
 
-	//座標
-	XMFLOAT3 position = { 0,5,30 };
-
 	//移動スピード
 	float moveSpeed = 0.3f;
 

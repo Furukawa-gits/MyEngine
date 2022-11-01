@@ -65,7 +65,7 @@ public:
 	Model* enemyModel = nullptr;
 	Object3d_FBX* enemyObject = nullptr;
 
-	bool isDraw = true;//描画フラグ
+	bool isDraw = false;//描画フラグ
 	bool Isarive = false;//生存フラグ
 	bool isTargetSet = false;//狙われているかどうか
 	bool isSetMissile = false;//ミサイルが自分にセットされているか
