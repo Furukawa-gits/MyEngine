@@ -47,21 +47,6 @@ public:
 	FollowCamera* followCamera = nullptr;
 
 	//回転量
-	float yowRotateSpeedPositive = 0.0f;//ヨー回転(正方向)
-	float yowRotateSpeedNegative = 0.0f;//ヨー回転(負方向)
-	float pitchRotateSpeedPositive = 0.0f;//ピッチ回転(正方向)
-	float pitchRotateSpeedNegative = 0.0f;//ピッチ回転(負方向)
-	float addRotateSpeed = 0.002f;//加算量
-	float subRotateSpeed = -0.002f;//減算量
-	float limitRotateSpeed = 0.02f;//最大回転速度
-
-	//基準回転軸
-	const XMFLOAT3 unitX = { 1,0,0 };
-	const XMFLOAT3 unitY = { 0,1,0 };
-	const XMFLOAT3 unitZ = { 0,0,1 };
-
-	//クォータニオン回転行列
-	Quaternion qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
 
 	//クォータニオン回転角度
 	float roll = 0.0f;
@@ -82,8 +67,24 @@ public:
 	int rockOnCount = 0;
 	bool isRockOn = false;
 
+	float yowRotateSpeedPositive = 0.0f;//ヨー回転(正方向)
+	float yowRotateSpeedNegative = 0.0f;//ヨー回転(負方向)
+	float pitchRotateSpeedPositive = 0.0f;//ピッチ回転(正方向)
+	float pitchRotateSpeedNegative = 0.0f;//ピッチ回転(負方向)
+	float addRotateSpeed = 0.002f;//加算量
+	float subRotateSpeed = -0.002f;//減算量
+	float limitRotateSpeed = 0.02f;//最大回転速度
+
+	//基準回転軸
+	const XMFLOAT3 unitX = { 1,0,0 };
+	const XMFLOAT3 unitY = { 0,1,0 };
+	const XMFLOAT3 unitZ = { 0,0,1 };
+
+	//クォータニオン回転行列
+	Quaternion qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
 	//Hpスプライト
 	SingleSprite hitPointUI[10];
+	std::vector<SingleSprite> HPUI[10];
 
 	//弾
 	bullet playerBullet[MaxPlayerBulletNum];

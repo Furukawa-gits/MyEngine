@@ -68,6 +68,15 @@ void Player::init(dxinput* input, directX* directx)
 		hitPointUI[i].SpriteTransferVertexBuffer(false);
 	}
 
+	//HP(vector)
+	/*for (auto itr = HPUI->begin(); itr != HPUI->end(); ++itr)
+	{
+		itr->GenerateSprite("Player_HP.png");
+		itr->size = { 40,80 };
+		itr->position = { (itr - HPUI->begin()) * 30.0f + 10.0f,650.0f,0.0f };
+		itr->SpriteTransferVertexBuffer(false);
+	}*/
+
 	playerCollision.radius = 2.0f;
 
 	playerHP = 10;

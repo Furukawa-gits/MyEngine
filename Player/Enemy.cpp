@@ -248,6 +248,11 @@ void Enemy::deathMove()
 		isDraw = false;
 		fallDownCount = 0;
 	}
+
+	if (enemyMovePattern == enemyPattern::shot)
+	{
+		bullet.isArive = false;
+	}
 }
 
 void Enemy::isHitTarget(XMFLOAT2 targetpos, bool istarget)
