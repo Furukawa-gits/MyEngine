@@ -10,8 +10,6 @@ public:
 
 	void bossInit();
 	void bossUpdate(Player* player);
-	void bossDraw3D(directX* directx);
-	void bossDraw2D(directX* directx);
 	void bossSet(XMFLOAT3 pos);
 	void bossReSet();
 	void CheckHitPlayer(Player* player);

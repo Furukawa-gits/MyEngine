@@ -1,5 +1,13 @@
 #include "Boss.h"
 
+Boss::Boss()
+{
+}
+
+Boss::~Boss()
+{
+}
+
 void Boss::bossInit()
 {
 	init(enemyPattern::chase);
@@ -14,16 +22,6 @@ void Boss::bossUpdate(Player* player)
 	update(player->playerObject->getPosition());
 }
 
-void Boss::bossDraw3D(directX* directx)
-{
-	draw3D(directx);
-}
-
-void Boss::bossDraw2D(directX* directx)
-{
-	draw2D(directx);
-}
-
 void Boss::bossSet(XMFLOAT3 pos)
 {
 	set(pos);
@@ -32,6 +30,7 @@ void Boss::bossSet(XMFLOAT3 pos)
 void Boss::bossReSet()
 {
 	reSet();
+	isDraw = false;
 }
 
 void Boss::CheckHitPlayer(Player* player)

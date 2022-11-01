@@ -11,11 +11,12 @@
 
 #include"../Player/Player.h"
 #include"../Player/Enemy.h"
+#include"../Player/Boss.h"
 
 #include<random>
 #include<time.h>
 
-enum scene
+enum class sceneType
 {
 	title = 0,
 	play = 1,
@@ -139,7 +140,7 @@ private:
 	/// <para>HP削り切ったら消滅</para>
 	/// オブジェクトのサイズは大きくして分かりやすく
 	/// </summary>
-	Enemy testBoss;
+	Boss testBoss;
 
 	//照準スプライト関連
 	int mousePressCount = 0;
@@ -153,7 +154,7 @@ private:
 	int game_time = 0;
 
 	//シーン
-	int scene = title;
+	sceneType scene = sceneType::title;
 
 	//ウェーブ
 	bool Ischangescene = false;
