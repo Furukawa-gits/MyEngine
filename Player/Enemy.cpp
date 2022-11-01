@@ -221,7 +221,7 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 	rockTarget.SpriteTransferVertexBuffer();
 	rockTarget.SpriteUpdate();
 
-	//enemyObject->SetPosition(position);
+	enemyObject->SetPosition(position);
 	enemyCollision.center =
 	{
 		enemyObject->getPosition().x,

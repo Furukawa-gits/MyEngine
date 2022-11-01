@@ -78,7 +78,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	for (int i = 0; i < maxEnemyNum; i++)
 	{
-		testEnemys[i].init(enemyPattern::shot);
+		testEnemys[i].init(enemyPattern::chase);
 		testEnemys[i].set({
 			(float)(rand() % 50 - 25),
 			(float)(rand() % 30 + 15),
@@ -143,6 +143,7 @@ void GameScene::Title_update()
 
 		testBoss.bossReSet();
 		testBoss.HP = 30;
+		isBoss = false;
 
 		scene = sceneType::play;
 	}
@@ -252,12 +253,13 @@ void GameScene::Play_update()
 		}
 	}
 
-	if (count >= maxEnemyNum)
+	if (count >= maxEnemyNum && !isBoss)
 	{
 		testBoss.bossSet({ 0,5,0 });
+		isBoss = true;
 	}
 
-	if (!testBoss.isDraw || testPlayer.playerHP <= 0)
+	if ((isBoss && !testBoss.isDraw) || testPlayer.playerHP <= 0)
 	{
 		scene = sceneType::clear;
 	}
@@ -315,7 +317,7 @@ void GameScene::Play_draw()
 //リザルト画面描画
 void GameScene::Result_draw()
 {
-	
+
 }
 
 #pragma endregion 各シーン描画
@@ -406,13 +408,11 @@ void GameScene::checkHitPlayerTarget()
 
 		float dis = sqrtf(powf(testPlayer.targetFirst.position.x - screenPos.x, 2) + powf(testPlayer.targetFirst.position.y - screenPos.y, 2));
 
-		if (dis < 56.5685f && !testEnemys[i].isTargetSet && targetnum < MaxPlayerMissileNum)
+		if (dis < 56.5685f && !testEnemys[i].isTargetSet && targetnum < MaxPlayerMissileNum && testEnemys[i].Isarive)
 		{
 			testEnemys[i].isTargetSet = true;
 			targetnum++;
 		}
-
-		testEnemys[i].rockTarget.position = { screenPos.x,screenPos.y,0 };
 	}
 
 	//ボス
@@ -420,11 +420,9 @@ void GameScene::checkHitPlayerTarget()
 
 	float dis = sqrtf(powf(testPlayer.targetFirst.position.x - screenPos.x, 2) + powf(testPlayer.targetFirst.position.y - screenPos.y, 2));
 
-	if (dis < 56.5685f && !testBoss.isTargetSet && targetnum < MaxPlayerMissileNum)
+	if (dis < 56.5685f && !testBoss.isTargetSet && targetnum < MaxPlayerMissileNum && testBoss.Isarive)
 	{
 		testBoss.isTargetSet = true;
 		targetnum++;
 	}
-
-	testBoss.rockTarget.position = { screenPos.x,screenPos.y,0 };
 }

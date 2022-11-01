@@ -142,6 +142,9 @@ private:
 	/// </summary>
 	Boss testBoss;
 
+	//ボス出現フラグ
+	bool isBoss = false;
+
 	//照準スプライト関連
 	int mousePressCount = 0;
 	SingleSprite target;
