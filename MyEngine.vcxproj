@@ -191,6 +191,7 @@
     <ClInclude Include="Player\Enemy.h" />
     <ClInclude Include="Player\Player.h" />
     <ClInclude Include="Scene\GameScene.h" />
+    <ClInclude Include="staging\Easing.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="2D\Debug_Text.cpp" />
@@ -219,6 +220,7 @@
     <ClCompile Include="Player\Enemy.cpp" />
     <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
+    <ClCompile Include="staging\Easing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli" />
