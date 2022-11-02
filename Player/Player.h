@@ -79,8 +79,8 @@ public:
 
 	//クォータニオン回転行列
 	Quaternion qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
+
 	//Hpスプライト
-	SingleSprite hitPointUI[10];
 	std::vector<SingleSprite> HPUI[10];
 
 	//弾

@@ -13,7 +13,7 @@ bullet::~bullet()
 	delete(bulletModel);
 }
 
-void bullet::init(int index)
+void bullet::init()
 {
 	bulletModel = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
 
@@ -132,7 +132,7 @@ Missile::~Missile()
 	delete(bulletModel);
 }
 
-void Missile::init(int index)
+void Missile::init()
 {
 	bulletModel = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
 

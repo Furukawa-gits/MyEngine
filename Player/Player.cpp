@@ -4,6 +4,10 @@ dxinput* Player::input = nullptr;
 
 Player::Player()
 {
+	for (int i = 0; i < 10; i++)
+	{
+		HPUI->push_back(SingleSprite());
+	}
 }
 
 Player::~Player()
@@ -52,30 +56,24 @@ void Player::init(dxinput* input, directX* directx)
 
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
 	{
-		playerBullet[i].init(i + 1);
+		playerBullet[i].init();
 	}
 
 	for (int i = 0; i < MaxPlayerMissileNum; i++)
 	{
-		playerMissiale[i].init(i + 21);
-	}
-
-	for (int i = 0; i < 10; i++)
-	{
-		hitPointUI[i].GenerateSprite("Player_HP.png");
-		hitPointUI[i].size = { 40,80 };
-		hitPointUI[i].position = { i * 30.0f + 10.0f,650.0f,0.0f };
-		hitPointUI[i].SpriteTransferVertexBuffer(false);
+		playerMissiale[i].init();
 	}
 
 	//HP(vector)
-	/*for (auto itr = HPUI->begin(); itr != HPUI->end(); ++itr)
+	int i = 0;
+	for (auto itr = HPUI->begin(); itr != HPUI->end(); itr++)
 	{
 		itr->GenerateSprite("Player_HP.png");
 		itr->size = { 40,80 };
-		itr->position = { (itr - HPUI->begin()) * 30.0f + 10.0f,650.0f,0.0f };
+		itr->position = { i * 30.0f + 10.0f,650.0f,0.0f };
 		itr->SpriteTransferVertexBuffer(false);
-	}*/
+		i++;
+	}
 
 	playerCollision.radius = 2.0f;
 
@@ -293,9 +291,9 @@ void Player::update()
 		playerMissiale[i].update();
 	}
 
-	for (int i = 0; i < 10; i++)
+	for (auto itr = HPUI->begin(); itr != HPUI->end(); itr++)
 	{
-		hitPointUI[i].SpriteUpdate();
+		itr->SpriteUpdate();
 	}
 }
 
@@ -452,8 +450,14 @@ void Player::draw2D(directX* directx)
 	targetSecond.DrawSprite(directx->cmdList.Get());
 	targetFirst.DrawSprite(directx->cmdList.Get());
 
-	for (int i = 0; i < playerHP; i++)
+	int i = 0;
+	for (auto itr = HPUI->begin(); itr != HPUI->end(); itr++)
 	{
-		hitPointUI[i].DrawSprite(directx->cmdList.Get());
+		if (i >= playerHP - 1)
+		{
+			break;
+		}
+		itr->DrawSprite(directx->cmdList.Get());
+		i++;
 	}
 }

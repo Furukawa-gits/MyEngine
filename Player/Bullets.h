@@ -21,7 +21,7 @@ public:
 	bullet();
 	~bullet();
 
-	void init(int index);
+	void init();
 	void set(XMFLOAT3 start_pos, XMFLOAT3 Target);
 	void checkHitEnemy(Enemy* enemy);
 	void checkHitEnemyBullet(Enemy* enemy);
@@ -58,7 +58,7 @@ public:
 	Missile();
 	~Missile();
 
-	void init(int index);
+	void init();
 	void setPenemy(Enemy* enemy);
 	void start(XMFLOAT3 start_pos);
 	void checkhit();

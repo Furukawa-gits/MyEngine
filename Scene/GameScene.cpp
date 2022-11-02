@@ -226,7 +226,7 @@ void GameScene::Play_update()
 		targetnum = 0;
 	}
 
-	//通常弾当たり判定
+	//プレイヤーの通常弾当たり判定
 	for (int j = 0; j < MaxPlayerBulletNum; j++)
 	{
 		for (int i = 0; i < maxEnemyNum; i++)
@@ -243,8 +243,8 @@ void GameScene::Play_update()
 		testPlayer.playerBullet[i].checkHitEnemyBullet(&testBoss);
 	}
 
+	//死んでいる雑魚敵をカウント
 	int count = 0;
-
 	for (int i = 0; i < maxEnemyNum; i++)
 	{
 		if (!testEnemys[i].isDraw)
@@ -253,17 +253,20 @@ void GameScene::Play_update()
 		}
 	}
 
+	//すべての雑魚敵が死んでいたらボス出現
 	if (count >= maxEnemyNum && !isBoss)
 	{
 		testBoss.bossSet({ 0,5,0 });
 		isBoss = true;
 	}
 
+	//ボスを倒したorプレイヤーが死んだらリザルト
 	if ((isBoss && !testBoss.isDraw) || testPlayer.playerHP <= 0)
 	{
 		scene = sceneType::clear;
 	}
 
+	//デバッグ用シーン切り替え
 	if (input->Triger(DIK_N))
 	{
 		scene = sceneType::clear;
