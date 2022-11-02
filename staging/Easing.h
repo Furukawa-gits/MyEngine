@@ -1,13 +1,15 @@
 #pragma once
+#define _USE_MATH_DEFINES
+#include<math.h>
 
-enum class easingPattern
+enum class easingType
 {
 	easeIn = 0,
 	easeOut = 1,
 	easeInOut = 2
 };
 
-enum class easingLevel
+enum class easingPattern
 {
 	Quadratic = 0,
 	Cubic = 1,
@@ -26,8 +28,15 @@ public:
 	easingManager();
 	~easingManager();
 
-	//イージングのセット
-	void set(easingPattern pattaern, easingLevel level, int totaltime, float start, float end);
+	/// <summary>
+	/// イージングのセット
+	/// </summary>
+	/// <param name="pattaern">イージングパターン</param>
+	/// <param name="type">イージングタイプ</param>
+	/// <param name="totaltime">イージング全体のフレーム</param>
+	/// <param name="start">初期位置</param>
+	/// <param name="end">最終位置</param>
+	void set(easingType pattaern, easingPattern type, int totaltime, float start, float end);
 
 	/// <summary>
 	/// <para>イージング</para>
@@ -47,18 +56,28 @@ private:
 	void easeInOut();
 
 	void inQuadratic();
-
 	void inCubic();
-
 	void inQuartic();
-
 	void inQuintic();
-
 	void inSinusoidal();
-
 	void inExponential();
-
 	void inCircular();
+
+	void outQuadratic();
+	void outCubic();
+	void outQuartic();
+	void outQuintic();
+	void outSinusoidal();
+	void outExponential();
+	void outCircular();
+
+	void inOutQuadratic();
+	void inOutCubic();
+	void inOutQuartic();
+	void inOutQuintic();
+	void inOutSinusoidal();
+	void inOutExponential();
+	void inOutCircular();
 
 
 private:
@@ -77,15 +96,15 @@ private:
 	//初期値
 	float start = 0;
 
-	//最終値
-	float end = 0;
+	//移動量
+	float lange = 0;
 
 	//イージングの値(返り値用)
 	float easingNum = 0;
 
 	//イージングの種類
-	easingPattern thisPattern;
+	easingType thisType;
 
 	//イージングのレベル
-	easingLevel thisLevel;
+	easingPattern thisPattern;
 };
