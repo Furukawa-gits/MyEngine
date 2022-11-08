@@ -222,6 +222,7 @@
     <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="staging\Easing.cpp" />
+    <ClCompile Include="staging\Shake.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli" />
