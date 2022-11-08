@@ -158,6 +158,9 @@ private:
 
 	//シーン
 	sceneType scene = sceneType::title;
+	
+	//タイトル演出フラグ
+	bool isTitleStage = false;
 
 	//ウェーブ
 	bool Ischangescene = false;

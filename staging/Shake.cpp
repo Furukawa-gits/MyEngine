@@ -8,14 +8,14 @@ Shake::~Shake()
 {
 }
 
-void Shake::set(shakeType type, float shakewide, int time)
+void Shake::set(int shakewide, int totalTime)
 {
-	thisType = type;
 	wide = shakewide;
-	totalFrame = time;
+	totalFrame = totalTime;
+	srand(time(NULL));
 }
 
-float Shake::shaking()
+int Shake::shaking()
 {
 	if (!isActive)
 	{
@@ -24,9 +24,7 @@ float Shake::shaking()
 
 	totalFrame--;
 
-	shakeVertical();
-	shakehorizontal();
-	shakeFreely();
+	shakeReturn = (rand() % (wide * 2)) - wide;
 
 	if (totalFrame <= 0)
 	{
@@ -35,16 +33,4 @@ float Shake::shaking()
 	}
 
 	return shakeReturn;
-}
-
-void Shake::shakeVertical()
-{
-}
-
-void Shake::shakehorizontal()
-{
-}
-
-void Shake::shakeFreely()
-{
 }
