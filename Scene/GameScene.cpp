@@ -4,6 +4,7 @@
 
 GameScene::GameScene()
 {
+	
 }
 
 GameScene::~GameScene()
@@ -175,6 +176,11 @@ void GameScene::Play_update()
 		for (int i = 0; i < maxEnemyNum; i++)
 		{
 			testEnemys[i].reSet();
+		}
+
+		for (auto itre = Enemys.begin(); itre != Enemys.end(); itre++)
+		{
+			itre->reSet();
 		}
 
 		testBoss.bossReSet();

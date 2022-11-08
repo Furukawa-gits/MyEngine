@@ -1,4 +1,6 @@
 #pragma once
+#include<memory>
+#include<list>
 #include"../3D/Collision.h"
 #include"../2D/Sprite.h"
 #include"../Input/dxInput.h"

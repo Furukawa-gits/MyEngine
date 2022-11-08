@@ -13,6 +13,8 @@
 #include"../Player/Enemy.h"
 #include"../Player/Boss.h"
 
+#include"../staging/Easing.h"
+
 #include<random>
 #include<time.h>
 
@@ -36,13 +38,6 @@ enum class wave
 	second = 1,
 	third = 2
 };
-
-//ウェーブごとの敵の数
-//const int ENEMY_NUM_1 = 8;
-//
-//const int ENEMY_NUM_2 = 8;
-//
-//const int ENEMY_NUM_3 = 20;
 
 class GameScene
 {
@@ -99,7 +94,6 @@ private:
 	Audio* audio = nullptr;
 	DebugText debugtext;
 	XMFLOAT3 MOUSE_POS = { 0,0,0 };
-	//Camera* camera = nullptr;
 #pragma endregion
 
 	//回転量
@@ -130,6 +124,7 @@ private:
 	//敵(test)
 	static const int maxEnemyNum = 20;
 	Enemy testEnemys[maxEnemyNum];
+	std::vector<Enemy> Enemys;
 	bool isEnemySimple = false;
 
 	/// <summary>
@@ -161,6 +156,10 @@ private:
 	
 	//タイトル演出フラグ
 	bool isTitleStage = false;
+
+	easingManager startEase;
+
+	SingleSprite startButton;
 
 	//ウェーブ
 	bool Ischangescene = false;
