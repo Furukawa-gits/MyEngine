@@ -87,11 +87,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//グレースケール切り替え
 		if (input.Triger(DIK_2) && isSetGray == false)
 		{
-			isSetGray = true;
+			//isSetGray = true;
 		}
 		else if (input.Triger(DIK_2) && isSetGray == true)
 		{
-			isSetGray = false;
+			//isSetGray = false;
 		}
 
 		//ESCキーで抜ける
