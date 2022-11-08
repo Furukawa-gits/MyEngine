@@ -128,7 +128,7 @@ private:
 	int targetnum = 0;
 
 	//“G(test)
-	static const int maxEnemyNum = 30;
+	static const int maxEnemyNum = 20;
 	Enemy testEnemys[maxEnemyNum];
 	bool isEnemySimple = false;
 

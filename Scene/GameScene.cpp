@@ -214,13 +214,13 @@ void GameScene::Play_update()
 					break;
 				}
 			}
+		}
 
-			if (testBoss.isTargetSet && !testBoss.isSetMissile)
-			{
-				testPlayer.playerMissiale[i].setPenemy(&testBoss);
-				testPlayer.playerMissiale[i].start(testPlayer.playerObject->getPosition());
-				testBoss.isSetMissile = true;
-			}
+		if (testBoss.isTargetSet && !testBoss.isSetMissile)
+		{
+			testPlayer.playerMissiale[0].setPenemy(&testBoss);
+			testPlayer.playerMissiale[0].start(testPlayer.playerObject->getPosition());
+			testBoss.isSetMissile = true;
 		}
 
 		targetnum = 0;
@@ -423,7 +423,7 @@ void GameScene::checkHitPlayerTarget()
 
 	float dis = sqrtf(powf(testPlayer.targetFirst.position.x - screenPos.x, 2) + powf(testPlayer.targetFirst.position.y - screenPos.y, 2));
 
-	if (dis < 56.5685f && !testBoss.isTargetSet && targetnum < MaxPlayerMissileNum && testBoss.Isarive)
+	if (dis < 56.5685f && !testBoss.isTargetSet && targetnum < MaxPlayerMissileNum && testBoss.isDraw)
 	{
 		testBoss.isTargetSet = true;
 		targetnum++;
