@@ -53,17 +53,20 @@ public:
 	//デストラクタ
 	~GameScene();
 
-	//音読み込みだけ関数
-	void Load_sounds();
-
-	//スプライト(各クラスに依存しないやつ)初期化
-	void Load_Sprites();
-
 	//初期化
 	void Init(directX* directx, dxinput* input, Audio* audio);
 
-	//デバッグテキスト更新
-	void debugs_print();
+	//更新
+	void Update();
+
+	//描画
+	void DrawBack();
+	void Draw3D();
+	void Draw2D();
+
+	bool Isclose = false;
+
+private:
 
 	//シーンごとの更新
 	void Title_update();
@@ -75,20 +78,17 @@ public:
 	void Play_draw();
 	void Result_draw();
 
-	//更新
-	void Update();
-
-	//描画
-	void DrawBack();
-	void Draw3D();
-	void Draw2D();
-
 	//ホーミングターゲットのセッティング
 	void checkHitPlayerTarget();
 
-	bool Isclose = false;
+	//音読み込みだけ関数
+	void Load_sounds();
 
-private:
+	//スプライト(各クラスに依存しないやつ)初期化
+	void Load_Sprites();
+
+	//デバッグテキスト更新
+	void debugs_print();
 
 	//-------------ゲームに使う変数等はここより↓-------------
 	static const int debugTextnum = 0;
