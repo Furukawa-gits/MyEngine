@@ -15,6 +15,7 @@ void Boss::bossInit()
 	enemyObject->SetScale({ 5.0f,5.0f,5.0f });
 	enemyObject->setColor({ 0.3f,0.3f,0.3f,1 });
 	enemyCollision.radius = 9.0f;
+	isThisBoss = true;
 }
 
 void Boss::bossUpdate(Player* player)
@@ -35,8 +36,5 @@ void Boss::bossReSet()
 
 void Boss::CheckHitPlayer(Player* player)
 {
-	for (int i = 0; i < MaxPlayerBulletNum; i++)
-	{
-
-	}
+	
 }

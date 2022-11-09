@@ -98,6 +98,9 @@ public:
 	int shotCount = 0;//ŽŸ‚ÌŽËŒ‚‚Ü‚Å‚Ì‘Ò‹@ŽžŠÔ
 	bool isInRange = false;//ŽË’ö”ÍˆÍ“à‚©‚Ç‚¤‚©
 
+	//‚±‚Ì“G‚ªƒ{ƒX‚©‚Ç‚¤‚©
+	bool isThisBoss = false;
+
 	//’e
 	enemyBullet bullet;
 

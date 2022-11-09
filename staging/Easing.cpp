@@ -31,7 +31,7 @@ float easingManager::easing()
 	frame++;
 
 	//進行度の割合を算出
-	rate = frame / totalFrame;
+	rate = (float)frame / (float)totalFrame;
 
 	//イーズイン
 	easeIn();

@@ -87,7 +87,12 @@ public:
 
 	//’e
 	bullet playerBullet[MaxPlayerBulletNum];
+
+	std::list<std::unique_ptr<bullet>> bullets;
+
 	Missile playerMissiale[MaxPlayerMissileNum];
+
+	std::list<std::unique_ptr<Missile>> missiles;
 
 	//“ü—Í
 	static dxinput* input;

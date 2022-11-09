@@ -281,16 +281,19 @@ void Player::update()
 		isArive = false;
 	}
 
+	//通常弾の更新
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
 	{
 		playerBullet[i].update();
 	}
 
+	//ミサイルの更新
 	for (int i = 0; i < MaxPlayerMissileNum; i++)
 	{
 		playerMissiale[i].update();
 	}
 
+	//HPゲージの更新
 	for (auto itr = HPUI->begin(); itr != HPUI->end(); itr++)
 	{
 		itr->SpriteUpdate();
@@ -302,7 +305,6 @@ void Player::targetUpdate()
 	//左クリックで通常弾
 	if (input->Mouse_LeftTriger())
 	{
-		//弾を撃つ
 		for (int i = 0; i < MaxPlayerBulletNum; i++)
 		{
 			if (playerBullet[i].isArive == false)
@@ -312,6 +314,13 @@ void Player::targetUpdate()
 				break;
 			}
 		}
+
+		/*std::unique_ptr<bullet> newBullet = std::make_unique<bullet>();
+		newBullet->init();
+		newBullet->set(playerObject->getPosition(),
+			playerObject->screenToWorld({ targetFirst.position.x,targetFirst.position.y }));*/
+
+		
 	}
 
 	//ロックオンモードに切り替え

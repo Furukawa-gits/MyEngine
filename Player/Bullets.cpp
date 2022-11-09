@@ -176,12 +176,23 @@ void Missile::checkhit()
 	{
 		if (Collision::CheckSphere2Sphere(this->missileCollision, enemyPointer->enemyCollision))
 		{
+			if (enemyPointer->isThisBoss)
+			{
+				enemyPointer->HP--;
+
+				if (enemyPointer->HP <= 0)
+				{
+					enemyPointer->Isarive = false;
+				}
+			}
+			else
+			{
+				enemyPointer->Isarive = false;
+			}
 			isArive = false;
 			isTargetSet = false;
-
-			enemyPointer->Isarive = false;
-
 			enemyPointer = nullptr;
+
 		}
 	}
 }

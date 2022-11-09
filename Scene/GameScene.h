@@ -21,9 +21,10 @@
 enum class sceneType
 {
 	title = 0,
-	play = 1,
-	over = 2,
-	clear = 3
+	select = 1,
+	play = 2,
+	over = 3,
+	clear = 4
 };
 
 enum ChangePat
@@ -65,11 +66,13 @@ private:
 
 	//シーンごとの更新
 	void Title_update();
+	void Select_update();
 	void Play_update();
 	void Result_update();
 
 	//シーンごとの描画
 	void Title_draw();
+	void Select_draw();
 	void Play_draw();
 	void Result_draw();
 
@@ -153,13 +156,14 @@ private:
 
 	//シーン
 	sceneType scene = sceneType::title;
-	
+
 	//タイトル演出フラグ
 	bool isTitleStage = false;
 
 	easingManager startEase;
 
 	SingleSprite startButton;
+	bool isPushStart = false;
 
 	//ウェーブ
 	bool Ischangescene = false;

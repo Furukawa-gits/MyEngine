@@ -4,7 +4,7 @@
 
 GameScene::GameScene()
 {
-	
+
 }
 
 GameScene::~GameScene()
@@ -26,6 +26,12 @@ void GameScene::Load_Sprites()
 {
 	sample_back.size = { 1280,720 };
 	sample_back.GenerateSprite("sample_back.jpg");
+
+	startButton.anchorpoint = { 0.5f,0.5f };
+	startButton.size = { 256,64 };
+	startButton.GenerateSprite("Start_button.png");
+	startButton.position = { 640,500,0 };
+	startButton.SpriteTransferVertexBuffer();
 }
 
 //初期化
@@ -104,6 +110,10 @@ void GameScene::debugs_print()
 		debugtext.Print("Title", 10, 160, 1.0f);
 		debugtext.Print("SPACE : start", 10, 190, 1.0f);
 	}
+	else if (scene == sceneType::select)
+	{
+		debugtext.Print("Select", 10, 160, 1.0f);
+	}
 	else if (scene == sceneType::play)
 	{
 		debugtext.Print("Play", 10, 160, 1.0f);
@@ -120,6 +130,34 @@ void GameScene::debugs_print()
 void GameScene::Title_update()
 {
 	if (scene != sceneType::title)
+	{
+		return;
+	}
+
+	if (input->Triger(DIK_SPACE))
+	{
+		startEase.set(easingType::easeOut, easingPattern::Quadratic, 30, 64, 0);
+		isPushStart = true;
+	}
+
+	if (isPushStart)
+	{
+		startButton.size.y = startEase.easing();
+		startButton.SpriteTransferVertexBuffer();
+	}
+
+	startButton.SpriteUpdate();
+
+	if (isPushStart && startButton.size.y <= 0)
+	{
+		scene = sceneType::select;
+	}
+}
+
+//セレクト画面更新
+void GameScene::Select_update()
+{
+	if (scene != sceneType::select)
 	{
 		return;
 	}
@@ -284,6 +322,8 @@ void GameScene::Result_update()
 {
 	if (input->Triger(DIK_SPACE))
 	{
+		startButton.size = { 256,64 };
+		startButton.SpriteTransferVertexBuffer();
 		scene = sceneType::title;
 	}
 }
@@ -296,6 +336,15 @@ void GameScene::Result_update()
 void GameScene::Title_draw()
 {
 	if (scene != sceneType::title)
+	{
+		return;
+	}
+}
+
+//レクと画面描画
+void GameScene::Select_draw()
+{
+	if (scene != sceneType::select)
 	{
 		return;
 	}
@@ -345,6 +394,9 @@ void GameScene::Update()
 	//タイトル画面
 	Title_update();
 
+	//セレクト画面
+	Select_update();
+
 	//プレイ画面
 	Play_update();
 
@@ -373,6 +425,8 @@ void GameScene::Draw3D()
 	//ゲーム内シーンごとの描画
 	Title_draw();
 
+	Select_draw();
+
 	Play_draw();
 
 	if (scene == sceneType::clear || scene == sceneType::over)
@@ -383,6 +437,11 @@ void GameScene::Draw3D()
 
 void GameScene::Draw2D()
 {
+	if (scene == sceneType::title)
+	{
+		startButton.DrawSprite(directx->cmdList.Get());
+	}
+
 	if (scene == sceneType::play)
 	{
 		for (int i = 0; i < maxEnemyNum; i++)
