@@ -115,8 +115,13 @@ public:
 	/// セッティング
 	/// </summary>
 	/// <param name="pos">初期位置</param>
-	/// <param name="pattern">行動パターン</param>
 	void set(XMFLOAT3 pos);
+
+	/// <summary>
+	/// 行動パターン変更
+	/// <param name="pattern">行動パターン</param>
+	/// </summary>
+	void changePattern(enemyPattern pattern) { enemyMovePattern = pattern; }
 
 	//リセット
 	void reSet();
