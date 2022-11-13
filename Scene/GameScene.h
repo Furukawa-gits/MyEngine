@@ -53,7 +53,7 @@ public:
 	void Init(directX* directx, dxinput* input, Audio* audio);
 
 	//更新
-	void Update();
+	void Updata();
 
 	//描画
 	void DrawBack();
@@ -65,10 +65,10 @@ public:
 private:
 
 	//シーンごとの更新
-	void Title_update();
-	void Select_update();
-	void Play_update();
-	void Result_update();
+	void Title_updata();
+	void Select_updata();
+	void Play_updata();
+	void Result_updata();
 
 	//シーンごとの描画
 	void Title_draw();
@@ -110,8 +110,6 @@ private:
 	float roll = 0.0f;
 	//音
 
-	//スプライト(各クラスに依存しないやつ)
-
 	//3dオブジェクト
 	Model* model = nullptr;
 	Model* SkyModel = nullptr;
@@ -148,8 +146,17 @@ private:
 	SingleSprite target;
 	bool isTarget = false;
 
+	//スプライト(各クラスに依存しないやつ)
 	//背景
 	SingleSprite sample_back;
+	//スタートボタン
+	SingleSprite startButton;
+	//ステージアイコン
+	SingleSprite stage1;
+	SingleSprite stage2;
+
+
+	SingleSprite test;
 
 	//ゲーム時間
 	int game_time = 0;
@@ -160,13 +167,23 @@ private:
 	//タイトル演出フラグ
 	bool isTitleStage = false;
 
-	easingManager startEase;
+	//スタートボタンのイージング
+	easingManager startButtonEase_y;
+	easingManager startButtonEase_x;
 
-	SingleSprite startButton;
 	bool isPushStart = false;
 
-	//ウェーブ
+	//シーンチェンジフラグ
 	bool Ischangescene = false;
+
+	//ステージ番号
+	int stageNum = 1;
+
+	//ステージアイコンのイージング
+	easingManager stageIconEase;
+
+	//ステージアイコンを動かしているかどうか
+	bool isMoveStageIcon = false;
 
 	//リザルトの表示切り替え
 	int result_count = 0;

@@ -217,7 +217,7 @@ struct CD3DX12_DEPTH_STENCIL_DESC : public D3D12_DEPTH_STENCIL_DESC
 };
 
 //------------------------------------------------------------------------------------------------
-// Requires the Windows 10 Creators Update SDK (15063)
+// Requires the Windows 10 Creators Updata SDK (15063)
 #if defined(NTDDI_WIN10_RS2) && (NTDDI_VERSION >= NTDDI_WIN10_RS2)
 struct CD3DX12_DEPTH_STENCIL_DESC1 : public D3D12_DEPTH_STENCIL_DESC1
 {
@@ -1959,7 +1959,7 @@ inline bool operator!=( const D3D12_RESOURCE_DESC1& l, const D3D12_RESOURCE_DESC
 #endif // NTDDI_WIN10_VB
 
 //------------------------------------------------------------------------------------------------
-// Requires the Windows 10 Fall Creators Update SDK (16299)
+// Requires the Windows 10 Fall Creators Updata SDK (16299)
 #if defined(NTDDI_WIN10_RS3) && (NTDDI_VERSION >= NTDDI_WIN10_RS3)
 struct CD3DX12_VIEW_INSTANCING_DESC : public D3D12_VIEW_INSTANCING_DESC
 {
@@ -2309,7 +2309,7 @@ inline ID3D12CommandList * const * CommandListCast(t_CommandListType * const * p
 }
 
 //------------------------------------------------------------------------------------------------
-// D3D12 exports a new method for serializing root signatures in the Windows 10 Anniversary Update.
+// D3D12 exports a new method for serializing root signatures in the Windows 10 Anniversary Updata.
 // To help enable root signature 1.1 features when they are available and not require maintaining
 // two code paths for building root signatures, this helper method reconstructs a 1.0 signature when
 // 1.1 is not supported.
@@ -3240,7 +3240,7 @@ inline HRESULT D3DX12ParsePipelineStream(const D3D12_PIPELINE_STATE_STREAM_DESC&
 }
 #endif // NTDDI_WIN10_RS2
 
-// Requires the Windows 10 October 2018 Update SDK (17763)
+// Requires the Windows 10 October 2018 Updata SDK (17763)
 #if defined(NTDDI_WIN10_RS5) && (NTDDI_VERSION >= NTDDI_WIN10_RS5)
 //------------------------------------------------------------------------------------------------
 inline bool operator==( const D3D12_CLEAR_VALUE &a, const D3D12_CLEAR_VALUE &b) noexcept

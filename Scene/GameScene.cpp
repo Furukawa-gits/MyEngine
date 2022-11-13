@@ -24,14 +24,32 @@ void GameScene::Load_sounds()
 //スプライト(各クラスに依存しないやつ)初期化
 void GameScene::Load_Sprites()
 {
+	//背景
 	sample_back.size = { 1280,720 };
 	sample_back.GenerateSprite("sample_back.jpg");
 
+	//スタートボタン
 	startButton.anchorpoint = { 0.5f,0.5f };
 	startButton.size = { 256,64 };
 	startButton.GenerateSprite("Start_button.png");
 	startButton.position = { 640,500,0 };
 	startButton.SpriteTransferVertexBuffer();
+
+	//ステージアイコン１～２
+	stage1.anchorpoint = { 0.5f,0.5f };
+	stage1.size = { 128,128 };
+	stage1.position = { 0,360,0 };
+	stage1.GenerateSprite("select1.png");
+
+	stage2.anchorpoint = { 0.5f,0.5f };
+	stage2.size = { 128,128 };
+	stage2.position = { 0,360,0 };
+	stage2.GenerateSprite("select2.png");
+
+	test.anchorpoint = { 0.5f,0.5f };
+	test.size = { 128,128 };
+	test.position = { 640,100,0 };
+	test.GenerateSprite("select2.png");
 }
 
 //初期化
@@ -122,12 +140,21 @@ void GameScene::debugs_print()
 	{
 		debugtext.Print("Result", 10, 160, 1.0f);
 	}
+
+	if (stageNum == 1)
+	{
+		debugtext.Print("1", 10, 180, 1.0f);
+	}
+	else
+	{
+		debugtext.Print("2", 10, 180, 1.0f);
+	}
 }
 
 #pragma region 各シーン更新
 
 //タイトル画面更新
-void GameScene::Title_update()
+void GameScene::Title_updata()
 {
 	if (scene != sceneType::title)
 	{
@@ -136,33 +163,73 @@ void GameScene::Title_update()
 
 	if (input->Triger(DIK_SPACE))
 	{
-		startEase.set(easingType::easeOut, easingPattern::Quadratic, 30, 64, 0);
+		startButtonEase_y.set(easingType::easeOut, easingPattern::Quadratic, 30, 64, 0);
+		startButtonEase_x.set(easingType::easeOut, easingPattern::Quadratic, 30, 256, 330);
 		isPushStart = true;
 	}
 
 	if (isPushStart)
 	{
-		startButton.size.y = startEase.easing();
+		startButton.size.y = startButtonEase_y.easing();
+		startButton.size.x = startButtonEase_x.easing();
 		startButton.SpriteTransferVertexBuffer();
 	}
 
 	startButton.SpriteUpdate();
 
-	if (isPushStart && startButton.size.y <= 0)
+	if (isPushStart && !startButtonEase_y.getIsActive())
 	{
+		stage1.position.x = 640;
+		isMoveStageIcon = false;
 		scene = sceneType::select;
 	}
 }
 
 //セレクト画面更新
-void GameScene::Select_update()
+void GameScene::Select_updata()
 {
 	if (scene != sceneType::select)
 	{
 		return;
 	}
 
-	if (input->Triger(DIK_SPACE))
+	if (!isMoveStageIcon)
+	{
+		float iconPos = stage1.position.x;
+
+		//次のステージ
+		if (input->Triger(DIK_RIGHT) && stageNum < 2)
+		{
+			stageIconEase.set(easingType::easeOut, easingPattern::Cubic, 20, iconPos, iconPos - 300);
+			stageNum++;
+			isMoveStageIcon = true;
+		}
+		//前のステージ
+		else if (input->Triger(DIK_LEFT) && stageNum > 1)
+		{
+			stageIconEase.set(easingType::easeOut, easingPattern::Quadratic, 20, iconPos, iconPos + 300);
+			stageNum--;
+			isMoveStageIcon = true;
+		}
+	}
+	else
+	{
+		stage1.position.x = stageIconEase.easing();
+
+		if (!stageIconEase.getIsActive())
+		{
+			isMoveStageIcon = false;
+		}
+	}
+
+	stage2.position.x = stage1.position.x + 300;
+
+	stage1.SpriteUpdate();
+	stage2.SpriteUpdate();
+
+	test.SpriteUpdate();
+
+	if (input->Triger(DIK_SPACE) && !isMoveStageIcon)
 	{
 		up = 0;
 		right = 0;
@@ -184,12 +251,29 @@ void GameScene::Select_update()
 		testBoss.HP = 30;
 		isBoss = false;
 
+		if (stageNum == 1)
+		{
+			for (int i = 0; i < maxEnemyNum; i++)
+			{
+				testEnemys[i].changePattern(enemyPattern::chase);
+			}
+			testBoss.changePattern(enemyPattern::chase);
+		}
+		else
+		{
+			for (int i = 0; i < maxEnemyNum; i++)
+			{
+				testEnemys[i].changePattern(enemyPattern::shot);
+			}
+			testBoss.changePattern(enemyPattern::shot);
+		}
+
 		scene = sceneType::play;
 	}
 }
 
 //プレイ画面更新
-void GameScene::Play_update()
+void GameScene::Play_updata()
 {
 	if (scene != sceneType::play)
 	{
@@ -318,7 +402,7 @@ void GameScene::Play_update()
 }
 
 //リザルト画面更新
-void GameScene::Result_update()
+void GameScene::Result_updata()
 {
 	if (input->Triger(DIK_SPACE))
 	{
@@ -381,7 +465,7 @@ void GameScene::Result_draw()
 #pragma endregion 各シーン描画
 
 //更新
-void GameScene::Update()
+void GameScene::Updata()
 {
 	//マウス座標更新
 	MOUSE_POS = { (float)input->mouse_p.x,(float)input->mouse_p.y,0.0f };
@@ -392,23 +476,23 @@ void GameScene::Update()
 	//シーン切り替え
 
 	//タイトル画面
-	Title_update();
+	Title_updata();
 
 	//セレクト画面
-	Select_update();
+	Select_updata();
 
 	//プレイ画面
-	Play_update();
+	Play_updata();
 
 	//クリア画面
 	if (scene == sceneType::clear || scene == sceneType::over)
 	{
-		Result_update();
+		Result_updata();
 	}
 
 	sample_back.SpriteUpdate();
 
-	//camera->Update();
+	//camera->Updata();
 
 	debugs_print();
 }
@@ -440,6 +524,14 @@ void GameScene::Draw2D()
 	if (scene == sceneType::title)
 	{
 		startButton.DrawSprite(directx->cmdList.Get());
+	}
+
+	if (scene == sceneType::select)
+	{
+		stage1.DrawSprite(directx->cmdList.Get());
+		stage2.DrawSprite(directx->cmdList.Get());
+
+		test.DrawSprite(directx->cmdList.Get());
 	}
 
 	if (scene == sceneType::play)

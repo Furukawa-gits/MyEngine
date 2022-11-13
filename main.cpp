@@ -82,7 +82,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		input.Update(Win->hwnd);
 
 		//ゲームシーン更新
-		gamescene.Update();
+		gamescene.Updata();
 
 		//グレースケール切り替え
 		if (input.Triger(DIK_2) && isSetGray == false)

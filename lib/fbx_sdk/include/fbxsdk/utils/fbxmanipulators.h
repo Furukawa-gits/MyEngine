@@ -58,7 +58,7 @@ public:
 	//! End current manipulation.
 	void End();
 
-	/** Update the camera position. This must be called periodically in order for the camera to update its position.
+	/** Updata the camera position. This must be called periodically in order for the camera to update its position.
 	* \param pTimeDelta Elapsed time since the last update. If Smooth is disabled, you can leave this value to zero.
 	* \remark Begin, Notify and End will not change the current camera position. */
 	void Update(const FbxTime& pTimeDelta=FBXSDK_TIME_ZERO);

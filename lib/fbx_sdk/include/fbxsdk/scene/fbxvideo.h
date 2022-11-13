@@ -52,14 +52,14 @@ public:
 		/** Specify the Video full filename.
 		  * \param pName     Video full filename.
 		  * \return          \c True,if update successfully, \c false otherwise.
-		  * \remarks         Update the texture filename if the connection exists.
+		  * \remarks         Updata the texture filename if the connection exists.
 		  */
         bool SetFileName(const char* pName) override;
 
 		/** Specify the Video relative filename.
 		  * \param pName     Video relative filename.
 		  * \return          \c True, if update successfully, \c false otherwise.
-		  * \remarks         Update the texture filename if the connection exists.
+		  * \remarks         Updata the texture filename if the connection exists.
 		  */
         bool SetRelativeFileName(const char* pName) override;
 

@@ -10,7 +10,7 @@ Boss::~Boss()
 
 void Boss::bossInit()
 {
-	init(enemyPattern::chase);
+	init(enemyPattern::shot);
 	HP = 30;
 	enemyObject->SetScale({ 5.0f,5.0f,5.0f });
 	enemyObject->setColor({ 0.3f,0.3f,0.3f,1 });

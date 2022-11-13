@@ -46,7 +46,7 @@ public:
 	* \remark The default threshold is 1.0, meaning that every 1% the callback is triggered. */
 	void SetThreshold(float pThreshold);
 
-	/** Update current progress with recent workload.
+	/** Updata current progress with recent workload.
 	* \param pDelta Delta amount of workload progressed so far.
 	* \param pStatus Optional current progress status string.
 	* \remark If a callback is set, it will be called upon caling this function. */

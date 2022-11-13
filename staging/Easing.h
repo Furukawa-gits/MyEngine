@@ -45,6 +45,11 @@ public:
 	/// <returns>現在のイージング進行度(割合)</returns>
 	float easing();
 
+	/// <summary>
+	/// 動いているかどうかを取得
+	/// </summary>
+	bool getIsActive() { return isActive; }
+
 private:
 	//イーズイン
 	void easeIn();

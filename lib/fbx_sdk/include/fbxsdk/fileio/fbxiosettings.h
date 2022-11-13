@@ -503,7 +503,7 @@ public:
     { 
 		eCreate,          /*!< Add to scene(duplicate the ones with the same name)    */  
 		eMerge,           /*!< Add to scene and update animation                      */
-        eExclusiveMerge  /*!< Update animation                                       */
+        eExclusiveMerge  /*!< Updata animation                                       */
     };
 
 

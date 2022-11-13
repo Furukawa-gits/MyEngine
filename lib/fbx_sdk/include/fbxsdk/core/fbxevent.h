@@ -137,7 +137,7 @@ public:
     //!Destructor
     virtual ~FbxEvent(){}
 
-    /** Update the type ID of current event with the given type ID.
+    /** Updata the type ID of current event with the given type ID.
     * \param pTypeId     the new type ID.
     */
     static void ForceTypeId(int pTypeId)
