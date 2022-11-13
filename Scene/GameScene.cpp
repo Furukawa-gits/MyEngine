@@ -248,7 +248,6 @@ void GameScene::Select_updata()
 		testPlayer.reset();
 
 		testBoss.bossReSet();
-		testBoss.HP = 30;
 		isBoss = false;
 
 		if (stageNum == 1)
@@ -346,6 +345,13 @@ void GameScene::Play_updata()
 
 		if (testBoss.isTargetSet && !testBoss.isSetMissile)
 		{
+			for (int i = 0; i < MaxPlayerMissileNum; i++)
+			{
+				if (testPlayer.playerMissiale[i].isArive = false)
+				{
+
+				}
+			}
 			testPlayer.playerMissiale[0].setPenemy(&testBoss);
 			testPlayer.playerMissiale[0].start(testPlayer.playerObject->getPosition());
 			testBoss.isSetMissile = true;

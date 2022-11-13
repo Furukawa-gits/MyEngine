@@ -191,6 +191,8 @@ void Missile::checkhit()
 			}
 			isArive = false;
 			isTargetSet = false;
+			enemyPointer->isTargetSet = false;
+			enemyPointer->isSetMissile = false;
 			enemyPointer = nullptr;
 
 		}

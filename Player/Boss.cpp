@@ -11,7 +11,7 @@ Boss::~Boss()
 void Boss::bossInit()
 {
 	init(enemyPattern::shot);
-	HP = 30;
+	HP = 5;
 	enemyObject->SetScale({ 5.0f,5.0f,5.0f });
 	enemyObject->setColor({ 0.3f,0.3f,0.3f,1 });
 	enemyCollision.radius = 9.0f;
@@ -31,6 +31,7 @@ void Boss::bossSet(XMFLOAT3 pos)
 void Boss::bossReSet()
 {
 	reSet();
+	HP = 5;
 	isDraw = false;
 }
 
