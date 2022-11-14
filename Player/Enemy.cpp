@@ -240,9 +240,9 @@ void Enemy::deathMove()
 	fallDownCount++;
 
 	position.y -= 0.2f;
-	rot.x += 2;
-	rot.y += 2;
-	rot.z += 2;
+	rot.x += deathRotSpeed;
+	rot.y += deathRotSpeed;
+	rot.z += deathRotSpeed;
 	enemyObject->setRotMatrix(rot.x, rot.y, rot.z);
 
 	if (fallDownCount >= 90)

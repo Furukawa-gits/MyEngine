@@ -86,6 +86,8 @@ public:
 	//一定距離下に落ちて行くためのカウント
 	int fallDownCount = 0;
 
+	float deathRotSpeed = 2.0f;
+
 	//敵の行動パターン
 	enemyPattern enemyMovePattern = enemyPattern::chase;
 
