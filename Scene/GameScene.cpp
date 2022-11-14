@@ -46,10 +46,21 @@ void GameScene::Load_Sprites()
 	stage2.position = { 0,360,0 };
 	stage2.GenerateSprite("select2.png");
 
-	test.anchorpoint = { 0.5f,0.5f };
-	test.size = { 128,128 };
-	test.position = { 640,100,0 };
-	test.GenerateSprite("select2.png");
+	//リザルト画面
+	resultScreen[0].size = { 1280,720 };
+	resultScreen[0].GenerateSprite("black_color.png");
+
+	resultScreen[1].size = { 1280,300 };
+	resultScreen[1].GenerateSprite("black_color.png");
+
+	//クリア・オーバー画面
+	clearText.anchorpoint = { 0.5f,0.0f };
+	clearText.size = { 640,100 };
+	clearText.GenerateSprite("CLEAR_text.png");
+
+	overText.anchorpoint = { 0.5f,0.0f };
+	overText.size = { 640,100 };
+	overText.GenerateSprite("OVER_text.png");
 }
 
 //初期化
@@ -88,7 +99,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	SkyModel = FbxLoader::GetInstance()->LoadmodelFromFile("skySphere");
 
 	//プレイヤー初期化
-	testPlayer.init(input, directx);
+	player.init(input, directx);
 
 	skySphere = new Object3d_FBX;
 	skySphere->Initialize();
@@ -131,23 +142,19 @@ void GameScene::debugs_print()
 	else if (scene == sceneType::select)
 	{
 		debugtext.Print("Select", 10, 160, 1.0f);
+		debugtext.Print("LEFT RIGHT : stage select", 10, 180, 1.0f);
 	}
 	else if (scene == sceneType::play)
 	{
 		debugtext.Print("Play", 10, 160, 1.0f);
 	}
-	else
+	else if (scene == sceneType::clear)
 	{
-		debugtext.Print("Result", 10, 160, 1.0f);
-	}
-
-	if (stageNum == 1)
-	{
-		debugtext.Print("1", 10, 180, 1.0f);
+		debugtext.Print("clear", 10, 160, 1.0f);
 	}
 	else
 	{
-		debugtext.Print("2", 10, 180, 1.0f);
+		debugtext.Print("over", 10, 160, 1.0f);
 	}
 }
 
@@ -163,8 +170,8 @@ void GameScene::Title_updata()
 
 	if (input->Triger(DIK_SPACE))
 	{
-		startButtonEase_y.set(easingType::easeOut, easingPattern::Quadratic, 30, 64, 0);
-		startButtonEase_x.set(easingType::easeOut, easingPattern::Quadratic, 30, 256, 330);
+		startButtonEase_y.set(easingType::easeOut, easingPattern::Quadratic, 15, 64, 0);
+		startButtonEase_x.set(easingType::easeOut, easingPattern::Quadratic, 15, 256, 330);
 		isPushStart = true;
 	}
 
@@ -227,8 +234,6 @@ void GameScene::Select_updata()
 	stage1.SpriteUpdate();
 	stage2.SpriteUpdate();
 
-	test.SpriteUpdate();
-
 	if (input->Triger(DIK_SPACE) && !isMoveStageIcon)
 	{
 		up = 0;
@@ -245,7 +250,7 @@ void GameScene::Select_updata()
 			testEnemys[i].reSet();
 		}
 
-		testPlayer.reset();
+		player.reset();
 
 		testBoss.bossReSet();
 		isBoss = false;
@@ -280,7 +285,7 @@ void GameScene::Play_updata()
 	}
 
 	//プレイヤー更新
-	testPlayer.update();
+	player.update();
 
 	//リセット
 	if (input->push(DIK_R))
@@ -312,13 +317,13 @@ void GameScene::Play_updata()
 	//敵(テスト)更新
 	for (int i = 0; i < maxEnemyNum; i++)
 	{
-		testEnemys[i].update(testPlayer.playerObject->getPosition());
-		testPlayer.checkPlayerEnemy(&testEnemys[i]);
-		testPlayer.checkPlayerEnemyBullet(&testEnemys[i]);
+		testEnemys[i].update(player.playerObject->getPosition());
+		player.checkPlayerEnemy(&testEnemys[i]);
+		player.checkPlayerEnemyBullet(&testEnemys[i]);
 	}
 
 	//ボス更新
-	testBoss.bossUpdate(&testPlayer);
+	testBoss.bossUpdate(&player);
 
 	//マウスカーソル非表示
 	ShowCursor(false);
@@ -335,8 +340,8 @@ void GameScene::Play_updata()
 			{
 				if (testEnemys[j].isTargetSet && !testEnemys[j].isSetMissile)
 				{
-					testPlayer.playerMissiale[i].setPenemy(&testEnemys[j]);
-					testPlayer.playerMissiale[i].start(testPlayer.playerObject->getPosition());
+					player.playerMissiale[i].setPenemy(&testEnemys[j]);
+					player.playerMissiale[i].start(player.playerObject->getPosition());
 					testEnemys[j].isSetMissile = true;
 					break;
 				}
@@ -347,13 +352,13 @@ void GameScene::Play_updata()
 		{
 			for (int i = 0; i < MaxPlayerMissileNum; i++)
 			{
-				if (testPlayer.playerMissiale[i].isArive = false)
+				if (player.playerMissiale[i].isArive = false)
 				{
 
 				}
 			}
-			testPlayer.playerMissiale[0].setPenemy(&testBoss);
-			testPlayer.playerMissiale[0].start(testPlayer.playerObject->getPosition());
+			player.playerMissiale[0].setPenemy(&testBoss);
+			player.playerMissiale[0].start(player.playerObject->getPosition());
 			testBoss.isSetMissile = true;
 		}
 
@@ -365,16 +370,16 @@ void GameScene::Play_updata()
 	{
 		for (int i = 0; i < maxEnemyNum; i++)
 		{
-			testPlayer.playerBullet[j].checkHitEnemy(&testEnemys[i]);
-			testPlayer.playerBullet[j].checkHitEnemyBullet(&testEnemys[i]);
+			player.playerBullet[j].checkHitEnemy(&testEnemys[i]);
+			player.playerBullet[j].checkHitEnemyBullet(&testEnemys[i]);
 		}
 	}
 
 	//通常弾とボスの当たり判定
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
 	{
-		testPlayer.playerBullet[i].checkHitEnemy(&testBoss);
-		testPlayer.playerBullet[i].checkHitEnemyBullet(&testBoss);
+		player.playerBullet[i].checkHitEnemy(&testBoss);
+		player.playerBullet[i].checkHitEnemyBullet(&testBoss);
 	}
 
 	//死んでいる雑魚敵をカウント
@@ -395,22 +400,64 @@ void GameScene::Play_updata()
 	}
 
 	//ボスを倒したorプレイヤーが死んだらリザルト
-	if ((isBoss && !testBoss.isDraw) || testPlayer.playerHP <= 0)
+	if ((isBoss && !testBoss.isDraw))
 	{
+		isStartScreen = true;
+		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 20, 720, 0);
 		scene = sceneType::clear;
 	}
 
-	//デバッグ用シーン切り替え
-	if (input->Triger(DIK_N))
+	if (player.playerHP <= 0)
 	{
-		scene = sceneType::clear;
+		isStartScreen = true;
+		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 20, 720, 0);
+		scene = sceneType::over;
 	}
 }
 
 //リザルト画面更新
 void GameScene::Result_updata()
 {
-	if (input->Triger(DIK_SPACE))
+	if (scene != sceneType::clear && scene != sceneType::over)
+	{
+		return;
+	}
+
+	resultScreen[0].position.y = resultScreenEase.easing();
+
+	if (scene == sceneType::clear)
+	{
+		if (!resultScreenEase.getIsActive())
+		{
+			clearTextEase.set(easingType::easeOut, easingPattern::Quadratic, 15, 200, 300);
+		}
+		clearText.SpriteUpdate();
+	}
+	else
+	{
+		if (!resultScreenEase.getIsActive())
+		{
+			overTextEase.set(easingType::easeOut, easingPattern::Quadratic, 15, 200, 300);
+		}
+		overText.SpriteUpdate();
+	}
+
+	clearText.position.x = 640;
+	clearText.position.y = clearTextEase.easing();
+	clearText.SpriteTransferVertexBuffer();
+	clearText.SpriteUpdate();
+
+	overText.position.x = 640;
+	overText.position.y = overTextEase.easing();
+	overText.SpriteTransferVertexBuffer();
+	overText.SpriteUpdate();
+
+	if (!clearTextEase.getIsActive() && !overTextEase.getIsActive())
+	{
+		isStartScreen = false;
+	}
+
+	if (input->Triger(DIK_SPACE) && !isStartScreen)
 	{
 		startButton.size = { 256,64 };
 		startButton.SpriteTransferVertexBuffer();
@@ -451,7 +498,7 @@ void GameScene::Play_draw()
 	skySphere->Draw(directx->cmdList.Get());
 
 	//プレイヤー描画
-	testPlayer.draw3D(directx);
+	player.draw3D(directx);
 
 	for (int i = 0; i < maxEnemyNum; i++)
 	{
@@ -465,7 +512,10 @@ void GameScene::Play_draw()
 //リザルト画面描画
 void GameScene::Result_draw()
 {
-
+	if (scene != sceneType::clear && scene != sceneType::over)
+	{
+		return;
+	}
 }
 
 #pragma endregion 各シーン描画
@@ -536,8 +586,6 @@ void GameScene::Draw2D()
 	{
 		stage1.DrawSprite(directx->cmdList.Get());
 		stage2.DrawSprite(directx->cmdList.Get());
-
-		test.DrawSprite(directx->cmdList.Get());
 	}
 
 	if (scene == sceneType::play)
@@ -550,14 +598,28 @@ void GameScene::Draw2D()
 		//ボス描画(2d)
 		testBoss.draw2D(directx);
 
-		testPlayer.draw2D(directx);
+		player.draw2D(directx);
+	}
+
+	if (scene == sceneType::clear)
+	{
+		resultScreen[0].DrawSprite(directx->cmdList.Get());
+		clearText.DrawSprite(directx->cmdList.Get());
+		resultScreen[1].DrawSprite(directx->cmdList.Get());
+	}
+
+	if (scene == sceneType::over)
+	{
+		resultScreen[0].DrawSprite(directx->cmdList.Get());
+		overText.DrawSprite(directx->cmdList.Get());
+		resultScreen[1].DrawSprite(directx->cmdList.Get());
 	}
 	debugtext.DrawAll(directx->cmdList.Get());
 }
 
 void GameScene::checkHitPlayerTarget()
 {
-	if (!testPlayer.isRockOn)
+	if (!player.isRockOn)
 	{
 		return;
 	}
@@ -572,7 +634,7 @@ void GameScene::checkHitPlayerTarget()
 	{
 		XMFLOAT2 screenPos = testEnemys[i].enemyObject->worldToScleen();
 
-		float dis = sqrtf(powf(testPlayer.targetFirst.position.x - screenPos.x, 2) + powf(testPlayer.targetFirst.position.y - screenPos.y, 2));
+		float dis = sqrtf(powf(player.targetFirst.position.x - screenPos.x, 2) + powf(player.targetFirst.position.y - screenPos.y, 2));
 
 		if (dis < 56.5685f && !testEnemys[i].isTargetSet && targetnum < MaxPlayerMissileNum && testEnemys[i].Isarive)
 		{
@@ -584,7 +646,7 @@ void GameScene::checkHitPlayerTarget()
 	//ボス
 	XMFLOAT2 screenPos = testBoss.enemyObject->worldToScleen();
 
-	float dis = sqrtf(powf(testPlayer.targetFirst.position.x - screenPos.x, 2) + powf(testPlayer.targetFirst.position.y - screenPos.y, 2));
+	float dis = sqrtf(powf(player.targetFirst.position.x - screenPos.x, 2) + powf(player.targetFirst.position.y - screenPos.y, 2));
 
 	if (dis < 56.5685f && !testBoss.isTargetSet && targetnum < MaxPlayerMissileNum && testBoss.isDraw)
 	{

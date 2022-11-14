@@ -118,7 +118,7 @@ private:
 	Object3d_FBX* cameraobj = nullptr;
 
 	//プレイヤー
-	Player testPlayer;
+	Player player;
 
 	int targetnum = 0;
 
@@ -149,14 +149,22 @@ private:
 	//スプライト(各クラスに依存しないやつ)
 	//背景
 	SingleSprite sample_back;
+
 	//スタートボタン
 	SingleSprite startButton;
+
 	//ステージアイコン
 	SingleSprite stage1;
 	SingleSprite stage2;
 
+	//リザルト画面
+	SingleSprite resultScreen[2];
 
-	SingleSprite test;
+	//クリア画面
+	SingleSprite clearText;
+
+	//ゲームオーバー画面
+	SingleSprite overText;
 
 	//ゲーム時間
 	int game_time = 0;
@@ -185,6 +193,10 @@ private:
 	//ステージアイコンを動かしているかどうか
 	bool isMoveStageIcon = false;
 
-	//リザルトの表示切り替え
-	int result_count = 0;
+	//リザルト画面のイージングフラグ
+	bool isStartScreen = false;
+
+	easingManager resultScreenEase;
+	easingManager clearTextEase;
+	easingManager overTextEase;
 };
