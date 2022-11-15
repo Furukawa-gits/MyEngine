@@ -69,7 +69,7 @@ void Player::init(dxinput* input, directX* directx)
 	for (auto itr = HPUI->begin(); itr != HPUI->end(); itr++)
 	{
 		itr->GenerateSprite("Player_HP.png");
-		itr->size = { 40,80 };
+		itr->size = { 40,60 };
 		itr->position = { i * 30.0f + 10.0f,650.0f,0.0f };
 		itr->SpriteTransferVertexBuffer(false);
 		i++;
@@ -84,6 +84,21 @@ void Player::init(dxinput* input, directX* directx)
 //移動
 void Player::Move()
 {
+	//オブジェクトの更新
+	playerObject->Update();
+	playerCollision.center =
+	{
+		playerObject->getPosition().x,
+		playerObject->getPosition().y,
+		playerObject->getPosition().z,
+		1.0f
+	};
+
+	if (isStop)
+	{
+		return;
+	}
+
 	//自動で前に進み続ける
 	playerObject->addMoveFront(followCamera->getFrontVec());
 
@@ -113,16 +128,6 @@ void Player::Move()
 
 	//前への移動量を計算
 	followCamera->setFrontVec(moveSpeed);
-
-	//オブジェクトの更新
-	playerObject->Update();
-	playerCollision.center =
-	{
-		playerObject->getPosition().x,
-		playerObject->getPosition().y,
-		playerObject->getPosition().z,
-		1.0f
-	};
 }
 
 //カメラ移動
@@ -302,53 +307,7 @@ void Player::update()
 
 void Player::targetUpdate()
 {
-	//左クリックで通常弾
-	if (input->Mouse_LeftTriger())
-	{
-		for (int i = 0; i < MaxPlayerBulletNum; i++)
-		{
-			if (playerBullet[i].isArive == false)
-			{
-				playerBullet[i].set(playerObject->getPosition(),
-					playerObject->screenToWorld({ targetFirst.position.x,targetFirst.position.y }));
-				break;
-			}
-		}
-
-		//リスト化
-		/*std::unique_ptr<bullet> newBullet = std::make_unique<bullet>();
-		newBullet->init();
-		newBullet->set(playerObject->getPosition(),
-			playerObject->screenToWorld({ targetFirst.position.x,targetFirst.position.y }));*/
-
-		
-	}
-
-	//ロックオンモードに切り替え
-	if (input->Mouse_LeftPush())
-	{
-		targetCount++;
-	}
-	else
-	{
-		targetCount = 0;
-	}
-
-	if (targetCount > 70)
-	{
-		targetFirst.rotation -= 7.0f;
-		targetSecond.rotation += 7.0f;
-		targetThird.rotation -= 7.0f;
-		isRockOn = true;
-	}
-	else
-	{
-		targetFirst.rotation += 4.0f;
-		targetSecond.rotation -= 4.0f;
-		targetThird.rotation += 4.0f;
-		isRockOn = false;
-	}
-
+	//ターゲットカーソルの座標
 	targetFirst.position = { (float)input->mouse_p.x,(float)input->mouse_p.y,0.0f };
 
 	//ターゲットカーソルが場外にいかないように制御
@@ -404,6 +363,59 @@ void Player::targetUpdate()
 	};
 	targetThird.SpriteTransferVertexBuffer();
 	targetThird.SpriteUpdate();
+
+	if (isStop)
+	{
+		return;
+	}
+
+	//左クリックで通常弾
+	if (input->Mouse_LeftTriger())
+	{
+		for (int i = 0; i < MaxPlayerBulletNum; i++)
+		{
+			if (playerBullet[i].isArive == false)
+			{
+				playerBullet[i].set(playerObject->getPosition(),
+					playerObject->screenToWorld({ targetFirst.position.x,targetFirst.position.y }));
+				break;
+			}
+		}
+
+		//リスト化
+		/*std::unique_ptr<bullet> newBullet = std::make_unique<bullet>();
+		newBullet->init();
+		newBullet->set(playerObject->getPosition(),
+			playerObject->screenToWorld({ targetFirst.position.x,targetFirst.position.y }));*/
+
+		
+	}
+
+	//ロックオンモードに切り替え
+	if (input->Mouse_LeftPush())
+	{
+		targetCount++;
+	}
+	else
+	{
+		targetCount = 0;
+	}
+
+	if (targetCount > 70)
+	{
+		targetFirst.rotation -= 7.0f;
+		targetSecond.rotation += 7.0f;
+		targetThird.rotation -= 7.0f;
+		isRockOn = true;
+	}
+	else
+	{
+		targetFirst.rotation += 4.0f;
+		targetSecond.rotation -= 4.0f;
+		targetThird.rotation += 4.0f;
+		isRockOn = false;
+	}
+
 }
 
 //リセット

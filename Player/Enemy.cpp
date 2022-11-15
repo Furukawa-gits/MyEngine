@@ -182,13 +182,18 @@ void Enemy::update(XMFLOAT3 playerPos)
 		return;
 	}
 
+	enemyObject->Update();
+
+	if (isStop)
+	{
+		return;
+	}
+
 	//“G‚ª¶‘¶
 	ariveMove(playerPos);
 
 	//“G‚ªŒ‚’Ä
 	deathMove();
-
-	enemyObject->Update();
 
 	return;
 }

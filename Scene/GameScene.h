@@ -138,6 +138,9 @@ private:
 	/// </summary>
 	Boss testBoss;
 
+	//ボスのhpゲージ
+	SingleSprite bossHp[5];
+
 	//ボス出現フラグ
 	bool isBoss = false;
 
@@ -205,7 +208,10 @@ private:
 	bool isMoveStageIcon = false;
 
 	//カウントダウンのイージングフラグ
-	bool isStartCount = false;
+	bool isCountDown = false;
+	bool isStartIcon = false;
+	int countDownNum = 0;
+	int startIconTime = 0;
 	easingManager countDownEase;
 	easingManager startEase;
 

@@ -104,4 +104,6 @@ public:
 
 	int playerHP = 10;
 
+	//’â~ƒtƒ‰ƒO
+	bool isStop = false;
 };

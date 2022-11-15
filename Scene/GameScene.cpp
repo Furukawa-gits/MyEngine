@@ -39,12 +39,12 @@ void GameScene::Load_Sprites()
 	stage1.anchorpoint = { 0.5f,0.5f };
 	stage1.size = { 128,128 };
 	stage1.position = { 0,360,0 };
-	stage1.GenerateSprite("select1.png");
+	stage1.GenerateSprite("count1.png");
 
 	stage2.anchorpoint = { 0.5f,0.5f };
 	stage2.size = { 128,128 };
 	stage2.position = { 0,360,0 };
-	stage2.GenerateSprite("select2.png");
+	stage2.GenerateSprite("count2.png");
 
 	//カウントダウンアイコン
 	countDown[0].anchorpoint = { 0.5f,0.5f };
@@ -63,7 +63,7 @@ void GameScene::Load_Sprites()
 	countDown[2].GenerateSprite("count1.png");
 
 	playStart.anchorpoint = { 0.5f,0.5f };
-	playStart.size = { 400,100 };
+	playStart.size = { 500,125 };
 	playStart.position = { 640,360,0 };
 	playStart.GenerateSprite("playstart.png");
 
@@ -294,6 +294,16 @@ void GameScene::Select_updata()
 			testBoss.changePattern(enemyPattern::shot);
 		}
 
+		countDownEase.set(easingType::easeOut, easingPattern::Quintic, 90, 450, 20);
+		countDown[0].rotation = 0;
+		countDown[1].rotation = 0;
+		countDown[2].rotation = 0;
+		countDownNum = 0;
+		isCountDown = true;
+		isStartIcon = false;
+
+		player.update();
+
 		scene = sceneType::play;
 	}
 }
@@ -304,6 +314,64 @@ void GameScene::Play_updata()
 	if (scene != sceneType::play)
 	{
 		return;
+	}
+
+	if (isCountDown)
+	{
+		countDown[countDownNum].size = { countDownEase.easing(),countDownEase.easing() };
+		countDown[countDownNum].rotation -= 4;
+		countDown[countDownNum].SpriteTransferVertexBuffer();
+		countDown[countDownNum].SpriteUpdate();
+
+		if (!countDownEase.getIsActive())
+		{
+			if (countDownNum + 1 < 3)
+			{
+				countDownEase.set(easingType::easeOut, easingPattern::Quintic, 90, 450, 20);
+				countDownNum++;
+			}
+			else
+			{
+				isStartIcon = true;
+				startIconTime = 40;
+				isCountDown = false;
+			}
+		}
+	}
+
+	if (isStartIcon)
+	{
+		startIconTime--;
+		playStart.SpriteUpdate();
+
+		if (startIconTime <= 0)
+		{
+			isStartIcon = false;
+		}
+	}
+
+	//スタートのカウントダウン演出が終わったら動ける
+	if (isCountDown || isStartIcon)
+	{
+		player.isStop = true;
+
+		for (int i = 0; i < maxEnemyNum; i++)
+		{
+			testEnemys[i].isStop = true;
+		}
+
+		testBoss.isStop = true;
+	}
+	else
+	{
+		player.isStop = false;
+
+		for (int i = 0; i < maxEnemyNum; i++)
+		{
+			testEnemys[i].isStop = false;
+		}
+
+		testBoss.isStop = false;
 	}
 
 	//プレイヤー更新
@@ -334,8 +402,6 @@ void GameScene::Play_updata()
 		testBoss.bossReSet();
 	}
 
-	skySphere->Update();
-
 	//敵(テスト)更新
 	for (int i = 0; i < maxEnemyNum; i++)
 	{
@@ -347,14 +413,8 @@ void GameScene::Play_updata()
 	//ボス更新
 	testBoss.bossUpdate(&player);
 
-	//マウスカーソル非表示
-	ShowCursor(false);
-
-	//敵がロックオンされているかどうか
-	checkHitPlayerTarget();
-
 	//ホーミング弾発射
-	if (input->Mouse_LeftRelease() && !isStartCount)
+	if (input->Mouse_LeftRelease() && !isCountDown)
 	{
 		for (int i = 0; i < targetnum; i++)
 		{
@@ -386,6 +446,14 @@ void GameScene::Play_updata()
 
 		targetnum = 0;
 	}
+
+	skySphere->Update();
+
+	//マウスカーソル非表示
+	ShowCursor(false);
+
+	//敵がロックオンされているかどうか
+	checkHitPlayerTarget();
 
 	//プレイヤーの通常弾当たり判定
 	for (int j = 0; j < MaxPlayerBulletNum; j++)
@@ -669,6 +737,16 @@ void GameScene::Draw2D()
 		testBoss.draw2D(directx);
 
 		player.draw2D(directx);
+
+		if (isCountDown)
+		{
+			countDown[countDownNum].DrawSprite(directx->cmdList.Get());
+		}
+
+		if (isStartIcon)
+		{
+			playStart.DrawSprite(directx->cmdList.Get());
+		}
 	}
 
 	if (scene == sceneType::clear)
@@ -723,9 +801,4 @@ void GameScene::checkHitPlayerTarget()
 		testBoss.isTargetSet = true;
 		targetnum++;
 	}
-}
-
-void GameScene::startCountDown()
-{
-
 }

@@ -77,6 +77,9 @@ public:
 	//体力
 	int HP = 1;
 
+	//停止フラグ
+	bool isStop = false;
+
 	//座標・初期位置・速度・回転
 	XMFLOAT3 position = {};
 	XMFLOAT3 startPosition = {};
