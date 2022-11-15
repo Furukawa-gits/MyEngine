@@ -195,6 +195,8 @@ private:
 
 	//リザルト画面のイージングフラグ
 	bool isStartScreen = false;
+	bool isScreenEase = false;
+	bool isTextEase = false;
 
 	easingManager resultScreenEase;
 	easingManager clearTextEase;

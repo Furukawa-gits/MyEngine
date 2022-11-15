@@ -399,17 +399,26 @@ void GameScene::Play_updata()
 		isBoss = true;
 	}
 
+	if (input->Triger(DIK_D))
+	{
+		player.playerHP = 0;
+	}
+
 	//ボスを倒したorプレイヤーが死んだらリザルト
 	if ((isBoss && !testBoss.isDraw))
 	{
-		isStartScreen = true;
+		isMoveScreen = true;
+		isScreenEase = true;
+		isTextEase = false;
 		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 20, 720, 0);
 		scene = sceneType::clear;
 	}
 
 	if (player.playerHP <= 0)
 	{
-		isStartScreen = true;
+		isMoveScreen = true;
+		isScreenEase = true;
+		isTextEase = false;
 		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 20, 720, 0);
 		scene = sceneType::over;
 	}
@@ -423,41 +432,71 @@ void GameScene::Result_updata()
 		return;
 	}
 
-	resultScreen[0].position.y = resultScreenEase.easing();
-
-	if (scene == sceneType::clear)
+	if (isScreenEase)
 	{
+		resultScreen[0].position.y = resultScreenEase.easing();
+		resultScreen[1].position.y = resultScreen[0].position.y;
+
+		clearText.position.x = 640;
+		clearText.position.y = resultScreen[0].position.y;
+		clearText.SpriteTransferVertexBuffer();
+		clearText.SpriteUpdate();
+
+		overText.position.x = 640;
+		overText.position.y = resultScreen[0].position.y;
+		overText.SpriteTransferVertexBuffer();
+		overText.SpriteUpdate();
+
 		if (!resultScreenEase.getIsActive())
 		{
-			clearTextEase.set(easingType::easeOut, easingPattern::Quadratic, 15, 200, 300);
+			isScreenEase = false;
+
+			if (scene == sceneType::clear)
+			{
+				clearTextEase.set(easingType::easeOut, easingPattern::Quadratic, 15, 200, 300);
+			}
+			else
+			{
+				overTextEase.set(easingType::easeOut, easingPattern::Quadratic, 15, 200, 300);
+			}
+			isTextEase = true;
 		}
-		clearText.SpriteUpdate();
 	}
 	else
 	{
-		if (!resultScreenEase.getIsActive())
-		{
-			overTextEase.set(easingType::easeOut, easingPattern::Quadratic, 15, 200, 300);
-		}
-		overText.SpriteUpdate();
+		resultScreen[0].position.y = 0;
+		resultScreen[1].position.y = 0;
 	}
 
-	clearText.position.x = 640;
-	clearText.position.y = clearTextEase.easing();
-	clearText.SpriteTransferVertexBuffer();
-	clearText.SpriteUpdate();
+	resultScreen[0].SpriteUpdate();
+	resultScreen[0].SpriteTransferVertexBuffer();
+	resultScreen[1].SpriteUpdate();
+	resultScreen[1].SpriteTransferVertexBuffer();
 
-	overText.position.x = 640;
-	overText.position.y = overTextEase.easing();
-	overText.SpriteTransferVertexBuffer();
-	overText.SpriteUpdate();
-
-	if (!clearTextEase.getIsActive() && !overTextEase.getIsActive())
+	if (isTextEase)
 	{
-		isStartScreen = false;
+		clearText.position.x = 640;
+		clearText.position.y = clearTextEase.easing();
+		clearText.SpriteTransferVertexBuffer();
+		clearText.SpriteUpdate();
+
+		overText.position.x = 640;
+		overText.position.y = overTextEase.easing();
+		overText.SpriteTransferVertexBuffer();
+		overText.SpriteUpdate();
+
+		if (!clearTextEase.getIsActive() && !overTextEase.getIsActive())
+		{
+			isTextEase = false;
+		}
 	}
 
-	if (input->Triger(DIK_SPACE) && !isStartScreen)
+	if (!clearTextEase.getIsActive() && !overTextEase.getIsActive() && !resultScreenEase.getIsActive())
+	{
+		isMoveScreen = false;
+	}
+
+	if (input->Triger(DIK_SPACE) && !isMoveScreen)
 	{
 		startButton.size = { 256,64 };
 		startButton.SpriteTransferVertexBuffer();
