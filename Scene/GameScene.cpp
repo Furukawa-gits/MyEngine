@@ -258,13 +258,6 @@ void GameScene::Select_updata()
 
 	if (input->Triger(DIK_SPACE) && !isMoveStageIcon)
 	{
-		up = 0;
-		right = 0;
-		objectRot = { 0,0,0 };
-
-		pitch = 0.0f;
-		yow = 0.0f;
-
 		targetnum = 0;
 
 		for (int i = 0; i < maxEnemyNum; i++)
@@ -380,13 +373,6 @@ void GameScene::Play_updata()
 	//ƒŠƒZƒbƒg
 	if (input->push(DIK_R))
 	{
-		up = 0;
-		right = 0;
-		objectRot = { 0,0,0 };
-
-		pitch = 0.0f;
-		yow = 0.0f;
-
 		targetnum = 0;
 
 		for (int i = 0; i < maxEnemyNum; i++)

@@ -98,16 +98,6 @@ private:
 	DebugText debugtext;
 	XMFLOAT3 MOUSE_POS = { 0,0,0 };
 #pragma endregion
-
-	//回転量
-	XMFLOAT3 objectRot = { 0,0,0 };
-
-	float up = 0.0f;
-	float right = 0.0f;
-
-	float pitch = 0.0f;
-	float yow = 0.0f;
-	float roll = 0.0f;
 	//音
 
 	//3dオブジェクト
