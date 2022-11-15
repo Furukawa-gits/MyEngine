@@ -205,6 +205,11 @@ private:
 	easingManager countDownEase;
 	easingManager startEase;
 
+	//ボスのHPゲージ出現のイージング
+	easingManager bossHpEase;
+	int bossHpNum = 0;
+	bool isBossHp = false;
+
 	//リザルト画面のイージングフラグ
 	bool isMoveScreen = false;
 	bool isScreenEase = false;
