@@ -194,7 +194,7 @@ private:
 	bool isMoveStageIcon = false;
 
 	//リザルト画面のイージングフラグ
-	bool isStartScreen = false;
+	bool isMoveScreen = false;
 	bool isScreenEase = false;
 	bool isTextEase = false;
 

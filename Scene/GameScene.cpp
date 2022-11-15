@@ -453,11 +453,11 @@ void GameScene::Result_updata()
 
 			if (scene == sceneType::clear)
 			{
-				clearTextEase.set(easingType::easeOut, easingPattern::Quadratic, 15, 200, 300);
+				clearTextEase.set(easingType::easeOut, easingPattern::Quadratic, 20, 200, 300);
 			}
 			else
 			{
-				overTextEase.set(easingType::easeOut, easingPattern::Quadratic, 15, 200, 300);
+				overTextEase.set(easingType::easeOut, easingPattern::Quadratic, 20, 200, 300);
 			}
 			isTextEase = true;
 		}
