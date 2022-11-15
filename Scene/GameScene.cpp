@@ -21,7 +21,7 @@ void GameScene::Load_sounds()
 
 }
 
-//スプライト(各クラスに依存しないやつ)初期化
+//スプライト(シーン内で動かすもの)初期化
 void GameScene::Load_Sprites()
 {
 	//背景
@@ -66,6 +66,15 @@ void GameScene::Load_Sprites()
 	playStart.size = { 500,125 };
 	playStart.position = { 640,360,0 };
 	playStart.GenerateSprite("playstart.png");
+
+	for (int i = 0; i < 5; i++)
+	{
+		bossHp[i].anchorpoint = { 0.5f,0 };
+		bossHp[i].GenerateSprite("Enemy_HP.png");
+		bossHp[i].size = { 40,60 };
+		bossHp[i].position = { i * 30.0f + 580.0f,30.0f,0.0f };
+		bossHp[i].SpriteTransferVertexBuffer(false);
+	}
 
 	//リザルト画面
 	resultScreen[0].size = { 1280,720 };
@@ -475,6 +484,14 @@ void GameScene::Play_updata()
 		isBoss = true;
 	}
 
+	if (isBoss)
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			bossHp[i].SpriteUpdate();
+		}
+	}
+
 	//ボスを倒したorプレイヤーが死んだらリザルト
 	if ((isBoss && !testBoss.isDraw))
 	{
@@ -721,6 +738,14 @@ void GameScene::Draw2D()
 
 		//ボス描画(2d)
 		testBoss.draw2D(directx);
+
+		if (isBoss)
+		{
+			for (int i = 0; i < testBoss.HP; i++)
+			{
+				bossHp[i].DrawSprite(directx->cmdList.Get());
+			}
+		}
 
 		player.draw2D(directx);
 
