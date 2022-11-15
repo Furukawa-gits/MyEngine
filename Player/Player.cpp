@@ -315,6 +315,7 @@ void Player::targetUpdate()
 			}
 		}
 
+		//ƒŠƒXƒg‰»
 		/*std::unique_ptr<bullet> newBullet = std::make_unique<bullet>();
 		newBullet->init();
 		newBullet->set(playerObject->getPosition(),
@@ -462,7 +463,7 @@ void Player::draw2D(directX* directx)
 	int i = 0;
 	for (auto itr = HPUI->begin(); itr != HPUI->end(); itr++)
 	{
-		if (i >= playerHP - 1)
+		if (i >= playerHP)
 		{
 			break;
 		}

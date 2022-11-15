@@ -46,6 +46,27 @@ void GameScene::Load_Sprites()
 	stage2.position = { 0,360,0 };
 	stage2.GenerateSprite("select2.png");
 
+	//カウントダウンアイコン
+	countDown[0].anchorpoint = { 0.5f,0.5f };
+	countDown[0].size = { 100,100 };
+	countDown[0].position = { 640,360,0 };
+	countDown[0].GenerateSprite("count3.png");
+
+	countDown[1].anchorpoint = { 0.5f,0.5f };
+	countDown[1].size = { 100,100 };
+	countDown[1].position = { 640,360,0 };
+	countDown[1].GenerateSprite("count2.png");
+
+	countDown[2].anchorpoint = { 0.5f,0.5f };
+	countDown[2].size = { 100,100 };
+	countDown[2].position = { 640,360,0 };
+	countDown[2].GenerateSprite("count1.png");
+
+	playStart.anchorpoint = { 0.5f,0.5f };
+	playStart.size = { 400,100 };
+	playStart.position = { 640,360,0 };
+	playStart.GenerateSprite("playstart.png");
+
 	//リザルト画面
 	resultScreen[0].size = { 1280,720 };
 	resultScreen[0].GenerateSprite("black_color.png");
@@ -168,7 +189,7 @@ void GameScene::Title_updata()
 		return;
 	}
 
-	if (input->Triger(DIK_SPACE))
+	if (input->Triger(DIK_SPACE) && !isPushStart)
 	{
 		startButtonEase_y.set(easingType::easeOut, easingPattern::Quadratic, 15, 64, 0);
 		startButtonEase_x.set(easingType::easeOut, easingPattern::Quadratic, 15, 256, 330);
@@ -183,6 +204,7 @@ void GameScene::Title_updata()
 	}
 
 	startButton.SpriteUpdate();
+	resultScreen[0].SpriteUpdate();
 
 	if (isPushStart && !startButtonEase_y.getIsActive())
 	{
@@ -332,7 +354,7 @@ void GameScene::Play_updata()
 	checkHitPlayerTarget();
 
 	//ホーミング弾発射
-	if (input->Mouse_LeftRelease())
+	if (input->Mouse_LeftRelease() && !isStartCount)
 	{
 		for (int i = 0; i < targetnum; i++)
 		{
@@ -399,18 +421,13 @@ void GameScene::Play_updata()
 		isBoss = true;
 	}
 
-	if (input->Triger(DIK_D))
-	{
-		player.playerHP = 0;
-	}
-
 	//ボスを倒したorプレイヤーが死んだらリザルト
 	if ((isBoss && !testBoss.isDraw))
 	{
 		isMoveScreen = true;
 		isScreenEase = true;
 		isTextEase = false;
-		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 20, 720, 0);
+		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 40, 720, 0);
 		scene = sceneType::clear;
 	}
 
@@ -419,7 +436,7 @@ void GameScene::Play_updata()
 		isMoveScreen = true;
 		isScreenEase = true;
 		isTextEase = false;
-		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 20, 720, 0);
+		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 40, 720, 0);
 		scene = sceneType::over;
 	}
 }
@@ -453,11 +470,11 @@ void GameScene::Result_updata()
 
 			if (scene == sceneType::clear)
 			{
-				clearTextEase.set(easingType::easeOut, easingPattern::Quadratic, 20, 200, 300);
+				clearTextEase.set(easingType::easeOut, easingPattern::Quadratic, 25, 200, 300);
 			}
 			else
 			{
-				overTextEase.set(easingType::easeOut, easingPattern::Quadratic, 20, 200, 300);
+				overTextEase.set(easingType::easeOut, easingPattern::Quadratic, 25, 200, 300);
 			}
 			isTextEase = true;
 		}
@@ -500,6 +517,7 @@ void GameScene::Result_updata()
 	{
 		startButton.size = { 256,64 };
 		startButton.SpriteTransferVertexBuffer();
+		isPushStart = false;
 		scene = sceneType::title;
 	}
 }
@@ -555,6 +573,19 @@ void GameScene::Result_draw()
 	{
 		return;
 	}
+
+	skySphere->Draw(directx->cmdList.Get());
+
+	//プレイヤー描画
+	player.draw3D(directx);
+
+	for (int i = 0; i < maxEnemyNum; i++)
+	{
+		testEnemys[i].draw3D(directx);
+	}
+
+	//ボス描画
+	testBoss.draw3D(directx);
 }
 
 #pragma endregion 各シーン描画
@@ -692,4 +723,9 @@ void GameScene::checkHitPlayerTarget()
 		testBoss.isTargetSet = true;
 		targetnum++;
 	}
+}
+
+void GameScene::startCountDown()
+{
+
 }

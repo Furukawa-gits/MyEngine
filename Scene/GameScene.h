@@ -150,12 +150,19 @@ private:
 	//背景
 	SingleSprite sample_back;
 
+	//タイトル
+	SingleSprite gameTitle;
+
 	//スタートボタン
 	SingleSprite startButton;
 
 	//ステージアイコン
 	SingleSprite stage1;
 	SingleSprite stage2;
+
+	//カウントダウン・スタートアイコン
+	SingleSprite countDown[3];
+	SingleSprite playStart;
 
 	//リザルト画面
 	SingleSprite resultScreen[2];
@@ -166,10 +173,14 @@ private:
 	//ゲームオーバー画面
 	SingleSprite overText;
 
+	//タイトル・セレクトボタン
+	SingleSprite titleButton;
+	SingleSprite selectButton;
+
 	//ゲーム時間
 	int game_time = 0;
 
-	//シーン
+	//シーン番号
 	sceneType scene = sceneType::title;
 
 	//タイトル演出フラグ
@@ -192,6 +203,11 @@ private:
 
 	//ステージアイコンを動かしているかどうか
 	bool isMoveStageIcon = false;
+
+	//カウントダウンのイージングフラグ
+	bool isStartCount = false;
+	easingManager countDownEase;
+	easingManager startEase;
 
 	//リザルト画面のイージングフラグ
 	bool isMoveScreen = false;
