@@ -28,10 +28,16 @@ void GameScene::Load_Sprites()
 	sample_back.size = { 1280,720 };
 	sample_back.GenerateSprite("sample_back.jpg");
 
+	//タイトル
+	gameTitle.anchorpoint = { 0.5f,0.5f };
+	gameTitle.size = { 500,220 };
+	gameTitle.position = { 640,200,0 };
+	gameTitle.GenerateSprite("DragShoot.png");
+
 	//スタートボタン
 	startButton.anchorpoint = { 0.5f,0.5f };
-	startButton.size = { 256,64 };
-	startButton.GenerateSprite("Start_button.png");
+	startButton.size = { 340,50 };
+	startButton.GenerateSprite("startButton.png");
 	startButton.position = { 640,500,0 };
 	startButton.SpriteTransferVertexBuffer();
 
@@ -45,6 +51,17 @@ void GameScene::Load_Sprites()
 	stage2.size = { 128,128 };
 	stage2.position = { 0,360,0 };
 	stage2.GenerateSprite("count2.png");
+
+	//セレクト画面矢印
+	selects[0].anchorpoint = { 0.5f,0.5f };
+	selects[0].size = { 100,100 };
+	selects[0].position = { 640 - 400,360,0 };
+	selects[0].GenerateSprite("selectL.png");
+
+	selects[1].anchorpoint = { 0.5f,0.5f };
+	selects[1].size = { 100,100 };
+	selects[1].position = { 640 + 400,360,0 };
+	selects[1].GenerateSprite("selectR.png");
 
 	//カウントダウンアイコン
 	countDown[0].anchorpoint = { 0.5f,0.5f };
@@ -91,6 +108,13 @@ void GameScene::Load_Sprites()
 	overText.anchorpoint = { 0.5f,0.0f };
 	overText.size = { 640,100 };
 	overText.GenerateSprite("OVER_text.png");
+
+	//タイトルボタン
+	titleButton.anchorpoint = { 0.5f,0.5f };
+	titleButton.size = { 315,50 };
+	titleButton.GenerateSprite("toTitle.png");
+	titleButton.position = { 640,500,0 };
+	titleButton.SpriteTransferVertexBuffer();
 }
 
 //初期化
@@ -162,7 +186,7 @@ void GameScene::debugs_print()
 	debugtext.Print("MouseClick : Shot", 10, 70, 1.0f);
 	debugtext.Print("MousePress(Left)&Drag : Target", 10, 85, 1.0f);
 	debugtext.Print("MouseRelease : Homing", 10, 100, 1.0f);
-	debugtext.Print("R : Reset", 10, 130, 1.0f);
+	//debugtext.Print("R : Reset", 10, 130, 1.0f);
 
 	if (scene == sceneType::title)
 	{
@@ -200,8 +224,8 @@ void GameScene::Title_updata()
 
 	if (input->Triger(DIK_SPACE) && !isPushStart)
 	{
-		startButtonEase_y.set(easingType::easeOut, easingPattern::Quadratic, 15, 64, 0);
-		startButtonEase_x.set(easingType::easeOut, easingPattern::Quadratic, 15, 256, 330);
+		startButtonEase_y.set(easingType::easeOut, easingPattern::Quadratic, 30, 50, 0);
+		startButtonEase_x.set(easingType::easeOut, easingPattern::Quadratic, 30, 340, 420);
 		isPushStart = true;
 	}
 
@@ -214,6 +238,7 @@ void GameScene::Title_updata()
 
 	startButton.SpriteUpdate();
 	resultScreen[0].SpriteUpdate();
+	gameTitle.SpriteUpdate();
 
 	if (isPushStart && !startButtonEase_y.getIsActive())
 	{
@@ -265,6 +290,9 @@ void GameScene::Select_updata()
 	stage1.SpriteUpdate();
 	stage2.SpriteUpdate();
 
+	selects[0].SpriteUpdate();
+	selects[1].SpriteUpdate();
+
 	if (input->Triger(DIK_SPACE) && !isMoveStageIcon)
 	{
 		targetnum = 0;
@@ -276,6 +304,7 @@ void GameScene::Select_updata()
 
 		player.reset();
 
+		testBoss.bossSet({ 0,5,0 });
 		testBoss.bossReSet();
 		isBoss = false;
 
@@ -296,13 +325,19 @@ void GameScene::Select_updata()
 			testBoss.changePattern(enemyPattern::shot);
 		}
 
-		countDownEase.set(easingType::easeOut, easingPattern::Quintic, 90, 450, 20);
+		countDownEase.set(easingType::easeOut, easingPattern::Quintic, 120, 450, 20);
 		countDown[0].rotation = 0;
 		countDown[1].rotation = 0;
 		countDown[2].rotation = 0;
 		countDownNum = 0;
 		isCountDown = true;
 		isStartIcon = false;
+
+		isMoveScreen = false;
+		isScreenEase = false;
+		isTextEase = false;
+		isPushTitle = false;
+		titleButton.size = { 315,50 };
 
 		player.update();
 
@@ -329,7 +364,7 @@ void GameScene::Play_updata()
 		{
 			if (countDownNum + 1 < 3)
 			{
-				countDownEase.set(easingType::easeOut, easingPattern::Quintic, 90, 450, 20);
+				countDownEase.set(easingType::easeOut, easingPattern::Quintic, 120, 450, 20);
 				countDownNum++;
 			}
 			else
@@ -382,7 +417,7 @@ void GameScene::Play_updata()
 	//リセット
 	if (input->push(DIK_R))
 	{
-		targetnum = 0;
+		/*targetnum = 0;
 
 		for (int i = 0; i < maxEnemyNum; i++)
 		{
@@ -394,7 +429,7 @@ void GameScene::Play_updata()
 			itre->reSet();
 		}
 
-		testBoss.bossReSet();
+		testBoss.bossReSet();*/
 	}
 
 	//敵(テスト)更新
@@ -499,6 +534,10 @@ void GameScene::Play_updata()
 		isScreenEase = true;
 		isTextEase = false;
 		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 40, 720, 0);
+		titleButton.size = { 315,50 };
+		titleButton.SpriteTransferVertexBuffer();
+		titleButtonEase_y.reSet();
+		titleButtonEase_x.reSet();
 		scene = sceneType::clear;
 	}
 
@@ -508,6 +547,10 @@ void GameScene::Play_updata()
 		isScreenEase = true;
 		isTextEase = false;
 		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 40, 720, 0);
+		titleButton.size = { 315,50 };
+		titleButton.SpriteTransferVertexBuffer();
+		titleButtonEase_y.reSet();
+		titleButtonEase_x.reSet();
 		scene = sceneType::over;
 	}
 }
@@ -582,11 +625,30 @@ void GameScene::Result_updata()
 	if (!clearTextEase.getIsActive() && !overTextEase.getIsActive() && !resultScreenEase.getIsActive())
 	{
 		isMoveScreen = false;
+		titleButton.SpriteUpdate();
 	}
+
+	titleButton.SpriteUpdate();
 
 	if (input->Triger(DIK_SPACE) && !isMoveScreen)
 	{
-		startButton.size = { 256,64 };
+		titleButtonEase_y.set(easingType::easeOut, easingPattern::Quadratic, 30, 50, 0);
+		titleButtonEase_x.set(easingType::easeOut, easingPattern::Quadratic, 30, 315, 400);
+		isPushTitle = true;
+	}
+
+	if (isPushTitle)
+	{
+		titleButton.size.y = titleButtonEase_y.easing();
+		titleButton.size.x = titleButtonEase_x.easing();
+		titleButton.SpriteTransferVertexBuffer();
+	}
+
+	titleButton.SpriteUpdate();
+
+	if (isPushTitle && !titleButtonEase_y.getIsActive())
+	{
+		startButton.size = { 340,50 };
 		startButton.SpriteTransferVertexBuffer();
 		isPushStart = false;
 		scene = sceneType::title;
@@ -720,6 +782,8 @@ void GameScene::Draw2D()
 {
 	if (scene == sceneType::title)
 	{
+		resultScreen[0].DrawSprite(directx->cmdList.Get());
+		gameTitle.DrawSprite(directx->cmdList.Get());
 		startButton.DrawSprite(directx->cmdList.Get());
 	}
 
@@ -727,6 +791,9 @@ void GameScene::Draw2D()
 	{
 		stage1.DrawSprite(directx->cmdList.Get());
 		stage2.DrawSprite(directx->cmdList.Get());
+
+		selects[0].DrawSprite(directx->cmdList.Get());
+		selects[1].DrawSprite(directx->cmdList.Get());
 	}
 
 	if (scene == sceneType::play)
@@ -765,6 +832,11 @@ void GameScene::Draw2D()
 		resultScreen[0].DrawSprite(directx->cmdList.Get());
 		clearText.DrawSprite(directx->cmdList.Get());
 		resultScreen[1].DrawSprite(directx->cmdList.Get());
+
+		if (!isMoveScreen)
+		{
+			titleButton.DrawSprite(directx->cmdList.Get());
+		}
 	}
 
 	if (scene == sceneType::over)
@@ -772,6 +844,11 @@ void GameScene::Draw2D()
 		resultScreen[0].DrawSprite(directx->cmdList.Get());
 		overText.DrawSprite(directx->cmdList.Get());
 		resultScreen[1].DrawSprite(directx->cmdList.Get());
+
+		if (!isMoveScreen)
+		{
+			titleButton.DrawSprite(directx->cmdList.Get());
+		}
 	}
 	debugtext.DrawAll(directx->cmdList.Get());
 }

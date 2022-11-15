@@ -153,6 +153,8 @@ private:
 	SingleSprite stage1;
 	SingleSprite stage2;
 
+	SingleSprite selects[2];
+
 	//カウントダウン・スタートアイコン
 	SingleSprite countDown[3];
 	SingleSprite playStart;
@@ -168,7 +170,6 @@ private:
 
 	//タイトル・セレクトボタン
 	SingleSprite titleButton;
-	SingleSprite selectButton;
 
 	//ゲーム時間
 	int game_time = 0;
@@ -207,7 +208,6 @@ private:
 
 	//ボスのHPゲージ出現のイージング
 	easingManager bossHpEase;
-	int bossHpNum = 0;
 	bool isBossHp = false;
 
 	//リザルト画面のイージングフラグ
@@ -218,4 +218,10 @@ private:
 	easingManager resultScreenEase;
 	easingManager clearTextEase;
 	easingManager overTextEase;
+
+	//タイトルボタンのイージング
+	easingManager titleButtonEase_y;
+	easingManager titleButtonEase_x;
+
+	bool isPushTitle = false;
 };

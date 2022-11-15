@@ -50,6 +50,8 @@ public:
 	/// </summary>
 	bool getIsActive() { return isActive; }
 
+	void reSet() { isActive = false; }
+
 private:
 	//イーズイン
 	void easeIn();
