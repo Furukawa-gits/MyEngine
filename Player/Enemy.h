@@ -4,6 +4,9 @@
 #include"../FbxLoder/Object3d_FBX.h"
 #include"../Base/DirectX_Base.h"
 
+#include<memory>
+#include<list>
+
 //“G‚Ì’e
 class enemyBullet
 {

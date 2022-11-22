@@ -275,6 +275,17 @@ void Player::update()
 		return;
 	}
 
+	//死んだ弾は削除
+	bulletsList.remove_if([](std::unique_ptr<bullet>& newbullet) 
+		{
+			return newbullet == false; 
+		});
+
+	missilesList.remove_if([](std::unique_ptr<Missile>& newmissile)
+		{
+			return newmissile == false;
+		});
+
 	//移動
 	Move();
 
@@ -291,11 +302,21 @@ void Player::update()
 	{
 		playerBullet[i].update();
 	}
+	//通常弾の初期化(ユニークリスト)
+	for (std::unique_ptr<bullet>& bullet : bulletsList)
+	{
+		bullet->update();
+	}
 
 	//ミサイルの更新
 	for (int i = 0; i < MaxPlayerMissileNum; i++)
 	{
 		playerMissiale[i].update();
+	}
+	//ミサイルの初期化(ユニークリスト)
+	for (std::unique_ptr<Missile>& missile : missilesList)
+	{
+		missile->update();
 	}
 
 	//HPゲージの更新
@@ -383,12 +404,12 @@ void Player::targetUpdate()
 		}
 
 		//リスト化
-		/*std::unique_ptr<bullet> newBullet = std::make_unique<bullet>();
+		std::unique_ptr<bullet> newBullet = std::make_unique<bullet>();
 		newBullet->init();
 		newBullet->set(playerObject->getPosition(),
-			playerObject->screenToWorld({ targetFirst.position.x,targetFirst.position.y }));*/
+			playerObject->screenToWorld({ targetFirst.position.x,targetFirst.position.y }));
 
-		
+		bulletsList.push_back(std::move(newBullet));
 	}
 
 	//ロックオンモードに切り替え
@@ -450,14 +471,27 @@ void Player::draw3D(directX* directx)
 	playerObject->SetPipelineSimple(directx->cmdList.Get());
 	playerObject->Draw(directx->cmdList.Get());
 
+	//通常弾描画
 	for (int i = 0; i < MaxPlayerBulletNum; i++)
 	{
 		playerBullet[i].draw(directx);
 	}
 
+	//ミサイル描画
 	for (int i = 0; i < MaxPlayerMissileNum; i++)
 	{
 		playerMissiale[i].draw(directx);
+	}
+
+	//通常弾の描画(ユニークリスト)
+	for (std::unique_ptr<bullet>& bullet : bulletsList)
+	{
+		bullet->draw(directx);
+	}
+	//ミサイルの更新(ユニークリスト)
+	for (std::unique_ptr<Missile>& missile : missilesList)
+	{
+		missile->draw(directx);
 	}
 }
 

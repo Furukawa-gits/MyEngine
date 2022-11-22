@@ -34,6 +34,8 @@ public:
 
 	void targetUpdate();
 
+	void addMissile(std::unique_ptr<Enemy>& enemy);
+
 	void reset();
 
 	void draw3D(directX* directx);
@@ -88,11 +90,11 @@ public:
 	//’e
 	bullet playerBullet[MaxPlayerBulletNum];
 
-	std::list<std::unique_ptr<bullet>> bullets;
+	std::list<std::unique_ptr<bullet>> bulletsList;
 
 	Missile playerMissiale[MaxPlayerMissileNum];
 
-	std::list<std::unique_ptr<Missile>> missiles;
+	std::list<std::unique_ptr<Missile>> missilesList;
 
 	//“ü—Í
 	static dxinput* input;

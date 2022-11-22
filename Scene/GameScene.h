@@ -12,11 +12,15 @@
 #include"../Player/Player.h"
 #include"../Player/Enemy.h"
 #include"../Player/Boss.h"
+#include"../Player/CheckHItManager.h"
 
 #include"../staging/Easing.h"
 
 #include<random>
 #include<time.h>
+
+#include<memory>
+#include<list>
 
 enum class sceneType
 {
@@ -115,7 +119,7 @@ private:
 	//“G(test)
 	static const int maxEnemyNum = 20;
 	Enemy testEnemys[maxEnemyNum];
-	std::vector<Enemy> Enemys;
+	std::list<std::unique_ptr<Enemy>> enemyList;
 	bool isEnemySimple = false;
 
 	/// <summary>

@@ -432,12 +432,22 @@ void GameScene::Play_updata()
 		testBoss.bossReSet();*/
 	}
 
-	//敵(テスト)更新
+	//エネミー更新
 	for (int i = 0; i < maxEnemyNum; i++)
 	{
 		testEnemys[i].update(player.playerObject->getPosition());
 		player.checkPlayerEnemy(&testEnemys[i]);
 		player.checkPlayerEnemyBullet(&testEnemys[i]);
+	}
+
+	enemyList.remove_if([](std::unique_ptr<Enemy>& newenemy)
+		{
+			newenemy->isDraw == false;
+		});
+
+	for (std::unique_ptr<Enemy>& newenemy : enemyList)
+	{
+		newenemy->update(player.playerObject->getPosition());
 	}
 
 	//ボス更新
@@ -455,6 +465,15 @@ void GameScene::Play_updata()
 					player.playerMissiale[i].setPenemy(&testEnemys[j]);
 					player.playerMissiale[i].start(player.playerObject->getPosition());
 					testEnemys[j].isSetMissile = true;
+
+					//リスト化
+					std::unique_ptr<Missile> newMissile = std::make_unique<Missile>();
+					newMissile->init();
+					player.playerMissiale[i].setPenemy(&testEnemys[j]);
+					player.playerMissiale[i].start(player.playerObject->getPosition());
+
+					player.missilesList.push_back(std::move(newMissile));
+
 					break;
 				}
 			}
@@ -462,13 +481,6 @@ void GameScene::Play_updata()
 
 		if (testBoss.isTargetSet && !testBoss.isSetMissile)
 		{
-			for (int i = 0; i < MaxPlayerMissileNum; i++)
-			{
-				if (player.playerMissiale[i].isArive = false)
-				{
-
-				}
-			}
 			player.playerMissiale[0].setPenemy(&testBoss);
 			player.playerMissiale[0].start(player.playerObject->getPosition());
 			testBoss.isSetMissile = true;
@@ -693,6 +705,11 @@ void GameScene::Play_draw()
 	for (int i = 0; i < maxEnemyNum; i++)
 	{
 		testEnemys[i].draw3D(directx);
+	}
+
+	for (std::unique_ptr<Enemy>& newenemy : enemyList)
+	{
+		newenemy->draw3D(directx);
 	}
 
 	//ボス描画
