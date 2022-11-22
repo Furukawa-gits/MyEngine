@@ -247,6 +247,7 @@ void Player::checkPlayerEnemy(Enemy* enemy)
 	}
 }
 
+//“G‚Ì’e‚Æ‚ÌÕ“Ë”»’è
 void Player::checkPlayerEnemyBullet(Enemy* enemy)
 {
 	if (enemy->enemyMovePattern != enemyPattern::shot)
@@ -436,6 +437,11 @@ void Player::targetUpdate()
 		targetThird.rotation += 4.0f;
 		isRockOn = false;
 	}
+
+}
+
+void Player::addMissile(std::unique_ptr<Enemy>& enemy)
+{
 
 }
 

@@ -300,6 +300,15 @@ void GameScene::Select_updata()
 		for (int i = 0; i < maxEnemyNum; i++)
 		{
 			testEnemys[i].reSet();
+
+			std::unique_ptr<Enemy> newenemy = std::make_unique<Enemy>();
+			newenemy->init(enemyPattern::shot);
+			newenemy->set({
+			(float)(rand() % 50 - 25),
+			(float)(rand() % 30 + 15),
+			(float)(rand() % 50 - 25) });
+
+			enemyList.push_back(std::move(newenemy));
 		}
 
 		player.reset();
@@ -315,6 +324,11 @@ void GameScene::Select_updata()
 				testEnemys[i].changePattern(enemyPattern::chase);
 			}
 			testBoss.changePattern(enemyPattern::chase);
+
+			for (std::unique_ptr<Enemy>& newenemy : enemyList)
+			{
+				newenemy->changePattern(enemyPattern::chase);
+			}
 		}
 		else
 		{
@@ -323,6 +337,11 @@ void GameScene::Select_updata()
 				testEnemys[i].changePattern(enemyPattern::shot);
 			}
 			testBoss.changePattern(enemyPattern::shot);
+
+			for (std::unique_ptr<Enemy>& newenemy : enemyList)
+			{
+				newenemy->changePattern(enemyPattern::shot);
+			}
 		}
 
 		countDownEase.set(easingType::easeOut, easingPattern::Quintic, 120, 450, 20);
@@ -397,6 +416,11 @@ void GameScene::Play_updata()
 			testEnemys[i].isStop = true;
 		}
 
+		for (std::unique_ptr<Enemy>& newenemy : enemyList)
+		{
+			newenemy->isStop = true;
+		}
+
 		testBoss.isStop = true;
 	}
 	else
@@ -406,6 +430,11 @@ void GameScene::Play_updata()
 		for (int i = 0; i < maxEnemyNum; i++)
 		{
 			testEnemys[i].isStop = false;
+		}
+
+		for (std::unique_ptr<Enemy>& newenemy : enemyList)
+		{
+			newenemy->isStop = false;
 		}
 
 		testBoss.isStop = false;
@@ -442,7 +471,7 @@ void GameScene::Play_updata()
 
 	enemyList.remove_if([](std::unique_ptr<Enemy>& newenemy)
 		{
-			newenemy->isDraw == false;
+			return newenemy->isDraw == false;
 		});
 
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
@@ -466,11 +495,23 @@ void GameScene::Play_updata()
 					player.playerMissiale[i].start(player.playerObject->getPosition());
 					testEnemys[j].isSetMissile = true;
 
+					break;
+				}
+			}
+
+			for (std::unique_ptr<Enemy>& newenemy : enemyList)
+			{
+				if (newenemy->isTargetSet && !newenemy->isSetMissile)
+				{
+					player.addMissile(newenemy);
+
+					newenemy->isSetMissile = true;
+
 					//ƒŠƒXƒg‰»
 					std::unique_ptr<Missile> newMissile = std::make_unique<Missile>();
 					newMissile->init();
-					player.playerMissiale[i].setPenemy(&testEnemys[j]);
-					player.playerMissiale[i].start(player.playerObject->getPosition());
+					newMissile->setPenemy(newenemy.get());
+					newMissile->start(player.playerObject->getPosition());
 
 					player.missilesList.push_back(std::move(newMissile));
 

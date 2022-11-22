@@ -3,6 +3,8 @@
 #include"../Base/DirectX_Base.h"
 #include"Enemy.h"
 
+#include<memory>
+
 //í èÌíe
 class bullet
 {
@@ -34,6 +36,8 @@ public:
 class Missile
 {
 public:
+	std::unique_ptr<Enemy>* pEnemy;
+
 	Enemy* enemyPointer = nullptr;
 	XMFLOAT3 bulletVec = { 0.0f,0.0f,0.0f };
 
@@ -60,6 +64,7 @@ public:
 
 	void init();
 	void setPenemy(Enemy* enemy);
+	void setUenemy(std::unique_ptr<Enemy>& enemy);
 	void start(XMFLOAT3 start_pos);
 	void checkhit();
 	void update();

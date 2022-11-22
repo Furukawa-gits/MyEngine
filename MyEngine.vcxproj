@@ -218,6 +218,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player\Boss.cpp" />
     <ClCompile Include="Player\Bullets.cpp" />
+    <ClCompile Include="Player\CheckHItManager.cpp" />
     <ClCompile Include="Player\Enemy.cpp" />
     <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
