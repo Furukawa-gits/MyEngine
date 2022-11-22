@@ -437,12 +437,16 @@ void Player::targetUpdate()
 		targetThird.rotation += 4.0f;
 		isRockOn = false;
 	}
-
 }
 
-void Player::addMissile(std::unique_ptr<Enemy>& enemy)
+void Player::addMissile(Enemy* enemy)
 {
+	std::unique_ptr<Missile> newMissile = std::make_unique<Missile>();
+	newMissile->init();
+	newMissile->setPenemy(enemy);
+	newMissile->start(playerObject->getPosition());
 
+	missilesList.push_back(std::move(newMissile));
 }
 
 //ƒŠƒZƒbƒg

@@ -503,17 +503,9 @@ void GameScene::Play_updata()
 			{
 				if (newenemy->isTargetSet && !newenemy->isSetMissile)
 				{
-					player.addMissile(newenemy);
+					player.addMissile(newenemy.get());
 
 					newenemy->isSetMissile = true;
-
-					//ƒŠƒXƒg‰»
-					std::unique_ptr<Missile> newMissile = std::make_unique<Missile>();
-					newMissile->init();
-					newMissile->setPenemy(newenemy.get());
-					newMissile->start(player.playerObject->getPosition());
-
-					player.missilesList.push_back(std::move(newMissile));
 
 					break;
 				}

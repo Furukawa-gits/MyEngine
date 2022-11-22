@@ -34,7 +34,7 @@ public:
 
 	void targetUpdate();
 
-	void addMissile(std::unique_ptr<Enemy>& enemy);
+	void addMissile(Enemy* enemy);
 
 	void reset();
 
