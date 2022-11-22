@@ -850,7 +850,7 @@ void GameScene::Draw2D()
 			titleButton.DrawSprite(directx->cmdList.Get());
 		}
 	}
-	debugtext.DrawAll(directx->cmdList.Get());
+	//debugtext.DrawAll(directx->cmdList.Get());
 }
 
 void GameScene::checkHitPlayerTarget()
