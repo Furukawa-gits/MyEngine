@@ -39,6 +39,7 @@ void Player::init(dxinput* input, directX* directx)
 	playerObject->SetModel(playerModel);
 	playerObject->SetPosition({ 0,5,0 });
 	playerObject->SetScale({ 1,1,1 });
+	//playerObject->SetScale({ 0.01f,0.01f,0.01f });
 	playerObject->setSpeed(2.0f);
 	//Player_object->PlayAnimation();
 	playerObject->setColor({ 0,1,1,1 });

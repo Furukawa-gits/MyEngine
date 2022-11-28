@@ -7,14 +7,14 @@
 
 using namespace std;
 
-//やってること
+//やってること一覧
 //プレイヤーと敵本体の当たり判定
 //プレイヤーの通常弾と敵の当たり判定
 //プレイヤーの追尾弾と敵の当たり判定
 //プレイヤーと敵の弾の当たり判定
 //プレイヤーと敵のロックオン判定
 
-#pragma region プレイヤーと敵本体の当たり判定
+#pragma region プレイヤー本体と敵本体の当たり判定
 /// <summary>
 /// プレイヤーと敵本体の当たり判定(単体)
 /// </summary>
@@ -30,23 +30,39 @@ void checkPlayerEnemy(Player* player, Enemy* enemy);
 void checkPlayerEnemys(Player* player, list<unique_ptr<Enemy>>* enemys);
 #pragma endregion
 
-#pragma region プレイヤーの通常弾と敵の当たり判定
+#pragma region プレイヤーの通常弾と敵本体の当たり判定
 /// <summary>
 /// プレイヤーの通常弾と敵の当たり判定(単体)
 /// </summary>
 /// <param name="bulletsList">プレイヤーの通常弾</param>
 /// <param name="enemy">敵(単体)</param>
-void checkBulletEnemy(list<unique_ptr<bullet>>* bulletsList, Enemy* enemy);
+void checkBulletEnemy(bullet* bullet, Enemy* enemy);
 
 /// <summary>
 /// プレイヤーの通常弾と敵の当たり判定(群れ)
 /// </summary>
 /// <param name="bulletsList">プレイヤーの通常弾</param>
 /// <param name="enemys">敵(群れ)</param>
-void checkBulletEnemy(list<unique_ptr<bullet>>* bulletsList, list<unique_ptr<Enemy>>* enemys);
+void checkBulletEnemys(list<unique_ptr<bullet>>* bulletsList, list<unique_ptr<Enemy>>* enemys);
 #pragma endregion 
 
-#pragma region プレイヤーの追尾弾と敵の当たり判定
+#pragma region プレイヤーの通常弾と敵の弾の当たり判定
+/// <summary>
+/// プレイヤーの通常弾と敵の当たり判定(単体)
+/// </summary>
+/// <param name="bulletsList">プレイヤーの通常弾</param>
+/// <param name="enemy">敵(単体)</param>
+void checkBulletEnemybullet(bullet* bullet, Enemy* enemy);
+
+/// <summary>
+/// プレイヤーの通常弾と敵の当たり判定(群れ)
+/// </summary>
+/// <param name="bulletsList">プレイヤーの通常弾</param>
+/// <param name="enemys">敵(群れ)</param>
+void checkBulletEnemyBullets(list<unique_ptr<bullet>>* bulletsList, list<unique_ptr<Enemy>>* enemys);
+#pragma endregion 
+
+#pragma region プレイヤーの追尾弾と敵本体の当たり判定
 /// <summary>
 /// プレイヤーの追尾弾と敵の当たり判定
 /// </summary>
@@ -54,7 +70,7 @@ void checkBulletEnemy(list<unique_ptr<bullet>>* bulletsList, list<unique_ptr<Ene
 void checkHomingEnemy(list<unique_ptr<Missile>>* missilesList);
 #pragma endregion
 
-#pragma region プレイヤーと敵の弾の当たり判定
+#pragma region プレイヤー本体と敵の弾の当たり判定
 /// <summary>
 /// プレイヤーと敵の弾の当たり判定(単体)
 /// </summary>

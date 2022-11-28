@@ -166,14 +166,14 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	srand(time(NULL));
 
-	for (int i = 0; i < maxEnemyNum; i++)
+	/*for (int i = 0; i < maxEnemyNum; i++)
 	{
 		testEnemys[i].init(enemyPattern::shot);
 		testEnemys[i].set({
 			(float)(rand() % 50 - 25),
 			(float)(rand() % 30 + 15),
 			(float)(rand() % 50 - 25) });
-	}
+	}*/
 
 	//ボスの初期化
 	testBoss.bossInit();
@@ -299,8 +299,10 @@ void GameScene::Select_updata()
 
 		for (int i = 0; i < maxEnemyNum; i++)
 		{
-			testEnemys[i].reSet();
+			//敵　配列
+			//testEnemys[i].reSet();
 
+			//敵　リスト
 			std::unique_ptr<Enemy> newenemy = std::make_unique<Enemy>();
 			newenemy->init(enemyPattern::shot);
 			newenemy->set({
@@ -319,12 +321,14 @@ void GameScene::Select_updata()
 
 		if (stageNum == 1)
 		{
+			//敵　配列
 			for (int i = 0; i < maxEnemyNum; i++)
 			{
-				testEnemys[i].changePattern(enemyPattern::chase);
+				//testEnemys[i].changePattern(enemyPattern::chase);
 			}
 			testBoss.changePattern(enemyPattern::chase);
 
+			//敵　リスト
 			for (std::unique_ptr<Enemy>& newenemy : enemyList)
 			{
 				newenemy->changePattern(enemyPattern::chase);
@@ -332,12 +336,14 @@ void GameScene::Select_updata()
 		}
 		else
 		{
+			//敵　配列
 			for (int i = 0; i < maxEnemyNum; i++)
 			{
-				testEnemys[i].changePattern(enemyPattern::shot);
+				//testEnemys[i].changePattern(enemyPattern::shot);
 			}
 			testBoss.changePattern(enemyPattern::shot);
 
+			//敵　リスト
 			for (std::unique_ptr<Enemy>& newenemy : enemyList)
 			{
 				newenemy->changePattern(enemyPattern::shot);
@@ -411,9 +417,10 @@ void GameScene::Play_updata()
 	{
 		player.isStop = true;
 
+		//敵　配列
 		for (int i = 0; i < maxEnemyNum; i++)
 		{
-			testEnemys[i].isStop = true;
+			//testEnemys[i].isStop = true;
 		}
 
 		for (std::unique_ptr<Enemy>& newenemy : enemyList)
@@ -427,9 +434,10 @@ void GameScene::Play_updata()
 	{
 		player.isStop = false;
 
+		//敵　配列
 		for (int i = 0; i < maxEnemyNum; i++)
 		{
-			testEnemys[i].isStop = false;
+			//testEnemys[i].isStop = false;
 		}
 
 		for (std::unique_ptr<Enemy>& newenemy : enemyList)
@@ -461,12 +469,12 @@ void GameScene::Play_updata()
 		testBoss.bossReSet();*/
 	}
 
-	//エネミー更新
+	//エネミー更新　配列
 	for (int i = 0; i < maxEnemyNum; i++)
 	{
-		testEnemys[i].update(player.playerObject->getPosition());
-		player.checkPlayerEnemy(&testEnemys[i]);
-		player.checkPlayerEnemyBullet(&testEnemys[i]);
+		//testEnemys[i].update(player.playerObject->getPosition());
+		//player.checkPlayerEnemy(&testEnemys[i]);
+		//player.checkPlayerEnemyBullet(&testEnemys[i]);
 	}
 
 	enemyList.remove_if([](std::unique_ptr<Enemy>& newenemy)
@@ -477,6 +485,8 @@ void GameScene::Play_updata()
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
 		newenemy->update(player.playerObject->getPosition());
+		player.checkPlayerEnemy(newenemy.get());
+		player.checkPlayerEnemyBullet(newenemy.get());
 	}
 
 	//ボス更新
@@ -487,16 +497,17 @@ void GameScene::Play_updata()
 	{
 		for (int i = 0; i < targetnum; i++)
 		{
+			//配列
 			for (int j = 0; j < maxEnemyNum; j++)
 			{
-				if (testEnemys[j].isTargetSet && !testEnemys[j].isSetMissile)
+				/*if (testEnemys[j].isTargetSet && !testEnemys[j].isSetMissile)
 				{
 					player.playerMissiale[i].setPenemy(&testEnemys[j]);
 					player.playerMissiale[i].start(player.playerObject->getPosition());
 					testEnemys[j].isSetMissile = true;
 
 					break;
-				}
+				}*/
 			}
 
 			for (std::unique_ptr<Enemy>& newenemy : enemyList)
@@ -535,8 +546,14 @@ void GameScene::Play_updata()
 	{
 		for (int i = 0; i < maxEnemyNum; i++)
 		{
-			player.playerBullet[j].checkHitEnemy(&testEnemys[i]);
-			player.playerBullet[j].checkHitEnemyBullet(&testEnemys[i]);
+			//player.playerBullet[j].checkHitEnemy(&testEnemys[i]);
+			//player.playerBullet[j].checkHitEnemyBullet(&testEnemys[i]);
+		}
+
+		for (std::unique_ptr<Enemy>& newenemy : enemyList)
+		{
+			player.playerBullet[j].checkHitEnemy(newenemy.get());
+			player.playerBullet[j].checkHitEnemyBullet(newenemy.get());
 		}
 	}
 
@@ -551,14 +568,21 @@ void GameScene::Play_updata()
 	int count = 0;
 	for (int i = 0; i < maxEnemyNum; i++)
 	{
-		if (!testEnemys[i].isDraw)
+		/*if (!testEnemys[i].isDraw)
+		{
+			count++;
+		}*/
+	}
+	for (std::unique_ptr<Enemy>& newenemy : enemyList)
+	{
+		if (!newenemy->isDraw)
 		{
 			count++;
 		}
 	}
 
 	//すべての雑魚敵が死んでいたらボス出現
-	if (count >= maxEnemyNum && !isBoss)
+	if (enemyList.size() <= 0)
 	{
 		testBoss.bossSet({ 0,5,0 });
 		isBoss = true;
@@ -737,7 +761,7 @@ void GameScene::Play_draw()
 
 	for (int i = 0; i < maxEnemyNum; i++)
 	{
-		testEnemys[i].draw3D(directx);
+		//testEnemys[i].draw3D(directx);
 	}
 
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
@@ -764,7 +788,7 @@ void GameScene::Result_draw()
 
 	for (int i = 0; i < maxEnemyNum; i++)
 	{
-		testEnemys[i].draw3D(directx);
+		//testEnemys[i].draw3D(directx);
 	}
 
 	//ボス描画
@@ -850,7 +874,12 @@ void GameScene::Draw2D()
 	{
 		for (int i = 0; i < maxEnemyNum; i++)
 		{
-			testEnemys[i].draw2D(directx);
+			//testEnemys[i].draw2D(directx);
+		}
+
+		for (std::unique_ptr<Enemy>& newenemy : enemyList)
+		{
+			newenemy->draw2D(directx);
 		}
 
 		//ボス描画(2d)
@@ -915,16 +944,28 @@ void GameScene::checkHitPlayerTarget()
 		return;
 	}
 
-	//通常の敵
+	//通常の敵　配列
 	for (int i = 0; i < maxEnemyNum; i++)
 	{
-		XMFLOAT2 screenPos = testEnemys[i].enemyObject->worldToScleen();
+		/*XMFLOAT2 screenPos = testEnemys[i].enemyObject->worldToScleen();
 
 		float dis = sqrtf(powf(player.targetFirst.position.x - screenPos.x, 2) + powf(player.targetFirst.position.y - screenPos.y, 2));
 
 		if (dis < 56.5685f && !testEnemys[i].isTargetSet && targetnum < MaxPlayerMissileNum && testEnemys[i].Isarive)
 		{
 			testEnemys[i].isTargetSet = true;
+			targetnum++;
+		}*/
+	}
+	for (std::unique_ptr<Enemy>& newenemy : enemyList)
+	{
+		XMFLOAT2 screenPos = newenemy->enemyObject->worldToScleen();
+
+		float dis = sqrtf(powf(player.targetFirst.position.x - screenPos.x, 2) + powf(player.targetFirst.position.y - screenPos.y, 2));
+
+		if (dis < 56.5685f && !newenemy->isTargetSet && targetnum < MaxPlayerMissileNum && newenemy->Isarive)
+		{
+			newenemy->isTargetSet = true;
 			targetnum++;
 		}
 	}

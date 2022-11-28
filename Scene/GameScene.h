@@ -118,7 +118,7 @@ private:
 
 	//“G(test)
 	static const int maxEnemyNum = 20;
-	Enemy testEnemys[maxEnemyNum];
+	//Enemy testEnemys[maxEnemyNum];
 	std::list<std::unique_ptr<Enemy>> enemyList;
 	bool isEnemySimple = false;
 
