@@ -196,6 +196,17 @@ private:
 	//ステージ番号
 	int stageNum = 1;
 
+	//敵を全滅させたときに上がるレベル
+	int level = 1;
+
+	//ステージごとのレベル
+	int stageLevel = 1;
+
+	// レベル = ステージレベル + 2
+	// レベルが最大まで行くとボス出現
+	// ボスの HP はレベル + 5
+	// ボスを倒すとクリア
+
 	//ステージアイコンのイージング
 	easingManager stageIconEase;
 
