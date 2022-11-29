@@ -166,14 +166,8 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	srand(time(NULL));
 
-	/*for (int i = 0; i < maxEnemyNum; i++)
-	{
-		testEnemys[i].init(enemyPattern::shot);
-		testEnemys[i].set({
-			(float)(rand() % 50 - 25),
-			(float)(rand() % 30 + 15),
-			(float)(rand() % 50 - 25) });
-	}*/
+	//敵モデルの初期化
+	Enemy::staticInit();
 
 	//ボスの初期化
 	testBoss.bossInit();
@@ -299,9 +293,6 @@ void GameScene::Select_updata()
 
 		for (int i = 0; i < maxEnemyNum; i++)
 		{
-			//敵　配列
-			//testEnemys[i].reSet();
-
 			//敵　リスト
 			std::unique_ptr<Enemy> newenemy = std::make_unique<Enemy>();
 			newenemy->init(enemyPattern::shot);
@@ -321,11 +312,7 @@ void GameScene::Select_updata()
 
 		if (stageNum == 1)
 		{
-			//敵　配列
-			for (int i = 0; i < maxEnemyNum; i++)
-			{
-				//testEnemys[i].changePattern(enemyPattern::chase);
-			}
+			//敵
 			testBoss.changePattern(enemyPattern::chase);
 
 			//敵　リスト
@@ -336,11 +323,7 @@ void GameScene::Select_updata()
 		}
 		else
 		{
-			//敵　配列
-			for (int i = 0; i < maxEnemyNum; i++)
-			{
-				//testEnemys[i].changePattern(enemyPattern::shot);
-			}
+			//敵
 			testBoss.changePattern(enemyPattern::shot);
 
 			//敵　リスト
@@ -417,12 +400,7 @@ void GameScene::Play_updata()
 	{
 		player.isStop = true;
 
-		//敵　配列
-		for (int i = 0; i < maxEnemyNum; i++)
-		{
-			//testEnemys[i].isStop = true;
-		}
-
+		//敵
 		for (std::unique_ptr<Enemy>& newenemy : enemyList)
 		{
 			newenemy->isStop = true;
@@ -434,12 +412,7 @@ void GameScene::Play_updata()
 	{
 		player.isStop = false;
 
-		//敵　配列
-		for (int i = 0; i < maxEnemyNum; i++)
-		{
-			//testEnemys[i].isStop = false;
-		}
-
+		//敵
 		for (std::unique_ptr<Enemy>& newenemy : enemyList)
 		{
 			newenemy->isStop = false;
@@ -454,29 +427,9 @@ void GameScene::Play_updata()
 	//リセット
 	if (input->push(DIK_R))
 	{
-		/*targetnum = 0;
-
-		for (int i = 0; i < maxEnemyNum; i++)
-		{
-			testEnemys[i].reSet();
-		}
-
-		for (auto itre = Enemys.begin(); itre != Enemys.end(); itre++)
-		{
-			itre->reSet();
-		}
-
-		testBoss.bossReSet();*/
 	}
 
-	//エネミー更新　配列
-	for (int i = 0; i < maxEnemyNum; i++)
-	{
-		//testEnemys[i].update(player.playerObject->getPosition());
-		//player.checkPlayerEnemy(&testEnemys[i]);
-		//player.checkPlayerEnemyBullet(&testEnemys[i]);
-	}
-
+	//エネミー更新
 	enemyList.remove_if([](std::unique_ptr<Enemy>& newenemy)
 		{
 			return newenemy->isDraw == false;
@@ -497,19 +450,6 @@ void GameScene::Play_updata()
 	{
 		for (int i = 0; i < targetnum; i++)
 		{
-			//配列
-			for (int j = 0; j < maxEnemyNum; j++)
-			{
-				/*if (testEnemys[j].isTargetSet && !testEnemys[j].isSetMissile)
-				{
-					player.playerMissiale[i].setPenemy(&testEnemys[j]);
-					player.playerMissiale[i].start(player.playerObject->getPosition());
-					testEnemys[j].isSetMissile = true;
-
-					break;
-				}*/
-			}
-
 			for (std::unique_ptr<Enemy>& newenemy : enemyList)
 			{
 				if (newenemy->isTargetSet && !newenemy->isSetMissile)
@@ -525,8 +465,8 @@ void GameScene::Play_updata()
 
 		if (testBoss.isTargetSet && !testBoss.isSetMissile)
 		{
-			player.playerMissiale[0].setPenemy(&testBoss);
-			player.playerMissiale[0].start(player.playerObject->getPosition());
+			player.addMissile(&testBoss);
+
 			testBoss.isSetMissile = true;
 		}
 
@@ -542,37 +482,24 @@ void GameScene::Play_updata()
 	checkHitPlayerTarget();
 
 	//プレイヤーの通常弾当たり判定
-	for (int j = 0; j < MaxPlayerBulletNum; j++)
+	for (std::unique_ptr<bullet>& newbullet : player.bulletsList)
 	{
-		for (int i = 0; i < maxEnemyNum; i++)
-		{
-			//player.playerBullet[j].checkHitEnemy(&testEnemys[i]);
-			//player.playerBullet[j].checkHitEnemyBullet(&testEnemys[i]);
-		}
-
 		for (std::unique_ptr<Enemy>& newenemy : enemyList)
 		{
-			player.playerBullet[j].checkHitEnemy(newenemy.get());
-			player.playerBullet[j].checkHitEnemyBullet(newenemy.get());
+			newbullet->checkHitEnemy(newenemy.get());
+			newbullet->checkHitEnemyBullet(newenemy.get());
 		}
 	}
 
 	//通常弾とボスの当たり判定
-	for (int i = 0; i < MaxPlayerBulletNum; i++)
+	for (std::unique_ptr<bullet>& newbullet : player.bulletsList)
 	{
-		player.playerBullet[i].checkHitEnemy(&testBoss);
-		player.playerBullet[i].checkHitEnemyBullet(&testBoss);
+		newbullet->checkHitEnemy(&testBoss);
+		newbullet->checkHitEnemyBullet(&testBoss);
 	}
 
 	//死んでいる雑魚敵をカウント
 	int count = 0;
-	for (int i = 0; i < maxEnemyNum; i++)
-	{
-		/*if (!testEnemys[i].isDraw)
-		{
-			count++;
-		}*/
-	}
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
 		if (!newenemy->isDraw)
@@ -582,7 +509,7 @@ void GameScene::Play_updata()
 	}
 
 	//すべての雑魚敵が死んでいたらボス出現
-	if (enemyList.size() <= 0)
+	if (enemyList.size() <= 0 && !isBoss)
 	{
 		testBoss.bossSet({ 0,5,0 });
 		isBoss = true;
@@ -759,11 +686,7 @@ void GameScene::Play_draw()
 	//プレイヤー描画
 	player.draw3D(directx);
 
-	for (int i = 0; i < maxEnemyNum; i++)
-	{
-		//testEnemys[i].draw3D(directx);
-	}
-
+	//敵
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
 		newenemy->draw3D(directx);
@@ -785,11 +708,6 @@ void GameScene::Result_draw()
 
 	//プレイヤー描画
 	player.draw3D(directx);
-
-	for (int i = 0; i < maxEnemyNum; i++)
-	{
-		//testEnemys[i].draw3D(directx);
-	}
 
 	//ボス描画
 	testBoss.draw3D(directx);
@@ -872,11 +790,6 @@ void GameScene::Draw2D()
 
 	if (scene == sceneType::play)
 	{
-		for (int i = 0; i < maxEnemyNum; i++)
-		{
-			//testEnemys[i].draw2D(directx);
-		}
-
 		for (std::unique_ptr<Enemy>& newenemy : enemyList)
 		{
 			newenemy->draw2D(directx);
@@ -944,19 +857,7 @@ void GameScene::checkHitPlayerTarget()
 		return;
 	}
 
-	//通常の敵　配列
-	for (int i = 0; i < maxEnemyNum; i++)
-	{
-		/*XMFLOAT2 screenPos = testEnemys[i].enemyObject->worldToScleen();
-
-		float dis = sqrtf(powf(player.targetFirst.position.x - screenPos.x, 2) + powf(player.targetFirst.position.y - screenPos.y, 2));
-
-		if (dis < 56.5685f && !testEnemys[i].isTargetSet && targetnum < MaxPlayerMissileNum && testEnemys[i].Isarive)
-		{
-			testEnemys[i].isTargetSet = true;
-			targetnum++;
-		}*/
-	}
+	//通常の敵
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
 		XMFLOAT2 screenPos = newenemy->enemyObject->worldToScleen();

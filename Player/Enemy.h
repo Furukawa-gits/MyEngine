@@ -14,6 +14,8 @@ public:
 	enemyBullet();
 	~enemyBullet();
 
+	static void staticInit();
+
 	void init();
 
 	void set(XMFLOAT3 playerpos,XMFLOAT3 shotpos);
@@ -43,7 +45,7 @@ public:
 
 private:
 	//モデル・オブジェクト
-	Model* buletModel = nullptr;
+	static Model* buletModelS;
 	Object3d_FBX* bulletObject = nullptr;
 
 	//座標・方向・弾速
@@ -65,7 +67,7 @@ class Enemy
 {
 public:
 	//オブジェクト
-	Model* enemyModel = nullptr;
+	static Model* enemyModelS;
 	Object3d_FBX* enemyObject = nullptr;
 
 	bool isDraw = false;//描画フラグ
@@ -115,6 +117,8 @@ public:
 	Enemy();
 
 	~Enemy();
+
+	static void staticInit();
 
 	//初期化
 	void init(enemyPattern pattern);

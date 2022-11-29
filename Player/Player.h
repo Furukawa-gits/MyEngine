@@ -88,12 +88,7 @@ public:
 	std::vector<SingleSprite> HPUI[10];
 
 	//’e
-	bullet playerBullet[MaxPlayerBulletNum];
-
 	std::list<std::unique_ptr<bullet>> bulletsList;
-
-	Missile playerMissiale[MaxPlayerMissileNum];
-
 	std::list<std::unique_ptr<Missile>> missilesList;
 
 	//“ü—Í

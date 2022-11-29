@@ -3,6 +3,8 @@
 #include"../3D/3Dobject.h"
 
 #pragma region ’Êí’e
+Model* bullet::bulletModelS = nullptr;
+
 bullet::bullet()
 {
 }
@@ -10,16 +12,18 @@ bullet::bullet()
 bullet::~bullet()
 {
 	delete(bulletObject);
-	delete(bulletModel);
+}
+
+void bullet::staticInit()
+{
+	bulletModelS = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
 }
 
 void bullet::init()
 {
-	bulletModel = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
-
 	bulletObject = new Object3d_FBX;
 	bulletObject->Initialize();
-	bulletObject->SetModel(bulletModel);
+	bulletObject->SetModel(bulletModelS);
 	bulletObject->SetScale({ 0.5f,0.5f,0.5f });
 
 	bulletCollision.radius = 2.0f;
@@ -122,6 +126,8 @@ void bullet::draw(directX* directx)
 #pragma endregion
 
 #pragma region ƒ~ƒTƒCƒ‹
+Model* Missile::bulletModelS = nullptr;
+
 Missile::Missile()
 {
 }
@@ -129,16 +135,18 @@ Missile::Missile()
 Missile::~Missile()
 {
 	delete(bulletObject);
-	delete(bulletModel);
+}
+
+void Missile::staticInit()
+{
+	bulletModelS = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
 }
 
 void Missile::init()
 {
-	bulletModel = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
-
 	bulletObject = new Object3d_FBX;
 	bulletObject->Initialize();
-	bulletObject->SetModel(bulletModel);
+	bulletObject->SetModel(bulletModelS);
 	bulletObject->SetScale({ 0.5f,0.5f,0.5f });
 
 	bulletObject->setColor({ 1,1,0,1 });

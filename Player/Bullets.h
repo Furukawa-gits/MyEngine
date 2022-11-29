@@ -8,12 +8,13 @@
 //通常弾
 class bullet
 {
+private:
+	static Model* bulletModelS;
 public:
 	float count = 0;
 	XMFLOAT3 bullet_vec = { 0.0f,0.0f,0.0f };
 
 	Object3d_FBX* bulletObject = nullptr;
-	Model* bulletModel = nullptr;
 	float bulletSpeed = 3.0f;
 
 	bool isArive = false;
@@ -23,6 +24,7 @@ public:
 	bullet();
 	~bullet();
 
+	static void staticInit();
 	void init();
 	void set(XMFLOAT3 start_pos, XMFLOAT3 Target);
 	void checkHitEnemy(Enemy* enemy);
@@ -35,6 +37,8 @@ public:
 //ホーミングミサイル
 class Missile
 {
+private:
+	static Model* bulletModelS;
 public:
 	std::unique_ptr<Enemy>* pEnemy;
 
@@ -42,7 +46,6 @@ public:
 	XMFLOAT3 bulletVec = { 0.0f,0.0f,0.0f };
 
 	Object3d_FBX* bulletObject = nullptr;
-	Model* bulletModel = nullptr;
 	bool isArive = false;
 	bool isTargetSet = false;
 	
@@ -62,9 +65,9 @@ public:
 	Missile();
 	~Missile();
 
+	static void staticInit();
 	void init();
 	void setPenemy(Enemy* enemy);
-	void setUenemy(std::unique_ptr<Enemy>& enemy);
 	void start(XMFLOAT3 start_pos);
 	void checkhit();
 	void update();

@@ -55,15 +55,8 @@ void Player::init(dxinput* input, directX* directx)
 
 	Object3d_FBX::SetCamera(followCamera);
 
-	for (int i = 0; i < MaxPlayerBulletNum; i++)
-	{
-		playerBullet[i].init();
-	}
-
-	for (int i = 0; i < MaxPlayerMissileNum; i++)
-	{
-		playerMissiale[i].init();
-	}
+	bullet::staticInit();
+	Missile::staticInit();
 
 	//HP(vector)
 	int i = 0;
@@ -299,23 +292,13 @@ void Player::update()
 		isArive = false;
 	}
 
-	//通常弾の更新
-	for (int i = 0; i < MaxPlayerBulletNum; i++)
-	{
-		playerBullet[i].update();
-	}
-	//通常弾の初期化(ユニークリスト)
+	//通常弾の更新(ユニークリスト)
 	for (std::unique_ptr<bullet>& bullet : bulletsList)
 	{
 		bullet->update();
 	}
 
-	//ミサイルの更新
-	for (int i = 0; i < MaxPlayerMissileNum; i++)
-	{
-		playerMissiale[i].update();
-	}
-	//ミサイルの初期化(ユニークリスト)
+	//ミサイルの更新(ユニークリスト)
 	for (std::unique_ptr<Missile>& missile : missilesList)
 	{
 		missile->update();
@@ -395,16 +378,6 @@ void Player::targetUpdate()
 	//左クリックで通常弾
 	if (input->Mouse_LeftTriger())
 	{
-		for (int i = 0; i < MaxPlayerBulletNum; i++)
-		{
-			if (playerBullet[i].isArive == false)
-			{
-				playerBullet[i].set(playerObject->getPosition(),
-					playerObject->screenToWorld({ targetFirst.position.x,targetFirst.position.y }));
-				break;
-			}
-		}
-
 		//リスト化
 		std::unique_ptr<bullet> newBullet = std::make_unique<bullet>();
 		newBullet->init();
@@ -464,9 +437,9 @@ void Player::reset()
 
 	for (int i = 0; i < MaxPlayerMissileNum; i++)
 	{
-		playerMissiale[i].enemyPointer = nullptr;
-		playerMissiale[i].isArive = false;
-		playerMissiale[i].isTargetSet = false;
+		//playerMissiale[i].enemyPointer = nullptr;
+		//playerMissiale[i].isArive = false;
+		//playerMissiale[i].isTargetSet = false;
 	}
 }
 
@@ -481,18 +454,6 @@ void Player::draw3D(directX* directx)
 	//単色シェーダをセットして描画
 	playerObject->SetPipelineSimple(directx->cmdList.Get());
 	playerObject->Draw(directx->cmdList.Get());
-
-	//通常弾描画
-	for (int i = 0; i < MaxPlayerBulletNum; i++)
-	{
-		playerBullet[i].draw(directx);
-	}
-
-	//ミサイル描画
-	for (int i = 0; i < MaxPlayerMissileNum; i++)
-	{
-		playerMissiale[i].draw(directx);
-	}
 
 	//通常弾の描画(ユニークリスト)
 	for (std::unique_ptr<bullet>& bullet : bulletsList)

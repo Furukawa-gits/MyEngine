@@ -1,6 +1,8 @@
 #include"Enemy.h"
 #include<random>
 
+Model* Enemy::enemyModelS = nullptr;
+
 #pragma region “G–{‘Ì
 Enemy::Enemy()
 {
@@ -8,8 +10,14 @@ Enemy::Enemy()
 
 Enemy::~Enemy()
 {
-	delete(enemyModel);
 	delete(enemyObject);
+}
+
+void Enemy::staticInit()
+{
+	enemyModelS = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
+
+	enemyBullet::staticInit();
 }
 
 void Enemy::init(enemyPattern pattern)
@@ -21,11 +29,9 @@ void Enemy::init(enemyPattern pattern)
 	rockTarget.size = { 70,70 };
 	rockTarget.GenerateSprite("Rock_on.png");
 
-	enemyModel = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
-
 	enemyObject = new Object3d_FBX;
 	enemyObject->Initialize();
-	enemyObject->SetModel(enemyModel);
+	enemyObject->SetModel(enemyModelS);
 	enemyObject->SetScale({ 1.0f,1.0f,1.0f });
 
 	enemyCollision.radius = 2.0f;
@@ -329,6 +335,8 @@ void Enemy::draw2D(directX* directx)
 #pragma endregion
 
 #pragma region “G‚Ì’e
+Model* enemyBullet::buletModelS = nullptr;
+
 enemyBullet::enemyBullet()
 {
 }
@@ -337,13 +345,16 @@ enemyBullet::~enemyBullet()
 {
 }
 
+void enemyBullet::staticInit()
+{
+	buletModelS = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
+}
+
 void enemyBullet::init()
 {
-	buletModel = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
-
 	bulletObject = new Object3d_FBX;
 	bulletObject->Initialize();
-	bulletObject->SetModel(buletModel);
+	bulletObject->SetModel(buletModelS);
 	bulletObject->SetScale({ 0.3f,0.3f,0.3f });
 
 	bulletObject->setColor({ 0,0,1,1 });
