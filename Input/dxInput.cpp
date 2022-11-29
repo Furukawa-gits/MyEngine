@@ -44,6 +44,8 @@ void dxinput::Update(HWND hwnd)
 	result = devmouse->Acquire();
 	result = devmouse->GetDeviceState(sizeof(mouse), &mouse);
 
+	mouseMoveVecrocity = { (float)mouse.lX,(float)mouse.lY };
+
 	oldmouse_p = mouse_p;
 
 	GetCursorPos(&mouse_p);

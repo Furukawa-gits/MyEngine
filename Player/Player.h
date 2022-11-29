@@ -50,8 +50,6 @@ public:
 	//追従カメラ
 	FollowCamera* followCamera = nullptr;
 
-	//回転量
-
 	//クォータニオン回転角度
 	float roll = 0.0f;
 	float pitch = 0.0f;
@@ -75,6 +73,10 @@ public:
 	float addRotateSpeed = 0.002f;//加算量
 	float subRotateSpeed = -0.002f;//減算量
 	float limitRotateSpeed = 0.02f;//最大回転速度
+
+	//マウスカーソル固定値
+	const int mouseOffsetX = 640;
+	const int mouseOffsetY = 360;
 
 	//基準回転軸
 	const XMFLOAT3 unitX = { 1,0,0 };

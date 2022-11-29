@@ -271,9 +271,9 @@ void Player::update()
 	}
 
 	//死んだ弾は削除
-	bulletsList.remove_if([](std::unique_ptr<bullet>& newbullet) 
+	bulletsList.remove_if([](std::unique_ptr<bullet>& newbullet)
 		{
-			return newbullet == false; 
+			return newbullet == false;
 		});
 
 	missilesList.remove_if([](std::unique_ptr<Missile>& newmissile)
@@ -313,8 +313,12 @@ void Player::update()
 
 void Player::targetUpdate()
 {
-	//ターゲットカーソルの座標
-	targetFirst.position = { (float)input->mouse_p.x,(float)input->mouse_p.y,0.0f };
+	//マウスの移動量をターゲットカーソルの座標に加算
+	targetFirst.position.x += input->mouseMoveVecrocity.x;
+	targetFirst.position.y += input->mouseMoveVecrocity.y;
+
+	//マウスカーソル固定
+	SetCursorPos(mouseOffsetX, mouseOffsetY);
 
 	//ターゲットカーソルが場外にいかないように制御
 	if (targetFirst.position.x <= 29)
@@ -432,6 +436,10 @@ void Player::reset()
 	playerObject->SetPosition({ 0,5,0 });
 	pitch = 0.0f;
 	yow = 0.0f;
+
+	targetFirst.position = { (float)mouseOffsetX,(float)mouseOffsetY ,0 };
+
+	SetCursorPos(mouseOffsetX, mouseOffsetY);
 
 	qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
 

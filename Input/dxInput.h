@@ -33,6 +33,8 @@ public:
 	XMFLOAT3 mouse_position = { 0,0,0 };
 	XMFLOAT3 old_mouse_position = { 0,0,0 };
 
+	XMFLOAT2 mouseMoveVecrocity = { 0,0 };
+
 	//ä÷êîåR
 	dxinput();
 
