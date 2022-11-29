@@ -27,7 +27,6 @@ void checkHitManager::checkPlayerEnemys(Player* player, list<unique_ptr<Enemy>>*
 // プレイヤーの通常弾と敵本体の当たり判定(単体)
 void checkHitManager::checkBulletEnemy(bullet* bullet, Enemy* enemy)
 {
-
 	if (!enemy->Isarive || !bullet->isArive)
 	{
 		return;
@@ -42,8 +41,17 @@ void checkHitManager::checkBulletEnemy(bullet* bullet, Enemy* enemy)
 	}
 }
 
+// プレイヤーの通常弾と敵本体の当たり判定(ボス)
+void checkHitManager::checkBulletsEnemy(list<unique_ptr<bullet>>* bulletsList, Enemy* enemy)
+{
+	for (std::unique_ptr<bullet>& newbullet : *bulletsList)
+	{
+		checkBulletEnemy(newbullet.get(), enemy);
+	}
+}
+
 // プレイヤーの通常弾と敵本体の当たり判定(群れ)
-void checkHitManager::checkBulletEnemys(list<unique_ptr<bullet>>* bulletsList, list<unique_ptr<Enemy>>* enemys)
+void checkHitManager::checkBulletsEnemys(list<unique_ptr<bullet>>* bulletsList, list<unique_ptr<Enemy>>* enemys)
 {
 	for (std::unique_ptr<bullet>& newbullet : *bulletsList)
 	{
@@ -82,8 +90,17 @@ void checkHitManager::checkBulletEnemybullet(bullet* bullet, Enemy* enemy)
 	}
 }
 
+// プレイヤーの通常弾と敵の弾の当たり判定(ボス)
+void checkHitManager::checkBulletsEnemybullet(list<unique_ptr<bullet>>* bulletsList, Enemy* enemy)
+{
+	for (std::unique_ptr<bullet>& newbullet : *bulletsList)
+	{
+		checkBulletEnemybullet(newbullet.get(), enemy);
+	}
+}
+
 // プレイヤーの通常弾と敵の弾の当たり判定(群れ)
-void checkHitManager::checkBulletEnemyBullets(list<unique_ptr<bullet>>* bulletsList, list<unique_ptr<Enemy>>* enemys)
+void checkHitManager::checkBulletsEnemyBullets(list<unique_ptr<bullet>>* bulletsList, list<unique_ptr<Enemy>>* enemys)
 {
 	for (std::unique_ptr<bullet>& newbullet : *bulletsList)
 	{
@@ -95,7 +112,7 @@ void checkHitManager::checkBulletEnemyBullets(list<unique_ptr<bullet>>* bulletsL
 }
 
 // プレイヤーの追尾弾と敵の当たり判定
-void checkHitManager::checkHomingEnemy(list<unique_ptr<Missile>>* missilesList)
+void checkHitManager::checkMissilesEnemy(list<unique_ptr<Missile>>* missilesList)
 {
 	for (std::unique_ptr<Missile>& newmissile : *missilesList)
 	{
@@ -132,7 +149,7 @@ void checkHitManager::checkHomingEnemy(list<unique_ptr<Missile>>* missilesList)
 	}
 }
 
-// プレイヤーと敵の弾の当たり判定(単体)
+// プレイヤー本体と敵の弾の当たり判定(単体)
 void checkHitManager::chackPlayerEnemyBullet(Player* player, Enemy* enemy)
 {
 	if (enemy->enemyMovePattern != enemyPattern::shot)
@@ -153,7 +170,7 @@ void checkHitManager::chackPlayerEnemyBullet(Player* player, Enemy* enemy)
 	}
 }
 
-// プレイヤーと敵の弾の当たり判定(群れ)
+// プレイヤー本体と敵の弾の当たり判定(群れ)
 void checkHitManager::checkPlayerEnemyBullets(Player* player, list<unique_ptr<Enemy>>* enemys)
 {
 	for (std::unique_ptr<Enemy>& newenemy : *enemys)
@@ -162,7 +179,7 @@ void checkHitManager::checkPlayerEnemyBullets(Player* player, list<unique_ptr<En
 	}
 }
 
-// プレイヤーと敵のロックオン判定(単体)
+// プレイヤーカーソルと敵本体のロックオン判定(単体)
 void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& targetnum)
 {
 	XMFLOAT2 screenPos = enemy->enemyObject->worldToScleen();
@@ -176,7 +193,7 @@ void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& target
 	}
 }
 
-// プレイヤーと敵のロックオン判定(群れ)
+// プレイヤーカーソルと敵本体のロックオン判定(群れ)
 void checkHitManager::checkRockonEnemys(Player* player, list<unique_ptr<Enemy>>* enemys, int& targetnum)
 {
 	for (std::unique_ptr<Enemy>& newenemy : *enemys)

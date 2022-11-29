@@ -438,8 +438,8 @@ void GameScene::Play_updata()
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
 		newenemy->update(player.playerObject->getPosition());
-		player.checkPlayerEnemy(newenemy.get());
-		player.checkPlayerEnemyBullet(newenemy.get());
+		checkHitManager::checkPlayerEnemy(&player, newenemy.get());
+		checkHitManager::chackPlayerEnemyBullet(&player, newenemy.get());
 	}
 
 	//ボス更新
@@ -482,21 +482,12 @@ void GameScene::Play_updata()
 	checkHitPlayerTarget();
 
 	//プレイヤーの通常弾当たり判定
-	for (std::unique_ptr<bullet>& newbullet : player.bulletsList)
-	{
-		for (std::unique_ptr<Enemy>& newenemy : enemyList)
-		{
-			newbullet->checkHitEnemy(newenemy.get());
-			newbullet->checkHitEnemyBullet(newenemy.get());
-		}
-	}
+	checkHitManager::checkBulletsEnemys(&player.bulletsList, &enemyList);
+	checkHitManager::checkBulletsEnemyBullets(&player.bulletsList, &enemyList);
 
 	//通常弾とボスの当たり判定
-	for (std::unique_ptr<bullet>& newbullet : player.bulletsList)
-	{
-		newbullet->checkHitEnemy(&testBoss);
-		newbullet->checkHitEnemyBullet(&testBoss);
-	}
+	checkHitManager::checkBulletsEnemy(&player.bulletsList, &testBoss);
+	checkHitManager::checkBulletsEnemybullet(&player.bulletsList, &testBoss);
 
 	//死んでいる雑魚敵をカウント
 	int count = 0;
@@ -858,27 +849,8 @@ void GameScene::checkHitPlayerTarget()
 	}
 
 	//通常の敵
-	for (std::unique_ptr<Enemy>& newenemy : enemyList)
-	{
-		XMFLOAT2 screenPos = newenemy->enemyObject->worldToScleen();
-
-		float dis = sqrtf(powf(player.targetFirst.position.x - screenPos.x, 2) + powf(player.targetFirst.position.y - screenPos.y, 2));
-
-		if (dis < 56.5685f && !newenemy->isTargetSet && targetnum < MaxPlayerMissileNum && newenemy->Isarive)
-		{
-			newenemy->isTargetSet = true;
-			targetnum++;
-		}
-	}
+	checkHitManager::checkRockonEnemys(&player, &enemyList, targetnum);
 
 	//ボス
-	XMFLOAT2 screenPos = testBoss.enemyObject->worldToScleen();
-
-	float dis = sqrtf(powf(player.targetFirst.position.x - screenPos.x, 2) + powf(player.targetFirst.position.y - screenPos.y, 2));
-
-	if (dis < 56.5685f && !testBoss.isTargetSet && targetnum < MaxPlayerMissileNum && testBoss.isDraw)
-	{
-		testBoss.isTargetSet = true;
-		targetnum++;
-	}
+	checkHitManager::checkRockonEnemy(&player, &testBoss, targetnum);
 }
