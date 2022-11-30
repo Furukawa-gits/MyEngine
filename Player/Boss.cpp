@@ -27,6 +27,7 @@ void Boss::bossUpdate(Player* player)
 void Boss::bossSet(XMFLOAT3 pos)
 {
 	set(pos);
+	HP = 5;
 }
 
 void Boss::bossReSet()
@@ -34,9 +35,4 @@ void Boss::bossReSet()
 	reSet();
 	HP = 5;
 	isDraw = false;
-}
-
-void Boss::CheckHitPlayer(Player* player)
-{
-	
 }
