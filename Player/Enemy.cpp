@@ -2,6 +2,7 @@
 #include<random>
 
 Model* Enemy::enemyModelS = nullptr;
+const float Enemy::forPlayer = 200.0f;
 
 #pragma region “G–{‘Ì
 Enemy::Enemy()
@@ -195,6 +196,24 @@ void Enemy::update(XMFLOAT3 playerPos)
 		return;
 	}
 
+	XMFLOAT3 toPlayer =
+	{
+		playerPos.x - position.x,
+		playerPos.y - position.y,
+		playerPos.z - position.z,
+	};
+
+	float length = sqrtf(powf(toPlayer.x, 2) + powf(toPlayer.y, 2) + powf(toPlayer.z, 2));
+
+	if (length >= forPlayer)
+	{
+		isFar = true;
+	}
+	else
+	{
+		isFar = false;
+	}
+
 	//“G‚ª¶‘¶
 	ariveMove(playerPos);
 
@@ -316,6 +335,11 @@ void Enemy::draw3D(directX* directx)
 		return;
 	}
 
+	if (isFar)
+	{
+		return;
+	}
+
 	enemyObject->SetPipelineSimple(directx->cmdList.Get());
 	enemyObject->Draw(directx->cmdList.Get());
 
@@ -327,6 +351,11 @@ void Enemy::draw3D(directX* directx)
 
 void Enemy::draw2D(directX* directx)
 {
+	if (isFar)
+	{
+		return;
+	}
+
 	if (Isarive && isTargetSet)
 	{
 		rockTarget.DrawSprite(directx->cmdList.Get());

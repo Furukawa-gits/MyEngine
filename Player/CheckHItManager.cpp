@@ -182,6 +182,23 @@ void checkHitManager::checkPlayerEnemyBullets(Player* player, list<unique_ptr<En
 // プレイヤーカーソルと敵本体のロックオン判定(単体)
 void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& targetnum)
 {
+	XMFLOAT3 playerToEnemy =
+	{
+		enemy->position.x - player->playerObject->getPosition().x,
+		enemy->position.y - player->playerObject->getPosition().y,
+		enemy->position.z - player->playerObject->getPosition().z,
+	};
+
+	float length = sqrtf(powf(playerToEnemy.x, 2) + powf(playerToEnemy.y, 2) + powf(playerToEnemy.z, 2));
+
+	if (length >= Enemy::forPlayer)
+	{
+		enemy->isTargetSet = false;
+		enemy->isSetMissile = false;
+
+		return;
+	}
+
 	XMFLOAT2 screenPos = enemy->enemyObject->worldToScleen();
 
 	float dis = sqrtf(powf(player->targetFirst.position.x - screenPos.x, 2) + powf(player->targetFirst.position.y - screenPos.y, 2));

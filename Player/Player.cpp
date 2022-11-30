@@ -281,6 +281,11 @@ void Player::update()
 			return newmissile == false;
 		});
 
+	missilesList.remove_if([](std::unique_ptr<Missile>& newmissile)
+		{
+			return newmissile->enemyPointer->isSetMissile == false && newmissile->enemyPointer->isTargetSet == false;
+		});
+
 	//ˆÚ“®
 	Move();
 

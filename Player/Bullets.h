@@ -40,7 +40,6 @@ class Missile
 private:
 	static Model* bulletModelS;
 public:
-	std::unique_ptr<Enemy>* pEnemy;
 
 	Enemy* enemyPointer = nullptr;
 	XMFLOAT3 bulletVec = { 0.0f,0.0f,0.0f };

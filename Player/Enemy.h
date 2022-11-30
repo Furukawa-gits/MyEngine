@@ -70,6 +70,8 @@ public:
 	static Model* enemyModelS;
 	Object3d_FBX* enemyObject = nullptr;
 
+	static const float forPlayer;
+
 	bool isDraw = false;//描画フラグ
 	bool Isarive = false;//生存フラグ
 	bool isTargetSet = false;//狙われているかどうか
@@ -95,6 +97,8 @@ public:
 	int fallDownCount = 0;
 
 	float deathRotSpeed = 2.0f;
+
+	bool isFar = false;
 
 	//敵の行動パターン
 	enemyPattern enemyMovePattern = enemyPattern::chase;
