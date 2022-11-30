@@ -133,8 +133,7 @@ private:
 	Boss testBoss;
 
 	//ボスのhpゲージ
-	SingleSprite bossHp[5];
-	std::list<std::unique_ptr<SingleSprite>> bossHitPoints;
+	std::vector<std::unique_ptr<SingleSprite>> bossHitPoints;
 
 	//ボス出現フラグ
 	bool isBoss = false;

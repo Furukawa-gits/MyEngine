@@ -27,12 +27,12 @@ void Boss::bossUpdate(Player* player)
 void Boss::bossSet(XMFLOAT3 pos)
 {
 	set(pos);
-	HP = 5;
+	HP = resetHitPoint;
 }
 
 void Boss::bossReSet()
 {
 	reSet();
-	HP = 5;
+	HP = resetHitPoint;
 	isDraw = false;
 }

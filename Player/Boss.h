@@ -12,8 +12,13 @@ public:
 	void bossUpdate(Player* player);
 	void bossSet(XMFLOAT3 pos);
 	void bossReSet();
-	void CheckHitPlayer(Player* player);
+	void setHitPoint(int hp)
+	{
+		HP = hp;
+		resetHitPoint = hp;
+		return;
+	}
 
 private:
-
+	int resetHitPoint = 3;
 };

@@ -84,15 +84,6 @@ void GameScene::Load_Sprites()
 	playStart.position = { 640,360,0 };
 	playStart.GenerateSprite("playstart.png");
 
-	for (int i = 0; i < 5; i++)
-	{
-		bossHp[i].anchorpoint = { 0.5f,0 };
-		bossHp[i].GenerateSprite("Enemy_HP.png");
-		bossHp[i].size = { 40,60 };
-		bossHp[i].position = { i * 30.0f + 580.0f,30.0f,0.0f };
-		bossHp[i].SpriteTransferVertexBuffer(false);
-	}
-
 	//リザルト画面
 	resultScreen[0].size = { 1280,720 };
 	resultScreen[0].GenerateSprite("black_color.png");
@@ -158,7 +149,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	skySphere = new Object3d_FBX;
 	skySphere->Initialize();
 	skySphere->SetModel(SkyModel);
-	skySphere->SetScale({ 5.0f,5.0f,5.0f });
+	skySphere->SetScale({ 8.0f,8.0f,8.0f });
 
 	cameraobj = new Object3d_FBX;
 	cameraobj->Initialize();
@@ -330,6 +321,21 @@ void GameScene::Select_updata()
 			{
 				newenemy->changePattern(enemyPattern::shot);
 			}
+		}
+
+		//ボスの設定
+		testBoss.setHitPoint(7);
+
+		for (int i = 0; i < testBoss.HP; i++)
+		{
+			std::unique_ptr<SingleSprite> newsprite = std::make_unique<SingleSprite>();
+			newsprite->anchorpoint = { 0.5f,0 };
+			newsprite->GenerateSprite("Enemy_HP.png");
+			newsprite->size = { 40,60 };
+			newsprite->position = { i * 30 + 640 - (30 * floorf(testBoss.HP / 2)),30,0 };
+			newsprite->SpriteTransferVertexBuffer(false);
+
+			bossHitPoints.push_back(std::move(newsprite));
 		}
 
 		countDownEase.set(easingType::easeOut, easingPattern::Quintic, countDownTime, 450, 0);
@@ -508,9 +514,9 @@ void GameScene::Play_updata()
 
 	if (isBoss)
 	{
-		for (int i = 0; i < 5; i++)
+		for (std::unique_ptr<SingleSprite>& newsprite : bossHitPoints)
 		{
-			bossHp[i].SpriteUpdate();
+			newsprite->SpriteUpdate();
 		}
 	}
 
@@ -526,6 +532,8 @@ void GameScene::Play_updata()
 		titleButtonEase_y.reSet();
 		titleButtonEase_x.reSet();
 		scene = sceneType::clear;
+
+		bossHitPoints.clear();
 	}
 
 	if (player.playerHP <= 0)
@@ -793,7 +801,7 @@ void GameScene::Draw2D()
 		{
 			for (int i = 0; i < testBoss.HP; i++)
 			{
-				bossHp[i].DrawSprite(directx->cmdList.Get());
+				bossHitPoints[i]->DrawSprite(directx->cmdList.Get());
 			}
 		}
 
