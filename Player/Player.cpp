@@ -273,12 +273,12 @@ void Player::update()
 	//€‚ñ‚¾’e‚Ííœ
 	bulletsList.remove_if([](std::unique_ptr<bullet>& newbullet)
 		{
-			return newbullet == false;
+			return newbullet->isArive == false;
 		});
 
 	missilesList.remove_if([](std::unique_ptr<Missile>& newmissile)
 		{
-			return newmissile == false;
+			return newmissile->isArive == false;
 		});
 
 	missilesList.remove_if([](std::unique_ptr<Missile>& newmissile)

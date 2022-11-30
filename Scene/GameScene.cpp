@@ -473,6 +473,7 @@ void GameScene::Play_updata()
 		targetnum = 0;
 	}
 
+	//スカイドーム
 	skySphere->Update();
 
 	//マウスカーソル非表示
