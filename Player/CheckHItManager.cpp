@@ -3,7 +3,7 @@
 // プレイヤー本体と敵本体の当たり判定(単体)
 void checkHitManager::checkPlayerEnemy(Player* player, Enemy* enemy)
 {
-	if (!enemy->Isarive || !player->isArive)
+	if (enemy->Isarive == false || player->isArive == false)
 	{
 		return;
 	}
@@ -27,7 +27,7 @@ void checkHitManager::checkPlayerEnemys(Player* player, list<unique_ptr<Enemy>>*
 // プレイヤーの通常弾と敵本体の当たり判定(単体)
 void checkHitManager::checkBulletEnemy(bullet* bullet, Enemy* enemy)
 {
-	if (!enemy->Isarive || !bullet->isArive)
+	if (enemy->Isarive == false || bullet->isArive == false)
 	{
 		return;
 	}
@@ -44,6 +44,11 @@ void checkHitManager::checkBulletEnemy(bullet* bullet, Enemy* enemy)
 // プレイヤーの通常弾と敵本体の当たり判定(ボス)
 void checkHitManager::checkBulletsEnemy(list<unique_ptr<bullet>>* bulletsList, Enemy* enemy)
 {
+	if (enemy->Isarive == false)
+	{
+		return;
+	}
+
 	for (std::unique_ptr<bullet>& newbullet : *bulletsList)
 	{
 		checkBulletEnemy(newbullet.get(), enemy);
@@ -70,12 +75,12 @@ void checkHitManager::checkBulletEnemybullet(bullet* bullet, Enemy* enemy)
 		return;
 	}
 
-	if (!enemy->bullet.isBulletArive())
+	if (enemy->bullet.isBulletArive() == false)
 	{
 		return;
 	}
 
-	if (!bullet->isArive)
+	if (bullet->isArive == false)
 	{
 		return;
 	}
@@ -157,7 +162,7 @@ void checkHitManager::chackPlayerEnemyBullet(Player* player, Enemy* enemy)
 		return;
 	}
 
-	if (!enemy->bullet.isBulletArive())
+	if (enemy->bullet.isBulletArive() == false)
 	{
 		return;
 	}
@@ -182,6 +187,16 @@ void checkHitManager::checkPlayerEnemyBullets(Player* player, list<unique_ptr<En
 // プレイヤーカーソルと敵本体のロックオン判定(単体)
 void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& targetnum)
 {
+	if (targetnum >= MaxPlayerMissileNum)
+	{
+		return;
+	}
+
+	if (enemy->isDraw == false)
+	{
+		return;
+	}
+
 	XMFLOAT3 playerToEnemy =
 	{
 		enemy->position.x - player->playerObject->getPosition().x,
@@ -191,6 +206,7 @@ void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& target
 
 	float length = sqrtf(powf(playerToEnemy.x, 2) + powf(playerToEnemy.y, 2) + powf(playerToEnemy.z, 2));
 
+	//ロックオンした状態で離れすぎると解除
 	if (length >= Enemy::forPlayer)
 	{
 		enemy->isTargetSet = false;
@@ -203,7 +219,7 @@ void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& target
 
 	float dis = sqrtf(powf(player->targetFirst.position.x - screenPos.x, 2) + powf(player->targetFirst.position.y - screenPos.y, 2));
 
-	if (dis < 56.5685f && !enemy->isTargetSet && targetnum < MaxPlayerMissileNum && enemy->isDraw)
+	if (dis < 56.5685f && enemy->isTargetSet == false)
 	{
 		enemy->isTargetSet = true;
 		targetnum++;

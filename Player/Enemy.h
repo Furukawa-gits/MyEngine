@@ -59,7 +59,7 @@ private:
 enum class enemyPattern
 {
 	chase = 1,
-	shot = 2
+	shot = 2,
 };
 
 //“G

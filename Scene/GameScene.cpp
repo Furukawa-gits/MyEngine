@@ -238,6 +238,7 @@ void GameScene::Title_updata()
 	{
 		stage1.position.x = 640;
 		isMoveStageIcon = false;
+		stageNum = 1;
 		scene = sceneType::select;
 	}
 }
@@ -306,8 +307,6 @@ void GameScene::Select_updata()
 
 		player.reset();
 
-		testBoss.bossSet({ 0,5,0 });
-		testBoss.bossReSet();
 		isBoss = false;
 
 		if (stageNum == 1)
@@ -333,7 +332,7 @@ void GameScene::Select_updata()
 			}
 		}
 
-		countDownEase.set(easingType::easeOut, easingPattern::Quintic, 120, 450, 20);
+		countDownEase.set(easingType::easeOut, easingPattern::Quintic, countDownTime, 450, 0);
 		countDown[0].rotation = 0;
 		countDown[1].rotation = 0;
 		countDown[2].rotation = 0;
@@ -372,7 +371,7 @@ void GameScene::Play_updata()
 		{
 			if (countDownNum + 1 < 3)
 			{
-				countDownEase.set(easingType::easeOut, easingPattern::Quintic, 120, 450, 20);
+				countDownEase.set(easingType::easeOut, easingPattern::Quintic, countDownTime, 450, 0);
 				countDownNum++;
 			}
 			else

@@ -134,6 +134,7 @@ private:
 
 	//ボスのhpゲージ
 	SingleSprite bossHp[5];
+	std::list<std::unique_ptr<SingleSprite>> bossHitPoints;
 
 	//ボス出現フラグ
 	bool isBoss = false;
@@ -218,6 +219,7 @@ private:
 	bool isStartIcon = false;
 	int countDownNum = 0;
 	int startIconTime = 0;
+	int countDownTime = 150;
 	easingManager countDownEase;
 	easingManager startEase;
 
