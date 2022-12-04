@@ -112,13 +112,12 @@ private:
 	Object3d_FBX* cameraobj = nullptr;
 
 	//プレイヤー
-	Player player;
+	std::unique_ptr<Player> player_p;
 
 	int targetnum = 0;
 
 	//敵(test)
 	static const int maxEnemyNum = 20;
-	//Enemy testEnemys[maxEnemyNum];
 	std::list<std::unique_ptr<Enemy>> enemyList;
 	bool isEnemySimple = false;
 
@@ -130,7 +129,7 @@ private:
 	/// <para>HP削り切ったら消滅</para>
 	/// オブジェクトのサイズは大きくして分かりやすく
 	/// </summary>
-	Boss testBoss;
+	std::unique_ptr<Boss> testBoss;
 
 	//ボスのhpゲージ
 	std::vector<std::unique_ptr<SingleSprite>> bossHitPoints;
@@ -145,7 +144,7 @@ private:
 
 	//スプライト(各クラスに依存しないやつ)
 	//背景
-	SingleSprite sample_back;
+	std::unique_ptr<SingleSprite> sample_back;
 
 	//タイトル
 	SingleSprite gameTitle;

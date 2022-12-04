@@ -9,7 +9,7 @@
 class bullet
 {
 private:
-	static Model* bulletModelS;
+	static std::unique_ptr<Model> bulletModelS;
 public:
 	float count = 0;
 	XMFLOAT3 bullet_vec = { 0.0f,0.0f,0.0f };
@@ -25,10 +25,9 @@ public:
 	~bullet();
 
 	static void staticInit();
+	static void staticDestroy();
 	void init();
 	void set(XMFLOAT3 start_pos, XMFLOAT3 Target);
-	void checkHitEnemy(Enemy* enemy);
-	void checkHitEnemyBullet(Enemy* enemy);
 	void update();
 	void draw(directX* directx);
 };
@@ -38,7 +37,7 @@ public:
 class Missile
 {
 private:
-	static Model* bulletModelS;
+	static std::unique_ptr<Model> MissileModelS;
 public:
 
 	Enemy* enemyPointer = nullptr;
@@ -65,10 +64,10 @@ public:
 	~Missile();
 
 	static void staticInit();
+	static void staticDestroy();
 	void init();
 	void setPenemy(Enemy* enemy);
 	void start(XMFLOAT3 start_pos);
-	void checkhit();
 	void update();
 	void draw(directX* directx);
 };

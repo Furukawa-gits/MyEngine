@@ -1,7 +1,7 @@
 #include"Enemy.h"
 #include<random>
 
-Model* Enemy::enemyModelS = nullptr;
+std::unique_ptr<Model> Enemy::enemyModelS = std::make_unique<Model>();
 const float Enemy::forPlayer = 200.0f;
 
 #pragma region “G–{‘Ì
@@ -16,9 +16,13 @@ Enemy::~Enemy()
 
 void Enemy::staticInit()
 {
-	enemyModelS = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
+	enemyModelS.reset(FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01"));
 
 	enemyBullet::staticInit();
+}
+
+void Enemy::staticDestroy()
+{
 }
 
 void Enemy::init(enemyPattern pattern)
@@ -26,13 +30,14 @@ void Enemy::init(enemyPattern pattern)
 	Isarive = false;
 	isDraw = false;
 
-	rockTarget.anchorpoint = { 0.5f,0.5f };
-	rockTarget.size = { 70,70 };
-	rockTarget.GenerateSprite("Rock_on.png");
+	rockTarget = std::make_unique<SingleSprite>();
+	rockTarget->anchorpoint = { 0.5f,0.5f };
+	rockTarget->size = { 70,70 };
+	rockTarget->GenerateSprite("Rock_on.png");
 
 	enemyObject = new Object3d_FBX;
 	enemyObject->Initialize();
-	enemyObject->SetModel(enemyModelS);
+	enemyObject->SetModel(enemyModelS.get());
 	enemyObject->SetScale({ 1.0f,1.0f,1.0f });
 
 	enemyCollision.radius = 2.0f;
@@ -41,7 +46,8 @@ void Enemy::init(enemyPattern pattern)
 
 	if (enemyMovePattern == enemyPattern::shot)
 	{
-		bullet.init();
+		bullet = std::make_unique<enemyBullet>();
+		bullet->init();
 		//shotCount = rand() % 10;
 	}
 }
@@ -158,12 +164,12 @@ void Enemy::shot(XMFLOAT3 pPos)
 		isInRange = false;
 	}
 
-	if (!bullet.isBulletArive() && isInRange)
+	if (!bullet->isBulletArive() && isInRange)
 	{
 		shotCount++;
 	}
 
-	if (shotCount >= 10 && bullet.isBulletArive() == false)
+	if (shotCount >= 10 && bullet->isBulletArive() == false)
 	{
 		isShot = true;
 		shotCount = 0;
@@ -175,11 +181,11 @@ void Enemy::shot(XMFLOAT3 pPos)
 
 	if (isShot)
 	{
-		bullet.set(pPos, this->position);
+		bullet->set(pPos, this->position);
 		isShot = false;
 	}
 
-	bullet.update();
+	bullet->update();
 }
 
 void Enemy::update(XMFLOAT3 playerPos)
@@ -243,13 +249,13 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 
 	if (isTargetSet)
 	{
-		rockTarget.rotation += 1.5f;
+		rockTarget->rotation += 1.5f;
 		XMFLOAT2 screenPos = enemyObject->worldToScleen();
-		rockTarget.position = { screenPos.x,screenPos.y,0 };
+		rockTarget->position = { screenPos.x,screenPos.y,0 };
 	}
 
-	rockTarget.SpriteTransferVertexBuffer();
-	rockTarget.SpriteUpdate();
+	rockTarget->SpriteTransferVertexBuffer();
+	rockTarget->SpriteUpdate();
 
 	enemyObject->SetPosition(position);
 	enemyCollision.center =
@@ -283,48 +289,7 @@ void Enemy::deathMove()
 
 	if (enemyMovePattern == enemyPattern::shot)
 	{
-		bullet.isArive = false;
-	}
-}
-
-void Enemy::isHitTarget(XMFLOAT2 targetpos, bool istarget)
-{
-	if (!Isarive)
-	{
-		return;
-	}
-
-	XMFLOAT2 screenPos = enemyObject->worldToScleen();
-
-	float dis = sqrtf(powf(targetpos.x - screenPos.x, 2) + powf(targetpos.y - screenPos.y, 2));
-
-	if (dis < 20 && istarget && !isTargetSet)
-	{
-		isTargetSet = true;
-	}
-
-	rockTarget.position = { screenPos.x,screenPos.y,0 };
-}
-
-void Enemy::isHitShot(XMFLOAT2 targetpos)
-{
-	if (!Isarive)
-	{
-		return;
-	}
-
-	XMFLOAT2 screenPos = enemyObject->worldToScleen();
-
-	float dis = sqrtf(powf(targetpos.x - screenPos.x, 2) + powf(targetpos.y - screenPos.y, 2));
-
-	if (dis < 30)
-	{
-		HP--;
-
-		if (HP <= 0)
-		{
-			Isarive = false;
-		}
+		bullet->isArive = false;
 	}
 }
 
@@ -345,7 +310,7 @@ void Enemy::draw3D(directX* directx)
 
 	if (enemyMovePattern == enemyPattern::shot)
 	{
-		bullet.draw(directx);
+		bullet->draw(directx);
 	}
 }
 
@@ -358,13 +323,13 @@ void Enemy::draw2D(directX* directx)
 
 	if (Isarive && isTargetSet)
 	{
-		rockTarget.DrawSprite(directx->cmdList.Get());
+		rockTarget->DrawSprite(directx->cmdList.Get());
 	}
 }
 #pragma endregion
 
 #pragma region “G‚Ì’e
-Model* enemyBullet::buletModelS = nullptr;
+std::unique_ptr<Model> enemyBullet::buletModelS = std::make_unique<Model>();
 
 enemyBullet::enemyBullet()
 {
@@ -372,18 +337,23 @@ enemyBullet::enemyBullet()
 
 enemyBullet::~enemyBullet()
 {
+	delete(bulletObject);
 }
 
 void enemyBullet::staticInit()
 {
-	buletModelS = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
+	buletModelS.reset(FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01"));
+}
+
+void enemyBullet::staticDestroy()
+{
 }
 
 void enemyBullet::init()
 {
 	bulletObject = new Object3d_FBX;
 	bulletObject->Initialize();
-	bulletObject->SetModel(buletModelS);
+	bulletObject->SetModel(buletModelS.get());
 	bulletObject->SetScale({ 0.3f,0.3f,0.3f });
 
 	bulletObject->setColor({ 0,0,1,1 });

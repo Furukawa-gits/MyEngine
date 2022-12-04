@@ -13,7 +13,13 @@ Player::Player()
 Player::~Player()
 {
 	delete(playerObject);
+	delete(playerModel);
 	delete(followCamera);
+	bulletsList.clear();
+	missilesList.clear();
+
+	bullet::staticDestroy();
+	Missile::staticDestroy();
 }
 
 void Player::init(dxinput* input, directX* directx)
@@ -207,58 +213,6 @@ void Player::cameraMove()
 	else
 	{
 		pitch = pitchRotateSpeedNegative;
-	}
-}
-
-//敵とプレイヤー弾の当たり判定
-//※プレイヤー更新処理の中には描かない
-//※ゲームシーン内で書く
-void Player::checkPlayerBullet(Enemy* enemy)
-{
-	for (int i = 0; i < MaxPlayerBulletNum; i++)
-	{
-		//player_bullet[i].checkhit(enemy);
-	}
-
-	for (int i = 0; i < MaxPlayerMissileNum; i++)
-	{
-		//player_missiale[i].checkhit();
-	}
-}
-
-//敵との衝突判定
-void Player::checkPlayerEnemy(Enemy* enemy)
-{
-	if (enemy->Isarive == false)
-	{
-		return;
-	}
-
-	if (Collision::CheckSphere2Sphere(playerCollision, enemy->enemyCollision))
-	{
-		playerHP--;
-		enemy->Isarive = false;
-	}
-}
-
-//敵の弾との衝突判定
-void Player::checkPlayerEnemyBullet(Enemy* enemy)
-{
-	if (enemy->enemyMovePattern != enemyPattern::shot)
-	{
-		return;
-	}
-
-	if (!enemy->bullet.isBulletArive())
-	{
-		return;
-	}
-
-	if (Collision::CheckSphere2Sphere(playerCollision, enemy->bullet.getCollision()))
-	{
-		playerHP--;
-		enemy->bullet.isArive = false;
-		enemy->bullet.ariveTime = 0;
 	}
 }
 

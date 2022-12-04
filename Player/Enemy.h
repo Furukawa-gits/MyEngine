@@ -16,9 +16,11 @@ public:
 
 	static void staticInit();
 
+	static void staticDestroy();
+
 	void init();
 
-	void set(XMFLOAT3 playerpos,XMFLOAT3 shotpos);
+	void set(XMFLOAT3 playerpos, XMFLOAT3 shotpos);
 
 	void update();
 
@@ -45,7 +47,7 @@ public:
 
 private:
 	//モデル・オブジェクト
-	static Model* buletModelS;
+	static std::unique_ptr<Model> buletModelS;
 	Object3d_FBX* bulletObject = nullptr;
 
 	//座標・方向・弾速
@@ -67,7 +69,7 @@ class Enemy
 {
 public:
 	//オブジェクト
-	static Model* enemyModelS;
+	static std::unique_ptr<Model> enemyModelS;
 	Object3d_FBX* enemyObject = nullptr;
 
 	static const float forPlayer;
@@ -78,7 +80,7 @@ public:
 	bool isSetMissile = false;//ミサイルが自分にセットされているか
 	bool isChase = false;//追跡フラグ
 	bool isWait = false;//待機フラグ
-	SingleSprite rockTarget;//マーカー
+	std::unique_ptr<SingleSprite> rockTarget;//マーカー
 	Sphere enemyCollision;//敵の当たり判定
 
 	//体力
@@ -116,13 +118,14 @@ public:
 	bool isThisBoss = false;
 
 	//弾
-	enemyBullet bullet;
+	std::unique_ptr<enemyBullet> bullet;
 
 	Enemy();
 
 	~Enemy();
 
 	static void staticInit();
+	static void staticDestroy();
 
 	//初期化
 	void init(enemyPattern pattern);
@@ -168,10 +171,6 @@ public:
 	/// </summary>
 	/// <param name="pPos">プレイヤーの座標</param>
 	void shot(XMFLOAT3 pPos);
-
-	void isHitTarget(XMFLOAT2 targetpos, bool istarget);
-
-	void isHitShot(XMFLOAT2 targetpos);
 
 	/// <summary>
 	/// 描画(3dオブジェクト)

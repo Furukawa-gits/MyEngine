@@ -75,7 +75,7 @@ void checkHitManager::checkBulletEnemybullet(bullet* bullet, Enemy* enemy)
 		return;
 	}
 
-	if (enemy->bullet.isBulletArive() == false)
+	if (enemy->bullet->isBulletArive() == false)
 	{
 		return;
 	}
@@ -85,13 +85,13 @@ void checkHitManager::checkBulletEnemybullet(bullet* bullet, Enemy* enemy)
 		return;
 	}
 
-	if (Collision::CheckSphere2Sphere(bullet->bulletCollision, enemy->bullet.bulletCollision))
+	if (Collision::CheckSphere2Sphere(bullet->bulletCollision, enemy->bullet->bulletCollision))
 	{
 		bullet->count = 0;
 		bullet->isArive = false;
 
-		enemy->bullet.isArive = false;
-		enemy->bullet.ariveTime = 0;
+		enemy->bullet->isArive = false;
+		enemy->bullet->ariveTime = 0;
 	}
 }
 
@@ -162,16 +162,16 @@ void checkHitManager::chackPlayerEnemyBullet(Player* player, Enemy* enemy)
 		return;
 	}
 
-	if (enemy->bullet.isBulletArive() == false)
+	if (enemy->bullet->isBulletArive() == false)
 	{
 		return;
 	}
 
-	if (Collision::CheckSphere2Sphere(player->playerCollision, enemy->bullet.getCollision()))
+	if (Collision::CheckSphere2Sphere(player->playerCollision, enemy->bullet->getCollision()))
 	{
 		player->playerHP--;
-		enemy->bullet.isArive = false;
-		enemy->bullet.ariveTime = 0;
+		enemy->bullet->isArive = false;
+		enemy->bullet->ariveTime = 0;
 	}
 }
 

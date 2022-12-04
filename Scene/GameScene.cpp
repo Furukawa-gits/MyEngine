@@ -10,9 +10,15 @@ GameScene::GameScene()
 GameScene::~GameScene()
 {
 	delete(object);
-	delete(model);
 	delete(skySphere);
 	delete(cameraobj);
+	delete(model);
+	delete(SkyModel);
+
+	enemyList.clear();
+
+	Enemy::staticDestroy();
+	enemyBullet::staticDestroy();
 }
 
 //サウンドだけ読み込み関数
@@ -25,8 +31,9 @@ void GameScene::Load_sounds()
 void GameScene::Load_Sprites()
 {
 	//背景
-	sample_back.size = { 1280,720 };
-	sample_back.GenerateSprite("sample_back.jpg");
+	sample_back = std::make_unique<SingleSprite>();
+	sample_back->size = { 1280,720 };
+	sample_back->GenerateSprite("sample_back.jpg");
 
 	//タイトル
 	gameTitle.anchorpoint = { 0.5f,0.5f };
@@ -144,7 +151,8 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	SkyModel = FbxLoader::GetInstance()->LoadmodelFromFile("skySphere");
 
 	//プレイヤー初期化
-	player.init(input, directx);
+	player_p = std::make_unique<Player>();
+	player_p->init(input, directx);
 
 	skySphere = new Object3d_FBX;
 	skySphere->Initialize();
@@ -161,7 +169,8 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	Enemy::staticInit();
 
 	//ボスの初期化
-	testBoss.bossInit();
+	testBoss = std::make_unique<Boss>();
+	testBoss->bossInit();
 }
 
 //デバッグテキスト
@@ -296,14 +305,14 @@ void GameScene::Select_updata()
 			enemyList.push_back(std::move(newenemy));
 		}
 
-		player.reset();
+		player_p->reset();
 
 		isBoss = false;
 
 		if (stageNum == 1)
 		{
 			//敵
-			testBoss.changePattern(enemyPattern::chase);
+			testBoss->changePattern(enemyPattern::chase);
 
 			//敵　リスト
 			for (std::unique_ptr<Enemy>& newenemy : enemyList)
@@ -314,7 +323,7 @@ void GameScene::Select_updata()
 		else
 		{
 			//敵
-			testBoss.changePattern(enemyPattern::shot);
+			testBoss->changePattern(enemyPattern::shot);
 
 			//敵　リスト
 			for (std::unique_ptr<Enemy>& newenemy : enemyList)
@@ -324,15 +333,15 @@ void GameScene::Select_updata()
 		}
 
 		//ボスの設定
-		testBoss.setHitPoint(7);
+		testBoss->setHitPoint(7);
 
-		for (int i = 0; i < testBoss.HP; i++)
+		for (int i = 0; i < testBoss->HP; i++)
 		{
 			std::unique_ptr<SingleSprite> newsprite = std::make_unique<SingleSprite>();
 			newsprite->anchorpoint = { 0.5f,0 };
 			newsprite->GenerateSprite("Enemy_HP.png");
 			newsprite->size = { 40,60 };
-			newsprite->position = { i * 30 + 640 - (30 * floorf(testBoss.HP / 2)),30,0 };
+			newsprite->position = { i * 30 + 640 - (30 * floorf(testBoss->HP / 2)),30,0 };
 			newsprite->SpriteTransferVertexBuffer(false);
 
 			bossHitPoints.push_back(std::move(newsprite));
@@ -352,7 +361,7 @@ void GameScene::Select_updata()
 		isPushTitle = false;
 		titleButton.size = { 315,50 };
 
-		player.update();
+		player_p->update();
 
 		scene = sceneType::play;
 	}
@@ -403,7 +412,7 @@ void GameScene::Play_updata()
 	//スタートのカウントダウン演出が終わったら動ける
 	if (isCountDown || isStartIcon)
 	{
-		player.isStop = true;
+		player_p->isStop = true;
 
 		//敵
 		for (std::unique_ptr<Enemy>& newenemy : enemyList)
@@ -411,11 +420,11 @@ void GameScene::Play_updata()
 			newenemy->isStop = true;
 		}
 
-		testBoss.isStop = true;
+		testBoss->isStop = true;
 	}
 	else
 	{
-		player.isStop = false;
+		player_p->isStop = false;
 
 		//敵
 		for (std::unique_ptr<Enemy>& newenemy : enemyList)
@@ -423,11 +432,13 @@ void GameScene::Play_updata()
 			newenemy->isStop = false;
 		}
 
-		testBoss.isStop = false;
+		testBoss->isStop = false;
 	}
 
 	//プレイヤー更新
-	player.update();
+	player_p->update();
+	checkHitManager::checkMissilesEnemy(&player_p->missilesList);
+
 
 	//リセット
 	if (input->push(DIK_R))
@@ -442,13 +453,13 @@ void GameScene::Play_updata()
 
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
-		newenemy->update(player.playerObject->getPosition());
-		checkHitManager::checkPlayerEnemy(&player, newenemy.get());
-		checkHitManager::chackPlayerEnemyBullet(&player, newenemy.get());
+		newenemy->update(player_p->playerObject->getPosition());
+		checkHitManager::checkPlayerEnemy(player_p.get(), newenemy.get());
+		checkHitManager::chackPlayerEnemyBullet(player_p.get(), newenemy.get());
 	}
 
 	//ボス更新
-	testBoss.bossUpdate(&player);
+	testBoss->bossUpdate(player_p.get());
 
 	//ホーミング弾発射
 	if (input->Mouse_LeftRelease() && !isCountDown)
@@ -459,7 +470,7 @@ void GameScene::Play_updata()
 			{
 				if (newenemy->isTargetSet && !newenemy->isSetMissile)
 				{
-					player.addMissile(newenemy.get());
+					player_p->addMissile(newenemy.get());
 
 					newenemy->isSetMissile = true;
 
@@ -468,11 +479,11 @@ void GameScene::Play_updata()
 			}
 		}
 
-		if (testBoss.isTargetSet && !testBoss.isSetMissile)
+		if (testBoss->isTargetSet && !testBoss->isSetMissile)
 		{
-			player.addMissile(&testBoss);
+			player_p->addMissile(testBoss.get());
 
-			testBoss.isSetMissile = true;
+			testBoss->isSetMissile = true;
 		}
 
 		targetnum = 0;
@@ -488,12 +499,12 @@ void GameScene::Play_updata()
 	checkHitPlayerTarget();
 
 	//プレイヤーの通常弾当たり判定
-	checkHitManager::checkBulletsEnemys(&player.bulletsList, &enemyList);
-	checkHitManager::checkBulletsEnemyBullets(&player.bulletsList, &enemyList);
+	checkHitManager::checkBulletsEnemys(&player_p->bulletsList, &enemyList);
+	checkHitManager::checkBulletsEnemyBullets(&player_p->bulletsList, &enemyList);
 
 	//通常弾とボスの当たり判定
-	checkHitManager::checkBulletsEnemy(&player.bulletsList, &testBoss);
-	checkHitManager::checkBulletsEnemybullet(&player.bulletsList, &testBoss);
+	checkHitManager::checkBulletsEnemy(&player_p->bulletsList, testBoss.get());
+	checkHitManager::checkBulletsEnemybullet(&player_p->bulletsList, testBoss.get());
 
 	//死んでいる雑魚敵をカウント
 	int count = 0;
@@ -508,7 +519,7 @@ void GameScene::Play_updata()
 	//すべての雑魚敵が死んでいたらボス出現
 	if (enemyList.size() <= 0 && !isBoss)
 	{
-		testBoss.bossSet({ 0,5,0 });
+		testBoss->bossSet({ 0,5,0 });
 		isBoss = true;
 	}
 
@@ -521,7 +532,7 @@ void GameScene::Play_updata()
 	}
 
 	//ボスを倒したorプレイヤーが死んだらリザルト
-	if ((isBoss && !testBoss.isDraw))
+	if ((isBoss && !testBoss->isDraw))
 	{
 		isMoveScreen = true;
 		isScreenEase = true;
@@ -536,7 +547,7 @@ void GameScene::Play_updata()
 		bossHitPoints.clear();
 	}
 
-	if (player.playerHP <= 0)
+	if (player_p->playerHP <= 0)
 	{
 		isMoveScreen = true;
 		isScreenEase = true;
@@ -683,7 +694,7 @@ void GameScene::Play_draw()
 	skySphere->Draw(directx->cmdList.Get());
 
 	//プレイヤー描画
-	player.draw3D(directx);
+	player_p->draw3D(directx);
 
 	//敵
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
@@ -692,7 +703,7 @@ void GameScene::Play_draw()
 	}
 
 	//ボス描画
-	testBoss.draw3D(directx);
+	testBoss->draw3D(directx);
 }
 
 //リザルト画面描画
@@ -706,10 +717,10 @@ void GameScene::Result_draw()
 	skySphere->Draw(directx->cmdList.Get());
 
 	//プレイヤー描画
-	player.draw3D(directx);
+	player_p->draw3D(directx);
 
 	//ボス描画
-	testBoss.draw3D(directx);
+	testBoss->draw3D(directx);
 }
 
 #pragma endregion 各シーン描画
@@ -740,7 +751,7 @@ void GameScene::Updata()
 		Result_updata();
 	}
 
-	sample_back.SpriteUpdate();
+	sample_back->SpriteUpdate();
 
 	//camera->Updata();
 
@@ -750,7 +761,7 @@ void GameScene::Updata()
 //背景スプライト描画
 void GameScene::DrawBack()
 {
-	sample_back.DrawSprite(directx->cmdList.Get());
+	sample_back->DrawSprite(directx->cmdList.Get());
 }
 
 //描画
@@ -795,17 +806,17 @@ void GameScene::Draw2D()
 		}
 
 		//ボス描画(2d)
-		testBoss.draw2D(directx);
+		testBoss->draw2D(directx);
 
 		if (isBoss)
 		{
-			for (int i = 0; i < testBoss.HP; i++)
+			for (int i = 0; i < testBoss->HP; i++)
 			{
 				bossHitPoints[i]->DrawSprite(directx->cmdList.Get());
 			}
 		}
 
-		player.draw2D(directx);
+		player_p->draw2D(directx);
 
 		if (isCountDown)
 		{
@@ -846,7 +857,7 @@ void GameScene::Draw2D()
 
 void GameScene::checkHitPlayerTarget()
 {
-	if (!player.isRockOn)
+	if (!player_p->isRockOn)
 	{
 		return;
 	}
@@ -857,8 +868,8 @@ void GameScene::checkHitPlayerTarget()
 	}
 
 	//通常の敵
-	checkHitManager::checkRockonEnemys(&player, &enemyList, targetnum);
+	checkHitManager::checkRockonEnemys(player_p.get(), &enemyList, targetnum);
 
 	//ボス
-	checkHitManager::checkRockonEnemy(&player, &testBoss, targetnum);
+	checkHitManager::checkRockonEnemy(player_p.get(), testBoss.get(), targetnum);
 }

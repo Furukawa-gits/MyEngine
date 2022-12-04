@@ -3,7 +3,7 @@
 #include"../3D/3Dobject.h"
 
 #pragma region í èÌíe
-Model* bullet::bulletModelS = nullptr;
+std::unique_ptr<Model> bullet::bulletModelS = std::make_unique<Model>();
 
 bullet::bullet()
 {
@@ -16,14 +16,19 @@ bullet::~bullet()
 
 void bullet::staticInit()
 {
-	bulletModelS = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
+	bulletModelS.reset(FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01"));
+}
+
+void bullet::staticDestroy()
+{
+	
 }
 
 void bullet::init()
 {
 	bulletObject = new Object3d_FBX;
 	bulletObject->Initialize();
-	bulletObject->SetModel(bulletModelS);
+	bulletObject->SetModel(bulletModelS.get());
 	bulletObject->SetScale({ 0.5f,0.5f,0.5f });
 
 	bulletCollision.radius = 2.0f;
@@ -44,49 +49,6 @@ void bullet::set(XMFLOAT3 start_pos, XMFLOAT3 Target)
 	bullet_vec = { (dis.x / length) * bulletSpeed,(dis.y / length) * bulletSpeed ,(dis.z / length) * bulletSpeed };
 
 	isArive = true;
-}
-
-void bullet::checkHitEnemy(Enemy* enemy)
-{
-	if (!enemy->Isarive || !isArive)
-	{
-		return;
-	}
-
-	if (Collision::CheckSphere2Sphere(this->bulletCollision, enemy->enemyCollision))
-	{
-		count = 0;
-		isArive = false;
-
-		enemy->HP--;
-	}
-}
-
-void bullet::checkHitEnemyBullet(Enemy* enemy)
-{
-	if (enemy->enemyMovePattern != enemyPattern::shot)
-	{
-		return;
-	}
-
-	if (!enemy->bullet.isBulletArive())
-	{
-		return;
-	}
-
-	if (!isArive)
-	{
-		return;
-	}
-
-	if (Collision::CheckSphere2Sphere(this->bulletCollision, enemy->bullet.bulletCollision))
-	{
-		count = 0;
-		isArive = false;
-
-		enemy->bullet.isArive = false;
-		enemy->bullet.ariveTime = 0;
-	}
 }
 
 void bullet::update()
@@ -126,7 +88,7 @@ void bullet::draw(directX* directx)
 #pragma endregion
 
 #pragma region É~ÉTÉCÉã
-Model* Missile::bulletModelS = nullptr;
+std::unique_ptr<Model> Missile::MissileModelS = std::make_unique<Model>();
 
 Missile::Missile()
 {
@@ -139,14 +101,18 @@ Missile::~Missile()
 
 void Missile::staticInit()
 {
-	bulletModelS = FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01");
+	MissileModelS.reset(FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01"));
+}
+
+void Missile::staticDestroy()
+{
 }
 
 void Missile::init()
 {
 	bulletObject = new Object3d_FBX;
 	bulletObject->Initialize();
-	bulletObject->SetModel(bulletModelS);
+	bulletObject->SetModel(MissileModelS.get());
 	bulletObject->SetScale({ 0.5f,0.5f,0.5f });
 
 	bulletObject->setColor({ 1,1,0,1 });
@@ -171,40 +137,6 @@ void Missile::start(XMFLOAT3 start_pos)
 	bulletObject->SetPosition(start_pos);
 
 	isArive = true;
-}
-
-void Missile::checkhit()
-{
-	if (enemyPointer == nullptr)
-	{
-		return;
-	}
-
-	if (enemyPointer->Isarive == true && isArive == true)
-	{
-		if (Collision::CheckSphere2Sphere(this->missileCollision, enemyPointer->enemyCollision))
-		{
-			if (enemyPointer->isThisBoss)
-			{
-				enemyPointer->HP--;
-
-				if (enemyPointer->HP <= 0)
-				{
-					enemyPointer->Isarive = false;
-				}
-			}
-			else
-			{
-				enemyPointer->Isarive = false;
-			}
-			isArive = false;
-			isTargetSet = false;
-			enemyPointer->isTargetSet = false;
-			enemyPointer->isSetMissile = false;
-			enemyPointer = nullptr;
-
-		}
-	}
 }
 
 void Missile::update()
@@ -283,8 +215,6 @@ void Missile::update()
 	bulletObject->getPosition().y,
 	bulletObject->getPosition().z,
 	1.0f };
-
-	checkhit();
 
 }
 
