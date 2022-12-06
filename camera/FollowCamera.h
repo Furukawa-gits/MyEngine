@@ -26,12 +26,10 @@ public:
 	/// <param name="targetPos">’Ç]‚·‚é‘ÎÛ‚ÌÀ•W</param>
 	void Following(XMFLOAT3 upVector, XMFLOAT3 forwordVector, XMFLOAT3 targetPos);
 
-	void setAngle(float up, float right)
-	{
-		/*this->upAngle = up;
-		this->rightAngle = right;*/
-	}
-
+	/// <summary>
+	/// ³–Ê‚Éi‚Ş
+	/// </summary>
+	/// <param name="speed">ˆÚ“®‘¬“x</param>
 	void setFrontVec(const float speed) {
 		frontVec.x *= speed;
 		frontVec.y *= speed;

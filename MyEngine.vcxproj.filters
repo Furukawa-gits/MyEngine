@@ -99,6 +99,9 @@
     <ClInclude Include="staging\Shake.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="camera\StagingCamera.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base\DirectX_Base.cpp">

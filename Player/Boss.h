@@ -18,6 +18,7 @@ public:
 		resetHitPoint = hp;
 		return;
 	}
+	void bossArrival();
 
 private:
 	int resetHitPoint = 3;

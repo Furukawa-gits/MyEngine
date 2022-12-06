@@ -111,6 +111,7 @@
     <ClInclude Include="Base\WindowGenerate.h" />
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="camera\FollowCamera.h" />
+    <ClInclude Include="camera\StagingCamera.h" />
     <ClInclude Include="FbxLoder\FbxLoader.h" />
     <ClInclude Include="FbxLoder\Model.h" />
     <ClInclude Include="FbxLoder\Object3d_FBX.h" />

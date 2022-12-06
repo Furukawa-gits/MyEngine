@@ -311,6 +311,8 @@ void GameScene::Select_updata()
 
 		if (stageNum == 1)
 		{
+			stageLevel = stageNum + 2;
+
 			//敵
 			testBoss->changePattern(enemyPattern::chase);
 
@@ -319,9 +321,14 @@ void GameScene::Select_updata()
 			{
 				newenemy->changePattern(enemyPattern::chase);
 			}
+
+			//ボスの設定
+			testBoss->setHitPoint(stageLevel + 5);
 		}
 		else
 		{
+			stageLevel = stageNum + 2;
+
 			//敵
 			testBoss->changePattern(enemyPattern::shot);
 
@@ -330,10 +337,10 @@ void GameScene::Select_updata()
 			{
 				newenemy->changePattern(enemyPattern::shot);
 			}
-		}
 
-		//ボスの設定
-		testBoss->setHitPoint(7);
+			//ボスの設定
+			testBoss->setHitPoint(stageLevel + 5);
+		}
 
 		for (int i = 0; i < testBoss->HP; i++)
 		{
@@ -341,7 +348,7 @@ void GameScene::Select_updata()
 			newsprite->anchorpoint = { 0.5f,0 };
 			newsprite->GenerateSprite("Enemy_HP.png");
 			newsprite->size = { 40,60 };
-			newsprite->position = { i * 30 + 640 - (30 * floorf(testBoss->HP / 2)),30,0 };
+			newsprite->position = { i * 30 + 660 - (30 * floorf(testBoss->HP / 2)),30,0 };
 			newsprite->SpriteTransferVertexBuffer(false);
 
 			bossHitPoints.push_back(std::move(newsprite));
@@ -360,6 +367,8 @@ void GameScene::Select_updata()
 		isTextEase = false;
 		isPushTitle = false;
 		titleButton.size = { 315,50 };
+
+		nowStageLevel = 1;
 
 		player_p->update();
 
@@ -516,9 +525,21 @@ void GameScene::Play_updata()
 		}
 	}
 
-	//すべての雑魚敵が死んでいたらボス出現
+	//すべての雑魚敵が死んでいたら次のウェーブ
 	if (enemyList.size() <= 0 && !isBoss)
 	{
+		nowStageLevel++;
+
+		if (nowStageLevel == stageLevel)
+		{
+			//ボス出現
+		}
+		else
+		{
+			//次ウェーブの敵出現
+		}
+
+		//ボス出現
 		testBoss->bossSet({ 0,5,0 });
 		isBoss = true;
 	}
