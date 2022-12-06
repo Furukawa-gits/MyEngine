@@ -155,7 +155,7 @@ void Enemy::shot(XMFLOAT3 pPos)
 
 	float length = sqrtf(powf(startToTarget.x, 2) + powf(startToTarget.y, 2) + powf(startToTarget.z, 2));
 
-	if (length <= 40)
+	if (length <= forPlayer / 2)
 	{
 		isInRange = true;
 	}

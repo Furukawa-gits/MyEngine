@@ -83,6 +83,9 @@ private:
 	//ホーミングターゲットのセッティング
 	void checkHitPlayerTarget();
 
+	//カウントダウン
+	void countDown();
+
 	//音読み込みだけ関数
 	void Load_sounds();
 
@@ -159,7 +162,7 @@ private:
 	SingleSprite selects[2];
 
 	//カウントダウン・スタートアイコン
-	SingleSprite countDown[3];
+	SingleSprite countDownSprite[3];
 	SingleSprite playStart;
 
 	//リザルト画面

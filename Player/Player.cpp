@@ -246,6 +246,22 @@ void Player::update()
 	//ターゲットカーソルの処理
 	targetUpdate();
 
+	//攻撃を連続したフレーム食らわないようにする
+	if (isArmor)
+	{
+		armorTime++;
+
+		if (armorTime >= maxArmorTime)
+		{
+			armorTime = 0;
+			isArmor = false;
+		}
+	}
+	else
+	{
+		armorTime = 0;
+	}
+
 	if (playerHP <= 0)
 	{
 		isArive = false;

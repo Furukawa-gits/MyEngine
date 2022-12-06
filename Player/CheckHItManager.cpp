@@ -8,10 +8,20 @@ void checkHitManager::checkPlayerEnemy(Player* player, Enemy* enemy)
 		return;
 	}
 
+	if (player->isArmor)
+	{
+		return;
+	}
+
 	if (Collision::CheckSphere2Sphere(player->playerCollision, enemy->enemyCollision))
 	{
 		player->playerHP--;
-		enemy->Isarive = false;
+		player->isArmor = true;
+
+		if (!enemy->isThisBoss)
+		{
+			enemy->HP--;
+		}
 	}
 }
 
@@ -167,9 +177,15 @@ void checkHitManager::chackPlayerEnemyBullet(Player* player, Enemy* enemy)
 		return;
 	}
 
+	if (player->isArmor)
+	{
+		return;
+	}
+
 	if (Collision::CheckSphere2Sphere(player->playerCollision, enemy->bullet->getCollision()))
 	{
 		player->playerHP--;
+		player->isArmor = true;
 		enemy->bullet->isArive = false;
 		enemy->bullet->ariveTime = 0;
 	}

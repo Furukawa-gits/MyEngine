@@ -71,20 +71,20 @@ void GameScene::Load_Sprites()
 	selects[1].GenerateSprite("selectR.png");
 
 	//カウントダウンアイコン
-	countDown[0].anchorpoint = { 0.5f,0.5f };
-	countDown[0].size = { 100,100 };
-	countDown[0].position = { 640,360,0 };
-	countDown[0].GenerateSprite("count3.png");
+	countDownSprite[0].anchorpoint = { 0.5f,0.5f };
+	countDownSprite[0].size = { 100,100 };
+	countDownSprite[0].position = { 640,360,0 };
+	countDownSprite[0].GenerateSprite("count3.png");
 
-	countDown[1].anchorpoint = { 0.5f,0.5f };
-	countDown[1].size = { 100,100 };
-	countDown[1].position = { 640,360,0 };
-	countDown[1].GenerateSprite("count2.png");
+	countDownSprite[1].anchorpoint = { 0.5f,0.5f };
+	countDownSprite[1].size = { 100,100 };
+	countDownSprite[1].position = { 640,360,0 };
+	countDownSprite[1].GenerateSprite("count2.png");
 
-	countDown[2].anchorpoint = { 0.5f,0.5f };
-	countDown[2].size = { 100,100 };
-	countDown[2].position = { 640,360,0 };
-	countDown[2].GenerateSprite("count1.png");
+	countDownSprite[2].anchorpoint = { 0.5f,0.5f };
+	countDownSprite[2].size = { 100,100 };
+	countDownSprite[2].position = { 640,360,0 };
+	countDownSprite[2].GenerateSprite("count1.png");
 
 	playStart.anchorpoint = { 0.5f,0.5f };
 	playStart.size = { 500,125 };
@@ -355,9 +355,9 @@ void GameScene::Select_updata()
 		}
 
 		countDownEase.set(easingType::easeOut, easingPattern::Quintic, countDownTime, 450, 0);
-		countDown[0].rotation = 0;
-		countDown[1].rotation = 0;
-		countDown[2].rotation = 0;
+		countDownSprite[0].rotation = 0;
+		countDownSprite[1].rotation = 0;
+		countDownSprite[2].rotation = 0;
 		countDownNum = 0;
 		isCountDown = true;
 		isStartIcon = false;
@@ -384,65 +384,8 @@ void GameScene::Play_updata()
 		return;
 	}
 
-	if (isCountDown)
-	{
-		countDown[countDownNum].size = { countDownEase.easing(),countDownEase.easing() };
-		countDown[countDownNum].rotation -= 4;
-		countDown[countDownNum].SpriteTransferVertexBuffer();
-		countDown[countDownNum].SpriteUpdate();
-
-		if (!countDownEase.getIsActive())
-		{
-			if (countDownNum + 1 < 3)
-			{
-				countDownEase.set(easingType::easeOut, easingPattern::Quintic, countDownTime, 450, 0);
-				countDownNum++;
-			}
-			else
-			{
-				isStartIcon = true;
-				startIconTime = 40;
-				isCountDown = false;
-			}
-		}
-	}
-
-	if (isStartIcon)
-	{
-		startIconTime--;
-		playStart.SpriteUpdate();
-
-		if (startIconTime <= 0)
-		{
-			isStartIcon = false;
-		}
-	}
-
-	//スタートのカウントダウン演出が終わったら動ける
-	if (isCountDown || isStartIcon)
-	{
-		player_p->isStop = true;
-
-		//敵
-		for (std::unique_ptr<Enemy>& newenemy : enemyList)
-		{
-			newenemy->isStop = true;
-		}
-
-		testBoss->isStop = true;
-	}
-	else
-	{
-		player_p->isStop = false;
-
-		//敵
-		for (std::unique_ptr<Enemy>& newenemy : enemyList)
-		{
-			newenemy->isStop = false;
-		}
-
-		testBoss->isStop = false;
-	}
+	//カウントダウン
+	countDown();
 
 	//プレイヤー更新
 	player_p->update();
@@ -514,6 +457,13 @@ void GameScene::Play_updata()
 	//通常弾とボスの当たり判定
 	checkHitManager::checkBulletsEnemy(&player_p->bulletsList, testBoss.get());
 	checkHitManager::checkBulletsEnemybullet(&player_p->bulletsList, testBoss.get());
+
+	//プレイヤーとボスの当たり判定
+	if (testBoss->getIsAppear() == false)
+	{
+		checkHitManager::checkPlayerEnemy(player_p.get(), testBoss.get());
+		checkHitManager::chackPlayerEnemyBullet(player_p.get(), testBoss.get());
+	}
 
 	//死んでいる雑魚敵をカウント
 	int count = 0;
@@ -841,7 +791,7 @@ void GameScene::Draw2D()
 
 		if (isCountDown)
 		{
-			countDown[countDownNum].DrawSprite(directx->cmdList.Get());
+			countDownSprite[countDownNum].DrawSprite(directx->cmdList.Get());
 		}
 
 		if (isStartIcon)
@@ -893,4 +843,76 @@ void GameScene::checkHitPlayerTarget()
 
 	//ボス
 	checkHitManager::checkRockonEnemy(player_p.get(), testBoss.get(), targetnum);
+}
+
+void GameScene::countDown()
+{
+	if (!isCountDown && !isStartIcon)
+	{
+		return;
+	}
+
+	if (isCountDown)
+	{
+		countDownSprite[countDownNum].size = { countDownEase.easing(),countDownEase.easing() };
+		countDownSprite[countDownNum].rotation -= 4;
+		countDownSprite[countDownNum].SpriteTransferVertexBuffer();
+		countDownSprite[countDownNum].SpriteUpdate();
+
+		if (!countDownEase.getIsActive())
+		{
+			if (countDownNum + 1 < 3)
+			{
+				countDownEase.set(easingType::easeOut, easingPattern::Quintic, countDownTime, 450, 0);
+				countDownNum++;
+			}
+			else
+			{
+				isStartIcon = true;
+				startIconTime = 40;
+				isCountDown = false;
+			}
+		}
+	}
+
+	if (isStartIcon)
+	{
+		startIconTime--;
+		playStart.SpriteUpdate();
+
+		if (startIconTime <= 0)
+		{
+			isStartIcon = false;
+		}
+	}
+
+	//スタートのカウントダウン演出が終わったら動ける
+	if (isCountDown || isStartIcon)
+	{
+		player_p->isStop = true;
+
+		//敵
+		for (std::unique_ptr<Enemy>& newenemy : enemyList)
+		{
+			newenemy->isStop = true;
+		}
+
+		testBoss->isStop = true;
+
+		return;
+	}
+	else
+	{
+		player_p->isStop = false;
+
+		//敵
+		for (std::unique_ptr<Enemy>& newenemy : enemyList)
+		{
+			newenemy->isStop = false;
+		}
+
+		testBoss->isStop = false;
+	}
+
+	return;
 }

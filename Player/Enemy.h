@@ -72,6 +72,7 @@ public:
 	static std::unique_ptr<Model> enemyModelS;
 	Object3d_FBX* enemyObject = nullptr;
 
+	//プレイヤーの索敵ライン
 	static const float forPlayer;
 
 	bool isDraw = false;//描画フラグ
@@ -98,7 +99,7 @@ public:
 	//一定距離下に落ちて行くためのカウント
 	int fallDownCount = 0;
 
-	float deathRotSpeed = 2.0f;
+	float deathRotSpeed = 1.0f;
 
 	bool isFar = false;
 

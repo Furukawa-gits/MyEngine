@@ -103,6 +103,11 @@ public:
 
 	int playerHP = 10;
 
+	//無敵時間フラグ
+	bool isArmor = false;
+	int armorTime = 0;
+	const int maxArmorTime = 300;
+
 	//停止フラグ
 	bool isStop = false;
 };
