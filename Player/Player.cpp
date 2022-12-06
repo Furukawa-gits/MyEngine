@@ -417,13 +417,6 @@ void Player::reset()
 	SetCursorPos(mouseOffsetX, mouseOffsetY);
 
 	qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
-
-	for (int i = 0; i < MaxPlayerMissileNum; i++)
-	{
-		//playerMissiale[i].enemyPointer = nullptr;
-		//playerMissiale[i].isArive = false;
-		//playerMissiale[i].isTargetSet = false;
-	}
 }
 
 //•`‰æ

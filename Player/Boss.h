@@ -59,4 +59,7 @@ private:
 	easingManager bossRotEase;
 	XMFLOAT3 bossbaseScale;
 	XMFLOAT3 bossScale;
+
+	//ボス出現演出用のカメラ
+	Camera* bossCamera;
 };

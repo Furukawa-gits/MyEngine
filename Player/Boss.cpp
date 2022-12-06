@@ -39,6 +39,12 @@ void Boss::bossSet(XMFLOAT3 pos)
 	enemyObject->SetScale(bossScale);
 	enemyObject->SetPosition(pos);
 	enemyObject->Update();
+
+	//演出用カメラをセット
+	bossCamera = new Camera;
+	bossCamera->SetEye({ pos.x - 10,pos.y,pos.z + 10 });
+	bossCamera->SetTarget(pos);
+
 	isAppear = true;
 }
 
