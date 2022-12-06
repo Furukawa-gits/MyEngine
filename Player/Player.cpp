@@ -313,8 +313,7 @@ void Player::targetUpdate()
 		targetFirst.position.y = 691;
 	}
 
-	targetFirst.SpriteTransferVertexBuffer();
-	targetFirst.SpriteUpdate();
+	
 
 	//プレイヤーのスクリーン座標
 	XMFLOAT2 PlayerScreenPosition = playerObject->worldToScleen();
@@ -331,8 +330,6 @@ void Player::targetUpdate()
 		secondTargetPos.y,
 		0.0f
 	};
-	targetSecond.SpriteTransferVertexBuffer();
-	targetSecond.SpriteUpdate();
 
 	XMFLOAT2 thirdTargetPos =
 	{
@@ -346,13 +343,18 @@ void Player::targetUpdate()
 		thirdTargetPos.y,
 		0.0f
 	};
-	targetThird.SpriteTransferVertexBuffer();
-	targetThird.SpriteUpdate();
 
 	if (isStop)
 	{
 		return;
 	}
+
+	targetFirst.SpriteTransferVertexBuffer();
+	targetFirst.SpriteUpdate();
+	targetSecond.SpriteTransferVertexBuffer();
+	targetSecond.SpriteUpdate();
+	targetThird.SpriteTransferVertexBuffer();
+	targetThird.SpriteUpdate();
 
 	//左クリックで通常弾
 	if (input->Mouse_LeftTriger())

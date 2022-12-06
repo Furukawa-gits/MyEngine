@@ -33,8 +33,8 @@ void Boss::bossSet(XMFLOAT3 pos)
 {
 	set(pos);
 	HP = resetHitPoint;
-	arrivalTime = 300;
-	bossRotEase.set(easingType::easeInOut, easingPattern::Quadratic, arrivalTime, 600, 0);
+	arrivalTime = 600;
+	bossRotEase.set(easingType::easeInOut, easingPattern::Quadratic, arrivalTime, 360, 0);
 	bossScale = { 0,0,0 };
 	enemyObject->SetScale(bossScale);
 	enemyObject->SetPosition(pos);
@@ -42,8 +42,9 @@ void Boss::bossSet(XMFLOAT3 pos)
 
 	//演出用カメラをセット
 	bossCamera = new Camera;
-	bossCamera->SetEye({ pos.x - 10,pos.y,pos.z + 10 });
+	bossCamera->SetEye({ pos.x - 1,pos.y,pos.z + 1 });
 	bossCamera->SetTarget(pos);
+	Object3d_FBX::SetCamera(bossCamera);
 
 	isAppear = true;
 }
@@ -87,5 +88,6 @@ void Boss::bossArrival(Player* player)
 		isStop = false;
 		isAppear = false;
 		player->isStop = false;
+		Object3d_FBX::SetCamera(player->followCamera);
 	}
 }
