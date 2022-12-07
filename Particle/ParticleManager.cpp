@@ -19,7 +19,6 @@ ComPtr<ID3D12RootSignature> ParticleManager::rootsignature;
 ComPtr<ID3D12PipelineState> ParticleManager::pipelinestate;
 ComPtr<ID3D12DescriptorHeap> ParticleManager::descHeap;
 ComPtr<ID3D12Resource> ParticleManager::vertBuff;
-//ComPtr<ID3D12Resource> Object3d::indexBuff;
 ComPtr<ID3D12Resource> ParticleManager::texbuff;
 CD3DX12_CPU_DESCRIPTOR_HANDLE ParticleManager::cpuDescHandleSRV;
 CD3DX12_GPU_DESCRIPTOR_HANDLE ParticleManager::gpuDescHandleSRV;
@@ -29,10 +28,7 @@ XMFLOAT3 ParticleManager::eye = { 0, 0, -80.0f };
 XMFLOAT3 ParticleManager::target = { 0, 0, 0 };
 XMFLOAT3 ParticleManager::up = { 0, 1, 0 };
 D3D12_VERTEX_BUFFER_VIEW ParticleManager::vbView{};
-//D3D12_INDEX_BUFFER_VIEW Object3d::ibView{};
-//Object3d::VertexPosNormalUv Object3d::vertices[vertexCount];
 ParticleManager::VertexPos ParticleManager::vertices[vertexCount];
-//unsigned short Object3d::indices[indexCount];
 
 XMMATRIX ParticleManager::matBillboard = XMMatrixIdentity();
 XMMATRIX ParticleManager::matBillboardY = XMMatrixIdentity();
@@ -177,19 +173,7 @@ bool ParticleManager::InitializeDescriptorHeap()
 
 void ParticleManager::InitializeCamera(int window_width, int window_height)
 {
-	// ビュー行列の生成
-	/*matView = XMMatrixLookAtLH(
-		XMLoadFloat3(&eye),
-		XMLoadFloat3(&target),
-		XMLoadFloat3(&up));*/
-
 	UpdateViewMatrix();
-
-	// 平行投影による射影行列の生成
-	//constMap->mat = XMMatrixOrthographicOffCenterLH(
-	//	0, window_width,
-	//	window_height, 0,
-	//	0, 1);
 	// 透視投影による射影行列の生成
 	matProjection = XMMatrixPerspectiveFovLH(
 		XMConvertToRadians(60.0f),
@@ -287,16 +271,6 @@ bool ParticleManager::InitializeGraphicsPipeline()
 			D3D12_APPEND_ALIGNED_ELEMENT,
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
 		}
-		//{ // 法線ベクトル(1行で書いたほうが見やすい)
-		//	"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
-		//	D3D12_APPEND_ALIGNED_ELEMENT,
-		//	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
-		//},
-		//{ // uv座標(1行で書いたほうが見やすい)
-		//	"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,
-		//	D3D12_APPEND_ALIGNED_ELEMENT,
-		//	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
-		//},
 	};
 
 	// グラフィックスパイプラインの流れを設定
@@ -470,38 +444,6 @@ void ParticleManager::CreateModel()
 {
 	HRESULT result = S_FALSE;
 
-	//四角形の頂点データ
-	/*VertexPosNormalUv verticesSqare[] = {
-		{{-5.0f,-5.0f,0.0f},{0,0,1},{0,1}},
-		{{-5.0f,+5.0f,0.0f},{0,0,1},{0,0}},
-		{{+5.0f,-5.0f,0.0f},{0,0,1},{1,1}},
-		{{+5.0f,+5.0f,0.0f},{0,0,1},{1,0}}
-	};*/
-
-	//std::copy(std::begin(verticesSqare), std::end(verticesSqare), vertices);
-
-	//VertexPos verticesPoint[] = {
-	//	//{{0.0f,0.0f,0.0f},{0,0,1},{0,1}}
-	//	{{0.0f,0.0f,0.0f}}
-	//};
-
-	//std::copy(std::begin(verticesPoint), std::end(verticesPoint), vertices);
-
-	/*for (int i = 0; i < vertexCount; i++)
-	{
-		const float rmd_width = 10.0f;
-		vertices[i].pos.x = (float)rand() / RAND_MAX * rmd_width - rmd_width / 2.0f;
-		vertices[i].pos.y = (float)rand() / RAND_MAX * rmd_width - rmd_width / 2.0f;
-		vertices[i].pos.z = (float)rand() / RAND_MAX * rmd_width - rmd_width / 2.0f;
-	}*/
-
-	/*unsigned short indicesSquare[] = {
-		0, 1, 2,
-		2, 1, 3
-	};*/
-
-	//std::copy(std::begin(indicesSquare), std::end(indicesSquare), indices);
-
 	// 頂点バッファ生成
 	result = device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
@@ -515,19 +457,6 @@ void ParticleManager::CreateModel()
 		return;
 	}
 
-	// インデックスバッファ生成
-	/*result = device->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer(sizeof(indices)),
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&indexBuff));
-	if (FAILED(result)) {
-		assert(0);
-		return;
-	}*/
-
 	// 頂点バッファへのデータ転送
 	VertexPos* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
@@ -536,35 +465,14 @@ void ParticleManager::CreateModel()
 		vertBuff->Unmap(0, nullptr);
 	}
 
-	// インデックスバッファへのデータ転送
-	//unsigned short* indexMap = nullptr;
-	//result = indexBuff->Map(0, nullptr, (void**)&indexMap);
-	//if (SUCCEEDED(result)) {
-
-	//	// 全インデックスに対して
-	//	for (int i = 0; i < _countof(indices); i++)
-	//	{
-	//		indexMap[i] = indices[i];	// インデックスをコピー
-	//	}
-
-	//	indexBuff->Unmap(0, nullptr);
-	//}
-
 	// 頂点バッファビューの作成
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
 	vbView.SizeInBytes = sizeof(vertices);
 	vbView.StrideInBytes = sizeof(vertices[0]);
-
-	// インデックスバッファビューの作成
-	/*ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
-	ibView.Format = DXGI_FORMAT_R16_UINT;
-	ibView.SizeInBytes = sizeof(indices);*/
 }
 
 void ParticleManager::UpdateViewMatrix()
 {
-	// ビュー行列の更新
-	//matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
 	//視点座標
 	XMVECTOR eyePosition = XMLoadFloat3(&eye);
 	//注視点座標
@@ -668,23 +576,6 @@ void ParticleManager::Update()
 
 	// スケール、回転、平行移動行列の計算
 	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
-	//matRot = XMMatrixIdentity();
-	//matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
-	//matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
-	//matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
-	//matTrans = XMMatrixTranslation(position.x, position.y, position.z);
-	// ワールド行列の合成
-	//matWorld = XMMatrixIdentity(); // 変形をリセット
-	//matWorld *= matBillboard;//ビルボード行列を掛ける
-	//matWorld *= matBillboardY;//Y軸ビルボード行列を掛ける
-	//matWorld *= matScale; // ワールド行列にスケーリングを反映
-	//matWorld *= matRot; // ワールド行列に回転を反映
-	//matWorld *= matTrans; // ワールド行列に平行移動を反映
-	// 親オブジェクトがあれば
-	//if (parent != nullptr) {
-	//	// 親オブジェクトのワールド行列を掛ける
-	//	matWorld *= parent->matWorld;
-	//}
 
 	//寿命が尽きたパーティクルを削除
 	particles.remove_if(
@@ -735,8 +626,6 @@ void ParticleManager::Update()
 	// 定数バッファへデータ転送
 	ConstBufferData* constMap = nullptr;
 	result = constBuff->Map(0, nullptr, (void**)&constMap);
-	//constMap->color = color;
-	//constMap->mat = matWorld * matView * matProjection;	// 行列の合成
 	//行列の合成
 	constMap->mat = matView * matProjection;
 	constMap->matBillboard = matBillboard;

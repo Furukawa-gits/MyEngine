@@ -214,6 +214,7 @@
     <None Include="Resources\shaders\PostEffectBace.hlsli">
       <Filter>リソース ファイル</Filter>
     </None>
+    <None Include="Resources\shaders\Particle.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\BasicPS.hlsl">
@@ -249,5 +250,8 @@
     <FxCompile Include="Resources\shaders\FBXSimplePS.hlsl" />
     <FxCompile Include="Resources\shaders\PostEffectGrayPS.hlsl" />
     <FxCompile Include="Resources\shaders\PostEffectGaussianPS.hlsl" />
+    <FxCompile Include="Resources\shaders\ParticleGS.hlsl" />
+    <FxCompile Include="Resources\shaders\ParticlePS.hlsl" />
+    <FxCompile Include="Resources\shaders\ParticleVS.hlsl" />
   </ItemGroup>
 </Project>

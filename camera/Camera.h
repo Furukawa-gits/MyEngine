@@ -153,7 +153,7 @@ protected: // メンバ変数
 	// アスペクト比
 	float aspectRatio = 1.0f;
 
-	bool isAllBill = false;
-
-	bool isYBill = false;
+	//使う予定はないので const にしておく
+	const bool isAllBill = false;
+	const bool isYBill = false;
 };
