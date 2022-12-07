@@ -33,8 +33,8 @@ void Boss::bossSet(XMFLOAT3 pos)
 {
 	set(pos);
 	HP = resetHitPoint;
-	arrivalTime = 600;
-	bossRotEase.set(easingType::easeInOut, easingPattern::Quadratic, arrivalTime, 360, 0);
+	arrivalTime = 300;
+	bossRotEase.set(easingType::easeOut, easingPattern::Quadratic, arrivalTime, 1000, 0);
 	bossScale = { 0,0,0 };
 	enemyObject->SetScale(bossScale);
 	enemyObject->SetPosition(pos);
@@ -42,8 +42,8 @@ void Boss::bossSet(XMFLOAT3 pos)
 
 	//演出用カメラをセット
 	bossCamera = new Camera;
-	bossCamera->SetEye({ pos.x - 1,pos.y,pos.z + 1 });
-	bossCamera->SetTarget(pos);
+	bossCamera->SetEye({ pos.x - 5,pos.y - 5,pos.z + 5 });
+	bossCamera->SetTarget({ pos.x + 10,pos.y + 10,pos.z - 10 });
 	Object3d_FBX::SetCamera(bossCamera);
 
 	isAppear = true;
@@ -67,18 +67,18 @@ void Boss::bossArrival(Player* player)
 
 	isStop = true;
 
-	XMFLOAT3 rot =
-	{
-		bossRotEase.easing(),
-		bossRotEase.easing(),
-		bossRotEase.easing()
-	};
+	float rot = bossRotEase.easing();
 
 	bossScale.x += bossbaseScale.x / arrivalTime;
 	bossScale.y += bossbaseScale.y / arrivalTime;
 	bossScale.z += bossbaseScale.z / arrivalTime;
 
-	enemyObject->SetRotation(rot);
+	XMMATRIX matrot = XMMatrixIdentity();
+	matrot *= XMMatrixRotationZ(XMConvertToRadians(rot));
+	matrot *= XMMatrixRotationX(XMConvertToRadians(rot));
+	matrot *= XMMatrixRotationY(XMConvertToRadians(rot));
+
+	enemyObject->setRotMatrix(matrot);
 	enemyObject->SetScale(bossScale);
 	enemyObject->Update();
 

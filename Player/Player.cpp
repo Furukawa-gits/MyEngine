@@ -288,6 +288,11 @@ void Player::update()
 
 void Player::targetUpdate()
 {
+	if (isStop)
+	{
+		return;
+	}
+
 	//マウスの移動量をターゲットカーソルの座標に加算
 	targetFirst.position.x += input->mouseMoveVecrocity.x;
 	targetFirst.position.y += input->mouseMoveVecrocity.y;
@@ -312,8 +317,6 @@ void Player::targetUpdate()
 	{
 		targetFirst.position.y = 691;
 	}
-
-	
 
 	//プレイヤーのスクリーン座標
 	XMFLOAT2 PlayerScreenPosition = playerObject->worldToScleen();
@@ -343,11 +346,6 @@ void Player::targetUpdate()
 		thirdTargetPos.y,
 		0.0f
 	};
-
-	if (isStop)
-	{
-		return;
-	}
 
 	targetFirst.SpriteTransferVertexBuffer();
 	targetFirst.SpriteUpdate();
@@ -448,6 +446,11 @@ void Player::draw3D(directX* directx)
 void Player::draw2D(directX* directx)
 {
 	if (!isArive)
+	{
+		return;
+	}
+
+	if (isStop)
 	{
 		return;
 	}
