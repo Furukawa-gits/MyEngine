@@ -584,8 +584,6 @@ void ParticleManager::Draw()
 
 	// 頂点バッファの設定
 	cmdList->IASetVertexBuffers(0, 1, &vbView);
-	// インデックスバッファの設定
-	//cmdList->IASetIndexBuffer(&ibView);
 
 	// デスクリプタヒープの配列
 	ID3D12DescriptorHeap* ppHeaps[] = { descHeap.Get() };
@@ -596,7 +594,6 @@ void ParticleManager::Draw()
 	// シェーダリソースビューをセット
 	cmdList->SetGraphicsRootDescriptorTable(1, gpuDescHandleSRV);
 	// 描画コマンド
-	//cmdList->DrawInstanced(_countof(vertices), 1, 0, 0);
 	cmdList->DrawInstanced((UINT)std::distance(particles.begin(), particles.end()), 1, 0, 0);
 }
 

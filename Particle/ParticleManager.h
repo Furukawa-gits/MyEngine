@@ -116,8 +116,6 @@ private: // 静的メンバ変数
 	static ComPtr<ID3D12DescriptorHeap> descHeap;
 	// 頂点バッファ
 	static ComPtr<ID3D12Resource> vertBuff;
-	// インデックスバッファ
-	//static ComPtr<ID3D12Resource> indexBuff;
 	// テクスチャバッファ
 	static ComPtr<ID3D12Resource> texbuff;
 	// シェーダリソースビューのハンドル(CPU)
@@ -136,13 +134,8 @@ private: // 静的メンバ変数
 	static XMFLOAT3 up;
 	// 頂点バッファビュー
 	static D3D12_VERTEX_BUFFER_VIEW vbView;
-	// インデックスバッファビュー
-	//static D3D12_INDEX_BUFFER_VIEW ibView;
 	// 頂点データ配列
-	//static VertexPosNormalUv vertices[vertexCount];
 	static VertexPos vertices[vertexCount];
-	// 頂点インデックス配列
-	//static unsigned short indices[indexCount];
 
 	//ビルボード行列
 	static XMMATRIX matBillboard;
