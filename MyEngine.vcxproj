@@ -117,6 +117,7 @@
     <ClInclude Include="FbxLoder\Object3d_FBX.h" />
     <ClInclude Include="FbxLoder\Quaternion.h" />
     <ClInclude Include="Input\dxInput.h" />
+    <ClInclude Include="Particle\ParticleManager.h" />
     <ClInclude Include="Player\Boss.h" />
     <ClInclude Include="Player\Bullets.h" />
     <ClInclude Include="Player\CheckHItManager.h" />
@@ -148,6 +149,7 @@
     <ClCompile Include="FbxLoder\Quaternion.cpp" />
     <ClCompile Include="Input\dxInput.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Particle\ParticleManager.cpp" />
     <ClCompile Include="Player\Boss.cpp" />
     <ClCompile Include="Player\Bullets.cpp" />
     <ClCompile Include="Player\CheckHItManager.cpp" />
