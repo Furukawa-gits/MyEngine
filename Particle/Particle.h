@@ -36,6 +36,9 @@ private:
 	};
 
 public:
+	static void particleStaticInit(directX* Directx,Camera* camera);
+
+public:
 	//座標
 	XMFLOAT3 position = {};
 	//速度
@@ -56,10 +59,8 @@ public:
 	ComPtr<ID3D12Resource> constBuff;
 	// テクスチャバッファ
 	ComPtr<ID3D12Resource> texbuff;
-	// シェーダリソースビューのハンドル(CPU)
-	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
-	// シェーダリソースビューのハンドル(CPU)
-	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
+	// デスクリプタヒープ
+	ComPtr<ID3D12DescriptorHeap> descHeap;
 	// 頂点バッファ
 	ComPtr<ID3D12Resource> vertBuff;
 	// 頂点データ配列
@@ -70,27 +71,13 @@ public:
 private:
 	// 静的メンバ変数
 	// デバイス
-	static ID3D12Device* device;
-	// デスクリプタサイズ
-	static UINT descriptorHandleIncrementSize;
-	// コマンドリスト
-	static ID3D12GraphicsCommandList* cmdList;
+	static directX* directx;
 	// ルートシグネチャ
 	static ComPtr<ID3D12RootSignature> rootsignature;
 	// パイプラインステートオブジェクト
 	static ComPtr<ID3D12PipelineState> pipelinestate;
-	// デスクリプタヒープ
-	static ComPtr<ID3D12DescriptorHeap> descHeap;
 	// ビュー行列
 	static XMMATRIX matView;
-	// 射影行列
-	static XMMATRIX matProjection;
-	// 視点座標
-	static XMFLOAT3 eye;
-	// 注視点座標
-	static XMFLOAT3 target;
-	// 上方向ベクトル
-	static XMFLOAT3 up;
 	//ビルボード行列
 	static XMMATRIX matBillboard;
 	//Y軸周りビルボード行列

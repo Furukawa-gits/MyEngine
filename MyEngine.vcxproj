@@ -117,6 +117,7 @@
     <ClInclude Include="FbxLoder\Object3d_FBX.h" />
     <ClInclude Include="FbxLoder\Quaternion.h" />
     <ClInclude Include="Input\dxInput.h" />
+    <ClInclude Include="Particle\Particle.h" />
     <ClInclude Include="Particle\ParticleManager.h" />
     <ClInclude Include="Player\Boss.h" />
     <ClInclude Include="Player\Bullets.h" />
