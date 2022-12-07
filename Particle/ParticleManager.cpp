@@ -52,9 +52,6 @@ bool ParticleManager::StaticInitialize(ID3D12Device* device, int window_width, i
 	// デスクリプタヒープの初期化
 	InitializeDescriptorHeap();
 
-	// カメラ初期化
-	InitializeCamera(window_width, window_height);
-
 	// パイプライン初期化
 	InitializeGraphicsPipeline();
 
@@ -108,48 +105,6 @@ ParticleManager* ParticleManager::Create()
 	return object3d;
 }
 
-void ParticleManager::SetEye(XMFLOAT3 eye)
-{
-	ParticleManager::eye = eye;
-
-	UpdateViewMatrix();
-}
-
-void ParticleManager::SetTarget(XMFLOAT3 target)
-{
-	ParticleManager::target = target;
-
-	UpdateViewMatrix();
-}
-
-void ParticleManager::CameraMoveVector(XMFLOAT3 move)
-{
-	XMFLOAT3 eye_moved = GetEye();
-	XMFLOAT3 target_moved = GetTarget();
-
-	eye_moved.x += move.x;
-	eye_moved.y += move.y;
-	eye_moved.z += move.z;
-
-	target_moved.x += move.x;
-	target_moved.y += move.y;
-	target_moved.z += move.z;
-
-	SetEye(eye_moved);
-	SetTarget(target_moved);
-}
-
-void ParticleManager::CameraMoveEyeVector(XMFLOAT3 move)
-{
-	XMFLOAT3 eye_moved = GetEye();
-
-	eye_moved.x += move.x;
-	eye_moved.y += move.y;
-	eye_moved.z += move.z;
-
-	SetEye(eye_moved);
-}
-
 bool ParticleManager::InitializeDescriptorHeap()
 {
 	HRESULT result = S_FALSE;
@@ -169,17 +124,6 @@ bool ParticleManager::InitializeDescriptorHeap()
 	descriptorHandleIncrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	return true;
-}
-
-void ParticleManager::InitializeCamera(int window_width, int window_height)
-{
-	UpdateViewMatrix();
-	// 透視投影による射影行列の生成
-	matProjection = XMMatrixPerspectiveFovLH(
-		XMConvertToRadians(60.0f),
-		(float)window_width / window_height,
-		0.1f, 1000.0f
-	);
 }
 
 bool ParticleManager::InitializeGraphicsPipeline()

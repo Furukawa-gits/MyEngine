@@ -101,41 +101,6 @@ public: // 静的メンバ関数
 	/// <returns></returns>
 	static ParticleManager* Create();
 
-	/// <summary>
-	/// 視点座標の取得
-	/// </summary>
-	/// <returns>座標</returns>
-	static const XMFLOAT3& GetEye() { return eye; }
-
-	/// <summary>
-	/// 視点座標の設定
-	/// </summary>
-	/// <param name="position">座標</param>
-	static void SetEye(XMFLOAT3 eye);
-
-	/// <summary>
-	/// 注視点座標の取得
-	/// </summary>
-	/// <returns>座標</returns>
-	static const XMFLOAT3& GetTarget() { return target; }
-
-	/// <summary>
-	/// 注視点座標の設定
-	/// </summary>
-	/// <param name="position">座標</param>
-	static void SetTarget(XMFLOAT3 target);
-
-	/// <summary>
-	/// ベクトルによる移動
-	/// </summary>
-	/// <param name="move">移動量</param>
-	static void CameraMoveVector(XMFLOAT3 move);
-
-	/// <summary>
-	/// 視点移動
-	/// </summary>
-	static void CameraMoveEyeVector(XMFLOAT3 move);
-
 private: // 静的メンバ変数
 	// デバイス
 	static ID3D12Device* device;
@@ -191,13 +156,6 @@ private:// 静的メンバ関数
 	/// </summary>
 	/// <returns></returns>
 	static bool InitializeDescriptorHeap();
-
-	/// <summary>
-	/// カメラ初期化
-	/// </summary>
-	/// <param name="window_width">画面横幅</param>
-	/// <param name="window_height">画面縦幅</param>
-	static void InitializeCamera(int window_width, int window_height);
 
 	/// <summary>
 	/// グラフィックパイプライン生成
