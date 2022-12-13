@@ -150,6 +150,7 @@
     <ClCompile Include="FbxLoder\Quaternion.cpp" />
     <ClCompile Include="Input\dxInput.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Particle\Particle.cpp" />
     <ClCompile Include="Particle\ParticleManager.cpp" />
     <ClCompile Include="Player\Boss.cpp" />
     <ClCompile Include="Player\Bullets.cpp" />

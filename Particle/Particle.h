@@ -5,6 +5,7 @@
 #include"../staging/Easing.h"
 #include<DirectXTex.h>
 #include <d3dcompiler.h>
+#include<string>
 
 #pragma comment(lib, "d3dcompiler.lib")
 
@@ -36,7 +37,21 @@ private:
 	};
 
 public:
-	static void particleStaticInit(directX* Directx,Camera* camera);
+	static void particleStaticInit(directX* Directx, Camera* Camera);
+
+	static void createPipeline();
+
+	void generate(const std::string& filepath);
+
+	void loadTexture(const std::string& filepath);
+
+	void set(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel, float start_scale, float end_scale);
+
+	static void UpdateViewMatrix();
+
+	void updata();
+
+	void draw();
 
 public:
 	//座標
@@ -82,4 +97,6 @@ private:
 	static XMMATRIX matBillboard;
 	//Y軸周りビルボード行列
 	static XMMATRIX matBillboardY;
+	//カメラ
+	static Camera* camera;
 };
