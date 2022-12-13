@@ -39,6 +39,8 @@ private:
 public:
 	static void particleStaticInit(directX* Directx, Camera* Camera);
 
+	static void setCamera(Camera* setcamera);
+
 	static void createPipeline();
 
 	void generate(const std::string& filepath);

@@ -245,6 +245,16 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 	{
 		Isarive = false;
 		fallDownCount = 0;
+
+		for (int i = 0; i < particlenum; i++)
+		{
+			std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
+			newparticle->generate("bomb.png");
+			XMFLOAT3 vec = { rand() % 10 - 5,rand() % 10 - 5 ,rand() % 10 - 5 };
+			newparticle->set(6, position, vec, { vec.x / 2,vec.y / 2,vec.z / 2 }, 0.2, 1.0);
+			
+			particles.push_back(std::move(newparticle));
+		}
 	}
 
 	if (isTargetSet)
@@ -271,6 +281,16 @@ void Enemy::deathMove()
 	if (Isarive)
 	{
 		return;
+	}
+
+	particles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
+		{
+			return newparticle->frame == newparticle->num_frame;
+		});
+
+	for (std::unique_ptr<SingleParticle>& newparticle : particles)
+	{
+		newparticle->updata();
 	}
 
 	fallDownCount++;
@@ -311,6 +331,11 @@ void Enemy::draw3D(directX* directx)
 	if (enemyMovePattern == enemyPattern::shot)
 	{
 		bullet->draw(directx);
+	}
+
+	for (std::unique_ptr<SingleParticle>& newparticle : particles)
+	{
+		newparticle->draw();
 	}
 }
 

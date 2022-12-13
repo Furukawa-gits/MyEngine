@@ -10,11 +10,18 @@ Camera* SingleParticle::camera = nullptr;
 
 void SingleParticle::particleStaticInit(directX* Directx, Camera* Camera)
 {
-	directx = Directx;
-	camera = Camera;
+	SingleParticle::directx = Directx;
+	SingleParticle::camera = Camera;
 
 	//グラフィックスパイプライン生成
 	createPipeline();
+
+	return;
+}
+
+void SingleParticle::setCamera(Camera* setcamera)
+{
+	SingleParticle::camera = setcamera;
 }
 
 void SingleParticle::createPipeline()

@@ -3,6 +3,7 @@
 #include"../3D/Collision.h"
 #include"../FbxLoder/Object3d_FBX.h"
 #include"../Base/DirectX_Base.h"
+#include"../Particle/Particle.h"
 
 #include<memory>
 #include<list>
@@ -120,6 +121,12 @@ public:
 
 	//弾
 	std::unique_ptr<enemyBullet> bullet;
+
+	//爆発エフェクト
+	std::list<std::unique_ptr<SingleParticle>> particles;
+
+	//パーティクルの数
+	const int particlenum = 20;
 
 	Enemy();
 

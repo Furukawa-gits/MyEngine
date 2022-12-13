@@ -134,6 +134,8 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	//スプライトクラス初期化
 	SingleSprite::SetStaticData(directx->dev.Get());
 
+	SingleParticle::particleStaticInit(directx, nullptr);
+
 	//デバッグテキスト初期化
 	debugtext.Init();
 
@@ -167,6 +169,9 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	//敵モデルの初期化
 	Enemy::staticInit();
+
+	//パーティクルの共通カメラを設定
+	SingleParticle::setCamera(player_p->followCamera);
 
 	//ボスの初期化
 	testBoss = std::make_unique<Boss>();
