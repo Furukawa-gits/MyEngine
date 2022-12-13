@@ -1,6 +1,8 @@
 #pragma once
 #include<memory>
 #include<list>
+#define _USE_MATH_DEFINES
+#include<math.h>
 #include"Player.h"
 #include"Enemy.h"
 #include"Bullets.h"

@@ -224,6 +224,18 @@ void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& target
 
 	XMFLOAT3 playerFront = player->followCamera->getFrontVec();
 
+	//ベクトルの内積から角度を求めて、ロックオンの範囲を絞る
+	float cross = playerToEnemy.x * playerFront.x + playerToEnemy.y * playerFront.y + playerToEnemy.z * playerFront.z;
+
+	float vecLen = sqrtf((powf(playerToEnemy.x, 2) + powf(playerToEnemy.y, 2) + powf(playerToEnemy.z, 2)) * (powf(playerFront.x, 2) + powf(playerFront.y, 2) + powf(playerFront.z, 2)));
+
+	float vecAngle = acosf(cross / vecLen) * (180.0f / M_PI);
+
+	if (vecAngle > 85)
+	{
+		return;
+	}
+
 	//ロックオンした状態で離れすぎると解除
 	if (length >= Enemy::forPlayer)
 	{
