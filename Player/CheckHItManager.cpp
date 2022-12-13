@@ -222,6 +222,8 @@ void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& target
 
 	float length = sqrtf(powf(playerToEnemy.x, 2) + powf(playerToEnemy.y, 2) + powf(playerToEnemy.z, 2));
 
+	XMFLOAT3 playerFront = player->followCamera->getFrontVec();
+
 	//ƒƒbƒNƒIƒ“‚µ‚½ó‘Ô‚Å—£‚ê‚·‚¬‚é‚Æ‰ðœ
 	if (length >= Enemy::forPlayer)
 	{

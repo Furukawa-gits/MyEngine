@@ -42,8 +42,8 @@ void Boss::bossSet(XMFLOAT3 pos)
 
 	//演出用カメラをセット
 	bossCamera = new Camera;
-	bossCamera->SetEye({ pos.x - 5,pos.y - 5,pos.z + 5 });
-	bossCamera->SetTarget({ pos.x + 10,pos.y + 10,pos.z - 10 });
+	bossCamera->SetEye({ pos.x - 10,pos.y - 10,pos.z + 10 });
+	bossCamera->SetTarget({ pos.x + 5,pos.y + 5,pos.z - 5 });
 	Object3d_FBX::SetCamera(bossCamera);
 
 	isAppear = true;
