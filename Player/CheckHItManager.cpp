@@ -151,9 +151,8 @@ void checkHitManager::checkMissilesEnemy(list<unique_ptr<Missile>>* missilesList
 				}
 				else
 				{
-					newmissile->enemyPointer->Isarive = false;
+					newmissile->enemyPointer->HP = 0;
 				}
-				newmissile->enemyPointer->HP--;
 				newmissile->isTargetSet = false;
 				newmissile->enemyPointer->isTargetSet = false;
 				newmissile->enemyPointer->isSetMissile = false;

@@ -75,16 +75,19 @@ void GameScene::Load_Sprites()
 	countDownSprite[0].size = { 100,100 };
 	countDownSprite[0].position = { 640,360,0 };
 	countDownSprite[0].GenerateSprite("count3.png");
+	countDownSprite[0].SpriteTransferVertexBuffer();
 
 	countDownSprite[1].anchorpoint = { 0.5f,0.5f };
 	countDownSprite[1].size = { 100,100 };
 	countDownSprite[1].position = { 640,360,0 };
 	countDownSprite[1].GenerateSprite("count2.png");
+	countDownSprite[1].SpriteTransferVertexBuffer();
 
 	countDownSprite[2].anchorpoint = { 0.5f,0.5f };
 	countDownSprite[2].size = { 100,100 };
 	countDownSprite[2].position = { 640,360,0 };
 	countDownSprite[2].GenerateSprite("count1.png");
+	countDownSprite[2].SpriteTransferVertexBuffer();
 
 	playStart.anchorpoint = { 0.5f,0.5f };
 	playStart.size = { 500,125 };

@@ -6,6 +6,7 @@
 #include<DirectXTex.h>
 #include <d3dcompiler.h>
 #include<string>
+#include<map>
 
 #pragma comment(lib, "d3dcompiler.lib")
 
@@ -43,6 +44,8 @@ public:
 
 	static void createPipeline();
 
+	static void loadTexInMap(const std::string& filepath);
+
 	void generate(const std::string& filepath);
 
 	void loadTexture(const std::string& filepath);
@@ -54,6 +57,8 @@ public:
 	void updata();
 
 	void draw();
+
+	void drawSpecifyTex(const std::string texturename);
 
 public:
 	//座標
@@ -101,4 +106,8 @@ private:
 	static XMMATRIX matBillboardY;
 	//カメラ
 	static Camera* camera;
+
+	//テクスチャ格納マップ
+	static std::map<std::string, ComPtr<ID3D12DescriptorHeap>> texDescMap;
+	static std::map<std::string, ComPtr<ID3D12Resource>> texBufMap;
 };

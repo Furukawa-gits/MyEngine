@@ -100,6 +100,8 @@ public:
 	//一定距離下に落ちて行くためのカウント
 	int fallDownCount = 0;
 
+	const int maxFallCount = 90;
+
 	float deathRotSpeed = 1.0f;
 
 	bool isFar = false;

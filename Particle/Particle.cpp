@@ -7,6 +7,8 @@ XMMATRIX SingleParticle::matView{};
 XMMATRIX SingleParticle::matBillboard{};
 XMMATRIX SingleParticle::matBillboardY{};
 Camera* SingleParticle::camera = nullptr;
+std::map<std::string, ComPtr<ID3D12DescriptorHeap>> SingleParticle::texDescMap{};
+std::map<std::string, ComPtr<ID3D12Resource>> SingleParticle::texBufMap{};
 
 void SingleParticle::particleStaticInit(directX* Directx, Camera* Camera)
 {
@@ -134,25 +136,23 @@ void SingleParticle::createPipeline()
 	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
 	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	// RBGA全てのチャンネルを描画
 	blenddesc.BlendEnable = true;
-
+	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 	//半透明合成
-	//blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
-	//blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	//blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
 
 	//加算合成
-	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
-	blenddesc.SrcBlend = D3D12_BLEND_ONE;
-	blenddesc.DestBlend = D3D12_BLEND_ONE;
+	//blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+	//blenddesc.SrcBlend = D3D12_BLEND_ONE;
+	//blenddesc.DestBlend = D3D12_BLEND_ONE;
 
 	//減産合成
 	//blenddesc.BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
 	//blenddesc.SrcBlend = D3D12_BLEND_ONE;
 	//blenddesc.DestBlend = D3D12_BLEND_ONE;
-
-	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
 
 	// ブレンドステートの設定
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
@@ -212,6 +212,94 @@ void SingleParticle::createPipeline()
 	return;
 }
 
+void SingleParticle::loadTexInMap(const std::string& filepath)
+{
+	HRESULT result = S_FALSE;
+
+	ComPtr<ID3D12DescriptorHeap> testdescHeap;
+
+	ComPtr<ID3D12Resource> testtexbuff;
+
+	const std::string baseDirectory = "Resources/Image/";
+
+	std::string fullpath = baseDirectory + filepath;
+
+	wchar_t wfullpath[128];
+	MultiByteToWideChar(CP_ACP, 0, fullpath.c_str(), -1, wfullpath, _countof(wfullpath));
+
+	// WICテクスチャのロード
+	TexMetadata metadata{};
+	ScratchImage scratchImg{};
+
+	result = LoadFromWICFile(
+		wfullpath, WIC_FLAGS_NONE,
+		&metadata, scratchImg);
+	if (FAILED(result)) {
+		return;
+	}
+
+	const Image* img = scratchImg.GetImage(0, 0, 0); // 生データ抽出
+
+	// リソース設定
+	CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D(
+		metadata.format,
+		metadata.width,
+		(UINT)metadata.height,
+		(UINT16)metadata.arraySize,
+		(UINT16)metadata.mipLevels
+	);
+
+	D3D12_DESCRIPTOR_HEAP_DESC descHeapdesc = {};
+	descHeapdesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	descHeapdesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	descHeapdesc.NumDescriptors = 1;
+	result = directx->dev->CreateDescriptorHeap(&descHeapdesc, IID_PPV_ARGS(&testdescHeap));
+
+	// テクスチャ用バッファの生成
+	result = directx->dev->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0),
+		D3D12_HEAP_FLAG_NONE,
+		&texresDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ, // テクスチャ用指定
+		nullptr,
+		IID_PPV_ARGS(&testtexbuff));
+	if (FAILED(result)) {
+		return;
+	}
+
+	// テクスチャバッファにデータ転送
+	result = testtexbuff->WriteToSubresource(
+		0,
+		nullptr, // 全領域へコピー
+		img->pixels,    // 元データアドレス
+		(UINT)img->rowPitch,  // 1ラインサイズ
+		(UINT)img->slicePitch // 1枚サイズ
+	);
+	if (FAILED(result)) {
+		return;
+	}
+
+	// シェーダリソースビュー作成
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{}; // 設定構造体
+	D3D12_RESOURCE_DESC resDesc = testtexbuff->GetDesc();
+
+	srvDesc.Format = resDesc.Format;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//2Dテクスチャ
+	srvDesc.Texture2D.MipLevels = 1;
+
+	directx->dev->CreateShaderResourceView(testtexbuff.Get(), //ビューと関連付けるバッファ
+		&srvDesc, //テクスチャ設定情報
+		CD3DX12_CPU_DESCRIPTOR_HANDLE(testdescHeap->GetCPUDescriptorHandleForHeapStart(), 0,
+			directx->dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)
+		)
+	);
+
+	texBufMap.insert({ filepath,testtexbuff });
+
+	texDescMap.insert({ filepath,testdescHeap });
+}
+
 void SingleParticle::generate(const std::string& filepath)
 {
 	HRESULT result = S_FALSE;
@@ -251,7 +339,7 @@ void SingleParticle::generate(const std::string& filepath)
 	vbView.SizeInBytes = sizeof(vertices);
 	vbView.StrideInBytes = sizeof(vertices);
 
-	loadTexture(filepath);
+	//loadTexture(filepath);
 
 	return;
 }
@@ -288,6 +376,12 @@ void SingleParticle::loadTexture(const std::string& filepath)
 		(UINT16)metadata.arraySize,
 		(UINT16)metadata.mipLevels
 	);
+
+	D3D12_DESCRIPTOR_HEAP_DESC descHeapdesc = {};
+	descHeapdesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	descHeapdesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	descHeapdesc.NumDescriptors = 1;
+	result = directx->dev->CreateDescriptorHeap(&descHeapdesc, IID_PPV_ARGS(&descHeap));
 
 	// テクスチャ用バッファの生成
 	result = directx->dev->CreateCommittedResource(
@@ -427,15 +521,10 @@ void SingleParticle::updata()
 	HRESULT result;
 	XMMATRIX matScale, matRot, matTrans;
 
+	SingleParticle::UpdateViewMatrix();
+
 	// スケール、回転、平行移動行列の計算
 	matScale = XMMatrixScaling(scale, scale, scale);
-
-	//寿命が尽きたパーティクルを削除
-	/*particles.remove_if(
-		[](Particle& x) {
-			return x.frame >= x.num_frame;
-		}
-	);*/
 
 	//パーティクル更新
 	//経過フレーム数をカウント
@@ -487,7 +576,6 @@ void SingleParticle::draw()
 	// ルートシグネチャの設定
 	directx->cmdList->SetGraphicsRootSignature(rootsignature.Get());
 	// プリミティブ形状を設定
-	//directx->cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	directx->cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	// 頂点バッファの設定
@@ -501,6 +589,30 @@ void SingleParticle::draw()
 	directx->cmdList->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
 	// シェーダリソースビューをセット
 	directx->cmdList->SetGraphicsRootDescriptorTable(1, descHeap->GetGPUDescriptorHandleForHeapStart());
+	// 描画コマンド
+	directx->cmdList->DrawInstanced(1, 1, 0, 0);
+}
+
+void SingleParticle::drawSpecifyTex(const std::string texturename)
+{
+	// パイプラインステートの設定
+	directx->cmdList->SetPipelineState(pipelinestate.Get());
+	// ルートシグネチャの設定
+	directx->cmdList->SetGraphicsRootSignature(rootsignature.Get());
+	// プリミティブ形状を設定
+	directx->cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+
+	// 頂点バッファの設定
+	directx->cmdList->IASetVertexBuffers(0, 1, &vbView);
+
+	// デスクリプタヒープの配列
+	ID3D12DescriptorHeap* ppHeaps[] = { texDescMap[texturename].Get() };
+	directx->cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	// 定数バッファビューをセット
+	directx->cmdList->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
+	// シェーダリソースビューをセット
+	directx->cmdList->SetGraphicsRootDescriptorTable(1, texDescMap[texturename]->GetGPUDescriptorHandleForHeapStart());
 	// 描画コマンド
 	directx->cmdList->DrawInstanced(1, 1, 0, 0);
 }

@@ -18,6 +18,8 @@ void Enemy::staticInit()
 {
 	enemyModelS.reset(FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01"));
 
+	SingleParticle::loadTexInMap("bomb.png");
+
 	enemyBullet::staticInit();
 }
 
@@ -248,12 +250,17 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 
 		for (int i = 0; i < particlenum; i++)
 		{
-			std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
+			/*std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
 			newparticle->generate("bomb.png");
-			XMFLOAT3 vec = { (float)(rand() % 10 - 5),(float)(rand() % 10 - 5) ,(float)(rand() % 10 - 5) };
-			newparticle->set(6, position, vec, { vec.x / 2,vec.y / 2,vec.z / 2 }, 0.2, 1.0);
-			
-			particles.push_back(std::move(newparticle));
+			XMFLOAT3 vec =
+			{
+				(float)(rand() % 10 - 5) * 0.2f,
+				(float)(rand() % 10 - 5) * 0.2f,
+				(float)(rand() % 10 - 5) * 0.2f
+			};
+			newparticle->set(maxFallCount, position, vec, { vec.x / 50,vec.y / 50,vec.z / 50 }, 0.2, 20.0);
+
+			particles.push_back(std::move(newparticle));*/
 		}
 	}
 
@@ -335,7 +342,7 @@ void Enemy::draw3D(directX* directx)
 
 	for (std::unique_ptr<SingleParticle>& newparticle : particles)
 	{
-		newparticle->draw();
+		newparticle->drawSpecifyTex("bomb.png");
 	}
 }
 

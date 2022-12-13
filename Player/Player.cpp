@@ -237,7 +237,8 @@ void Player::update()
 
 	missilesList.remove_if([](std::unique_ptr<Missile>& newmissile)
 		{
-			return newmissile->enemyPointer->isSetMissile == false && newmissile->enemyPointer->isTargetSet == false;
+			//return newmissile->enemyPointer->isSetMissile == false && newmissile->enemyPointer->isTargetSet == false;
+			return newmissile->enemyPointer == nullptr;
 		});
 
 	//移動
@@ -428,7 +429,7 @@ void Player::draw3D(directX* directx)
 	}
 
 	//単色シェーダをセットして描画
-	playerObject->SetPipelineSimple(directx->cmdList.Get());
+	//playerObject->SetPipelineSimple(directx->cmdList.Get());
 	playerObject->Draw(directx->cmdList.Get());
 
 	//通常弾の描画(ユニークリスト)
