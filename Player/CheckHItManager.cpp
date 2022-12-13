@@ -126,7 +126,7 @@ void checkHitManager::checkBulletsEnemyBullets(list<unique_ptr<bullet>>* bullets
 	}
 }
 
-// プレイヤーの追尾弾と敵の当たり判定
+// プレイヤーのミサイルと敵の当たり判定
 void checkHitManager::checkMissilesEnemy(list<unique_ptr<Missile>>* missilesList)
 {
 	for (std::unique_ptr<Missile>& newmissile : *missilesList)
@@ -153,7 +153,7 @@ void checkHitManager::checkMissilesEnemy(list<unique_ptr<Missile>>* missilesList
 				{
 					newmissile->enemyPointer->Isarive = false;
 				}
-				newmissile->isArive = false;
+				newmissile->enemyPointer->HP--;
 				newmissile->isTargetSet = false;
 				newmissile->enemyPointer->isTargetSet = false;
 				newmissile->enemyPointer->isSetMissile = false;

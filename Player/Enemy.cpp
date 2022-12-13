@@ -250,7 +250,7 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 		{
 			std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
 			newparticle->generate("bomb.png");
-			XMFLOAT3 vec = { rand() % 10 - 5,rand() % 10 - 5 ,rand() % 10 - 5 };
+			XMFLOAT3 vec = { (float)(rand() % 10 - 5),(float)(rand() % 10 - 5) ,(float)(rand() % 10 - 5) };
 			newparticle->set(6, position, vec, { vec.x / 2,vec.y / 2,vec.z / 2 }, 0.2, 1.0);
 			
 			particles.push_back(std::move(newparticle));
