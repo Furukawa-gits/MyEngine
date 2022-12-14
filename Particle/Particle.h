@@ -46,7 +46,7 @@ public:
 
 	static void loadTexInMap(const std::string& filepath);
 
-	void generate(const std::string& filepath);
+	void generate();
 
 	void loadTexture(const std::string& filepath);
 

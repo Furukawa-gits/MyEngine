@@ -127,8 +127,8 @@ public:
 	//爆発エフェクト
 	std::list<std::unique_ptr<SingleParticle>> particles;
 
-	//パーティクルの数
-	const int particlenum = 20;
+	//パーティクルの数(なるべくこれを基準に考える)
+	const int PublicParticlenum = 10;
 
 	Enemy();
 

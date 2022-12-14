@@ -248,17 +248,17 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 		Isarive = false;
 		fallDownCount = 0;
 
-		for (int i = 0; i < particlenum; i++)
+		for (int i = 0; i < PublicParticlenum; i++)
 		{
 			std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
-			newparticle->generate("bomb.png");
+			newparticle->generate();
 			XMFLOAT3 vec =
 			{
-				(float)(rand() % 10 - 5) * 0.1f,
-				(float)(rand() % 10 - 5) * 0.1f,
-				(float)(rand() % 10 - 5) * 0.1f
+				(float)(rand() % 10 - 5) * 0.05f,
+				(float)(rand() % 10 - 5) * 0.05f,
+				(float)(rand() % 10 - 5) * 0.05f
 			};
-			newparticle->set(maxFallCount, position, vec, { 0,0,0 }, 0.2, 20.0);
+			newparticle->set(maxFallCount - 20, position, vec, { 0,0,0 }, 0.2, 8.0);
 
 			particles.push_back(std::move(newparticle));
 		}

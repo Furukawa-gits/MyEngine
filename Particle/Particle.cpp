@@ -300,7 +300,7 @@ void SingleParticle::loadTexInMap(const std::string& filepath)
 	texDescMap.insert({ filepath,testdescHeap });
 }
 
-void SingleParticle::generate(const std::string& filepath)
+void SingleParticle::generate()
 {
 	HRESULT result = S_FALSE;
 
@@ -338,8 +338,6 @@ void SingleParticle::generate(const std::string& filepath)
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
 	vbView.SizeInBytes = sizeof(vertices);
 	vbView.StrideInBytes = sizeof(vertices);
-
-	//loadTexture(filepath);
 
 	return;
 }
