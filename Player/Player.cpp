@@ -299,7 +299,7 @@ void Player::targetUpdate()
 	targetFirst.position.y += input->mouseMoveVecrocity.y;
 
 	//マウスカーソル固定
-	SetCursorPos(mouseOffsetX, mouseOffsetY);
+	//SetCursorPos(mouseOffsetX, mouseOffsetY);
 
 	//ターゲットカーソルが場外にいかないように制御
 	if (targetFirst.position.x <= 29)

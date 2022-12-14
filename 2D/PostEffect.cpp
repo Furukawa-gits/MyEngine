@@ -403,8 +403,8 @@ void PostEffect::CreateGraphicsPipelineState(ID3D12Device* dev)
 
 	//çáê¨ê›íË
 	blenddsec.BlendOp = D3D12_BLEND_OP_ADD;
-	blenddsec.SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	blenddsec.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+	blenddsec.SrcBlend = D3D12_BLEND_ONE;//one
+	blenddsec.DestBlend = D3D12_BLEND_ZERO;//zero
 
 	gpipeline.BlendState.RenderTarget[0] = blenddsec;
 	gpipeline.BlendState.RenderTarget[1] = blenddsec;
