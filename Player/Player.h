@@ -108,6 +108,9 @@ public:
 	int armorTime = 0;
 	const int maxArmorTime = 300;
 
+	//描画しないフラグ
+	int isInvisible = -1;
+
 	//停止フラグ
 	bool isStop = false;
 };

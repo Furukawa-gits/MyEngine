@@ -247,15 +247,21 @@ void Player::update()
 	//ターゲットカーソルの処理
 	targetUpdate();
 
-	//攻撃を連続したフレーム食らわないようにする
+	//攻撃を連続したフレームで食らわないようにする
 	if (isArmor)
 	{
 		armorTime++;
+
+		if (armorTime % 50 == 0)
+		{
+			isInvisible *= -1;
+		}
 
 		if (armorTime >= maxArmorTime)
 		{
 			armorTime = 0;
 			isArmor = false;
+			isInvisible = -1;
 		}
 	}
 	else
@@ -429,8 +435,10 @@ void Player::draw3D(directX* directx)
 	}
 
 	//単色シェーダをセットして描画
-	//playerObject->SetPipelineSimple(directx->cmdList.Get());
-	playerObject->Draw(directx->cmdList.Get());
+	if (isInvisible == -1)
+	{
+		playerObject->Draw(directx->cmdList.Get());
+	}
 
 	//通常弾の描画(ユニークリスト)
 	for (std::unique_ptr<bullet>& bullet : bulletsList)

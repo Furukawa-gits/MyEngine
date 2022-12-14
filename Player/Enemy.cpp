@@ -250,6 +250,7 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 
 		for (int i = 0; i < PublicParticlenum; i++)
 		{
+#pragma region 爆発パーティクル生成
 			std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
 			newparticle->generate();
 			XMFLOAT3 vec =
@@ -260,7 +261,8 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 			};
 			newparticle->set(maxFallCount - 20, position, vec, { 0,0,0 }, 0.2, 8.0);
 
-			particles.push_back(std::move(newparticle));
+			bomParticles.push_back(std::move(newparticle));
+#pragma endregion 爆発パーティクル生成
 		}
 	}
 
@@ -290,12 +292,12 @@ void Enemy::deathMove()
 		return;
 	}
 
-	particles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
+	//爆発パーティクル更新
+	bomParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
 		{
 			return newparticle->frame == newparticle->num_frame;
 		});
-
-	for (std::unique_ptr<SingleParticle>& newparticle : particles)
+	for (std::unique_ptr<SingleParticle>& newparticle : bomParticles)
 	{
 		newparticle->updata();
 	}
@@ -340,7 +342,8 @@ void Enemy::draw3D(directX* directx)
 		bullet->draw(directx);
 	}
 
-	for (std::unique_ptr<SingleParticle>& newparticle : particles)
+	//爆発パーティクル描画
+	for (std::unique_ptr<SingleParticle>& newparticle : bomParticles)
 	{
 		newparticle->drawSpecifyTex("bomb.png");
 	}
