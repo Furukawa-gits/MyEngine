@@ -89,6 +89,9 @@ public:
 	//Hpスプライト
 	std::vector<SingleSprite> HPUI[10];
 
+	//ダメージ表現
+	SingleSprite damage;
+
 	//弾
 	std::list<std::unique_ptr<bullet>> bulletsList;
 	std::list<std::unique_ptr<Missile>> missilesList;

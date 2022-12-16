@@ -38,6 +38,10 @@ void Player::init(dxinput* input, directX* directx)
 	targetThird.size = { 80,80 };
 	targetThird.GenerateSprite("Target.png");
 
+	damage.anchorpoint = { 0,0 };
+	damage.size = { 1280,720 };
+	damage.GenerateSprite("damage.png");
+
 	playerModel = FbxLoader::GetInstance()->LoadmodelFromFile("player");
 
 	playerObject = new Object3d_FBX;
@@ -252,7 +256,7 @@ void Player::update()
 	{
 		armorTime++;
 
-		if (armorTime % 50 == 0)
+		if (armorTime % 20 == 0)
 		{
 			isInvisible *= -1;
 		}
@@ -268,6 +272,10 @@ void Player::update()
 	{
 		armorTime = 0;
 	}
+
+	//ダメージ表現スプライト
+	damage.SpriteTransferVertexBuffer();
+	damage.SpriteUpdate();
 
 	if (playerHP <= 0)
 	{
@@ -434,7 +442,7 @@ void Player::draw3D(directX* directx)
 		return;
 	}
 
-	//単色シェーダをセットして描画
+	//プレイヤー本体の描画
 	if (isInvisible == -1)
 	{
 		playerObject->Draw(directx->cmdList.Get());
@@ -467,6 +475,11 @@ void Player::draw2D(directX* directx)
 	targetThird.DrawSprite(directx->cmdList.Get());
 	targetSecond.DrawSprite(directx->cmdList.Get());
 	targetFirst.DrawSprite(directx->cmdList.Get());
+
+	if (isArmor)
+	{
+		damage.DrawSprite(directx->cmdList.Get());
+	}
 
 	int i = 0;
 	for (auto itr = HPUI->begin(); itr != HPUI->end(); itr++)
