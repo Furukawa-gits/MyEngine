@@ -19,6 +19,7 @@ void Enemy::staticInit()
 	enemyModelS.reset(FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01"));
 
 	SingleParticle::loadTexInMap("bomb.png");
+	SingleParticle::loadTexInMap("smoke.png");
 
 	enemyBullet::staticInit();
 }
@@ -259,7 +260,7 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 				(float)(rand() % 10 - 5) * 0.05f,
 				(float)(rand() % 10 - 5) * 0.05f
 			};
-			newparticle->set(maxFallCount - 20, position, vec, { 0,0,0 }, 0.2, 8.0);
+			newparticle->set(maxFallCount - 20, position, vec, { 0,0,0 }, 0.2, 5.0);
 
 			bomParticles.push_back(std::move(newparticle));
 #pragma endregion 爆発パーティクル生成
@@ -310,8 +311,32 @@ void Enemy::deathMove()
 	rot.z += deathRotSpeed;
 	enemyObject->setRotMatrix(rot.x, rot.y, rot.z);
 
-	if (fallDownCount >= 90)
+#pragma region 黒煙パーティクル
+	if (fallDownCount % 15 == 0)
 	{
+		std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
+		newparticle->generate();
+		newparticle->set((maxFallCount - fallDownCount) + 10, position, { 0,0,0 }, { 0,0,0 }, 3.5, 0.5);
+
+		smokeParticles.push_back(std::move(newparticle));
+	}
+#pragma endregion 黒煙パーティクル
+
+	//煙パーティクル更新
+	smokeParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
+		{
+			return newparticle->frame == newparticle->num_frame;
+		});
+	for (std::unique_ptr<SingleParticle>& newparticle : smokeParticles)
+	{
+		newparticle->updata();
+	}
+
+	//落ちきったら
+	if (fallDownCount >= maxFallCount)
+	{
+		bomParticles.clear();
+		smokeParticles.clear();
 		isDraw = false;
 		fallDownCount = 0;
 	}
@@ -346,6 +371,11 @@ void Enemy::draw3D(directX* directx)
 	for (std::unique_ptr<SingleParticle>& newparticle : bomParticles)
 	{
 		newparticle->drawSpecifyTex("bomb.png");
+	}
+
+	for (std::unique_ptr<SingleParticle>& newparticle : smokeParticles)
+	{
+		newparticle->drawSpecifyTex("smoke.png");
 	}
 }
 

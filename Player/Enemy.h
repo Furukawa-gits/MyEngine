@@ -124,11 +124,9 @@ public:
 	//弾
 	std::unique_ptr<enemyBullet> bullet;
 
-	//爆発エフェクト
-	std::list<std::unique_ptr<SingleParticle>> bomParticles;
-
-	//爆発エフェクト
-	std::list<std::unique_ptr<SingleParticle>> smokeParticles;
+	//撃墜エフェクト
+	std::list<std::unique_ptr<SingleParticle>> bomParticles;	//爆発
+	std::list<std::unique_ptr<SingleParticle>> smokeParticles;	//煙
 
 	//パーティクルの数(なるべくこれを基準に考える)
 	const int PublicParticlenum = 10;
