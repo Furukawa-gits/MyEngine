@@ -362,6 +362,7 @@ void GameScene::Select_updata()
 			bossHitPoints.push_back(std::move(newsprite));
 		}
 
+		//スタートのカウントダウンを設定
 		countDownEase.set(easingType::easeOut, easingPattern::Quintic, countDownTime, 450, 0);
 		countDownSprite[0].rotation = 0;
 		countDownSprite[1].rotation = 0;
@@ -379,6 +380,7 @@ void GameScene::Select_updata()
 		nowStageLevel = 1;
 
 		player_p->update();
+		Object3d_FBX::SetCamera(player_p->followCamera);
 
 		scene = sceneType::play;
 	}

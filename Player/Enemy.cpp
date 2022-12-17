@@ -51,7 +51,6 @@ void Enemy::init(enemyPattern pattern)
 	{
 		bullet = std::make_unique<enemyBullet>();
 		bullet->init();
-		//shotCount = rand() % 10;
 	}
 }
 

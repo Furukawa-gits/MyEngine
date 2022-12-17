@@ -23,9 +23,23 @@ void Boss::bossUpdate(Player* player)
 {
 	bossArrival(player);
 
-	if (!isAppear)
+	update(player->playerObject->getPosition());
+
+	if (!Isarive && isDraw)
 	{
-		update(player->playerObject->getPosition());
+		player->isStop = true;
+
+		XMFLOAT3 setvec =
+		{
+			position.x - 5,
+			position.y,
+			position.z - 5,
+		};
+
+		bossCamera->SetEye(setvec);
+		bossCamera->SetTarget(position);
+
+		Object3d_FBX::SetCamera(bossCamera);
 	}
 }
 
