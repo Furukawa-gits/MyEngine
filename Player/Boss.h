@@ -10,6 +10,11 @@ public:
 	~Boss();
 
 	/// <summary>
+	/// モデル読み込み
+	/// </summary>
+	static void staticInitBoss();
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	void bossInit();
@@ -48,12 +53,32 @@ public:
 	/// <param name="player">プレイヤーのポインター</param>
 	void bossArrival(Player* player);
 
+	/// <summary>
+	/// 生存処理
+	/// </summary>
+	void bossAriveMove();
+
+	/// <summary>
+	/// 撃墜処理
+	/// </summary>
+	void bossDeathMove();
+
+	/// <summary>
+	/// プレイヤー追従
+	/// </summary>
+	void bossChase();
+
+	/// <summary>
+	/// 射撃
+	/// </summary>
+	void bossShot();
+
 	//登場演出フラグの取得
 	bool getIsAppear() { return isAppear; }
 
-private:
 	//モデル
 	static std::unique_ptr<Model> bossModel;
+private:
 
 	int resetHitPoint = 3;
 	int arrivalTime = 0;
@@ -62,6 +87,8 @@ private:
 	easingManager bossRotEase;
 	XMFLOAT3 bossbaseScale;
 	XMFLOAT3 bossScale;
+
+	Player* playerPointer = nullptr;
 
 	//ボス出現演出用のカメラ
 	Camera* bossCamera;

@@ -422,6 +422,7 @@ void Player::reset()
 {
 	isArive = true;
 	playerHP = 10;
+	isInvisible = -1;
 
 	playerObject->SetPosition({ 0,5,0 });
 	pitch = 0.0f;

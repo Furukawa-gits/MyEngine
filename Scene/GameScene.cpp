@@ -182,6 +182,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	SingleParticle::setCamera(player_p->followCamera);
 
 	//ボスの初期化
+	Boss::staticInitBoss();
 	testBoss = std::make_unique<Boss>();
 	testBoss->bossInit();
 }
@@ -320,6 +321,7 @@ void GameScene::Select_updata()
 			enemyList.push_back(std::move(newenemy));
 		}
 
+		//プレイヤーのリセット
 		player_p->reset();
 
 		isBoss = false;
@@ -340,7 +342,7 @@ void GameScene::Select_updata()
 			//ボスの設定
 			testBoss->setHitPoint(stageLevel + 5);
 		}
-		else
+		else if (stageNum == 2)
 		{
 			stageLevel = stageNum + 2;
 
@@ -427,9 +429,6 @@ void GameScene::Play_updata()
 		checkHitManager::chackPlayerEnemyBullet(player_p.get(), newenemy.get());
 	}
 
-	//ボス更新
-	testBoss->bossUpdate(player_p.get());
-
 	//ホーミング弾発射
 	if (input->Mouse_LeftRelease() && !isCountDown)
 	{
@@ -513,6 +512,9 @@ void GameScene::Play_updata()
 
 	if (isBoss)
 	{
+		//ボス更新
+		testBoss->bossUpdate(player_p.get());
+
 		for (std::unique_ptr<SingleSprite>& newsprite : bossHitPoints)
 		{
 			newsprite->SpriteUpdate();

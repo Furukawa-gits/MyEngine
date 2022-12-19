@@ -71,7 +71,6 @@ class Enemy
 public:
 	//オブジェクト
 	static std::unique_ptr<Model> enemyModelS;
-	static std::unique_ptr<Model> bossModelS;
 	Object3d_FBX* enemyObject = nullptr;
 
 	//プレイヤーの索敵ライン
