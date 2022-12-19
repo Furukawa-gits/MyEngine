@@ -2,6 +2,7 @@
 #include<random>
 
 std::unique_ptr<Model> Enemy::enemyModelS = std::make_unique<Model>();
+std::unique_ptr<Model> Enemy::bossModelS = std::make_unique<Model>();
 const float Enemy::forPlayer = 200.0f;
 
 #pragma region “G–{‘Ì
@@ -17,6 +18,7 @@ Enemy::~Enemy()
 void Enemy::staticInit()
 {
 	enemyModelS.reset(FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01"));
+	bossModelS.reset(FbxLoader::GetInstance()->LoadmodelFromFile("boss"));
 
 	SingleParticle::loadTexInMap("bomb.png");
 	SingleParticle::loadTexInMap("smoke.png");
@@ -41,6 +43,10 @@ void Enemy::init(enemyPattern pattern)
 	enemyObject = new Object3d_FBX;
 	enemyObject->Initialize();
 	enemyObject->SetModel(enemyModelS.get());
+	if (isThisBoss)
+	{
+		enemyObject->SetModel(bossModelS.get());
+	}
 	enemyObject->SetScale({ 1.0f,1.0f,1.0f });
 
 	enemyCollision.radius = 2.0f;
@@ -358,7 +364,6 @@ void Enemy::draw3D(directX* directx)
 		return;
 	}
 
-	enemyObject->SetPipelineSimple(directx->cmdList.Get());
 	enemyObject->Draw(directx->cmdList.Get());
 
 	if (enemyMovePattern == enemyPattern::shot)

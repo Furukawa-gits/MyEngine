@@ -52,10 +52,13 @@ public:
 	bool getIsAppear() { return isAppear; }
 
 private:
+	//モデル
+	static std::unique_ptr<Model> bossModel;
+
 	int resetHitPoint = 3;
 	int arrivalTime = 0;
 	//登場演出フラグ
-	int isAppear = false;
+	bool isAppear = false;
 	easingManager bossRotEase;
 	XMFLOAT3 bossbaseScale;
 	XMFLOAT3 bossScale;

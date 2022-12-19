@@ -156,6 +156,7 @@ private:
 	SingleSprite startButton;
 
 	//ステージアイコン
+	SingleSprite stage0;
 	SingleSprite stage1;
 	SingleSprite stage2;
 
@@ -245,4 +246,7 @@ private:
 	easingManager titleButtonEase_x;
 
 	bool isPushTitle = false;
+
+	//チュートリアル
+	bool isTutorial = false;
 };

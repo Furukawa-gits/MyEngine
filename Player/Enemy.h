@@ -71,6 +71,7 @@ class Enemy
 public:
 	//オブジェクト
 	static std::unique_ptr<Model> enemyModelS;
+	static std::unique_ptr<Model> bossModelS;
 	Object3d_FBX* enemyObject = nullptr;
 
 	//プレイヤーの索敵ライン
@@ -90,6 +91,9 @@ public:
 
 	//停止フラグ
 	bool isStop = false;
+
+	//登場演出フラグ
+	bool isAppear = false;
 
 	//座標・初期位置・速度・回転
 	XMFLOAT3 position = {};

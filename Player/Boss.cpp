@@ -1,5 +1,7 @@
 #include "Boss.h"
 
+std::unique_ptr<Model> Enemy::bossModelS = std::make_unique<Model>();
+
 Boss::Boss()
 {
 }
@@ -10,13 +12,13 @@ Boss::~Boss()
 
 void Boss::bossInit()
 {
+	isThisBoss = true;
 	init(enemyPattern::shot);
 	HP = 5;
 	bossbaseScale = { 5,5,5 };
 	enemyObject->setColor({ 0.3f,0.3f,0.3f,1 });
 	enemyCollision.radius = 9.0f;
 	deathRotSpeed = 0.1f;
-	isThisBoss = true;
 }
 
 void Boss::bossUpdate(Player* player)

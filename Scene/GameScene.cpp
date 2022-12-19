@@ -48,7 +48,12 @@ void GameScene::Load_Sprites()
 	startButton.position = { 640,500,0 };
 	startButton.SpriteTransferVertexBuffer();
 
-	//ステージアイコン１～２
+	//ステージアイコン０～２
+	stage0.anchorpoint = { 0.5f,0.5f };
+	stage0.size = { 128,128 };
+	stage0.position = { 0,360,0 };
+	stage0.GenerateSprite("count0.png");
+
 	stage1.anchorpoint = { 0.5f,0.5f };
 	stage1.size = { 128,128 };
 	stage1.position = { 0,360,0 };
@@ -244,9 +249,9 @@ void GameScene::Title_updata()
 
 	if (isPushStart && !startButtonEase_y.getIsActive())
 	{
-		stage1.position.x = 640;
+		stage0.position.x = 640;
 		isMoveStageIcon = false;
-		stageNum = 1;
+		stageNum = 0;
 		scene = sceneType::select;
 	}
 }
@@ -261,7 +266,7 @@ void GameScene::Select_updata()
 
 	if (!isMoveStageIcon)
 	{
-		float iconPos = stage1.position.x;
+		float iconPos = stage0.position.x;
 
 		//次のステージ
 		if (input->Triger(DIK_RIGHT) && stageNum < 2)
@@ -271,7 +276,7 @@ void GameScene::Select_updata()
 			isMoveStageIcon = true;
 		}
 		//前のステージ
-		else if (input->Triger(DIK_LEFT) && stageNum > 1)
+		else if (input->Triger(DIK_LEFT) && stageNum > 0)
 		{
 			stageIconEase.set(easingType::easeOut, easingPattern::Quadratic, 20, iconPos, iconPos + 300);
 			stageNum--;
@@ -280,7 +285,7 @@ void GameScene::Select_updata()
 	}
 	else
 	{
-		stage1.position.x = stageIconEase.easing();
+		stage0.position.x = stageIconEase.easing();
 
 		if (!stageIconEase.getIsActive())
 		{
@@ -288,8 +293,10 @@ void GameScene::Select_updata()
 		}
 	}
 
+	stage1.position.x = stage0.position.x + 300;
 	stage2.position.x = stage1.position.x + 300;
 
+	stage0.SpriteUpdate();
 	stage1.SpriteUpdate();
 	stage2.SpriteUpdate();
 
@@ -772,6 +779,7 @@ void GameScene::Draw2D()
 
 	if (scene == sceneType::select)
 	{
+		stage0.DrawSprite(directx->cmdList.Get());
 		stage1.DrawSprite(directx->cmdList.Get());
 		stage2.DrawSprite(directx->cmdList.Get());
 
