@@ -55,6 +55,10 @@ public:
 	float pitch = 0.0f;
 	float yow = 0.0f;
 
+	//モデル別クォータニオン回転
+	float modelRoll = 0.0f;
+	float modelPitch = 0.0f;
+
 	//移動スピード
 	float moveSpeed = 0.3f;
 
@@ -116,4 +120,7 @@ public:
 
 	//停止フラグ
 	bool isStop = false;
+
+	//カメラが動いた総量
+	int cameraMoveCount = 0;
 };

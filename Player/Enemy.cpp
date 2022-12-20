@@ -248,22 +248,12 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 		Isarive = false;
 		fallDownCount = 0;
 
-		for (int i = 0; i < PublicParticlenum; i++)
-		{
 #pragma region 爆発パーティクル生成
-			std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
-			newparticle->generate();
-			XMFLOAT3 vec =
-			{
-				(float)(rand() % 10 - 5) * 0.05f,
-				(float)(rand() % 10 - 5) * 0.05f,
-				(float)(rand() % 10 - 5) * 0.05f
-			};
-			newparticle->set(maxFallCount - 20, position, vec, { 0,0,0 }, 0.2, 5.0);
-
-			bomParticles.push_back(std::move(newparticle));
+		std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
+		newparticle->generate();
+		newparticle->set(maxFallCount - 20, position, { 0,0,0 }, { 0,0,0 }, 0.2, 5.0);
+		bomParticles.push_back(std::move(newparticle));
 #pragma endregion 爆発パーティクル生成
-		}
 	}
 
 	if (isTargetSet)

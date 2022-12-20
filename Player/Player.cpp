@@ -124,11 +124,11 @@ void Player::Move()
 	qLocal = qPitch * qLocal;
 	qLocal = qYow * qLocal;
 
-	//XMMATRIXに変換したクォータニオンをプレイヤーの回転行列にセット
-	playerObject->setRotMatrix(rotate(qLocal));
-
 	//追従
 	followCamera->Following(vUpAxis, vForwordAxis, playerObject->getPosition());
+
+	//XMMATRIXに変換したクォータニオンをプレイヤーの回転行列にセット
+	playerObject->setRotMatrix(rotate(qLocal));
 
 	//前への移動量を計算
 	followCamera->setFrontVec(moveSpeed);
@@ -138,8 +138,10 @@ void Player::Move()
 void Player::cameraMove()
 {
 	//ヨー回転
+	//右
 	if (targetFirst.position.x >= 1000)
 	{
+		cameraMoveCount++;
 		if (yowRotateSpeedPositive < limitRotateSpeed)
 		{
 			yowRotateSpeedPositive += addRotateSpeed;
@@ -152,9 +154,10 @@ void Player::cameraMove()
 			yowRotateSpeedPositive += subRotateSpeed;
 		}
 	}
-
+	//左
 	if (targetFirst.position.x <= 280)
 	{
+		cameraMoveCount++;
 		if (yowRotateSpeedNegative > -limitRotateSpeed)
 		{
 			yowRotateSpeedNegative -= addRotateSpeed;
@@ -179,8 +182,10 @@ void Player::cameraMove()
 	}
 
 	//ピッチ回転
+	//下
 	if (targetFirst.position.y >= 620)
 	{
+		cameraMoveCount++;
 		if (pitchRotateSpeedPositive > -limitRotateSpeed)
 		{
 			pitchRotateSpeedPositive -= addRotateSpeed;
@@ -193,9 +198,10 @@ void Player::cameraMove()
 			pitchRotateSpeedPositive -= subRotateSpeed;
 		}
 	}
-
+	//上
 	if (targetFirst.position.y <= 100)
 	{
+		cameraMoveCount++;
 		if (pitchRotateSpeedNegative < limitRotateSpeed)
 		{
 			pitchRotateSpeedNegative += addRotateSpeed;
@@ -423,16 +429,13 @@ void Player::reset()
 	isArive = true;
 	playerHP = 10;
 	isInvisible = -1;
-
 	playerObject->SetPosition({ 0,5,0 });
 	pitch = 0.0f;
 	yow = 0.0f;
-
 	targetFirst.position = { (float)mouseOffsetX,(float)mouseOffsetY ,0 };
-
 	SetCursorPos(mouseOffsetX, mouseOffsetY);
-
 	qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
+	cameraMoveCount = 0;
 }
 
 //描画

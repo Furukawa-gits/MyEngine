@@ -48,21 +48,27 @@ void GameScene::Load_Sprites()
 	startButton.position = { 640,500,0 };
 	startButton.SpriteTransferVertexBuffer();
 
-	//ステージアイコン０～２
-	stage0.anchorpoint = { 0.5f,0.5f };
-	stage0.size = { 128,128 };
-	stage0.position = { 0,360,0 };
-	stage0.GenerateSprite("count0.png");
+#pragma region //ステージアイコン０～２
+	stage[0].anchorpoint = { 0.5f,0.5f };
+	stage[0].size = { 300,100 };
+	stage[0].position = { 0,360,0 };
+	stage[0].GenerateSprite("titleText.png");
 
-	stage1.anchorpoint = { 0.5f,0.5f };
-	stage1.size = { 128,128 };
-	stage1.position = { 0,360,0 };
-	stage1.GenerateSprite("count1.png");
+	stage[1].anchorpoint = { 0.5f,0.5f };
+	stage[1].size = { 128,128 };
+	stage[1].position = { 0,360,0 };
+	stage[1].GenerateSprite("howto.png");
 
-	stage2.anchorpoint = { 0.5f,0.5f };
-	stage2.size = { 128,128 };
-	stage2.position = { 0,360,0 };
-	stage2.GenerateSprite("count2.png");
+	stage[2].anchorpoint = { 0.5f,0.5f };
+	stage[2].size = { 128,128 };
+	stage[2].position = { 0,360,0 };
+	stage[2].GenerateSprite("count1.png");
+
+	stage[3].anchorpoint = { 0.5f,0.5f };
+	stage[3].size = { 128,128 };
+	stage[3].position = { 0,360,0 };
+	stage[3].GenerateSprite("count2.png");
+#pragma endregion //ステージアイコン０～２
 
 	//セレクト画面矢印
 	selects[0].anchorpoint = { 0.5f,0.5f };
@@ -75,7 +81,13 @@ void GameScene::Load_Sprites()
 	selects[1].position = { 640 + 400,360,0 };
 	selects[1].GenerateSprite("selectR.png");
 
-	//カウントダウンアイコン
+	//決定ボタン
+	selects[2].anchorpoint = { 0.5f,0.5f };
+	selects[2].size = { 150,5 };
+	selects[2].position = { 640,420,0 };
+	selects[2].GenerateSprite("selectIcon.png");
+
+#pragma region	//カウントダウンアイコン
 	countDownSprite[0].anchorpoint = { 0.5f,0.5f };
 	countDownSprite[0].size = { 100,100 };
 	countDownSprite[0].position = { 640,360,0 };
@@ -93,6 +105,7 @@ void GameScene::Load_Sprites()
 	countDownSprite[2].position = { 640,360,0 };
 	countDownSprite[2].GenerateSprite("count1.png");
 	countDownSprite[2].SpriteTransferVertexBuffer();
+#pragma endregion //カウントダウンアイコン
 
 	playStart.anchorpoint = { 0.5f,0.5f };
 	playStart.size = { 500,125 };
@@ -103,7 +116,7 @@ void GameScene::Load_Sprites()
 	resultScreen[0].size = { 1280,720 };
 	resultScreen[0].GenerateSprite("black_color.png");
 
-	resultScreen[1].size = { 1280,300 };
+	resultScreen[1].size = { 1280,720 };
 	resultScreen[1].GenerateSprite("black_color.png");
 
 	//クリア・オーバー画面
@@ -250,9 +263,11 @@ void GameScene::Title_updata()
 
 	if (isPushStart && !startButtonEase_y.getIsActive())
 	{
-		stage0.position.x = 640;
+		stage[0].position.x = 640;
 		isMoveStageIcon = false;
-		stageNum = 0;
+		isPushStart = false;
+		stageNum = -1;
+		selectIconSizeX = 350;
 		scene = sceneType::select;
 	}
 }
@@ -265,9 +280,10 @@ void GameScene::Select_updata()
 		return;
 	}
 
+	//ステージアイコンが動いていなければセレクトボタン受付
 	if (!isMoveStageIcon)
 	{
-		float iconPos = stage0.position.x;
+		float iconPos = stage[0].position.x;
 
 		//次のステージ
 		if (input->Triger(DIK_RIGHT) && stageNum < 2)
@@ -277,7 +293,7 @@ void GameScene::Select_updata()
 			isMoveStageIcon = true;
 		}
 		//前のステージ
-		else if (input->Triger(DIK_LEFT) && stageNum > 0)
+		else if (input->Triger(DIK_LEFT) && stageNum > -1)
 		{
 			stageIconEase.set(easingType::easeOut, easingPattern::Quadratic, 20, iconPos, iconPos + 300);
 			stageNum--;
@@ -286,7 +302,7 @@ void GameScene::Select_updata()
 	}
 	else
 	{
-		stage0.position.x = stageIconEase.easing();
+		stage[0].position.x = stageIconEase.easing();
 
 		if (!stageIconEase.getIsActive())
 		{
@@ -294,82 +310,63 @@ void GameScene::Select_updata()
 		}
 	}
 
-	stage1.position.x = stage0.position.x + 300;
-	stage2.position.x = stage1.position.x + 300;
+	stage[1].position.x = stage[0].position.x + 300;
+	stage[2].position.x = stage[1].position.x + 300;
+	stage[3].position.x = stage[2].position.x + 300;
 
-	stage0.SpriteUpdate();
-	stage1.SpriteUpdate();
-	stage2.SpriteUpdate();
+	//セレクトアイコン通常拡縮
+	if (!isPushStart)
+	{
+		selectIconSizeX -= 0.5f;
 
-	selects[0].SpriteUpdate();
-	selects[1].SpriteUpdate();
+		if (selectIconSizeX <= 300)
+		{
+			selectIconSizeX = 350;
+		}
+		selects[2].size = { selectIconSizeX,10 };
+		selects[2].SpriteTransferVertexBuffer();
+	}
 
-	if (input->Triger(DIK_SPACE) && !isMoveStageIcon)
+	//ステージ選択ムーブ中でなければ決定
+	if (input->Triger(DIK_SPACE) && !isMoveStageIcon && !isPushStart)
 	{
 		targetnum = 0;
 
-		for (int i = 0; i < maxEnemyNum; i++)
-		{
-			//敵　リスト
-			std::unique_ptr<Enemy> newenemy = std::make_unique<Enemy>();
-			newenemy->init(enemyPattern::shot);
-			newenemy->set({
-			(float)(rand() % 50 - 25),
-			(float)(rand() % 30 + 15),
-			(float)(rand() % 50 - 25) });
+		startButtonEase_y.set(easingType::easeOut, easingPattern::Quadratic, 30, 20, 0);
+		startButtonEase_x.set(easingType::easeOut, easingPattern::Quadratic, 30, 300, 350);
+		isPushStart = true;
+	}
 
-			enemyList.push_back(std::move(newenemy));
+	//スタートボタン拡縮
+	if (isPushStart)
+	{
+		selects[2].size.y = startButtonEase_y.easing();
+		selects[2].size.x = startButtonEase_x.easing();
+		selects[2].SpriteTransferVertexBuffer();
+	}
+
+	//各スプライト更新
+	stage[0].SpriteUpdate();
+	stage[1].SpriteUpdate();
+	stage[2].SpriteUpdate();
+	stage[3].SpriteUpdate();
+	selects[0].SpriteUpdate();
+	selects[1].SpriteUpdate();
+	selects[2].SpriteUpdate();
+
+	if (isPushStart && !startButtonEase_y.getIsActive())
+	{
+		if (stageNum == -1)
+		{
+			startButton.size = { 340,50 };
+			startButton.SpriteTransferVertexBuffer();
+			isPushStart = false;
+			scene = sceneType::title;
+			return;
 		}
 
-		//プレイヤーのリセット
-		player_p->reset();
-
-		isBoss = false;
-
-		if (stageNum == 1)
-		{
-			stageLevel = stageNum + 2;
-
-			//敵
-			testBoss->changePattern(enemyPattern::chase);
-
-			//敵　リスト
-			for (std::unique_ptr<Enemy>& newenemy : enemyList)
-			{
-				newenemy->changePattern(enemyPattern::chase);
-			}
-
-			//ボスの設定
-			testBoss->setHitPoint(stageLevel + 5);
-		}
-		else if (stageNum == 2)
-		{
-			stageLevel = stageNum + 2;
-
-			//敵
-			testBoss->changePattern(enemyPattern::shot);
-
-			//敵　リスト
-			for (std::unique_ptr<Enemy>& newenemy : enemyList)
-			{
-				newenemy->changePattern(enemyPattern::shot);
-			}
-
-			//ボスの設定
-			testBoss->setHitPoint(stageLevel + 5);
-		}
-
-		for (int i = 0; i < testBoss->HP; i++)
-		{
-			std::unique_ptr<SingleSprite> newsprite = std::make_unique<SingleSprite>();
-			newsprite->anchorpoint = { 0.5f,0 };
-			newsprite->GenerateSprite("Enemy_HP.png");
-			newsprite->size = { 40,60 };
-			newsprite->position = { i * 30 + 660 - (30 * floorf(testBoss->HP / 2)),30,0 };
-			newsprite->SpriteTransferVertexBuffer(false);
-
-			bossHitPoints.push_back(std::move(newsprite));
-		}
+		//ステージ読み込み
+		loadStage();
 
 		//スタートのカウントダウンを設定
 		countDownEase.set(easingType::easeOut, easingPattern::Quintic, countDownTime, 450, 0);
@@ -642,6 +639,7 @@ void GameScene::Result_updata()
 
 	titleButton.SpriteUpdate();
 
+	//タイトル画面準備
 	if (isPushTitle && !titleButtonEase_y.getIsActive())
 	{
 		startButton.size = { 340,50 };
@@ -656,25 +654,53 @@ void GameScene::Result_updata()
 #pragma region 各シーン描画
 
 //タイトル画面描画
-void GameScene::Title_draw()
+void GameScene::TitleDraw3d()
 {
 	if (scene != sceneType::title)
 	{
 		return;
 	}
 }
+void GameScene::TitleDraw2d()
+{
+	if (scene != sceneType::title)
+	{
+		return;
+	}
+
+	resultScreen[0].DrawSprite(directx->cmdList.Get());
+	gameTitle.DrawSprite(directx->cmdList.Get());
+	startButton.DrawSprite(directx->cmdList.Get());
+}
 
 //レクと画面描画
-void GameScene::Select_draw()
+void GameScene::SelectDraw3d()
 {
 	if (scene != sceneType::select)
 	{
 		return;
 	}
 }
+void GameScene::SelectDraw2d()
+{
+	if (scene != sceneType::select)
+	{
+		return;
+	}
+
+	resultScreen[0].DrawSprite(directx->cmdList.Get());
+	stage[0].DrawSprite(directx->cmdList.Get());
+	stage[1].DrawSprite(directx->cmdList.Get());
+	stage[2].DrawSprite(directx->cmdList.Get());
+	stage[3].DrawSprite(directx->cmdList.Get());
+
+	selects[0].DrawSprite(directx->cmdList.Get());
+	selects[1].DrawSprite(directx->cmdList.Get());
+	selects[2].DrawSprite(directx->cmdList.Get());
+}
 
 //プレイ画面描画
-void GameScene::Play_draw()
+void GameScene::PlayDraw3d()
 {
 	if (scene != sceneType::play)
 	{
@@ -695,9 +721,44 @@ void GameScene::Play_draw()
 	//ボス描画
 	testBoss->draw3D(directx);
 }
+void GameScene::PlayDraw2d()
+{
+	if (scene != sceneType::play)
+	{
+		return;
+	}
+
+	for (std::unique_ptr<Enemy>& newenemy : enemyList)
+	{
+		newenemy->draw2D(directx);
+	}
+
+	//ボス描画(2d)
+	testBoss->draw2D(directx);
+
+	if (isBoss)
+	{
+		for (int i = 0; i < testBoss->HP; i++)
+		{
+			bossHitPoints[i]->DrawSprite(directx->cmdList.Get());
+		}
+	}
+
+	player_p->draw2D(directx);
+
+	if (isCountDown)
+	{
+		countDownSprite[countDownNum].DrawSprite(directx->cmdList.Get());
+	}
+
+	if (isStartIcon)
+	{
+		playStart.DrawSprite(directx->cmdList.Get());
+	}
+}
 
 //リザルト画面描画
-void GameScene::Result_draw()
+void GameScene::ResultDraw3d()
 {
 	if (scene != sceneType::clear && scene != sceneType::over)
 	{
@@ -711,6 +772,37 @@ void GameScene::Result_draw()
 
 	//ボス描画
 	testBoss->draw3D(directx);
+}
+void GameScene::ResultDraw2d()
+{
+	if (scene != sceneType::clear && scene != sceneType::over)
+	{
+		return;
+	}
+
+	if (scene == sceneType::clear)
+	{
+		resultScreen[0].DrawSprite(directx->cmdList.Get());
+		clearText.DrawSprite(directx->cmdList.Get());
+		resultScreen[1].DrawSprite(directx->cmdList.Get());
+
+		if (!isMoveScreen)
+		{
+			titleButton.DrawSprite(directx->cmdList.Get());
+		}
+	}
+
+	if (scene == sceneType::over)
+	{
+		resultScreen[0].DrawSprite(directx->cmdList.Get());
+		overText.DrawSprite(directx->cmdList.Get());
+		resultScreen[1].DrawSprite(directx->cmdList.Get());
+
+		if (!isMoveScreen)
+		{
+			titleButton.DrawSprite(directx->cmdList.Get());
+		}
+	}
 }
 
 #pragma endregion 各シーン描画
@@ -758,91 +850,27 @@ void GameScene::DrawBack()
 void GameScene::Draw3D()
 {
 	//ゲーム内シーンごとの描画
-	Title_draw();
+	TitleDraw3d();
 
-	Select_draw();
+	SelectDraw3d();
 
-	Play_draw();
+	PlayDraw3d();
 
 	if (scene == sceneType::clear || scene == sceneType::over)
 	{
-		Result_draw();
+		ResultDraw3d();
 	}
 }
-
 void GameScene::Draw2D()
 {
-	if (scene == sceneType::title)
-	{
-		resultScreen[0].DrawSprite(directx->cmdList.Get());
-		gameTitle.DrawSprite(directx->cmdList.Get());
-		startButton.DrawSprite(directx->cmdList.Get());
-	}
+	TitleDraw2d();
 
-	if (scene == sceneType::select)
-	{
-		stage0.DrawSprite(directx->cmdList.Get());
-		stage1.DrawSprite(directx->cmdList.Get());
-		stage2.DrawSprite(directx->cmdList.Get());
+	SelectDraw2d();
 
-		selects[0].DrawSprite(directx->cmdList.Get());
-		selects[1].DrawSprite(directx->cmdList.Get());
-	}
+	PlayDraw2d();
 
-	if (scene == sceneType::play)
-	{
-		for (std::unique_ptr<Enemy>& newenemy : enemyList)
-		{
-			newenemy->draw2D(directx);
-		}
+	ResultDraw2d();
 
-		//ボス描画(2d)
-		testBoss->draw2D(directx);
-
-		if (isBoss)
-		{
-			for (int i = 0; i < testBoss->HP; i++)
-			{
-				bossHitPoints[i]->DrawSprite(directx->cmdList.Get());
-			}
-		}
-
-		player_p->draw2D(directx);
-
-		if (isCountDown)
-		{
-			countDownSprite[countDownNum].DrawSprite(directx->cmdList.Get());
-		}
-
-		if (isStartIcon)
-		{
-			playStart.DrawSprite(directx->cmdList.Get());
-		}
-	}
-
-	if (scene == sceneType::clear)
-	{
-		resultScreen[0].DrawSprite(directx->cmdList.Get());
-		clearText.DrawSprite(directx->cmdList.Get());
-		resultScreen[1].DrawSprite(directx->cmdList.Get());
-
-		if (!isMoveScreen)
-		{
-			titleButton.DrawSprite(directx->cmdList.Get());
-		}
-	}
-
-	if (scene == sceneType::over)
-	{
-		resultScreen[0].DrawSprite(directx->cmdList.Get());
-		overText.DrawSprite(directx->cmdList.Get());
-		resultScreen[1].DrawSprite(directx->cmdList.Get());
-
-		if (!isMoveScreen)
-		{
-			titleButton.DrawSprite(directx->cmdList.Get());
-		}
-	}
 	//debugtext.DrawAll(directx->cmdList.Get());
 }
 
@@ -935,4 +963,78 @@ void GameScene::countDown()
 	}
 
 	return;
+}
+
+void GameScene::tutorial()
+{
+	if (!isTutorial)
+	{
+		return;
+	}
+}
+
+void GameScene::loadStage()
+{
+	for (int i = 0; i < maxEnemyNum; i++)
+	{
+		//敵　リスト
+		std::unique_ptr<Enemy> newenemy = std::make_unique<Enemy>();
+		newenemy->init(enemyPattern::shot);
+		newenemy->set({
+		(float)(rand() % 50 - 25),
+		(float)(rand() % 30 + 15),
+		(float)(rand() % 50 - 25) });
+
+		enemyList.push_back(std::move(newenemy));
+	}
+
+	//プレイヤーのリセット
+	player_p->reset();
+
+	isBoss = false;
+
+	if (stageNum == 1)
+	{
+		stageLevel = stageNum + 2;
+
+		//敵
+		testBoss->changePattern(enemyPattern::chase);
+
+		//敵　リスト
+		for (std::unique_ptr<Enemy>& newenemy : enemyList)
+		{
+			newenemy->changePattern(enemyPattern::chase);
+		}
+
+		//ボスの設定
+		testBoss->setHitPoint(stageLevel + 5);
+	}
+	else if (stageNum == 2)
+	{
+		stageLevel = stageNum + 2;
+
+		//敵
+		testBoss->changePattern(enemyPattern::shot);
+
+		//敵　リスト
+		for (std::unique_ptr<Enemy>& newenemy : enemyList)
+		{
+			newenemy->changePattern(enemyPattern::shot);
+		}
+
+		//ボスの設定
+		testBoss->setHitPoint(stageLevel + 5);
+	}
+
+	for (int i = 0; i < testBoss->HP; i++)
+	{
+		std::unique_ptr<SingleSprite> newsprite = std::make_unique<SingleSprite>();
+		newsprite->anchorpoint = { 0.5f,0 };
+		newsprite->GenerateSprite("Enemy_HP.png");
+		newsprite->size = { 40,60 };
+		newsprite->position = { i * 30 + 660 - (30 * floorf(testBoss->HP / 2)),30,0 };
+		newsprite->SpriteTransferVertexBuffer(false);
+
+		bossHitPoints.push_back(std::move(newsprite));
+	}
 }

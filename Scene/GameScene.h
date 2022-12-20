@@ -74,11 +74,24 @@ private:
 	void Play_updata();
 	void Result_updata();
 
+	//チュートリアル
+	void tutorial();
+
+	//ステージ読み込み
+	void loadStage();
+
 	//シーンごとの描画
-	void Title_draw();
-	void Select_draw();
-	void Play_draw();
-	void Result_draw();
+	void TitleDraw3d();
+	void TitleDraw2d();
+
+	void SelectDraw3d();
+	void SelectDraw2d();
+
+	void PlayDraw3d();
+	void PlayDraw2d();
+
+	void ResultDraw3d();
+	void ResultDraw2d();
 
 	//ホーミングターゲットのセッティング
 	void checkHitPlayerTarget();
@@ -156,11 +169,11 @@ private:
 	SingleSprite startButton;
 
 	//ステージアイコン
-	SingleSprite stage0;
-	SingleSprite stage1;
-	SingleSprite stage2;
+	SingleSprite stage[4];
 
-	SingleSprite selects[2];
+	SingleSprite selects[3];
+
+	float selectIconSizeX = 150;
 
 	//カウントダウン・スタートアイコン
 	SingleSprite countDownSprite[3];
