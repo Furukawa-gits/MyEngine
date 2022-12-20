@@ -394,7 +394,7 @@ void GameScene::Select_updata()
 			return;
 		}
 		//チュートリアル開始
-		if (stageNum == 0)
+		else if (stageNum == 0)
 		{
 			//プレイヤーのリセット
 			player_p->reset();
@@ -424,9 +424,11 @@ void GameScene::Select_updata()
 			scene = sceneType::play;
 			return;
 		}
-
-		//ステージ読み込み
-		loadStage();
+		else
+		{
+			//ステージ読み込み
+			loadStage();
+		}
 
 		//スタートのカウントダウンを設定
 		countDownEase.set(easingType::easeOut, easingPattern::Quintic, countDownTime, 450, 0);
@@ -441,7 +443,7 @@ void GameScene::Select_updata()
 		isScreenEase = false;
 		isTextEase = false;
 		isPushTitle = false;
-		//titleButton.size = { 315,50 };
+		isTutorial = false;
 
 		nowStageLevel = 1;
 
@@ -472,12 +474,6 @@ void GameScene::Play_updata()
 	//プレイヤー更新
 	player_p->update();
 	checkHitManager::checkMissilesEnemy(&player_p->missilesList);
-
-
-	//リセット
-	if (input->push(DIK_R))
-	{
-	}
 
 	//エネミー更新
 	enemyList.remove_if([](std::unique_ptr<Enemy>& newenemy)
@@ -889,15 +885,15 @@ void GameScene::PlayDraw2d()
 		{
 			moveText.DrawSprite(directx->cmdList.Get());
 		}
-		if (isShotText && !player_p->isStop)
+		else if (isShotText && !player_p->isStop)
 		{
 			shotText.DrawSprite(directx->cmdList.Get());
 		}
-		if (isMissileText)
+		else if (isMissileText)
 		{
 			missileText.DrawSprite(directx->cmdList.Get());
 		}
-		if (isShootingText)
+		else if (isShootingText)
 		{
 			shootingText.DrawSprite(directx->cmdList.Get());
 		}
@@ -1124,7 +1120,6 @@ void GameScene::tutorial()
 			(float)(rand() % 50 - 25),
 			(float)(rand() % 30 + 15),
 			(float)(rand() % 50 - 25) });
-			newenemy->changePattern(enemyPattern::tutorial);
 
 			enemyList.push_back(std::move(newenemy));
 		}
@@ -1148,7 +1143,7 @@ void GameScene::tutorial()
 		player_p->isStop = true;
 		player_p->isInvisible = 1;
 		stagingCamera = new Camera;
-		stagingCamera->SetEye({ 0,0,-40 });
+		stagingCamera->SetEye({ 0,0,-20 });
 		stagingCamera->SetTarget({ 0,0,0 });
 		stagingCamera->Update();
 		Object3d_FBX::SetCamera(stagingCamera);
