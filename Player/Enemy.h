@@ -61,6 +61,7 @@ private:
 //敵の行動パターン
 enum class enemyPattern
 {
+	tutorial = 0,
 	chase = 1,
 	shot = 2,
 };
@@ -93,6 +94,14 @@ public:
 
 	//登場演出フラグ
 	bool isAppear = false;
+
+	//登場演出時間
+	int enemyArrivalTime;
+
+	//登場演出イージング
+	easingManager arrivalEase;
+
+	XMFLOAT3 arrivalScale = { 1,1,1 };
 
 	//座標・初期位置・速度・回転
 	XMFLOAT3 position = {};
@@ -166,6 +175,11 @@ public:
 	void update(XMFLOAT3 playerPos);
 
 	/// <summary>
+	/// 出現
+	/// </summary>
+	void arrival();
+
+	/// <summary>
 	/// 生存時の処理
 	/// </summary>
 	/// <param name="playerPos">プレイヤーの座標</param>
@@ -173,6 +187,11 @@ public:
 
 	//撃墜時の処理
 	void deathMove();
+
+	/// <summary>
+	/// パターン０：チュートリアル
+	/// </summary>
+	void tutorial();
 
 	/// <summary>
 	/// パターン１：追尾

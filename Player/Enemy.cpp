@@ -72,6 +72,10 @@ void Enemy::set(XMFLOAT3 pos)
 		isChase = false;
 		isWait = true;
 	}
+	enemyArrivalTime = 100;
+	arrivalEase.set(easingType::easeOut, easingPattern::Quadratic, enemyArrivalTime, 500, 0);
+
+	isAppear = true;
 }
 
 void Enemy::reSet()
@@ -87,6 +91,16 @@ void Enemy::reSet()
 	isTargetSet = false;
 	isSetMissile = false;
 	isDraw = true;
+}
+
+void Enemy::tutorial()
+{
+	if (enemyMovePattern != enemyPattern::tutorial)
+	{
+		return;
+	}
+
+	enemyObject->Update();
 }
 
 void Enemy::chase(XMFLOAT3 pPos)
@@ -197,6 +211,8 @@ void Enemy::update(XMFLOAT3 playerPos)
 		return;
 	}
 
+	arrival();
+
 	enemyObject->Update();
 
 	if (isStop)
@@ -231,12 +247,47 @@ void Enemy::update(XMFLOAT3 playerPos)
 	return;
 }
 
-void Enemy::ariveMove(XMFLOAT3 playerPos)
+void Enemy::arrival()
 {
-	if (!Isarive)
+	if (!isAppear)
 	{
 		return;
 	}
+
+	arrivalScale.x = 1.0f / enemyArrivalTime;
+	arrivalScale.y = 1.0f / enemyArrivalTime;
+	arrivalScale.z = 1.0f / enemyArrivalTime;
+
+	float rot = arrivalEase.easing();
+
+	XMMATRIX matrot = XMMatrixIdentity();
+	matrot *= XMMatrixRotationZ(XMConvertToRadians(rot));
+	matrot *= XMMatrixRotationX(XMConvertToRadians(rot));
+	matrot *= XMMatrixRotationY(XMConvertToRadians(rot));
+
+	enemyObject->setRotMatrix(matrot);
+	enemyObject->SetScale(arrivalScale);
+	enemyObject->Update();
+
+	if (!arrivalEase.getIsActive())
+	{
+		enemyObject->SetRotation({ 0,0,0 });
+		enemyObject->SetPosition(position);
+		enemyObject->Update();
+		isStop = false;
+		Isarive = true;
+		isAppear = false;
+	}
+}
+
+void Enemy::ariveMove(XMFLOAT3 playerPos)
+{
+	if (!Isarive || isAppear)
+	{
+		return;
+	}
+
+	tutorial();
 
 	chase(playerPos);
 
@@ -251,7 +302,7 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 #pragma region 爆発パーティクル生成
 		std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
 		newparticle->generate();
-		newparticle->set(maxFallCount - 20, position, { 0,0,0 }, { 0,0,0 }, 0.2, 5.0);
+		newparticle->set(maxFallCount - 20, position, { 0,0,0 }, { 0,0,0 }, 0.2, 8.0);
 		bomParticles.push_back(std::move(newparticle));
 #pragma endregion 爆発パーティクル生成
 	}
@@ -277,7 +328,7 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 
 void Enemy::deathMove()
 {
-	if (Isarive)
+	if (Isarive || isAppear)
 	{
 		return;
 	}

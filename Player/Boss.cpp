@@ -264,13 +264,13 @@ void Boss::bossDeathMove()
 		//爆発パーティクル
 		std::unique_ptr<SingleParticle> newBomparticle = std::make_unique<SingleParticle>();
 		newBomparticle->generate();
-		newBomparticle->set(30, startPos, { 0,0,0 }, { 0,0,0 }, 0.2, 7.0);
+		newBomparticle->set(50, startPos, { 0,0,0 }, { 0,0,0 }, 0.2, 7.0);
 		bomParticles.push_back(std::move(newBomparticle));
 
 		//黒煙パーティクル
 		std::unique_ptr<SingleParticle> newSmokeparticle = std::make_unique<SingleParticle>();
 		newSmokeparticle->generate();
-		newSmokeparticle->set(30, startPos, { 0,0,0 }, { 0,0,0 }, 0.2, 5.0);
+		newSmokeparticle->set(50, startPos, { 0,0,0 }, { 0,0,0 }, 0.2, 5.0);
 		smokeParticles.push_back(std::move(newSmokeparticle));
 #pragma endregion パーティクル生成
 	}

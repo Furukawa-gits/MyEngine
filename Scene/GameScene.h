@@ -127,6 +127,8 @@ private:
 	Object3d_FBX* skySphere = nullptr;
 	Object3d_FBX* cameraobj = nullptr;
 
+	Camera* stagingCamera = nullptr;
+
 	//プレイヤー
 	std::unique_ptr<Player> player_p;
 
@@ -190,6 +192,7 @@ private:
 
 	//タイトル・セレクトボタン
 	SingleSprite titleButton;
+	SingleSprite selectButton;
 
 	//ゲーム時間
 	int game_time = 0;
@@ -239,24 +242,42 @@ private:
 	int startIconTime = 0;
 	int countDownTime = 150;
 	easingManager countDownEase;
-	easingManager startEase;
+
+	//チュートリアル用テキスト
+	SingleSprite moveText;
+	bool isMoveText = false;
+	SingleSprite shotText;
+	bool isShotText = false;
+	SingleSprite missileText;
+	bool isMissileText = false;
+	SingleSprite shootingText;
+	bool isShootingText = false;
 
 	//ボスのHPゲージ出現のイージング
 	easingManager bossHpEase;
 	bool isBossHp = false;
 
 	//リザルト画面のイージングフラグ
+	//背景＆テキスト
 	bool isMoveScreen = false;
+	//背景
 	bool isScreenEase = false;
+	//テキスト
 	bool isTextEase = false;
 
 	easingManager resultScreenEase;
 	easingManager clearTextEase;
 	easingManager overTextEase;
 
-	//タイトルボタンのイージング
-	easingManager titleButtonEase_y;
-	easingManager titleButtonEase_x;
+	//リザルト画面ボタンのイージング
+	easingManager ButtonEase_y;
+	easingManager ButtonEase_x;
+	easingManager selectEase;
+
+	//今どっちのボタンを選んでいるのか
+	//-1：select , 1：title
+	int isSelectOrTitle = -1;
+	bool isMoveSelectIcon = false;
 
 	bool isPushTitle = false;
 

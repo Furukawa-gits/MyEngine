@@ -116,7 +116,7 @@ void GameScene::Load_Sprites()
 	resultScreen[0].size = { 1280,720 };
 	resultScreen[0].GenerateSprite("black_color.png");
 
-	resultScreen[1].size = { 1280,720 };
+	resultScreen[1].size = { 1280,300 };
 	resultScreen[1].GenerateSprite("black_color.png");
 
 	//クリア・オーバー画面
@@ -130,10 +130,38 @@ void GameScene::Load_Sprites()
 
 	//タイトルボタン
 	titleButton.anchorpoint = { 0.5f,0.5f };
-	titleButton.size = { 315,50 };
-	titleButton.GenerateSprite("toTitle.png");
-	titleButton.position = { 640,500,0 };
+	titleButton.size = { 150,50 };
+	titleButton.GenerateSprite("titleText.png");
+	titleButton.position = { 640 + 150,500,0 };
 	titleButton.SpriteTransferVertexBuffer();
+
+	//セレクトボタン
+	selectButton.anchorpoint = { 0.5f,0.5f };
+	selectButton.size = { 200,50 };
+	selectButton.GenerateSprite("selectText.png");
+	selectButton.position = { 640 - 150,500,0 };
+	selectButton.SpriteTransferVertexBuffer();
+
+	//チュートリアル用のテキスト
+	moveText.anchorpoint = { 0.5f,0.5f };
+	moveText.size = { 250,50 };
+	moveText.position = { 640,600,0 };
+	moveText.GenerateSprite("moveText.png");
+
+	shotText.anchorpoint = { 0.5f,0.5f };
+	shotText.size = { 200,50 };
+	shotText.position = { 640,600,0 };
+	shotText.GenerateSprite("shotText.png");
+
+	missileText.anchorpoint = { 0.5f,0.5f };
+	missileText.size = { 315,50 };
+	missileText.position = { 640,600,0 };
+	missileText.GenerateSprite("missileText.png");
+
+	shootingText.anchorpoint = { 0.5f,0.5f };
+	shootingText.size = { 265,50 };
+	shootingText.position = { 640,600,0 };
+	shootingText.GenerateSprite("shootingText.png");
 }
 
 //初期化
@@ -356,12 +384,44 @@ void GameScene::Select_updata()
 
 	if (isPushStart && !startButtonEase_y.getIsActive())
 	{
+		//タイトルに戻る
 		if (stageNum == -1)
 		{
 			startButton.size = { 340,50 };
 			startButton.SpriteTransferVertexBuffer();
 			isPushStart = false;
 			scene = sceneType::title;
+			return;
+		}
+		//チュートリアル開始
+		if (stageNum == 0)
+		{
+			//プレイヤーのリセット
+			player_p->reset();
+			isMoveText = true;
+			isShotText = false;
+			isMissileText = false;
+			isShootingText = false;
+			isBoss = false;
+			//スタートのカウントダウンを設定
+			countDownEase.set(easingType::easeOut, easingPattern::Quintic, countDownTime, 450, 0);
+			countDownSprite[0].rotation = 0;
+			countDownSprite[1].rotation = 0;
+			countDownSprite[2].rotation = 0;
+			countDownNum = 0;
+			isCountDown = true;
+			isStartIcon = false;
+
+			isMoveScreen = false;
+			isScreenEase = false;
+			isTextEase = false;
+			isPushTitle = false;
+			nowStageLevel = 1;
+			player_p->update();
+			Object3d_FBX::SetCamera(player_p->followCamera);
+
+			isTutorial = true;
+			scene = sceneType::play;
 			return;
 		}
 
@@ -381,7 +441,7 @@ void GameScene::Select_updata()
 		isScreenEase = false;
 		isTextEase = false;
 		isPushTitle = false;
-		titleButton.size = { 315,50 };
+		//titleButton.size = { 315,50 };
 
 		nowStageLevel = 1;
 
@@ -402,6 +462,12 @@ void GameScene::Play_updata()
 
 	//カウントダウン
 	countDown();
+
+	if (isTutorial)
+	{
+		tutorial();
+		return;
+	}
 
 	//プレイヤー更新
 	player_p->update();
@@ -525,10 +591,12 @@ void GameScene::Play_updata()
 		isScreenEase = true;
 		isTextEase = false;
 		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 40, 720, 0);
-		titleButton.size = { 315,50 };
 		titleButton.SpriteTransferVertexBuffer();
-		titleButtonEase_y.reSet();
-		titleButtonEase_x.reSet();
+		selects[2].position = { 640 - 150,540,0 };
+		selectIconSizeX = 250;
+		isSelectOrTitle = -1;
+		ButtonEase_y.reSet();
+		ButtonEase_x.reSet();
 		scene = sceneType::clear;
 
 		bossHitPoints.clear();
@@ -540,10 +608,12 @@ void GameScene::Play_updata()
 		isScreenEase = true;
 		isTextEase = false;
 		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 40, 720, 0);
-		titleButton.size = { 315,50 };
 		titleButton.SpriteTransferVertexBuffer();
-		titleButtonEase_y.reSet();
-		titleButtonEase_x.reSet();
+		selects[2].position = { 640 - 150,540,0 };
+		selectIconSizeX = 250;
+		isSelectOrTitle = -1;
+		ButtonEase_y.reSet();
+		ButtonEase_x.reSet();
 		scene = sceneType::over;
 	}
 }
@@ -556,6 +626,7 @@ void GameScene::Result_updata()
 		return;
 	}
 
+	//画面背景のイージング
 	if (isScreenEase)
 	{
 		resultScreen[0].position.y = resultScreenEase.easing();
@@ -597,6 +668,7 @@ void GameScene::Result_updata()
 	resultScreen[1].SpriteUpdate();
 	resultScreen[1].SpriteTransferVertexBuffer();
 
+	//CLEAR・OVERのテキストのイージング
 	if (isTextEase)
 	{
 		clearText.position.x = 640;
@@ -618,34 +690,89 @@ void GameScene::Result_updata()
 	if (!clearTextEase.getIsActive() && !overTextEase.getIsActive() && !resultScreenEase.getIsActive())
 	{
 		isMoveScreen = false;
-		titleButton.SpriteUpdate();
+	}
+	//背景とテキストを動かし終わっていなければボタンの処理は無し
+	if (isMoveScreen)
+	{
+		return;
 	}
 
 	titleButton.SpriteUpdate();
+	selectButton.SpriteUpdate();
 
-	if (input->Triger(DIK_SPACE) && !isMoveScreen)
+	if (!isMoveSelectIcon)
 	{
-		titleButtonEase_y.set(easingType::easeOut, easingPattern::Quadratic, 30, 50, 0);
-		titleButtonEase_x.set(easingType::easeOut, easingPattern::Quadratic, 30, 315, 400);
+		//select画面
+		if (input->Triger(DIK_RIGHT) && isSelectOrTitle == -1)
+		{
+			selectEase.set(easingType::easeOut, easingPattern::Cubic, 20, 640 - 150, 640 + 150);
+			isMoveSelectIcon = true;
+			isSelectOrTitle *= -1;
+		}
+		//title画面
+		else if (input->Triger(DIK_LEFT) && isSelectOrTitle == 1)
+		{
+			selectEase.set(easingType::easeOut, easingPattern::Cubic, 20, 640 + 150, 640 - 150);
+			isMoveSelectIcon = true;
+			isSelectOrTitle *= -1;
+		}
+	}
+	else
+	{
+		selects[2].position = { selectEase.easing(),540,0 };
+
+		if (!selectEase.getIsActive())
+		{
+			isMoveSelectIcon = false;
+		}
+	}
+
+	//セレクトアイコン通常拡縮
+	if (!isPushTitle && !isMoveSelectIcon)
+	{
+		selectIconSizeX -= 0.5f;
+
+		if (selectIconSizeX <= 250)
+		{
+			selectIconSizeX = 200;
+		}
+		selects[2].size = { selectIconSizeX,7 };
+		selects[2].SpriteTransferVertexBuffer();
+	}
+	selects[2].SpriteUpdate();
+
+	if (input->Triger(DIK_SPACE) && !isPushTitle && !isMoveSelectIcon)
+	{
+		ButtonEase_y.set(easingType::easeOut, easingPattern::Quadratic, 30, 7, 0);
+		ButtonEase_x.set(easingType::easeOut, easingPattern::Quadratic, 30, 200, 300);
 		isPushTitle = true;
 	}
 
 	if (isPushTitle)
 	{
-		titleButton.size.y = titleButtonEase_y.easing();
-		titleButton.size.x = titleButtonEase_x.easing();
-		titleButton.SpriteTransferVertexBuffer();
+		selects[2].size.y = ButtonEase_y.easing();
+		selects[2].size.x = ButtonEase_x.easing();
+		selects[2].SpriteTransferVertexBuffer();
 	}
 
-	titleButton.SpriteUpdate();
-
 	//タイトル画面準備
-	if (isPushTitle && !titleButtonEase_y.getIsActive())
+	if (isPushTitle && !ButtonEase_y.getIsActive())
 	{
-		startButton.size = { 340,50 };
-		startButton.SpriteTransferVertexBuffer();
-		isPushStart = false;
-		scene = sceneType::title;
+		if (isSelectOrTitle == -1)
+		{
+			isMoveStageIcon = false;
+			isPushStart = false;
+			selectIconSizeX = 350;
+			selects[2].position = { 640,420,0 };
+			scene = sceneType::select;
+		}
+		else
+		{
+			startButton.size = { 340,50 };
+			startButton.SpriteTransferVertexBuffer();
+			isPushStart = false;
+			scene = sceneType::title;
+		}
 	}
 }
 
@@ -755,6 +882,26 @@ void GameScene::PlayDraw2d()
 	{
 		playStart.DrawSprite(directx->cmdList.Get());
 	}
+
+	if (isTutorial)
+	{
+		if (isMoveText)
+		{
+			moveText.DrawSprite(directx->cmdList.Get());
+		}
+		if (isShotText && !player_p->isStop)
+		{
+			shotText.DrawSprite(directx->cmdList.Get());
+		}
+		if (isMissileText)
+		{
+			missileText.DrawSprite(directx->cmdList.Get());
+		}
+		if (isShootingText)
+		{
+			shootingText.DrawSprite(directx->cmdList.Get());
+		}
+	}
 }
 
 //リザルト画面描画
@@ -780,29 +927,24 @@ void GameScene::ResultDraw2d()
 		return;
 	}
 
+	resultScreen[0].DrawSprite(directx->cmdList.Get());
 	if (scene == sceneType::clear)
 	{
-		resultScreen[0].DrawSprite(directx->cmdList.Get());
 		clearText.DrawSprite(directx->cmdList.Get());
-		resultScreen[1].DrawSprite(directx->cmdList.Get());
-
-		if (!isMoveScreen)
-		{
-			titleButton.DrawSprite(directx->cmdList.Get());
-		}
 	}
-
-	if (scene == sceneType::over)
+	else
 	{
-		resultScreen[0].DrawSprite(directx->cmdList.Get());
 		overText.DrawSprite(directx->cmdList.Get());
-		resultScreen[1].DrawSprite(directx->cmdList.Get());
-
-		if (!isMoveScreen)
-		{
-			titleButton.DrawSprite(directx->cmdList.Get());
-		}
 	}
+	resultScreen[1].DrawSprite(directx->cmdList.Get());
+
+	if (isMoveScreen)
+	{
+		return;
+	}
+	titleButton.DrawSprite(directx->cmdList.Get());
+	selectButton.DrawSprite(directx->cmdList.Get());
+	selects[2].DrawSprite(directx->cmdList.Get());
 }
 
 #pragma endregion 各シーン描画
@@ -967,14 +1109,175 @@ void GameScene::countDown()
 
 void GameScene::tutorial()
 {
-	if (!isTutorial)
+	player_p->update();
+	checkHitManager::checkMissilesEnemy(&player_p->missilesList);
+
+	//一定量カメラを動かしたら敵出現
+	if (player_p->cameraMoveCount >= 300 && isMoveText)
 	{
-		return;
+		for (int i = 0; i < 20; i++)
+		{
+			//敵　リスト
+			std::unique_ptr<Enemy> newenemy = std::make_unique<Enemy>();
+			newenemy->init(enemyPattern::shot);
+			newenemy->set({
+			(float)(rand() % 50 - 25),
+			(float)(rand() % 30 + 15),
+			(float)(rand() % 50 - 25) });
+			newenemy->changePattern(enemyPattern::tutorial);
+
+			enemyList.push_back(std::move(newenemy));
+		}
+
+		isMoveText = false;
+		isShotText = true;
+	}
+
+	//敵が出現演出途中ならカメラをセットする
+	int count = 0;
+	for (std::unique_ptr<Enemy>& newenemy : enemyList)
+	{
+		if (newenemy->isAppear == true)
+		{
+			count++;
+		}
+	}
+
+	if (count > 0)
+	{
+		player_p->isStop = true;
+		player_p->isInvisible = 1;
+		stagingCamera = new Camera;
+		stagingCamera->SetEye({ 0,0,-40 });
+		stagingCamera->SetTarget({ 0,0,0 });
+		stagingCamera->Update();
+		Object3d_FBX::SetCamera(stagingCamera);
+	}
+	else
+	{
+		player_p->isStop = false;
+		player_p->isInvisible = -1;
+		Object3d_FBX::SetCamera(player_p->followCamera);
+	}
+
+	if (input->Triger(DIK_SPACE))
+	{
+		int test = 0;
+	}
+
+	if (player_p->bulletsList.size() > 3)
+	{
+		isShotText = false;
+		isMissileText = true;
+	}
+
+	if (player_p->missilesList.size() > 3)
+	{
+		isMissileText = false;
+		isShootingText = true;
+	}
+
+	moveText.SpriteUpdate();
+	shotText.SpriteUpdate();
+	missileText.SpriteUpdate();
+	shootingText.SpriteUpdate();
+
+	//エネミー更新
+	enemyList.remove_if([](std::unique_ptr<Enemy>& newenemy)
+		{
+			return newenemy->isDraw == false;
+		});
+
+	for (std::unique_ptr<Enemy>& newenemy : enemyList)
+	{
+		newenemy->update(player_p->playerObject->getPosition());
+		checkHitManager::checkPlayerEnemy(player_p.get(), newenemy.get());
+		checkHitManager::chackPlayerEnemyBullet(player_p.get(), newenemy.get());
+	}
+
+	//ホーミング弾発射
+	if (input->Mouse_LeftRelease() && !isCountDown)
+	{
+		for (int i = 0; i < targetnum; i++)
+		{
+			for (std::unique_ptr<Enemy>& newenemy : enemyList)
+			{
+				if (newenemy->isTargetSet && !newenemy->isSetMissile)
+				{
+					player_p->addMissile(newenemy.get());
+
+					newenemy->isSetMissile = true;
+
+					break;
+				}
+			}
+		}
+
+		if (testBoss->isTargetSet && !testBoss->isSetMissile)
+		{
+			player_p->addMissile(testBoss.get());
+
+			testBoss->isSetMissile = true;
+		}
+
+		targetnum = 0;
+	}
+
+	//スカイドーム
+	skySphere->Update();
+
+	//マウスカーソル非表示
+	ShowCursor(false);
+
+	//敵がロックオンされているかどうか
+	checkHitPlayerTarget();
+
+	//プレイヤーの通常弾当たり判定
+	checkHitManager::checkBulletsEnemys(&player_p->bulletsList, &enemyList);
+	checkHitManager::checkBulletsEnemyBullets(&player_p->bulletsList, &enemyList);
+
+	//ボスを倒したorプレイヤーが死んだらリザルト
+	if (enemyList.size() <= 0 && !isMoveText && isShootingText)
+	{
+		isMoveScreen = true;
+		isScreenEase = true;
+		isTextEase = false;
+		isShootingText = false;
+		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 40, 720, 0);
+		titleButton.SpriteTransferVertexBuffer();
+		selects[2].position = { 640 - 150,540,0 };
+		selectIconSizeX = 250;
+		isSelectOrTitle = -1;
+		ButtonEase_y.reSet();
+		ButtonEase_x.reSet();
+		scene = sceneType::clear;
+
+		bossHitPoints.clear();
+	}
+	if (player_p->playerHP <= 0)
+	{
+		isMoveScreen = true;
+		isScreenEase = true;
+		isTextEase = false;
+		isShootingText = false;
+		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 40, 720, 0);
+		titleButton.SpriteTransferVertexBuffer();
+		selects[2].position = { 640 - 150,540,0 };
+		selectIconSizeX = 250;
+		isSelectOrTitle = -1;
+		ButtonEase_y.reSet();
+		ButtonEase_x.reSet();
+		scene = sceneType::over;
 	}
 }
 
 void GameScene::loadStage()
 {
+	if (stageNum < 1)
+	{
+		return;
+	}
+
 	for (int i = 0; i < maxEnemyNum; i++)
 	{
 		//敵　リスト
