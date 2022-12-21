@@ -310,7 +310,7 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 #pragma region 爆発パーティクル生成
 		std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
 		newparticle->generate();
-		newparticle->set(maxFallCount - 20, position, { 0,0,0 }, { 0,0,0 }, 0.2, 8.0);
+		newparticle->set(maxFallCount - 20, position, { 0,0,0 }, { 0,0,0 }, 0.2, 10.0);
 		bomParticles.push_back(std::move(newparticle));
 #pragma endregion 爆発パーティクル生成
 	}

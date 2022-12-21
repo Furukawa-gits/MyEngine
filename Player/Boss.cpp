@@ -264,7 +264,7 @@ void Boss::bossDeathMove()
 		//爆発パーティクル
 		std::unique_ptr<SingleParticle> newBomparticle = std::make_unique<SingleParticle>();
 		newBomparticle->generate();
-		newBomparticle->set(50, startPos, { 0,0,0 }, { 0,0,0 }, 0.2, 7.0);
+		newBomparticle->set(50, startPos, { 0,0,0 }, { 0,0,0 }, 0.2, 9.0);
 		bomParticles.push_back(std::move(newBomparticle));
 
 		//黒煙パーティクル
