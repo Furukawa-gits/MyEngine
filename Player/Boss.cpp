@@ -235,10 +235,13 @@ void Boss::bossDeathMove()
 	//撃墜演出のカウント
 	fallDownCount++;
 
+	float scale = 1.0f - ((float)fallDownCount / ((float)maxFallCount * 3));
+
 	rot.x += deathRotSpeed;
 	rot.y += deathRotSpeed;
 	rot.z += deathRotSpeed;
 	enemyObject->setRotMatrix(rot.x, rot.y, rot.z);
+	enemyObject->SetScale({ bossScale.x * scale,bossScale.y * scale,bossScale.z * scale });
 
 	//一定間隔でエフェクト
 	if (fallDownCount % 20 == 0)
