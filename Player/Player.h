@@ -24,12 +24,6 @@ public:
 
 	void cameraMove();
 
-	void checkPlayerBullet(Enemy* enemy);
-
-	void checkPlayerEnemy(Enemy* enemy);
-
-	void checkPlayerEnemyBullet(Enemy* enemy);
-
 	void update();
 
 	void targetUpdate();
@@ -42,14 +36,8 @@ public:
 
 	void draw2D(directX* directx);
 
-
-	//3dオブジェクト
-	Object3d_FBX* playerObject = nullptr;
+private:
 	Model* playerModel = nullptr;
-
-	//追従カメラ
-	FollowCamera* followCamera = nullptr;
-
 	//クォータニオン回転角度
 	float roll = 0.0f;
 	float pitch = 0.0f;
@@ -62,13 +50,8 @@ public:
 	//移動スピード
 	float moveSpeed = 0.3f;
 
-	//ターゲットスプライト
-	SingleSprite targetFirst;
 	SingleSprite targetSecond;
 	SingleSprite targetThird;
-	int targetCount = 0;
-	int rockOnCount = 0;
-	bool isRockOn = false;
 
 	float yowRotateSpeedPositive = 0.0f;//ヨー回転(正方向)
 	float yowRotateSpeedNegative = 0.0f;//ヨー回転(負方向)
@@ -86,6 +69,21 @@ public:
 	const XMFLOAT3 unitX = { 1,0,0 };
 	const XMFLOAT3 unitY = { 0,1,0 };
 	const XMFLOAT3 unitZ = { 0,0,1 };
+
+	const int maxArmorTime = 300;
+
+public:
+	//3dオブジェクト
+	Object3d_FBX* playerObject = nullptr;
+
+	//追従カメラ
+	FollowCamera* followCamera = nullptr;
+
+	//ターゲットスプライト
+	SingleSprite targetFirst;
+	int targetCount = 0;
+	int rockOnCount = 0;
+	bool isRockOn = false;
 
 	//クォータニオン回転行列
 	Quaternion qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
@@ -113,7 +111,6 @@ public:
 	//無敵時間フラグ
 	bool isArmor = false;
 	int armorTime = 0;
-	const int maxArmorTime = 300;
 
 	//描画しないフラグ
 	int isInvisible = -1;

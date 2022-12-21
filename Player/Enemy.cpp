@@ -16,7 +16,7 @@ Enemy::~Enemy()
 
 void Enemy::staticInit()
 {
-	enemyModelS.reset(FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01"));
+	enemyModelS.reset(FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_02"));
 
 	SingleParticle::loadTexInMap("bomb.png");
 	SingleParticle::loadTexInMap("smoke.png");
@@ -73,6 +73,7 @@ void Enemy::set(XMFLOAT3 pos)
 		isWait = true;
 	}
 	enemyArrivalTime = 100;
+	enemyArrivaCount = 0;
 	arrivalEase.set(easingType::easeOut, easingPattern::Quadratic, enemyArrivalTime, 500, 0);
 
 	isAppear = true;
@@ -254,9 +255,13 @@ void Enemy::arrival()
 		return;
 	}
 
-	arrivalScale.x = 1.0f / enemyArrivalTime;
-	arrivalScale.y = 1.0f / enemyArrivalTime;
-	arrivalScale.z = 1.0f / enemyArrivalTime;
+	isDraw = true;
+
+	enemyArrivaCount++;
+
+	arrivalScale.x = (float)enemyArrivaCount / (float)enemyArrivalTime;
+	arrivalScale.y = (float)enemyArrivaCount / (float)enemyArrivalTime;
+	arrivalScale.z = (float)enemyArrivaCount / (float)enemyArrivalTime;
 
 	float rot = arrivalEase.easing();
 
@@ -266,6 +271,7 @@ void Enemy::arrival()
 	matrot *= XMMatrixRotationY(XMConvertToRadians(rot));
 
 	enemyObject->setRotMatrix(matrot);
+	enemyObject->SetPosition(position);
 	enemyObject->SetScale(arrivalScale);
 	enemyObject->Update();
 
@@ -273,7 +279,9 @@ void Enemy::arrival()
 	{
 		enemyObject->SetRotation({ 0,0,0 });
 		enemyObject->SetPosition(position);
+		enemyObject->SetScale({ 1,1,1 });
 		enemyObject->Update();
+		enemyArrivaCount = 0;
 		isStop = false;
 		Isarive = true;
 		isAppear = false;

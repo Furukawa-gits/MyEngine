@@ -436,6 +436,7 @@ void Player::reset()
 	SetCursorPos(mouseOffsetX, mouseOffsetY);
 	qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
 	cameraMoveCount = 0;
+	Object3d_FBX::SetCamera(followCamera);
 }
 
 //•`‰æ

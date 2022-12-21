@@ -70,79 +70,6 @@ enum class enemyPattern
 class Enemy
 {
 public:
-	//オブジェクト
-	static std::unique_ptr<Model> enemyModelS;
-	Object3d_FBX* enemyObject = nullptr;
-
-	//プレイヤーの索敵ライン
-	static const float forPlayer;
-
-	bool isDraw = false;//描画フラグ
-	bool Isarive = false;//生存フラグ
-	bool isTargetSet = false;//狙われているかどうか
-	bool isSetMissile = false;//ミサイルが自分にセットされているか
-	bool isChase = false;//追跡フラグ
-	bool isWait = false;//待機フラグ
-	std::unique_ptr<SingleSprite> rockTarget;//マーカー
-	Sphere enemyCollision;//敵の当たり判定
-
-	//体力
-	int HP = 1;
-
-	//停止フラグ
-	bool isStop = false;
-
-	//登場演出フラグ
-	bool isAppear = false;
-
-	//登場演出時間
-	int enemyArrivalTime;
-
-	//登場演出イージング
-	easingManager arrivalEase;
-
-	XMFLOAT3 arrivalScale = { 1,1,1 };
-
-	//座標・初期位置・速度・回転
-	XMFLOAT3 position = {};
-	XMFLOAT3 startPosition = {};
-	float enemySpeed = 0.0f;
-	XMFLOAT3 rot = {};
-
-	//一定距離下に落ちて行くためのカウント
-	int fallDownCount = 0;
-
-	const int maxFallCount = 90;
-
-	float deathRotSpeed = 1.0f;
-
-	bool isFar = false;
-
-	//敵の行動パターン
-	enemyPattern enemyMovePattern = enemyPattern::chase;
-
-	//パターン１：追尾
-	int chaseCount = 0;//追尾カウント
-	int waitCount = 0;//待機カウント
-
-	//パターン２：射撃
-	bool isShot = false;//射撃フラグ
-	int shotCount = 0;//次の射撃までの待機時間
-	bool isInRange = false;//射程範囲内かどうか
-
-	//この敵がボスかどうか
-	bool isThisBoss = false;
-
-	//弾
-	std::unique_ptr<enemyBullet> bullet;
-
-	//撃墜エフェクト
-	std::list<std::unique_ptr<SingleParticle>> bomParticles;	//爆発
-	std::list<std::unique_ptr<SingleParticle>> smokeParticles;	//煙
-
-	//パーティクルの数(なるべくこれを基準に考える)
-	const int PublicParticlenum = 10;
-
 	Enemy();
 
 	~Enemy();
@@ -174,6 +101,20 @@ public:
 	/// <param name="playerPos">プレイヤーの座標</param>
 	void update(XMFLOAT3 playerPos);
 
+
+	/// <summary>
+	/// 描画(3dオブジェクト)
+	/// </summary>
+	/// <param name="directx">directX_Bace</param>
+	void draw3D(directX* directx);
+
+	/// <summary>
+	/// 描画(2dオブジェクト)
+	/// </summary>
+	/// <param name="directx">directX_Bace</param>
+	void draw2D(directX* directx);
+
+private:
 	/// <summary>
 	/// 出現
 	/// </summary>
@@ -205,15 +146,80 @@ public:
 	/// <param name="pPos">プレイヤーの座標</param>
 	void shot(XMFLOAT3 pPos);
 
-	/// <summary>
-	/// 描画(3dオブジェクト)
-	/// </summary>
-	/// <param name="directx">directX_Bace</param>
-	void draw3D(directX* directx);
+private:
+	//モデル
+	static std::unique_ptr<Model> enemyModelS;
 
-	/// <summary>
-	/// 描画(2dオブジェクト)
-	/// </summary>
-	/// <param name="directx">directX_Bace</param>
-	void draw2D(directX* directx);
+	//登場演出時間
+	int enemyArrivalTime;
+	int enemyArrivaCount;
+
+	//登場演出用変数
+	easingManager arrivalEase;
+	XMFLOAT3 arrivalScale = { 1,1,1 };
+
+public:
+	//オブジェクト
+	Object3d_FBX* enemyObject = nullptr;
+
+	//プレイヤーの索敵ライン
+	static const float forPlayer;
+
+	bool isDraw = false;//描画フラグ
+	bool Isarive = false;//生存フラグ
+	bool isTargetSet = false;//狙われているかどうか
+	bool isSetMissile = false;//ミサイルが自分にセットされているか
+	bool isChase = false;//追跡フラグ
+	bool isWait = false;//待機フラグ
+	std::unique_ptr<SingleSprite> rockTarget;//マーカー
+	Sphere enemyCollision;//敵の当たり判定
+
+	//体力
+	int HP = 1;
+
+	//停止フラグ
+	bool isStop = false;
+
+	//登場演出フラグ
+	bool isAppear = false;
+
+	//座標・初期位置・速度・回転
+	XMFLOAT3 position = {};
+	XMFLOAT3 startPosition = {};
+	float enemySpeed = 0.0f;
+	XMFLOAT3 rot = {};
+
+	bool isFar = false;
+
+	//敵の行動パターン
+	enemyPattern enemyMovePattern = enemyPattern::chase;
+
+	//パターン１：追尾
+	int chaseCount = 0;//追尾カウント
+	int waitCount = 0;//待機カウント
+
+	//パターン２：射撃
+	bool isShot = false;//射撃フラグ
+	int shotCount = 0;//次の射撃までの待機時間
+	bool isInRange = false;//射程範囲内かどうか
+
+	//この敵がボスかどうか
+	bool isThisBoss = false;
+
+	//弾
+	std::unique_ptr<enemyBullet> bullet;
+
+	//撃墜エフェクト
+	std::list<std::unique_ptr<SingleParticle>> bomParticles;	//爆発
+	std::list<std::unique_ptr<SingleParticle>> smokeParticles;	//煙
+
+	//パーティクルの数(なるべくこれを基準に考える)
+	const int PublicParticlenum = 10;
+
+	const int maxFallCount = 90;
+
+	//一定距離下に落ちて行くためのカウント
+	int fallDownCount = 0;
+
+	float deathRotSpeed = 1.0f;
 };

@@ -1115,7 +1115,7 @@ void GameScene::tutorial()
 		{
 			//敵　リスト
 			std::unique_ptr<Enemy> newenemy = std::make_unique<Enemy>();
-			newenemy->init(enemyPattern::shot);
+			newenemy->init(enemyPattern::tutorial);
 			newenemy->set({
 			(float)(rand() % 50 - 25),
 			(float)(rand() % 30 + 15),
@@ -1137,14 +1137,13 @@ void GameScene::tutorial()
 			count++;
 		}
 	}
-
 	if (count > 0)
 	{
 		player_p->isStop = true;
 		player_p->isInvisible = 1;
 		stagingCamera = new Camera;
-		stagingCamera->SetEye({ 0,0,-20 });
-		stagingCamera->SetTarget({ 0,0,0 });
+		stagingCamera->SetEye({ 0,0,-30 });
+		stagingCamera->SetTarget({ 0,30,0 });
 		stagingCamera->Update();
 		Object3d_FBX::SetCamera(stagingCamera);
 	}
@@ -1155,17 +1154,14 @@ void GameScene::tutorial()
 		Object3d_FBX::SetCamera(player_p->followCamera);
 	}
 
-	if (input->Triger(DIK_SPACE))
-	{
-		int test = 0;
-	}
-
+	//通常弾 -> ミサイル
 	if (player_p->bulletsList.size() > 3)
 	{
 		isShotText = false;
 		isMissileText = true;
 	}
 
+	//ミサイル -> Lets Shooting!!!
 	if (player_p->missilesList.size() > 3)
 	{
 		isMissileText = false;
@@ -1231,7 +1227,7 @@ void GameScene::tutorial()
 	checkHitManager::checkBulletsEnemys(&player_p->bulletsList, &enemyList);
 	checkHitManager::checkBulletsEnemyBullets(&player_p->bulletsList, &enemyList);
 
-	//ボスを倒したorプレイヤーが死んだらリザルト
+	//敵をすべて倒したorプレイヤーが死んだらリザルト
 	if (enemyList.size() <= 0 && !isMoveText && isShootingText)
 	{
 		isMoveScreen = true;
