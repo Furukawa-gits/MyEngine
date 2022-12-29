@@ -415,6 +415,7 @@ void Player::targetUpdate()
 
 void Player::addMissile(Enemy* enemy)
 {
+	//ƒ~ƒTƒCƒ‹’Ç‰Á
 	std::unique_ptr<Missile> newMissile = std::make_unique<Missile>();
 	newMissile->init();
 	newMissile->setPenemy(enemy);
