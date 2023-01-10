@@ -141,35 +141,42 @@ void Missile::start(XMFLOAT3 start_pos)
 
 void Missile::update()
 {
+	//セットされていないミサイルは更新処理を行わない
 	if (!isArive)
 	{
 		return;
 	}
 
+	//ミサイルが当たる前にターゲットがいなくなれば次フレームから更新しない
 	if (enemyPointer->Isarive == false)
 	{
 		isArive = false;
 	}
 
+	//ターゲットへのベクトル
 	XMFLOAT3 to_enemy = {
 		enemyPointer->position.x - bulletObject->getPosition().x,
 		enemyPointer->position.y - bulletObject->getPosition().y,
 		enemyPointer->position.z - bulletObject->getPosition().z
 	};
 
+	//ベクトルを正規化
 	XMFLOAT3 bullet_vec_nml = normalized(bulletVec);
 
+	//現在の進行方向との内積
 	float dot_ene_bullet =
 		to_enemy.x * bulletVec.x +
 		to_enemy.y * bulletVec.y +
 		to_enemy.z * bulletVec.z;
 
+	//ベクトルの外積を計算
 	XMFLOAT3 closs_bullet_vec = {
 		bullet_vec_nml.x * dot_ene_bullet,
 		bullet_vec_nml.y * dot_ene_bullet,
 		bullet_vec_nml.z * dot_ene_bullet
 	};
 
+	//ミサイルの進行ベクトルをターゲットの方に曲げるベクトルを計算
 	XMFLOAT3 centripetalAccel = {
 		bulletObject->getPosition().x - closs_bullet_vec.x,
 		bulletObject->getPosition().y - closs_bullet_vec.y,
@@ -188,6 +195,7 @@ void Missile::update()
 		centri_to_enemy = normalized(centri_to_enemy);
 	}
 
+	//曲げる力に補正を入れる
 	XMFLOAT3 Force = {
 		centri_to_enemy.x * 2.0f,
 		centri_to_enemy.y * 2.0f,
@@ -202,6 +210,7 @@ void Missile::update()
 	Force.y -= bulletVec.y * 1.2f;
 	Force.z -= bulletVec.z * 1.2f;
 
+	//ミサイルの進行方向を曲げる
 	bulletVec.x += Force.x;
 	bulletVec.y += Force.y;
 	bulletVec.z += Force.z;
