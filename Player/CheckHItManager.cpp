@@ -202,6 +202,11 @@ void checkHitManager::checkPlayerEnemyBullets(Player* player, list<unique_ptr<En
 // プレイヤーカーソルと敵本体のロックオン判定(単体)
 void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& targetnum)
 {
+	if (player->isRockOn == false)
+	{
+		return;
+	}
+
 	if (targetnum >= MaxPlayerMissileNum)
 	{
 		return;

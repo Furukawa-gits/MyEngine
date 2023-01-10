@@ -1014,16 +1014,6 @@ void GameScene::Draw2D()
 
 void GameScene::checkHitPlayerTarget()
 {
-	if (!player_p->isRockOn)
-	{
-		return;
-	}
-
-	if (!input->Mouse_LeftPush())
-	{
-		return;
-	}
-
 	//’Êí‚Ì“G
 	checkHitManager::checkRockonEnemys(player_p.get(), &enemyList, targetnum);
 
