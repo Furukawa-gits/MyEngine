@@ -483,7 +483,7 @@ void GameScene::Play_updata()
 
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
-		newenemy->update(player_p->playerObject->getPosition());
+		newenemy->update(player_p->playerObject->getPosition(), player_p->followCamera->getFrontVec());
 		checkHitManager::checkPlayerEnemy(player_p.get(), newenemy.get());
 		checkHitManager::chackPlayerEnemyBullet(player_p.get(), newenemy.get());
 	}
@@ -1171,7 +1171,7 @@ void GameScene::tutorial()
 
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
-		newenemy->update(player_p->playerObject->getPosition());
+		newenemy->update(player_p->playerObject->getPosition(), player_p->followCamera->getFrontVec());
 		checkHitManager::checkPlayerEnemy(player_p.get(), newenemy.get());
 		checkHitManager::chackPlayerEnemyBullet(player_p.get(), newenemy.get());
 	}

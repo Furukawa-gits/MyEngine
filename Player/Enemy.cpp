@@ -205,7 +205,7 @@ void Enemy::shot(XMFLOAT3 pPos)
 	bullet->update();
 }
 
-void Enemy::update(XMFLOAT3 playerPos)
+void Enemy::update(XMFLOAT3 playerPos, XMFLOAT3 playerFront)
 {
 	if (!isDraw)
 	{
@@ -221,6 +221,7 @@ void Enemy::update(XMFLOAT3 playerPos)
 		return;
 	}
 
+	//プレイヤーとの位置関係を計算
 	XMFLOAT3 toPlayer =
 	{
 		playerPos.x - position.x,
@@ -230,14 +231,23 @@ void Enemy::update(XMFLOAT3 playerPos)
 
 	float length = sqrtf(powf(toPlayer.x, 2) + powf(toPlayer.y, 2) + powf(toPlayer.z, 2));
 
+	//プレイヤーと距離が離れすぎているか
 	if (length >= forPlayer)
 	{
 		isFar = true;
+		isTargetSet = false;
 	}
 	else
 	{
 		isFar = false;
 	}
+
+	//ベクトルの内積から角度を求めて、ロックオンの範囲を絞る
+	float cross = toPlayer.x * playerFront.x + toPlayer.y * playerFront.y + toPlayer.z * playerFront.z;
+
+	float vecLen = sqrtf((powf(toPlayer.x, 2) + powf(toPlayer.y, 2) + powf(toPlayer.z, 2)) * (powf(playerFront.x, 2) + powf(playerFront.y, 2) + powf(playerFront.z, 2)));
+
+	toPlayerAngle = acosf(cross / vecLen) * (180.0f / M_PI);
 
 	//敵が生存
 	ariveMove(playerPos);
@@ -246,6 +256,47 @@ void Enemy::update(XMFLOAT3 playerPos)
 	deathMove();
 
 	return;
+}
+
+void Enemy::updataSprite()
+{
+	if (isTargetSet)
+	{
+		rockTarget->rotation += 1.5f;
+		XMFLOAT2 screenPos = enemyObject->worldToScleen();
+		XMFLOAT2 targetPos = screenPos;
+
+		if (targetPos.x < rockTarget->size.x / 2)
+		{
+			targetPos.x = rockTarget->size.x / 2;
+		}
+		else if (targetPos.x > 1280 - rockTarget->size.x / 2)
+		{
+			targetPos.x = 1280 - rockTarget->size.x / 2;
+		}
+
+		if (targetPos.y < rockTarget->size.y / 2)
+		{
+			targetPos.y = rockTarget->size.y / 2;
+		}
+		else if (targetPos.y > 720 - rockTarget->size.y / 2)
+		{
+			targetPos.y = 720 - rockTarget->size.y / 2;
+		}
+
+		rockTarget->position = { targetPos.x,targetPos.y,0 };
+	}
+
+	rockTarget->SpriteTransferVertexBuffer();
+	rockTarget->SpriteUpdate();
+
+	enemyObject->SetPosition(position);
+	enemyCollision.center =
+	{
+		enemyObject->getPosition().x,
+		enemyObject->getPosition().y,
+		enemyObject->getPosition().z,1.0f
+	};
 }
 
 void Enemy::arrival()
@@ -315,23 +366,7 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 #pragma endregion 爆発パーティクル生成
 	}
 
-	if (isTargetSet)
-	{
-		rockTarget->rotation += 1.5f;
-		XMFLOAT2 screenPos = enemyObject->worldToScleen();
-		rockTarget->position = { screenPos.x,screenPos.y,0 };
-	}
-
-	rockTarget->SpriteTransferVertexBuffer();
-	rockTarget->SpriteUpdate();
-
-	enemyObject->SetPosition(position);
-	enemyCollision.center =
-	{
-		enemyObject->getPosition().x,
-		enemyObject->getPosition().y,
-		enemyObject->getPosition().z,1.0f
-	};
+	updataSprite();
 }
 
 void Enemy::deathMove()

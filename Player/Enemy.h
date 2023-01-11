@@ -99,8 +99,13 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="playerPos">プレイヤーの座標</param>
-	void update(XMFLOAT3 playerPos);
+	/// <param name="playerFront">プレイヤーの正面ベクトル</param>
+	void update(XMFLOAT3 playerPos, XMFLOAT3 playerFront);
 
+	/// <summary>
+	/// スプライトの更新
+	/// </summary>
+	void updataSprite();
 
 	/// <summary>
 	/// 描画(3dオブジェクト)
@@ -190,6 +195,9 @@ public:
 	XMFLOAT3 rot = {};
 
 	bool isFar = false;
+
+	//プレイヤーの向いている方向と自分の位置との角度
+	float toPlayerAngle = 0.0f;
 
 	//敵の行動パターン
 	enemyPattern enemyMovePattern = enemyPattern::chase;

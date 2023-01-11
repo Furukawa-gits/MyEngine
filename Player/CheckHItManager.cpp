@@ -240,15 +240,6 @@ void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& target
 		return;
 	}
 
-	//ロックオンした状態で離れすぎると解除
-	if (length >= Enemy::forPlayer)
-	{
-		enemy->isTargetSet = false;
-		enemy->isSetMissile = false;
-
-		return;
-	}
-
 	XMFLOAT2 screenPos = enemy->enemyObject->worldToScleen();
 
 	float dis = sqrtf(powf(player->targetFirst.position.x - screenPos.x, 2) + powf(player->targetFirst.position.y - screenPos.y, 2));
@@ -256,6 +247,14 @@ void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& target
 	if (dis < 56.5685f && enemy->isTargetSet == false)
 	{
 		enemy->isTargetSet = true;
+
+		//ロックオンした状態で離れすぎると解除
+		if (length >= Enemy::forPlayer)
+		{
+			enemy->isTargetSet = false;
+			return;
+		}
+
 		targetnum++;
 	}
 }
