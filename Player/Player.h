@@ -53,6 +53,8 @@ private:
 	SingleSprite targetSecond;
 	SingleSprite targetThird;
 
+	SingleSprite remainingMissileNum[9];
+
 	float yowRotateSpeedPositive = 0.0f;//ヨー回転(正方向)
 	float yowRotateSpeedNegative = 0.0f;//ヨー回転(負方向)
 	float pitchRotateSpeedPositive = 0.0f;//ピッチ回転(正方向)
