@@ -867,7 +867,7 @@ void GameScene::PlayDraw2d()
 		}
 	}
 
-	player_p->draw2D(directx);
+	player_p->draw2D(directx, targetnum);
 
 	if (isCountDown)
 	{

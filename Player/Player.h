@@ -34,7 +34,7 @@ public:
 
 	void draw3D(directX* directx);
 
-	void draw2D(directX* directx);
+	void draw2D(directX* directx,int targetnum);
 
 private:
 	Model* playerModel = nullptr;

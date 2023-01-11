@@ -42,6 +42,11 @@ void Player::init(dxinput* input, directX* directx)
 	damage.size = { 1280,720 };
 	damage.GenerateSprite("damage.png");
 
+	for (int i = 0; i < 9; i++)
+	{
+		remainingMissileNum[i].GenerateSprite("remainingMissileNum.png");
+	}
+
 	playerModel = FbxLoader::GetInstance()->LoadmodelFromFile("player");
 
 	playerObject = new Object3d_FBX;
@@ -411,6 +416,19 @@ void Player::targetUpdate()
 		targetThird.rotation += 4.0f;
 		isRockOn = false;
 	}
+
+	//ミサイル残弾数の表示
+	for (int i = 0; i < 9; i++)
+	{
+		remainingMissileNum[i].anchorpoint = { 0,0 };
+		remainingMissileNum[i].position = { 640,360 + 100,0 };
+		remainingMissileNum[i].texLeftTop = { (float)i * 100,0 };
+		remainingMissileNum[i].texSize = { 100,100 };
+		remainingMissileNum[i].size = { 70,70 };
+
+		remainingMissileNum[i].SpriteTransferVertexBuffer(true);
+		remainingMissileNum[i].SpriteUpdate();
+	}
 }
 
 void Player::addMissile(Enemy* enemy)
@@ -466,7 +484,7 @@ void Player::draw3D(directX* directx)
 	}
 }
 
-void Player::draw2D(directX* directx)
+void Player::draw2D(directX* directx, int targetnum)
 {
 	if (!isArive)
 	{
@@ -485,6 +503,11 @@ void Player::draw2D(directX* directx)
 	if (isArmor)
 	{
 		damage.DrawSprite(directx->cmdList.Get());
+	}
+
+	if (isRockOn)
+	{
+		remainingMissileNum[MaxPlayerMissileNum - targetnum].DrawSprite(directx->cmdList.Get());
 	}
 
 	int i = 0;

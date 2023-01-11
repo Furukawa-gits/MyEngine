@@ -247,7 +247,7 @@ void Enemy::update(XMFLOAT3 playerPos, XMFLOAT3 playerFront)
 
 	float vecLen = sqrtf((powf(toPlayer.x, 2) + powf(toPlayer.y, 2) + powf(toPlayer.z, 2)) * (powf(playerFront.x, 2) + powf(playerFront.y, 2) + powf(playerFront.z, 2)));
 
-	toPlayerAngle = acosf(cross / vecLen) * (180.0f / M_PI);
+	toPlayerAngle = acosf(cross / vecLen) * (180.0f / (float)M_PI);
 
 	//敵が生存
 	ariveMove(playerPos);
@@ -361,7 +361,7 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 #pragma region 爆発パーティクル生成
 		std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
 		newparticle->generate();
-		newparticle->set(maxFallCount - 20, position, { 0,0,0 }, { 0,0,0 }, 0.2, 10.0);
+		newparticle->set(maxFallCount - 20, position, { 0,0,0 }, { 0,0,0 }, 0.2f, 10.0f);
 		bomParticles.push_back(std::move(newparticle));
 #pragma endregion 爆発パーティクル生成
 	}
