@@ -518,8 +518,6 @@ void Boss::bossHoming()
 		}
 	}
 
-	XMFLOAT3 pPos = playerPointer->playerObject->getPosition();
-
 	position = enemyObject->getPosition();
 	XMFLOAT3 dis = { pPos.x - position.x,pPos.y - position.y,pPos.z - position.z };
 

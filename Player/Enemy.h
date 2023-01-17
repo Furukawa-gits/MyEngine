@@ -200,6 +200,7 @@ public:
 	XMFLOAT3 startPosition = {};
 	float enemySpeed = 0.0f;
 	XMFLOAT3 rot = {};
+	XMFLOAT3 outScreenPos = {};
 
 	bool isFar = false;
 
