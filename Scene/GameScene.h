@@ -171,7 +171,7 @@ private:
 	SingleSprite startButton;
 
 	//ステージアイコン
-	SingleSprite stage[4];
+	SingleSprite stage[5];
 
 	SingleSprite selects[3];
 
@@ -214,6 +214,9 @@ private:
 
 	//ステージ番号
 	int stageNum = 1;
+
+	//最大ステージ番号
+	const int maxStageNum = 3;
 
 	//敵を全滅させたときに上がるレベル
 	int level = 1;

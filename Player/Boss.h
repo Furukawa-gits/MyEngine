@@ -73,6 +73,11 @@ public:
 	/// </summary>
 	void bossShot();
 
+	/// <summary>
+	/// ’Ç”ö•ËŒ‚
+	/// </summary>
+	void bossHoming();
+
 	//“oê‰‰oƒtƒ‰ƒO‚Ìæ“¾
 	bool getIsAppear() { return isAppear; }
 

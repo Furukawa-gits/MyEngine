@@ -68,6 +68,11 @@ void GameScene::Load_Sprites()
 	stage[3].size = { 128,128 };
 	stage[3].position = { 0,360,0 };
 	stage[3].GenerateSprite("count2.png");
+
+	stage[4].anchorpoint = { 0.5f,0.5f };
+	stage[4].size = { 128,128 };
+	stage[4].position = { 0,360,0 };
+	stage[4].GenerateSprite("count3.png");
 #pragma endregion //ステージアイコン０～２
 
 	//セレクト画面矢印
@@ -314,7 +319,7 @@ void GameScene::Select_updata()
 		float iconPos = stage[0].position.x;
 
 		//次のステージ
-		if (input->Triger(DIK_RIGHT) && stageNum < 2)
+		if (input->Triger(DIK_RIGHT) && stageNum < maxStageNum)
 		{
 			stageIconEase.set(easingType::easeOut, easingPattern::Cubic, 20, iconPos, iconPos - 300);
 			stageNum++;
@@ -341,6 +346,7 @@ void GameScene::Select_updata()
 	stage[1].position.x = stage[0].position.x + 300;
 	stage[2].position.x = stage[1].position.x + 300;
 	stage[3].position.x = stage[2].position.x + 300;
+	stage[4].position.x = stage[3].position.x + 300;
 
 	//セレクトアイコン通常拡縮
 	if (!isPushStart)
@@ -378,6 +384,7 @@ void GameScene::Select_updata()
 	stage[1].SpriteUpdate();
 	stage[2].SpriteUpdate();
 	stage[3].SpriteUpdate();
+	stage[4].SpriteUpdate();
 	selects[0].SpriteUpdate();
 	selects[1].SpriteUpdate();
 	selects[2].SpriteUpdate();
@@ -816,6 +823,7 @@ void GameScene::SelectDraw2d()
 	stage[1].DrawSprite(directx->cmdList.Get());
 	stage[2].DrawSprite(directx->cmdList.Get());
 	stage[3].DrawSprite(directx->cmdList.Get());
+	stage[4].DrawSprite(directx->cmdList.Get());
 
 	selects[0].DrawSprite(directx->cmdList.Get());
 	selects[1].DrawSprite(directx->cmdList.Get());
@@ -1304,6 +1312,22 @@ void GameScene::loadStage()
 		for (std::unique_ptr<Enemy>& newenemy : enemyList)
 		{
 			newenemy->changePattern(enemyPattern::shot);
+		}
+
+		//ボスの設定
+		testBoss->setHitPoint(stageLevel + 5);
+	}
+	else if (stageNum == 3)
+	{
+		stageLevel = stageNum + 2;
+
+		//敵
+		testBoss->changePattern(enemyPattern::homing);
+
+		//敵　リスト
+		for (std::unique_ptr<Enemy>& newenemy : enemyList)
+		{
+			newenemy->changePattern(enemyPattern::homing);
 		}
 
 		//ボスの設定

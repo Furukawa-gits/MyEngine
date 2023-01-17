@@ -64,6 +64,7 @@ enum class enemyPattern
 	tutorial = 0,
 	chase = 1,
 	shot = 2,
+	homing = 3,
 };
 
 //敵
@@ -150,6 +151,12 @@ private:
 	/// </summary>
 	/// <param name="pPos">プレイヤーの座標</param>
 	void shot(XMFLOAT3 pPos);
+
+	/// <summary>
+	/// パターン３：追尾＆射撃
+	/// </summary>
+	/// <param name="pPos">プレイヤーの座標</param>
+	void homing(XMFLOAT3 pPos);
 
 private:
 	//モデル

@@ -116,7 +116,7 @@ void Enemy::chase(XMFLOAT3 pPos)
 	{
 		//追尾カウント加算
 		chaseCount++;
-		enemySpeed = 0.25f;
+		enemySpeed = 0.35f;
 		if (chaseCount >= 1)
 		{
 			isChase = false;
@@ -203,6 +203,99 @@ void Enemy::shot(XMFLOAT3 pPos)
 	}
 
 	bullet->update();
+}
+
+void Enemy::homing(XMFLOAT3 pPos)
+{
+	if (enemyMovePattern != enemyPattern::homing)
+	{
+		return;
+	}
+
+	XMFLOAT3 startToTarget =
+	{
+		pPos.x - this->position.x,
+		pPos.y - this->position.y,
+		pPos.z - this->position.z
+	};
+
+	float length = sqrtf(powf(startToTarget.x, 2) + powf(startToTarget.y, 2) + powf(startToTarget.z, 2));
+
+	if (length <= forPlayer / 2)
+	{
+		isInRange = true;
+	}
+	else
+	{
+		isInRange = false;
+	}
+
+	if (!bullet->isBulletArive() && isInRange)
+	{
+		shotCount++;
+	}
+
+	if (shotCount >= 10 && bullet->isBulletArive() == false)
+	{
+		isShot = true;
+		shotCount = 0;
+	}
+	else
+	{
+		isShot = false;
+	}
+
+	if (isShot)
+	{
+		bullet->set(pPos, this->position);
+		isShot = false;
+	}
+
+	bullet->update();
+
+	//追跡
+	if (isChase)
+	{
+		//追尾カウント加算
+		chaseCount++;
+		enemySpeed = 0.25f;
+		if (chaseCount >= 1)
+		{
+			isChase = false;
+			chaseCount = 0;
+			isWait = true;
+		}
+	}
+
+	//待機
+	if (isWait)
+	{
+		//待機カウント加算
+		waitCount++;
+		if (enemySpeed > 0.0f)
+		{
+			enemySpeed -= 0.01f;
+		}
+		if (waitCount >= 40)
+		{
+			isWait = false;
+			waitCount = 0;
+			isChase = true;
+		}
+	}
+
+	position = enemyObject->getPosition();
+	XMFLOAT3 dis = { pPos.x - position.x,pPos.y - position.y,pPos.z - position.z };
+
+	float lengthDis = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
+
+	dis.x /= lengthDis;
+	dis.y /= lengthDis;
+	dis.z /= lengthDis;
+
+	position.x += dis.x * enemySpeed;
+	position.y += dis.y * enemySpeed;
+	position.z += dis.z * enemySpeed;
 }
 
 void Enemy::update(XMFLOAT3 playerPos, XMFLOAT3 playerFront)
@@ -352,6 +445,8 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 
 	shot(playerPos);
 
+	homing(playerPos);
+
 	//HPが0になったら消滅
 	if (HP <= 0)
 	{
@@ -444,7 +539,7 @@ void Enemy::draw3D(directX* directx)
 
 	enemyObject->Draw(directx->cmdList.Get());
 
-	if (enemyMovePattern == enemyPattern::shot)
+	if (enemyMovePattern == enemyPattern::shot || enemyMovePattern == enemyPattern::homing)
 	{
 		bullet->draw(directx);
 	}
