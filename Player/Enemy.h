@@ -183,7 +183,9 @@ public:
 	bool isSetMissile = false;//ミサイルが自分にセットされているか
 	bool isChase = false;//追跡フラグ
 	bool isWait = false;//待機フラグ
+	bool isOutScreen = false;//画面外にいるかどうか
 	std::unique_ptr<SingleSprite> rockTarget;//マーカー
+	std::unique_ptr<SingleSprite> outScreenIcon;
 	Sphere enemyCollision;//敵の当たり判定
 
 	//体力

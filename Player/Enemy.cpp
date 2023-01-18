@@ -38,6 +38,11 @@ void Enemy::init(enemyPattern pattern)
 	rockTarget->size = { 70,70 };
 	rockTarget->GenerateSprite("Rock_on.png");
 
+	outScreenIcon = std::make_unique<SingleSprite>();
+	outScreenIcon->anchorpoint = { 0.5f,0.5f };
+	outScreenIcon->size = { 80,80 };
+	outScreenIcon->GenerateSprite("enemyPos.png");
+
 	enemyObject = new Object3d_FBX;
 	enemyObject->Initialize();
 	enemyObject->SetModel(enemyModelS.get());
@@ -353,11 +358,13 @@ void Enemy::update(XMFLOAT3 playerPos, XMFLOAT3 playerFront)
 
 void Enemy::updataSprite()
 {
+	//画面外フラグを倒す
+	isOutScreen = false;
+
 	if (isTargetSet)
 	{
 		rockTarget->rotation += 1.5f;
-		XMFLOAT2 screenPos = enemyObject->worldToScleen();
-		XMFLOAT2 targetPos = screenPos;
+		XMFLOAT2 targetPos = enemyObject->worldToScleen();
 
 		if (targetPos.x < rockTarget->size.x / 2)
 		{
@@ -377,19 +384,23 @@ void Enemy::updataSprite()
 			targetPos.y = 720 - rockTarget->size.y / 2;
 		}
 
+		if (toPlayerAngle > 90)
+		{
+			targetPos.y = 720 - rockTarget->size.y / 2;
+			//画面外(自分の位置がプレイヤーの向きと直角以上)にいるとき画面外フラグを立てる
+			isOutScreen = true;
+		}
+
 		rockTarget->position = { targetPos.x,targetPos.y,0 };
+	}
+
+	if (isOutScreen)
+	{
+		
 	}
 
 	rockTarget->SpriteTransferVertexBuffer();
 	rockTarget->SpriteUpdate();
-
-	enemyObject->SetPosition(position);
-	enemyCollision.center =
-	{
-		enemyObject->getPosition().x,
-		enemyObject->getPosition().y,
-		enemyObject->getPosition().z,1.0f
-	};
 }
 
 void Enemy::arrival()
@@ -460,6 +471,14 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 		bomParticles.push_back(std::move(newparticle));
 #pragma endregion 爆発パーティクル生成
 	}
+
+	enemyObject->SetPosition(position);
+	enemyCollision.center =
+	{
+		enemyObject->getPosition().x,
+		enemyObject->getPosition().y,
+		enemyObject->getPosition().z,1.0f
+	};
 
 	updataSprite();
 }
