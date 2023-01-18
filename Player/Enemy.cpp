@@ -315,14 +315,14 @@ void Enemy::update(XMFLOAT3 playerPos, XMFLOAT3 playerFront)
 	}
 
 	//プレイヤーとの位置関係を計算
-	XMFLOAT3 toPlayer =
+	XMFLOAT3 playerToEnemy =
 	{
-		playerPos.x - position.x,
-		playerPos.y - position.y,
-		playerPos.z - position.z,
+		position.x - playerPos.x,
+		position.y - playerPos.y,
+		position.z - playerPos.z,
 	};
 
-	float length = sqrtf(powf(toPlayer.x, 2) + powf(toPlayer.y, 2) + powf(toPlayer.z, 2));
+	float length = sqrtf(powf(playerToEnemy.x, 2) + powf(playerToEnemy.y, 2) + powf(playerToEnemy.z, 2));
 
 	//プレイヤーと距離が離れすぎているか
 	if (length >= forPlayer)
@@ -336,9 +336,9 @@ void Enemy::update(XMFLOAT3 playerPos, XMFLOAT3 playerFront)
 	}
 
 	//ベクトルの内積から角度を求めて、ロックオンの範囲を絞る
-	float cross = toPlayer.x * playerFront.x + toPlayer.y * playerFront.y + toPlayer.z * playerFront.z;
+	float cross = playerToEnemy.x * playerFront.x + playerToEnemy.y * playerFront.y + playerToEnemy.z * playerFront.z;
 
-	float vecLen = sqrtf((powf(toPlayer.x, 2) + powf(toPlayer.y, 2) + powf(toPlayer.z, 2)) * (powf(playerFront.x, 2) + powf(playerFront.y, 2) + powf(playerFront.z, 2)));
+	float vecLen = sqrtf((powf(playerToEnemy.x, 2) + powf(playerToEnemy.y, 2) + powf(playerToEnemy.z, 2)) * (powf(playerFront.x, 2) + powf(playerFront.y, 2) + powf(playerFront.z, 2)));
 
 	toPlayerAngle = acosf(cross / vecLen) * (180.0f / (float)M_PI);
 
