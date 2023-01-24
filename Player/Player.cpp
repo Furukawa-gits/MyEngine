@@ -421,7 +421,7 @@ void Player::targetUpdate()
 	for (int i = 0; i < 9; i++)
 	{
 		remainingMissileNum[i].anchorpoint = { 0,0 };
-		remainingMissileNum[i].position = { 640 - (remainingMissileNum[i].size.x / 2),360 + 50,0 };
+		remainingMissileNum[i].position = { 640 + (remainingMissileNum[i].size.x / 2),360,0 };
 		remainingMissileNum[i].texLeftTop = { (float)i * 100,0 };
 		remainingMissileNum[i].texSize = { 100,100 };
 		remainingMissileNum[i].size = { 70,70 };

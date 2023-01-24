@@ -194,8 +194,8 @@ private:
 	SingleSprite titleButton;
 	SingleSprite selectButton;
 
-	//ゲーム時間
-	int game_time = 0;
+	//プレイシーンの時間
+	int totalPlayFlameCount = 0;
 
 	//シーン番号
 	sceneType scene = sceneType::title;

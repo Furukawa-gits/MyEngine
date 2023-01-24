@@ -373,55 +373,35 @@ void Enemy::update(XMFLOAT3 playerPos, XMFLOAT3 playerFront)
 void Enemy::updataSprite()
 {
 	XMFLOAT2 targetPos = enemyObject->worldToScleen();
-	XMFLOAT2 targetPosOutScreen = enemyObject->worldToScleen();
 
 	rockTarget->rotation += 1.5f;
 
-	//ターゲットアイコン
-	if (targetPos.x < rockTarget->size.x / 2)
+	//ターゲットアイコンと画面外アイコンの処理
+	if (targetPos.x < outScreenIcon[0]->size.x / 2)
 	{
-		targetPos.x = rockTarget->size.x / 2;
+		targetPos.x = outScreenIcon[0]->size.x / 2;
 	}
-	else if (targetPos.x > 1280 - rockTarget->size.x / 2)
+	else if (targetPos.x > 1280 - outScreenIcon[0]->size.x / 2)
 	{
-		targetPos.x = 1280 - rockTarget->size.x / 2;
+		targetPos.x = 1280 - outScreenIcon[0]->size.x / 2;
 	}
-	if (targetPos.y < rockTarget->size.y / 2)
+	if (targetPos.y < outScreenIcon[0]->size.y / 2)
 	{
-		targetPos.y = rockTarget->size.y / 2;
+		targetPos.y = outScreenIcon[0]->size.y / 2;
 	}
-	else if (targetPos.y > 720 - rockTarget->size.y / 2)
+	else if (targetPos.y > 720 - outScreenIcon[0]->size.y / 2)
 	{
-		targetPos.y = 720 - rockTarget->size.y / 2;
-	}
-
-	//画面外アイコン
-	if (targetPosOutScreen.x < outScreenIcon[0]->size.x / 2)
-	{
-		targetPosOutScreen.x = outScreenIcon[0]->size.x / 2;
-	}
-	else if (targetPosOutScreen.x > 1280 - outScreenIcon[0]->size.x / 2)
-	{
-		targetPosOutScreen.x = 1280 - outScreenIcon[0]->size.x / 2;
-	}
-	if (targetPosOutScreen.y < outScreenIcon[0]->size.y / 2)
-	{
-		targetPosOutScreen.y = outScreenIcon[0]->size.y / 2;
-	}
-	else if (targetPosOutScreen.y > 720 - outScreenIcon[0]->size.y / 2)
-	{
-		targetPosOutScreen.y = 720 - outScreenIcon[0]->size.y / 2;
+		targetPos.y = 720 - outScreenIcon[0]->size.y / 2;
 	}
 
 	if (isOutScreen)
 	{
-		targetPos.y = 720 - rockTarget->size.y / 2;
-		targetPosOutScreen.y = 720 - outScreenIcon[0]->size.y / 2;
+		targetPos.y = 720 - outScreenIcon[0]->size.y / 2;
 	}
 
 	rockTarget->position = { targetPos.x,targetPos.y,0 };
-	outScreenIcon[0]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
-	outScreenIcon[1]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
+	outScreenIcon[0]->position = { targetPos.x,targetPos.y,0 };
+	outScreenIcon[1]->position = { targetPos.x,targetPos.y,0 };
 
 	rockTarget->SpriteTransferVertexBuffer();
 	rockTarget->SpriteUpdate();

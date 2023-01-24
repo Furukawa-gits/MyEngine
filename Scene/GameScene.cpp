@@ -472,6 +472,12 @@ void GameScene::Play_updata()
 	//カウントダウン
 	countDown();
 
+	if (!isCountDown && !isStartIcon)
+	{
+		//ゲーム時間カウント
+		totalPlayFlameCount++;
+	}
+
 	if (isTutorial)
 	{
 		tutorial();
@@ -958,9 +964,6 @@ void GameScene::Updata()
 {
 	//マウス座標更新
 	MOUSE_POS = { (float)input->mouse_p.x,(float)input->mouse_p.y,0.0f };
-
-	//ゲーム時間カウント
-	game_time++;
 
 	//シーン切り替え
 
