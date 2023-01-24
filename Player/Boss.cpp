@@ -86,7 +86,6 @@ void Boss::bossUpdate(Player* player)
 	if (length >= forPlayer)
 	{
 		isFar = true;
-		isTargetSet = false;
 	}
 	else
 	{

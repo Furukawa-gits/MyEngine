@@ -207,13 +207,20 @@ void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& target
 		return;
 	}
 
-	if (targetnum >= MaxPlayerMissileNum)
+	if (enemy->isDraw == false)
 	{
 		return;
 	}
 
-	if (enemy->isDraw == false)
+	//ロックオンした状態で離れすぎると解除
+	if (enemy->isFar == true && enemy->isTargetSet)
 	{
+		enemy->isTargetSet = false;
+
+		if (targetnum > 0)
+		{
+			targetnum--;
+		}
 		return;
 	}
 
@@ -226,16 +233,9 @@ void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& target
 
 	float dis = sqrtf(powf(player->targetFirst.position.x - screenPos.x, 2) + powf(player->targetFirst.position.y - screenPos.y, 2));
 
-	if (dis < 56.5685f && enemy->isTargetSet == false)
+	if (dis < 56.5685f && enemy->isTargetSet == false && targetnum < MaxPlayerMissileNum)
 	{
 		enemy->isTargetSet = true;
-
-		//ロックオンした状態で離れすぎると解除
-		if (enemy->isFar == true)
-		{
-			enemy->isTargetSet = false;
-			return;
-		}
 
 		targetnum++;
 	}

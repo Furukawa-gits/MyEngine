@@ -338,7 +338,6 @@ void Enemy::update(XMFLOAT3 playerPos, XMFLOAT3 playerFront)
 	if (length >= forPlayer)
 	{
 		isFar = true;
-		isTargetSet = false;
 	}
 	else
 	{
@@ -413,7 +412,6 @@ void Enemy::updataSprite()
 	{
 		targetPosOutScreen.y = 720 - outScreenIcon[0]->size.y / 2;
 	}
-
 
 	if (isOutScreen)
 	{
