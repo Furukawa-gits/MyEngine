@@ -26,6 +26,11 @@ public:
 	void bossUpdate(Player* player);
 
 	/// <summary>
+	/// スプライトの更新
+	/// </summary>
+	void bossSpriteUpdata();
+
+	/// <summary>
 	/// ボスのセッティング
 	/// </summary>
 	/// <param name="pos">座標</param>

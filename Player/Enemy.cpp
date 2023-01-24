@@ -38,10 +38,15 @@ void Enemy::init(enemyPattern pattern)
 	rockTarget->size = { 70,70 };
 	rockTarget->GenerateSprite("Rock_on.png");
 
-	outScreenIcon = std::make_unique<SingleSprite>();
-	outScreenIcon->anchorpoint = { 0.5f,0.5f };
-	outScreenIcon->size = { 80,80 };
-	outScreenIcon->GenerateSprite("enemyPos.png");
+	outScreenIcon[0] = std::make_unique<SingleSprite>();
+	outScreenIcon[0]->anchorpoint = { 0.5f,0.5f };
+	outScreenIcon[0]->size = { 100,100 };
+	outScreenIcon[0]->GenerateSprite("enemyPos.png");
+
+	outScreenIcon[1] = std::make_unique<SingleSprite>();
+	outScreenIcon[1]->anchorpoint = { 0.5f,0.5f };
+	outScreenIcon[1]->size = { 100,100 };
+	outScreenIcon[1]->GenerateSprite("!.png");
 
 	enemyObject = new Object3d_FBX;
 	enemyObject->Initialize();
@@ -347,6 +352,16 @@ void Enemy::update(XMFLOAT3 playerPos, XMFLOAT3 playerFront)
 
 	toPlayerAngle = acosf(cross / vecLen) * (180.0f / (float)M_PI);
 
+	if (toPlayerAngle > 90)
+	{
+		//画面外(自分の位置がプレイヤーの向きと直角以上)にいるとき画面外フラグを立てる
+		isOutScreen = true;
+	}
+	else
+	{
+		isOutScreen = false;
+	}
+
 	//敵が生存
 	ariveMove(playerPos);
 
@@ -358,49 +373,65 @@ void Enemy::update(XMFLOAT3 playerPos, XMFLOAT3 playerFront)
 
 void Enemy::updataSprite()
 {
-	//画面外フラグを倒す
-	isOutScreen = false;
+	XMFLOAT2 targetPos = enemyObject->worldToScleen();
+	XMFLOAT2 targetPosOutScreen = enemyObject->worldToScleen();
 
-	if (isTargetSet)
+	rockTarget->rotation += 1.5f;
+
+	//ターゲットアイコン
+	if (targetPos.x < rockTarget->size.x / 2)
 	{
-		rockTarget->rotation += 1.5f;
-		XMFLOAT2 targetPos = enemyObject->worldToScleen();
-
-		if (targetPos.x < rockTarget->size.x / 2)
-		{
-			targetPos.x = rockTarget->size.x / 2;
-		}
-		else if (targetPos.x > 1280 - rockTarget->size.x / 2)
-		{
-			targetPos.x = 1280 - rockTarget->size.x / 2;
-		}
-
-		if (targetPos.y < rockTarget->size.y / 2)
-		{
-			targetPos.y = rockTarget->size.y / 2;
-		}
-		else if (targetPos.y > 720 - rockTarget->size.y / 2)
-		{
-			targetPos.y = 720 - rockTarget->size.y / 2;
-		}
-
-		if (toPlayerAngle > 90)
-		{
-			targetPos.y = 720 - rockTarget->size.y / 2;
-			//画面外(自分の位置がプレイヤーの向きと直角以上)にいるとき画面外フラグを立てる
-			isOutScreen = true;
-		}
-
-		rockTarget->position = { targetPos.x,targetPos.y,0 };
+		targetPos.x = rockTarget->size.x / 2;
 	}
+	else if (targetPos.x > 1280 - rockTarget->size.x / 2)
+	{
+		targetPos.x = 1280 - rockTarget->size.x / 2;
+	}
+	if (targetPos.y < rockTarget->size.y / 2)
+	{
+		targetPos.y = rockTarget->size.y / 2;
+	}
+	else if (targetPos.y > 720 - rockTarget->size.y / 2)
+	{
+		targetPos.y = 720 - rockTarget->size.y / 2;
+	}
+
+	//画面外アイコン
+	if (targetPosOutScreen.x < outScreenIcon[0]->size.x / 2)
+	{
+		targetPosOutScreen.x = outScreenIcon[0]->size.x / 2;
+	}
+	else if (targetPosOutScreen.x > 1280 - outScreenIcon[0]->size.x / 2)
+	{
+		targetPosOutScreen.x = 1280 - outScreenIcon[0]->size.x / 2;
+	}
+	if (targetPosOutScreen.y < outScreenIcon[0]->size.y / 2)
+	{
+		targetPosOutScreen.y = outScreenIcon[0]->size.y / 2;
+	}
+	else if (targetPosOutScreen.y > 720 - outScreenIcon[0]->size.y / 2)
+	{
+		targetPosOutScreen.y = 720 - outScreenIcon[0]->size.y / 2;
+	}
+
 
 	if (isOutScreen)
 	{
-		
+		targetPos.y = 720 - rockTarget->size.y / 2;
+		targetPosOutScreen.y = 720 - outScreenIcon[0]->size.y / 2;
 	}
+
+	rockTarget->position = { targetPos.x,targetPos.y,0 };
+	outScreenIcon[0]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
+	outScreenIcon[1]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
 
 	rockTarget->SpriteTransferVertexBuffer();
 	rockTarget->SpriteUpdate();
+
+	outScreenIcon[0]->SpriteTransferVertexBuffer();
+	outScreenIcon[0]->SpriteUpdate();
+	outScreenIcon[1]->SpriteTransferVertexBuffer();
+	outScreenIcon[1]->SpriteUpdate();
 }
 
 void Enemy::arrival()
@@ -560,7 +591,10 @@ void Enemy::draw3D(directX* directx)
 
 	if (enemyMovePattern == enemyPattern::shot || enemyMovePattern == enemyPattern::homing)
 	{
-		bullet->draw(directx);
+		if (Isarive)
+		{
+			bullet->draw(directx);
+		}
 	}
 
 	//爆発パーティクル描画
@@ -577,12 +611,18 @@ void Enemy::draw3D(directX* directx)
 
 void Enemy::draw2D(directX* directx)
 {
-	if (isFar)
+	if (isFar || !Isarive)
 	{
 		return;
 	}
 
-	if (Isarive && isTargetSet)
+	if (isOutScreen)
+	{
+		outScreenIcon[0]->DrawSprite(directx->cmdList.Get());
+		outScreenIcon[1]->DrawSprite(directx->cmdList.Get());
+	}
+
+	if (isTargetSet)
 	{
 		rockTarget->DrawSprite(directx->cmdList.Get());
 	}

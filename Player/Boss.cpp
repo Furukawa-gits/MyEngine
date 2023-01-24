@@ -27,6 +27,16 @@ void Boss::bossInit()
 	rockTarget->size = { 70,70 };
 	rockTarget->GenerateSprite("Rock_on.png");
 
+	outScreenIcon[0] = std::make_unique<SingleSprite>();
+	outScreenIcon[0]->anchorpoint = { 0.5f,0.5f };
+	outScreenIcon[0]->size = { 100,100 };
+	outScreenIcon[0]->GenerateSprite("enemyPos.png");
+
+	outScreenIcon[1] = std::make_unique<SingleSprite>();
+	outScreenIcon[1]->anchorpoint = { 0.5f,0.5f };
+	outScreenIcon[1]->size = { 100,100 };
+	outScreenIcon[1]->GenerateSprite("!.png");
+
 	enemyObject = new Object3d_FBX;
 	enemyObject->Initialize();
 	enemyObject->SetModel(bossModel.get());
@@ -66,9 +76,9 @@ void Boss::bossUpdate(Player* player)
 
 	XMFLOAT3 toPlayer =
 	{
-		playerPos.x - position.x,
-		playerPos.y - position.y,
-		playerPos.z - position.z,
+		position.x - playerPos.x ,
+		position.y - playerPos.y ,
+		position.z - playerPos.z ,
 	};
 
 	float length = sqrtf(powf(toPlayer.x, 2) + powf(toPlayer.y, 2) + powf(toPlayer.z, 2));
@@ -76,15 +86,98 @@ void Boss::bossUpdate(Player* player)
 	if (length >= forPlayer)
 	{
 		isFar = true;
+		isTargetSet = false;
 	}
 	else
 	{
 		isFar = false;
 	}
 
+	XMFLOAT3 playerFront = playerPointer->followCamera->getFrontVec();
+
+	//ベクトルの内積から角度を求めて、ロックオンの範囲を絞る
+	float cross = toPlayer.x * playerFront.x + toPlayer.y * playerFront.y + toPlayer.z * playerFront.z;
+
+	float vecLen = sqrtf((powf(toPlayer.x, 2) + powf(toPlayer.y, 2) + powf(toPlayer.z, 2)) * (powf(playerFront.x, 2) + powf(playerFront.y, 2) + powf(playerFront.z, 2)));
+
+	toPlayerAngle = acosf(cross / vecLen) * (180.0f / (float)M_PI);
+
+	if (toPlayerAngle > 90)
+	{
+		//画面外(自分の位置がプレイヤーの向きと直角以上)にいるとき画面外フラグを立てる
+		isOutScreen = true;
+	}
+	else
+	{
+		isOutScreen = false;
+	}
+
 	bossAriveMove();
 
 	bossDeathMove();
+}
+
+void Boss::bossSpriteUpdata()
+{
+	XMFLOAT2 targetPos = enemyObject->worldToScleen();
+	XMFLOAT2 targetPosOutScreen = enemyObject->worldToScleen();
+
+	rockTarget->rotation += 1.5f;
+
+	//ターゲットアイコン
+	if (targetPos.x < rockTarget->size.x / 2)
+	{
+		targetPos.x = rockTarget->size.x / 2;
+	}
+	else if (targetPos.x > 1280 - rockTarget->size.x / 2)
+	{
+		targetPos.x = 1280 - rockTarget->size.x / 2;
+	}
+	if (targetPos.y < rockTarget->size.y / 2)
+	{
+		targetPos.y = rockTarget->size.y / 2;
+	}
+	else if (targetPos.y > 720 - rockTarget->size.y / 2)
+	{
+		targetPos.y = 720 - rockTarget->size.y / 2;
+	}
+
+	//画面外アイコン
+	if (targetPosOutScreen.x < outScreenIcon[0]->size.x / 2)
+	{
+		targetPosOutScreen.x = outScreenIcon[0]->size.x / 2;
+	}
+	else if (targetPosOutScreen.x > 1280 - outScreenIcon[0]->size.x / 2)
+	{
+		targetPosOutScreen.x = 1280 - outScreenIcon[0]->size.x / 2;
+	}
+	if (targetPosOutScreen.y < outScreenIcon[0]->size.y / 2)
+	{
+		targetPosOutScreen.y = outScreenIcon[0]->size.y / 2;
+	}
+	else if (targetPosOutScreen.y > 720 - outScreenIcon[0]->size.y / 2)
+	{
+		targetPosOutScreen.y = 720 - outScreenIcon[0]->size.y / 2;
+	}
+
+
+	if (isOutScreen)
+	{
+		targetPos.y = 720 - rockTarget->size.y / 2;
+		targetPosOutScreen.y = 720 - outScreenIcon[0]->size.y / 2;
+	}
+
+	rockTarget->position = { targetPos.x,targetPos.y,0 };
+	outScreenIcon[0]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
+	outScreenIcon[1]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
+
+	rockTarget->SpriteTransferVertexBuffer();
+	rockTarget->SpriteUpdate();
+
+	outScreenIcon[0]->SpriteTransferVertexBuffer();
+	outScreenIcon[0]->SpriteUpdate();
+	outScreenIcon[1]->SpriteTransferVertexBuffer();
+	outScreenIcon[1]->SpriteUpdate();
 }
 
 void Boss::bossSet(XMFLOAT3 pos)
@@ -189,15 +282,7 @@ void Boss::bossAriveMove()
 		deathRotSpeed = 0.5f;
 	}
 
-	if (isTargetSet)
-	{
-		rockTarget->rotation += 1.5f;
-		XMFLOAT2 screenPos = enemyObject->worldToScleen();
-		rockTarget->position = { screenPos.x,screenPos.y,0 };
-	}
-
-	rockTarget->SpriteTransferVertexBuffer();
-	rockTarget->SpriteUpdate();
+	bossSpriteUpdata();
 
 	enemyObject->SetPosition(position);
 	enemyCollision.center =

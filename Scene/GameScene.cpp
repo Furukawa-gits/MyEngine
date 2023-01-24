@@ -859,6 +859,8 @@ void GameScene::PlayDraw2d()
 		return;
 	}
 
+	player_p->draw2D(directx, targetnum);
+
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
 		newenemy->draw2D(directx);
@@ -874,8 +876,6 @@ void GameScene::PlayDraw2d()
 			bossHitPoints[i]->DrawSprite(directx->cmdList.Get());
 		}
 	}
-
-	player_p->draw2D(directx, targetnum);
 
 	if (isCountDown)
 	{

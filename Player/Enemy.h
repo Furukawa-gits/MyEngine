@@ -185,7 +185,7 @@ public:
 	bool isWait = false;//待機フラグ
 	bool isOutScreen = false;//画面外にいるかどうか
 	std::unique_ptr<SingleSprite> rockTarget;//マーカー
-	std::unique_ptr<SingleSprite> outScreenIcon;
+	std::unique_ptr<SingleSprite>outScreenIcon[2];//画面外アイコン
 	Sphere enemyCollision;//敵の当たり判定
 
 	//体力
