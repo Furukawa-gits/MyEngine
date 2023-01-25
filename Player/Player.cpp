@@ -1,6 +1,8 @@
 #include"Player.h"
 
 dxinput* Player::input = nullptr;
+std::unique_ptr<Model> Player::playerModel = std::make_unique<Model>();
+
 
 Player::Player()
 {
@@ -13,7 +15,6 @@ Player::Player()
 Player::~Player()
 {
 	delete(playerObject);
-	delete(playerModel);
 	delete(followCamera);
 	bulletsList.clear();
 	missilesList.clear();
@@ -47,11 +48,11 @@ void Player::init(dxinput* input, directX* directx)
 		remainingMissileNum[i].GenerateSprite("remainingMissileNum.png");
 	}
 
-	playerModel = FbxLoader::GetInstance()->LoadmodelFromFile("player");
+	playerModel.reset(FbxLoader::GetInstance()->LoadmodelFromFile("player"));
 
 	playerObject = new Object3d_FBX;
 	playerObject->Initialize();
-	playerObject->SetModel(playerModel);
+	playerObject->SetModel(playerModel.get());
 	playerObject->SetPosition({ 0,5,0 });
 	playerObject->SetScale({ 1,1,1 });
 	playerObject->SetScale({ 0.02f,0.02f,0.02f });

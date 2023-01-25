@@ -219,18 +219,18 @@ private:
 	//最大ステージ番号
 	const int maxStageNum = 3;
 
-	//敵を全滅させたときに上がるレベル
-	int level = 1;
-
-	//ステージごとのレベル
-	int stageLevel = 1;
-
-	//現在のステージレベル
+	//現在のステージレベル(敵を全滅させると1つ上がる)
 	int nowStageLevel = 1;
 
-	// レベル = ステージ番号 + 2
-	// レベルが最大まで行くとボス出現
-	// ボスの HP はレベル + 5
+	//ステージごとの最大レベル(ここまで到達するとボス出現)
+	int stageLevel = 1;
+
+	//敵の湧き数
+	int enemySpawnNum = 0;
+
+	// stageLevel = stageNum + 2
+	// stageLevel が最大まで行くとボス出現
+	// ボスの HP は stageLevel + 5
 	// ボスを倒すとクリア
 
 	//ステージアイコンのイージング

@@ -575,6 +575,7 @@ void GameScene::Play_updata()
 		else
 		{
 			//次ウェーブの敵出現
+
 		}
 
 		//ボス出現
@@ -1274,7 +1275,7 @@ void GameScene::loadStage()
 		return;
 	}
 
-	for (int i = 0; i < maxEnemyNum; i++)
+	for (int i = 0; i < stageNum + 4; i++)
 	{
 		//敵　リスト
 		std::unique_ptr<Enemy> newenemy = std::make_unique<Enemy>();

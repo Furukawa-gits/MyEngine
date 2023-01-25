@@ -37,7 +37,7 @@ public:
 	void draw2D(directX* directx,int targetnum);
 
 private:
-	Model* playerModel = nullptr;
+	static std::unique_ptr<Model> playerModel;
 	//クォータニオン回転角度
 	float roll = 0.0f;
 	float pitch = 0.0f;
