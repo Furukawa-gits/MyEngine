@@ -575,13 +575,28 @@ void GameScene::Play_updata()
 		else
 		{
 			//次ウェーブの敵出現
+			enemySpawnNum = rand() % 4 + 4;
 
+			for (int i = 0; i < enemySpawnNum; i++)
+			{
+				//敵　リスト
+				std::unique_ptr<Enemy> newenemy = std::make_unique<Enemy>();
+				newenemy->init(enemyPattern::shot);
+				newenemy->set({
+				(float)(rand() % 50 - 25),
+				(float)(rand() % 30 + 15),
+				(float)(rand() % 50 - 25) });
+
+				enemyList.push_back(std::move(newenemy));
+			}
 		}
 
 		//ボス出現
 		testBoss->bossSet({ 0,5,0 });
 		isBoss = true;
 	}
+
+	
 
 	if (isBoss)
 	{

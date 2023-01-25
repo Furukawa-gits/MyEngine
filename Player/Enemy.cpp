@@ -76,12 +76,6 @@ void Enemy::set(XMFLOAT3 pos)
 	isChase = false;
 	isWait = true;
 	isDraw = true;
-	if (enemyMovePattern == enemyPattern::chase)
-	{
-		waitCount = rand() % 40;
-		isChase = false;
-		isWait = true;
-	}
 	enemyArrivalTime = 100;
 	enemyArrivaCount = 0;
 	arrivalEase.set(easingType::easeOut, easingPattern::Quadratic, enemyArrivalTime, 500, 0);
