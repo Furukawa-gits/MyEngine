@@ -155,7 +155,7 @@ private:
 	void homing();
 
 	/// <summary>
-	/// 弾乱射
+	/// パターン４：弾乱射
 	/// </summary>
 	void rampage();
 
