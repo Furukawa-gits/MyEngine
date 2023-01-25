@@ -173,6 +173,7 @@ private:
 	//ステージアイコン
 	SingleSprite stage[5];
 
+	//セレクトアイコン
 	SingleSprite selects[3];
 
 	float selectIconSizeX = 150;

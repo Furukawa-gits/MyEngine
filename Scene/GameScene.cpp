@@ -606,6 +606,8 @@ void GameScene::Play_updata()
 		isSelectOrTitle = -1;
 		ButtonEase_y.reSet();
 		ButtonEase_x.reSet();
+
+		//ステージクリア
 		scene = sceneType::clear;
 
 		bossHitPoints.clear();
@@ -623,6 +625,8 @@ void GameScene::Play_updata()
 		isSelectOrTitle = -1;
 		ButtonEase_y.reSet();
 		ButtonEase_x.reSet();
+
+		//ゲームオーバー
 		scene = sceneType::over;
 	}
 }
