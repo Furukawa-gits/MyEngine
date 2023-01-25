@@ -69,7 +69,7 @@ void Enemy::set(XMFLOAT3 pos)
 	position = pos;
 	startPosition = pos;
 	enemyObject->SetPosition(pos);
-	Isarive = true;
+	Isarive = false;
 	isTargetSet = false;
 	chaseCount = 0;
 	waitCount = 0;

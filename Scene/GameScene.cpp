@@ -564,18 +564,21 @@ void GameScene::Play_updata()
 	}
 
 	//すべての雑魚敵が死んでいたら次のウェーブ
-	if (enemyList.size() <= 0 && !isBoss)
+	if (enemyList.size() <= 0 && nowStageLevel < stageLevel)
 	{
 		nowStageLevel++;
 
-		if (nowStageLevel == stageLevel)
+		if (nowStageLevel == stageLevel && !isBoss)
 		{
 			//ボス出現
+			testBoss->bossSet({ 0,5,0 });
+			isBoss = true;
 		}
 		else
 		{
 			//次ウェーブの敵出現
-			enemySpawnNum = rand() % 4 + 4;
+			enemySpawnNum = (rand() % 4) + 4;
+			int nextType = (rand() % 3) + 1;
 
 			for (int i = 0; i < enemySpawnNum; i++)
 			{
@@ -587,16 +590,14 @@ void GameScene::Play_updata()
 				(float)(rand() % 30 + 15),
 				(float)(rand() % 50 - 25) });
 
+				newenemy->changePattern((enemyPattern)nextType);
+
 				enemyList.push_back(std::move(newenemy));
 			}
 		}
-
-		//ボス出現
-		testBoss->bossSet({ 0,5,0 });
-		isBoss = true;
 	}
 
-	
+
 
 	if (isBoss)
 	{
@@ -610,7 +611,7 @@ void GameScene::Play_updata()
 	}
 
 	//ボスを倒したorプレイヤーが死んだらリザルト
-	if ((isBoss && !testBoss->isDraw))
+	if (isBoss && (!testBoss->isDraw))
 	{
 		isMoveScreen = true;
 		isScreenEase = true;
