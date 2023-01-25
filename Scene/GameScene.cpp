@@ -472,6 +472,9 @@ void GameScene::Play_updata()
 	//カウントダウン
 	countDown();
 
+	//敵に共通して必要なプレイヤーの情報を渡す
+	Enemy::staticUpdata(player_p->getPlayerPosition(),player_p->getPlayerFront());
+
 	if (!isCountDown && !isStartIcon)
 	{
 		//ゲーム時間カウント
@@ -496,7 +499,7 @@ void GameScene::Play_updata()
 
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
-		newenemy->update(player_p->playerObject->getPosition(), player_p->followCamera->getFrontVec());
+		newenemy->update();
 		checkHitManager::checkPlayerEnemy(player_p.get(), newenemy.get());
 		checkHitManager::chackPlayerEnemyBullet(player_p.get(), newenemy.get());
 	}
@@ -568,17 +571,19 @@ void GameScene::Play_updata()
 	{
 		nowStageLevel++;
 
+		//最後のウェーブならボス戦
 		if (nowStageLevel == stageLevel && !isBoss)
 		{
 			//ボス出現
 			testBoss->bossSet({ 0,5,0 });
 			isBoss = true;
 		}
+		//でなければ次の敵軍
 		else
 		{
-			//次ウェーブの敵出現
-			enemySpawnNum = (rand() % 4) + 4;
-			int nextType = (rand() % 3) + 1;
+			//次ウェーブ
+			enemySpawnNum = (rand() % 4) + 3 + stageNum;	//敵出現数
+			int nextType = (rand() % 3) + 1;				//敵の種類
 
 			for (int i = 0; i < enemySpawnNum; i++)
 			{
@@ -596,8 +601,6 @@ void GameScene::Play_updata()
 			}
 		}
 	}
-
-
 
 	if (isBoss)
 	{
@@ -1203,7 +1206,7 @@ void GameScene::tutorial()
 
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
-		newenemy->update(player_p->playerObject->getPosition(), player_p->followCamera->getFrontVec());
+		newenemy->update();
 		checkHitManager::checkPlayerEnemy(player_p.get(), newenemy.get());
 		checkHitManager::chackPlayerEnemyBullet(player_p.get(), newenemy.get());
 	}

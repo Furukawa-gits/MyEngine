@@ -65,6 +65,7 @@ enum class enemyPattern
 	chase = 1,
 	shot = 2,
 	homing = 3,
+	rampage = 4,
 };
 
 //敵
@@ -76,6 +77,7 @@ public:
 	~Enemy();
 
 	static void staticInit();
+	static void staticUpdata(XMFLOAT3 playerpos, XMFLOAT3 playerfront);
 	static void staticDestroy();
 
 	//初期化
@@ -99,9 +101,7 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	/// <param name="playerPos">プレイヤーの座標</param>
-	/// <param name="playerFront">プレイヤーの正面ベクトル</param>
-	void update(XMFLOAT3 playerPos, XMFLOAT3 playerFront);
+	void update();
 
 	/// <summary>
 	/// スプライトの更新
@@ -129,8 +129,7 @@ private:
 	/// <summary>
 	/// 生存時の処理
 	/// </summary>
-	/// <param name="playerPos">プレイヤーの座標</param>
-	void ariveMove(XMFLOAT3 playerPos);
+	void ariveMove();
 
 	//撃墜時の処理
 	void deathMove();
@@ -143,24 +142,29 @@ private:
 	/// <summary>
 	/// パターン１：追尾
 	/// </summary>
-	/// <param name="pPos">プレイヤーの座標</param>
-	void chase(XMFLOAT3 pPos);
+	void chase();
 
 	/// <summary>
 	/// パターン２：射撃
 	/// </summary>
-	/// <param name="pPos">プレイヤーの座標</param>
-	void shot(XMFLOAT3 pPos);
+	void shot();
 
 	/// <summary>
 	/// パターン３：追尾＆射撃
 	/// </summary>
-	/// <param name="pPos">プレイヤーの座標</param>
-	void homing(XMFLOAT3 pPos);
+	void homing();
+
+	/// <summary>
+	/// 弾乱射
+	/// </summary>
+	void rampage();
 
 private:
 	//モデル
 	static std::unique_ptr<Model> enemyModelS;
+
+	static XMFLOAT3 playerPosition;
+	static XMFLOAT3 playerFront;
 
 	//登場演出時間
 	int enemyArrivalTime;
@@ -224,8 +228,13 @@ public:
 	//この敵がボスかどうか
 	bool isThisBoss = false;
 
-	//弾
+	//弾(1発のみ：shotで使う)
 	std::unique_ptr<enemyBullet> bullet;
+
+	//弾(乱射：rampageで使う)
+	std::list<std::unique_ptr<enemyBullet>> rampageBullet;
+
+	int maxBulletCount = 5;
 
 	//撃墜エフェクト
 	std::list<std::unique_ptr<SingleParticle>> bomParticles;	//爆発

@@ -36,6 +36,12 @@ public:
 
 	void draw2D(directX* directx,int targetnum);
 
+	//プレイヤーの位置を取得
+	XMFLOAT3 getPlayerPosition() { return playerObject->getPosition(); }
+
+	//プレイヤーの正面ベクトルを取得
+	XMFLOAT3 getPlayerFront() { return followCamera->getFrontVec(); }
+
 private:
 	static std::unique_ptr<Model> playerModel;
 	//クォータニオン回転角度

@@ -2,6 +2,8 @@
 #include<random>
 
 std::unique_ptr<Model> Enemy::enemyModelS = std::make_unique<Model>();
+XMFLOAT3 Enemy::playerPosition = { 0,0,0 };
+XMFLOAT3 Enemy::playerFront = { 0,0,0 };
 const float Enemy::forPlayer = 200.0f;
 
 #pragma region 敵本体
@@ -22,6 +24,12 @@ void Enemy::staticInit()
 	SingleParticle::loadTexInMap("smoke.png");
 
 	enemyBullet::staticInit();
+}
+
+void Enemy::staticUpdata(XMFLOAT3 playerpos, XMFLOAT3 playerfront)
+{
+	playerPosition = playerpos;
+	playerFront = playerfront;
 }
 
 void Enemy::staticDestroy()
@@ -108,7 +116,7 @@ void Enemy::tutorial()
 	enemyObject->Update();
 }
 
-void Enemy::chase(XMFLOAT3 pPos)
+void Enemy::chase()
 {
 	if (enemyMovePattern != enemyPattern::chase)
 	{
@@ -147,7 +155,12 @@ void Enemy::chase(XMFLOAT3 pPos)
 	}
 
 	position = enemyObject->getPosition();
-	XMFLOAT3 dis = { pPos.x - position.x,pPos.y - position.y,pPos.z - position.z };
+	XMFLOAT3 dis = 
+	{ 
+		playerPosition.x - position.x,
+		playerPosition.y - position.y,
+		playerPosition.z - position.z
+	};
 
 	float lengthDis = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
 
@@ -160,18 +173,19 @@ void Enemy::chase(XMFLOAT3 pPos)
 	position.z += dis.z * enemySpeed;
 }
 
-void Enemy::shot(XMFLOAT3 pPos)
+void Enemy::shot()
 {
 	if (enemyMovePattern != enemyPattern::shot)
 	{
 		return;
 	}
 
+	//射程範囲かどうかを計算
 	XMFLOAT3 startToTarget =
 	{
-		pPos.x - this->position.x,
-		pPos.y - this->position.y,
-		pPos.z - this->position.z
+		playerPosition.x - this->position.x,
+		playerPosition.y - this->position.y,
+		playerPosition.z - this->position.z
 	};
 
 	float length = sqrtf(powf(startToTarget.x, 2) + powf(startToTarget.y, 2) + powf(startToTarget.z, 2));
@@ -185,11 +199,13 @@ void Enemy::shot(XMFLOAT3 pPos)
 		isInRange = false;
 	}
 
+	//弾を撃っていないかつ射程範囲内なら射撃までのカウントダウンを進める
 	if (!bullet->isBulletArive() && isInRange)
 	{
 		shotCount++;
 	}
 
+	//一定カウントごとに射撃フラグを立てる
 	if (shotCount >= 10 && bullet->isBulletArive() == false)
 	{
 		isShot = true;
@@ -200,16 +216,17 @@ void Enemy::shot(XMFLOAT3 pPos)
 		isShot = false;
 	}
 
+	//弾を撃つ
 	if (isShot)
 	{
-		bullet->set(pPos, this->position);
+		bullet->set(playerPosition, this->position);
 		isShot = false;
 	}
 
 	bullet->update();
 }
 
-void Enemy::homing(XMFLOAT3 pPos)
+void Enemy::homing()
 {
 	if (enemyMovePattern != enemyPattern::homing)
 	{
@@ -218,9 +235,9 @@ void Enemy::homing(XMFLOAT3 pPos)
 
 	XMFLOAT3 startToTarget =
 	{
-		pPos.x - this->position.x,
-		pPos.y - this->position.y,
-		pPos.z - this->position.z
+		playerPosition.x - this->position.x,
+		playerPosition.y - this->position.y,
+		playerPosition.z - this->position.z
 	};
 
 	float length = sqrtf(powf(startToTarget.x, 2) + powf(startToTarget.y, 2) + powf(startToTarget.z, 2));
@@ -251,7 +268,7 @@ void Enemy::homing(XMFLOAT3 pPos)
 
 	if (isShot)
 	{
-		bullet->set(pPos, this->position);
+		bullet->set(playerPosition, this->position);
 		isShot = false;
 	}
 
@@ -289,7 +306,12 @@ void Enemy::homing(XMFLOAT3 pPos)
 	}
 
 	position = enemyObject->getPosition();
-	XMFLOAT3 dis = { pPos.x - position.x,pPos.y - position.y,pPos.z - position.z };
+	XMFLOAT3 dis = 
+	{ 
+		playerPosition.x - position.x,
+		playerPosition.y - position.y,
+		playerPosition.z - position.z
+	};
 
 	float lengthDis = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
 
@@ -302,7 +324,12 @@ void Enemy::homing(XMFLOAT3 pPos)
 	position.z += dis.z * enemySpeed;
 }
 
-void Enemy::update(XMFLOAT3 playerPos, XMFLOAT3 playerFront)
+void Enemy::rampage()
+{
+
+}
+
+void Enemy::update()
 {
 	if (!isDraw)
 	{
@@ -321,9 +348,9 @@ void Enemy::update(XMFLOAT3 playerPos, XMFLOAT3 playerFront)
 	//プレイヤーとの位置関係を計算
 	XMFLOAT3 playerToEnemy =
 	{
-		position.x - playerPos.x,
-		position.y - playerPos.y,
-		position.z - playerPos.z,
+		position.x - playerPosition.x,
+		position.y - playerPosition.y,
+		position.z - playerPosition.z,
 	};
 
 	float length = sqrtf(powf(playerToEnemy.x, 2) + powf(playerToEnemy.y, 2) + powf(playerToEnemy.z, 2));
@@ -356,7 +383,7 @@ void Enemy::update(XMFLOAT3 playerPos, XMFLOAT3 playerFront)
 	}
 
 	//敵が生存
-	ariveMove(playerPos);
+	ariveMove();
 
 	//敵が撃墜
 	deathMove();
@@ -446,7 +473,7 @@ void Enemy::arrival()
 	}
 }
 
-void Enemy::ariveMove(XMFLOAT3 playerPos)
+void Enemy::ariveMove()
 {
 	if (!Isarive || isAppear)
 	{
@@ -455,11 +482,11 @@ void Enemy::ariveMove(XMFLOAT3 playerPos)
 
 	tutorial();
 
-	chase(playerPos);
+	chase();
 
-	shot(playerPos);
+	shot();
 
-	homing(playerPos);
+	homing();
 
 	//HPが0になったら消滅
 	if (HP <= 0)
