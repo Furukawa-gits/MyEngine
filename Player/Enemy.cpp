@@ -329,7 +329,7 @@ void Enemy::rampage()
 
 }
 
-void Enemy::update()
+void Enemy::updata()
 {
 	if (!isDraw)
 	{

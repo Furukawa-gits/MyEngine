@@ -101,7 +101,7 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void update();
+	void updata();
 
 	/// <summary>
 	/// スプライトの更新

@@ -499,7 +499,7 @@ void GameScene::Play_updata()
 
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
-		newenemy->update();
+		newenemy->updata();
 		checkHitManager::checkPlayerEnemy(player_p.get(), newenemy.get());
 		checkHitManager::chackPlayerEnemyBullet(player_p.get(), newenemy.get());
 	}
@@ -1206,7 +1206,7 @@ void GameScene::tutorial()
 
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
-		newenemy->update();
+		newenemy->updata();
 		checkHitManager::checkPlayerEnemy(player_p.get(), newenemy.get());
 		checkHitManager::chackPlayerEnemyBullet(player_p.get(), newenemy.get());
 	}
