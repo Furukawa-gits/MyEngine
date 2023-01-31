@@ -469,6 +469,11 @@ void GameScene::Play_updata()
 		return;
 	}
 
+	if (input->Triger(DIK_SPACE))
+	{
+		int test = 0;
+	}
+
 	//カウントダウン
 	countDown();
 

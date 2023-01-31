@@ -452,9 +452,13 @@ void Player::reset()
 	playerObject->SetPosition({ 0,5,0 });
 	pitch = 0.0f;
 	yow = 0.0f;
+	qLocal = quaternion();
+	followCamera->setFollowTarget(playerObject->getPosition(), playerObject->getRotation(), -30);
+	followCamera->SetEye({ 0,5,-10 });
+	followCamera->SetTarget({ 0,5,0 });
+	followCamera->setTargets(playerObject->getPosition(), playerObject->getRotation());
 	targetFirst.position = { (float)mouseOffsetX,(float)mouseOffsetY ,0 };
 	SetCursorPos(mouseOffsetX, mouseOffsetY);
-	qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
 	cameraMoveCount = 0;
 	Object3d_FBX::SetCamera(followCamera);
 }

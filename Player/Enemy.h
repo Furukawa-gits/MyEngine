@@ -232,7 +232,7 @@ public:
 	std::unique_ptr<enemyBullet> bullet;
 
 	//’e(—ËFrampage‚Åg‚¤)
-	std::list<std::unique_ptr<enemyBullet>> rampageBullet;
+	std::list<std::unique_ptr<enemyBullet>> rampageBullets;
 
 	int maxBulletCount = 5;
 

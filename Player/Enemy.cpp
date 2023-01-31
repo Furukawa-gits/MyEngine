@@ -87,6 +87,8 @@ void Enemy::set(XMFLOAT3 pos)
 	enemyArrivalTime = 100;
 	enemyArrivaCount = 0;
 	arrivalEase.set(easingType::easeOut, easingPattern::Quadratic, enemyArrivalTime, 500, 0);
+	bomParticles.clear();
+	smokeParticles.clear();
 
 	isAppear = true;
 }
@@ -366,11 +368,11 @@ void Enemy::updata()
 	}
 
 	//ベクトルの内積から角度を求めて、ロックオンの範囲を絞る
-	float cross = playerToEnemy.x * playerFront.x + playerToEnemy.y * playerFront.y + playerToEnemy.z * playerFront.z;
+	float dot = playerToEnemy.x * playerFront.x + playerToEnemy.y * playerFront.y + playerToEnemy.z * playerFront.z;
 
 	float vecLen = sqrtf((powf(playerToEnemy.x, 2) + powf(playerToEnemy.y, 2) + powf(playerToEnemy.z, 2)) * (powf(playerFront.x, 2) + powf(playerFront.y, 2) + powf(playerFront.z, 2)));
 
-	toPlayerAngle = acosf(cross / vecLen) * (180.0f / (float)M_PI);
+	toPlayerAngle = acosf(dot / vecLen) * (180.0f / (float)M_PI);
 
 	if (toPlayerAngle > 90)
 	{
