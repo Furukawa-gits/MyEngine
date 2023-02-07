@@ -328,7 +328,49 @@ void Enemy::homing()
 
 void Enemy::rampage()
 {
+	if (enemyMovePattern != enemyPattern::rampage)
+	{
+		return;
+	}
 
+	if (isRampageWait)
+	{
+		rampageWaitCount++;
+
+		if (rampageWaitCount >= 120)
+		{
+			isRampageWait = false;
+		}
+		return;
+	}
+
+	nextBulletCount++;
+
+	if (nextBulletCount % 20 == 0)
+	{
+		std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
+		newBullet->init();
+		newBullet->set(playerPosition, this->position);
+		rampageBullets.push_back(std::move(newBullet));
+
+		bulletCount++;
+	}
+
+	rampageBullets.remove_if([](std::unique_ptr<enemyBullet>& bullet)
+		{
+			return bullet->isBulletArive() == false;
+		});
+
+	for (std::unique_ptr<enemyBullet>& bullet : rampageBullets)
+	{
+		bullet->update();
+	}
+
+	if (bulletCount == maxBulletCount)
+	{
+		isRampageWait = true;
+		rampageWaitCount = 0;
+	}
 }
 
 void Enemy::updata()

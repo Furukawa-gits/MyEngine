@@ -234,6 +234,11 @@ public:
 	//弾(乱射：rampageで使う)
 	std::list<std::unique_ptr<enemyBullet>> rampageBullets;
 
+	bool isRampageWait = true;
+	bool rampageWaitCount = 0;
+	int bulletCount = 0;
+	int nextBulletCount = 0;
+
 	int maxBulletCount = 5;
 
 	//撃墜エフェクト
