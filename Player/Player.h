@@ -24,6 +24,10 @@ public:
 
 	void cameraMove();
 
+	void playerClearMove();
+
+	void playerDeathMove();
+
 	void update();
 
 	void targetUpdate();
@@ -37,7 +41,7 @@ public:
 	void draw2D(directX* directx,int targetnum);
 
 	//プレイヤーの位置を取得
-	XMFLOAT3 getPlayerPosition() { return playerObject->getPosition(); }
+	XMFLOAT3 getPlayerPos() { return playerObject->getPosition(); }
 
 	//プレイヤーの正面ベクトルを取得
 	XMFLOAT3 getPlayerFront() { return followCamera->getFrontVec(); }

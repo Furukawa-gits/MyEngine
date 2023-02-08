@@ -660,7 +660,7 @@ void Boss::bossRampage()
 	{
 		std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
 		newBullet->init();
-		newBullet->set(playerPointer->getPlayerPosition(), this->position);
+		newBullet->set(playerPointer->getPlayerPos(), this->position);
 		rampageBullets.push_back(std::move(newBullet));
 
 		bulletCount++;

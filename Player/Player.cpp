@@ -232,6 +232,14 @@ void Player::cameraMove()
 	}
 }
 
+void Player::playerClearMove()
+{
+}
+
+void Player::playerDeathMove()
+{
+}
+
 //XV
 void Player::update()
 {

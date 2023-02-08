@@ -478,7 +478,7 @@ void GameScene::Play_updata()
 	countDown();
 
 	//敵に共通して必要なプレイヤーの情報を渡す
-	Enemy::staticUpdata(player_p->getPlayerPosition(),player_p->getPlayerFront());
+	Enemy::staticUpdata(player_p->getPlayerPos(),player_p->getPlayerFront());
 
 	if (!isCountDown && !isStartIcon)
 	{
