@@ -588,7 +588,7 @@ void GameScene::Play_updata()
 		{
 			//次ウェーブ
 			enemySpawnNum = (rand() % 4) + 3 + stageNum;	//敵出現数
-			int nextType = (rand() % 3) + 1;				//敵の種類
+			int nextType = (rand() % 4) + 1;				//敵の種類
 
 			for (int i = 0; i < enemySpawnNum; i++)
 			{
@@ -1359,7 +1359,7 @@ void GameScene::loadStage()
 		//敵　リスト
 		for (std::unique_ptr<Enemy>& newenemy : enemyList)
 		{
-			newenemy->changePattern(enemyPattern::homing);
+			newenemy->changePattern(enemyPattern::rampage);
 		}
 
 		//ボスの設定

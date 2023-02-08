@@ -83,6 +83,11 @@ public:
 	/// </summary>
 	void bossHoming();
 
+	/// <summary>
+	/// —Ë
+	/// </summary>
+	void bossRampage();
+
 	//“oê‰‰oƒtƒ‰ƒO‚Ìæ“¾
 	bool getIsAppear() { return isAppear; }
 

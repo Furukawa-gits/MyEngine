@@ -195,6 +195,14 @@ void Boss::bossSet(XMFLOAT3 pos)
 		isChase = false;
 		isWait = true;
 	}
+
+	nextBulletTime = 0;
+	bulletCount = 0;
+	maxBulletCount = 10;
+	isRampageWait = true;
+	rampageWaitCount = 0;
+	rampageBullets.clear();
+
 	HP = resetHitPoint;
 	arrivalTime = 300;
 	bossRotEase.set(easingType::easeOut, easingPattern::Quadratic, arrivalTime, 1000, 0);
@@ -616,4 +624,53 @@ void Boss::bossHoming()
 	position.z += dis.z * enemySpeed;
 
 	enemyObject->SetPosition(position);
+}
+
+void Boss::bossRampage()
+{
+	if (enemyMovePattern != enemyPattern::rampage)
+	{
+		return;
+	}
+
+	rampageBullets.remove_if([](std::unique_ptr<enemyBullet>& bullet)
+		{
+			return bullet->isBulletArive() == false;
+		});
+
+	for (std::unique_ptr<enemyBullet>& bullet : rampageBullets)
+	{
+		bullet->update();
+	}
+
+	if (isRampageWait)
+	{
+		rampageWaitCount++;
+
+		if (rampageWaitCount >= 100)
+		{
+			isRampageWait = false;
+		}
+		return;
+	}
+
+	nextBulletTime++;
+
+	if (nextBulletTime % 15 == 0)
+	{
+		std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
+		newBullet->init();
+		newBullet->set(playerPointer->getPlayerPosition(), this->position);
+		rampageBullets.push_back(std::move(newBullet));
+
+		bulletCount++;
+	}
+
+	if (bulletCount == maxBulletCount)
+	{
+		isRampageWait = true;
+		rampageWaitCount = 0;
+		nextBulletTime = 0;
+		bulletCount = 0;
+	}
 }

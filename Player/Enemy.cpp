@@ -89,6 +89,11 @@ void Enemy::set(XMFLOAT3 pos)
 	arrivalEase.set(easingType::easeOut, easingPattern::Quadratic, enemyArrivalTime, 500, 0);
 	bomParticles.clear();
 	smokeParticles.clear();
+	nextBulletTime = 0;
+	bulletCount = 0;
+	isRampageWait = true;
+	rampageWaitCount = 0;
+	rampageBullets.clear();
 
 	isAppear = true;
 }
@@ -333,29 +338,6 @@ void Enemy::rampage()
 		return;
 	}
 
-	if (isRampageWait)
-	{
-		rampageWaitCount++;
-
-		if (rampageWaitCount >= 120)
-		{
-			isRampageWait = false;
-		}
-		return;
-	}
-
-	nextBulletCount++;
-
-	if (nextBulletCount % 20 == 0)
-	{
-		std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
-		newBullet->init();
-		newBullet->set(playerPosition, this->position);
-		rampageBullets.push_back(std::move(newBullet));
-
-		bulletCount++;
-	}
-
 	rampageBullets.remove_if([](std::unique_ptr<enemyBullet>& bullet)
 		{
 			return bullet->isBulletArive() == false;
@@ -366,10 +348,35 @@ void Enemy::rampage()
 		bullet->update();
 	}
 
+	if (isRampageWait)
+	{
+		rampageWaitCount++;
+
+		if (rampageWaitCount >= 100)
+		{
+			isRampageWait = false;
+		}
+		return;
+	}
+
+	nextBulletTime++;
+
+	if (nextBulletTime % 15 == 0)
+	{
+		std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
+		newBullet->init();
+		newBullet->set(playerPosition, this->position);
+		rampageBullets.push_back(std::move(newBullet));
+
+		bulletCount++;
+	}
+
 	if (bulletCount == maxBulletCount)
 	{
 		isRampageWait = true;
 		rampageWaitCount = 0;
+		nextBulletTime = 0;
+		bulletCount = 0;
 	}
 }
 
@@ -532,6 +539,8 @@ void Enemy::ariveMove()
 
 	homing();
 
+	rampage();
+
 	//HPÇ™0Ç…Ç»Ç¡ÇΩÇÁè¡ñ≈
 	if (HP <= 0)
 	{
@@ -637,6 +646,17 @@ void Enemy::draw3D(directX* directx)
 		if (Isarive)
 		{
 			bullet->draw(directx);
+		}
+	}
+
+	if (enemyMovePattern == enemyPattern::rampage)
+	{
+		if (Isarive)
+		{
+			for (std::unique_ptr<enemyBullet>& bullet : rampageBullets)
+			{
+				bullet->draw(directx);
+			}
 		}
 	}
 

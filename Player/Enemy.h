@@ -54,7 +54,7 @@ private:
 	//ç¿ïWÅEï˚å¸ÅEíeë¨
 	XMFLOAT3 position = {};
 	XMFLOAT3 bulletVec = {};
-	float bulletSpeed = 0.5f;
+	float bulletSpeed = 0.9f;
 	XMFLOAT3 rot = {};
 };
 
@@ -235,9 +235,9 @@ public:
 	std::list<std::unique_ptr<enemyBullet>> rampageBullets;
 
 	bool isRampageWait = true;
-	bool rampageWaitCount = 0;
+	int rampageWaitCount = 0;
 	int bulletCount = 0;
-	int nextBulletCount = 0;
+	int nextBulletTime = 0;
 
 	int maxBulletCount = 5;
 
