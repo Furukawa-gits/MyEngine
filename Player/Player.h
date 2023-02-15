@@ -27,6 +27,8 @@ public:
 
 	void playerDeathMove();
 
+	void setStaging(bool isclear);
+
 	void update();
 
 	void targetUpdate();
@@ -105,6 +107,10 @@ public:
 	//ダメージ表現
 	SingleSprite damage;
 
+	//撃墜エフェクト
+	std::list<std::unique_ptr<SingleParticle>> bomParticles;	//爆発
+	std::list<std::unique_ptr<SingleParticle>> smokeParticles;	//煙
+
 	//弾
 	std::list<std::unique_ptr<bullet>> bulletsList;
 	std::list<std::unique_ptr<Missile>> missilesList;
@@ -131,6 +137,9 @@ public:
 
 	//カメラが動いた総量
 	int cameraMoveCount = 0;
+
+	//演出セットフラグ
+	bool isStagingSet = false;
 
 	//クリア演出時間
 	bool isClearStaging = false;

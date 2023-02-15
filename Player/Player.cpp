@@ -249,6 +249,11 @@ void Player::playerClearMove()
 		return;
 	}
 
+	if (!isStagingSet)
+	{
+		return;
+	}
+
 	clearTime++;
 
 	if (clearTime == maxClearTime)
@@ -264,13 +269,54 @@ void Player::playerDeathMove()
 		return;
 	}
 
+	if (!isStagingSet)
+	{
+		return;
+	}
+
+	fallCount++;
+
+	if (fallCount == maxFallCount)
+	{
+		isOverStaging = false;
+		return;
+	}
+
+	//回転しながら落ちて行く
 	fallRot.x += 0.1;
 	fallRot.y += 0.1;
 	fallRot.z += 0.1;
 	playerObject->setRotMatrix(fallRot.x, fallRot.y, fallRot.z);
 	playerObject->addMoveFront({ 0,-2,0 });
 
-	
+	//カメラ処理
+	followCamera->SetTarget(playerObject->getPosition());
+	followCamera->SetUp({ 0,1,0 });
+}
+
+void Player::setStaging(bool isclear)
+{
+	if (isStagingSet)
+	{
+		return;
+	}
+
+	XMFLOAT3 pos = playerObject->getPosition();
+
+	followCamera->SetEye({ pos.x,pos.y + 3,pos.z - 5 });
+
+	if (isclear)
+	{
+		isClearStaging = true;
+		isOverStaging = false;
+	}
+	else
+	{
+		isClearStaging = false;
+		isOverStaging = true;
+	}
+
+	isStagingSet = true;
 }
 
 //更新
@@ -302,6 +348,15 @@ void Player::update()
 
 	//ターゲットカーソルの処理
 	targetUpdate();
+
+	//クリア＆ゲームオーバー演出
+	playerClearMove();
+	playerDeathMove();
+
+	if (isClearStaging || isOverStaging)
+	{
+		return;
+	}
 
 	//攻撃を連続したフレームで食らわないようにする
 	if (isArmor)
