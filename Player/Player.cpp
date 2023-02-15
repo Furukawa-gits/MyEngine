@@ -94,6 +94,11 @@ void Player::init(dxinput* input, directX* directx)
 //移動
 void Player::Move()
 {
+	if (isClearStaging || isOverStaging)
+	{
+		return;
+	}
+
 	//オブジェクトの更新
 	playerObject->Update();
 	playerCollision.center =
@@ -143,6 +148,11 @@ void Player::Move()
 //カメラ移動
 void Player::cameraMove()
 {
+	if (isClearStaging || isOverStaging)
+	{
+		return;
+	}
+
 	//ヨー回転
 	//右
 	if (targetFirst.position.x >= 1000)
@@ -234,10 +244,33 @@ void Player::cameraMove()
 
 void Player::playerClearMove()
 {
+	if (!isClearStaging)
+	{
+		return;
+	}
+
+	clearTime++;
+
+	if (clearTime == maxClearTime)
+	{
+		isClearStaging = false;
+	}
 }
 
 void Player::playerDeathMove()
 {
+	if (!isOverStaging)
+	{
+		return;
+	}
+
+	fallRot.x += 0.1;
+	fallRot.y += 0.1;
+	fallRot.z += 0.1;
+	playerObject->setRotMatrix(fallRot.x, fallRot.y, fallRot.z);
+	playerObject->addMoveFront({ 0,-2,0 });
+
+	
 }
 
 //更新
@@ -261,7 +294,6 @@ void Player::update()
 
 	missilesList.remove_if([](std::unique_ptr<Missile>& newmissile)
 		{
-			//return newmissile->enemyPointer->isSetMissile == false && newmissile->enemyPointer->isTargetSet == false;
 			return newmissile->enemyPointer == nullptr;
 		});
 
@@ -324,6 +356,11 @@ void Player::update()
 void Player::targetUpdate()
 {
 	if (isStop)
+	{
+		return;
+	}
+
+	if (isClearStaging || isOverStaging)
 	{
 		return;
 	}
@@ -442,6 +479,11 @@ void Player::targetUpdate()
 
 void Player::addMissile(Enemy* enemy)
 {
+	if (isClearStaging || isOverStaging)
+	{
+		return;
+	}
+
 	//ミサイル追加
 	std::unique_ptr<Missile> newMissile = std::make_unique<Missile>();
 	newMissile->init();
@@ -459,6 +501,7 @@ void Player::reset()
 	isInvisible = -1;
 	playerObject->SetPosition({ 0,5,0 });
 	playerObject->setRotMatrix(XMMatrixIdentity());
+	roll = 0.0f;
 	pitch = 0.0f;
 	yow = 0.0f;
 	qLocal = quaternion();

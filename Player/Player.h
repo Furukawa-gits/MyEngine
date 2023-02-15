@@ -9,7 +9,6 @@
 #include"Bullets.h"
 
 
-const int MaxPlayerBulletNum = 20;
 const int MaxPlayerMissileNum = 8;
 
 class Player
@@ -132,4 +131,15 @@ public:
 
 	//カメラが動いた総量
 	int cameraMoveCount = 0;
+
+	//クリア演出時間
+	bool isClearStaging = false;
+	int clearTime = 0;
+	const int maxClearTime = 200;
+
+	//ゲームオーバー演出
+	bool isOverStaging = false;
+	int fallCount = 0;
+	const int maxFallCount = 120;
+	XMFLOAT3 fallRot = { 0,0,0 };
 };
