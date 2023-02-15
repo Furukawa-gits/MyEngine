@@ -232,7 +232,7 @@ public:
 	std::unique_ptr<enemyBullet> bullet;
 
 	//’e(—ËFrampage‚Åg‚¤)
-	std::list<std::unique_ptr<enemyBullet>> rampageBullets;
+	std::list<std::unique_ptr<enemyBullet>> Bullets;
 
 	bool isRampageWait = true;
 	int rampageWaitCount = 0;

@@ -93,7 +93,7 @@ void Enemy::set(XMFLOAT3 pos)
 	bulletCount = 0;
 	isRampageWait = true;
 	rampageWaitCount = 0;
-	rampageBullets.clear();
+	Bullets.clear();
 
 	isAppear = true;
 }
@@ -338,12 +338,12 @@ void Enemy::rampage()
 		return;
 	}
 
-	rampageBullets.remove_if([](std::unique_ptr<enemyBullet>& bullet)
+	Bullets.remove_if([](std::unique_ptr<enemyBullet>& bullet)
 		{
 			return bullet->isBulletArive() == false;
 		});
 
-	for (std::unique_ptr<enemyBullet>& bullet : rampageBullets)
+	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
 	{
 		bullet->update();
 	}
@@ -366,7 +366,7 @@ void Enemy::rampage()
 		std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
 		newBullet->init();
 		newBullet->set(playerPosition, this->position);
-		rampageBullets.push_back(std::move(newBullet));
+		Bullets.push_back(std::move(newBullet));
 
 		bulletCount++;
 	}
@@ -438,6 +438,8 @@ void Enemy::updata()
 
 	//敵が撃墜
 	deathMove();
+
+	enemyObject->SetPosition(position);
 
 	return;
 }
@@ -550,7 +552,7 @@ void Enemy::ariveMove()
 #pragma region 爆発パーティクル生成
 		std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
 		newparticle->generate();
-		newparticle->set(maxFallCount - 20, position, { 0,0,0 }, { 0,0,0 }, 0.2f, 10.0f);
+		newparticle->set(maxFallCount - 20, enemyObject->getPosition(), {0,0,0}, {0,0,0}, 0.2f, 10.0f);
 		bomParticles.push_back(std::move(newparticle));
 #pragma endregion 爆発パーティクル生成
 	}
@@ -596,7 +598,7 @@ void Enemy::deathMove()
 	{
 		std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
 		newparticle->generate();
-		newparticle->set((maxFallCount - fallDownCount) + 10, position, { 0,0,0 }, { 0,0,0 }, 3.5, 0.5);
+		newparticle->set((maxFallCount - fallDownCount) + 10, enemyObject->getPosition(), { 0,0,0 }, { 0,0,0 }, 3.5, 0.5);
 
 		smokeParticles.push_back(std::move(newparticle));
 	}
@@ -653,7 +655,7 @@ void Enemy::draw3D(directX* directx)
 	{
 		if (Isarive)
 		{
-			for (std::unique_ptr<enemyBullet>& bullet : rampageBullets)
+			for (std::unique_ptr<enemyBullet>& bullet : Bullets)
 			{
 				bullet->draw(directx);
 			}

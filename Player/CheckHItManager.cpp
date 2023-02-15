@@ -199,6 +199,72 @@ void checkHitManager::checkPlayerEnemyBullets(Player* player, list<unique_ptr<En
 	}
 }
 
+// プレイヤーの通常弾と敵の乱射弾の当たり判定(単体同士)
+void checkHitManager::checkBulletEnemyRampage(bullet* playerbullet, enemyBullet* rampagebullet)
+{
+	if (rampagebullet->isBulletArive() == false)
+	{
+		return;
+	}
+
+	if (playerbullet->isArive == false)
+	{
+		return;
+	}
+
+	if (Collision::CheckSphere2Sphere(playerbullet->bulletCollision, rampagebullet->bulletCollision))
+	{
+		playerbullet->count = 0;
+		playerbullet->isArive = false;
+
+		rampagebullet->isArive = false;
+		rampagebullet->ariveTime = 0;
+	}
+}
+
+// プレイヤーの通常弾と敵の乱射弾の当たり判定(list同士)
+void checkHitManager::checkBulletsEnemyRampage(list<unique_ptr<bullet>>* bulletsList, Enemy* enemy)
+{
+	for (std::unique_ptr<bullet>& newbullet : *bulletsList)
+	{
+		for (std::unique_ptr<enemyBullet>& enemybullet : enemy->Bullets)
+		{
+			checkBulletEnemyRampage(newbullet.get(), enemybullet.get());
+		}
+	}
+}
+
+// プレイヤー本体と敵の乱射弾の当たり判定(単体)
+void checkHitManager::checkPlayerEnemyRampage(Player* player, enemyBullet* rampagebullet)
+{
+	if (rampagebullet->isBulletArive() == false)
+	{
+		return;
+	}
+
+	if (player->isArmor)
+	{
+		return;
+	}
+
+	if (Collision::CheckSphere2Sphere(player->playerCollision, rampagebullet->getCollision()))
+	{
+		player->playerHP--;
+		player->isArmor = true;
+		rampagebullet->isArive = false;
+		rampagebullet->ariveTime = 0;
+	}
+}
+
+// プレイヤー本体と敵の乱射弾の当たり判定(リスト)
+void checkHitManager::checkPlayerEnemyRampages(Player* player, Enemy* enemy)
+{
+	for (std::unique_ptr<enemyBullet>& bullet : enemy->Bullets)
+	{
+		checkPlayerEnemyRampage(player, bullet.get());
+	}
+}
+
 // プレイヤーカーソルと敵本体のロックオン判定(単体)
 void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& targetnum)
 {

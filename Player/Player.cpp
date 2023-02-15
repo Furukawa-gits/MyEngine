@@ -461,6 +461,7 @@ void Player::reset()
 	pitch = 0.0f;
 	yow = 0.0f;
 	qLocal = quaternion();
+	followCamera = new FollowCamera();
 	followCamera->setFollowTarget(playerObject->getPosition(), playerObject->getRotation(), -30);
 	followCamera->SetEye({ 0,5,-10 });
 	followCamera->SetTarget({ 0,5,0 });

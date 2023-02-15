@@ -106,6 +106,38 @@ public:
 	static void checkPlayerEnemyBullets(Player* player, list<unique_ptr<Enemy>>* enemys);
 #pragma endregion
 
+#pragma region プレイヤーの通常弾と敵の乱射弾の当たり判定
+	/// <summary>
+	/// プレイヤーの通常弾と敵の乱射弾の当たり判定(単体同士)
+	/// </summary>
+	/// <param name="playerbullet">プレイヤーの通常弾(単体)</param>
+	/// <param name="rampagebullet">敵の乱射弾(単体)</param>
+	static void checkBulletEnemyRampage(bullet* playerbullet,enemyBullet* rampagebullet);
+
+	/// <summary>
+	/// プレイヤーの通常弾と敵の乱射弾の当たり判定(list同士)
+	/// </summary>
+	/// <param name="bulletsList">プレイヤーの通常弾(list)</param>
+	/// <param name="rampagebullets">敵の乱射弾(list)</param>
+	static void checkBulletsEnemyRampage(list<unique_ptr<bullet>>* bulletsList, Enemy *enemy);
+#pragma endregion
+
+#pragma region プレイヤー本体と敵の乱射弾の当たり判定
+	/// <summary>
+	/// プレイヤー本体と敵の乱射弾の当たり判定(単体)
+	/// </summary>
+	/// <param name="player">プレイヤー本体</param>
+	/// <param name="rampagebullet">敵の乱射弾</param>
+	static void checkPlayerEnemyRampage(Player* player, enemyBullet* rampagebullet);
+
+	/// <summary>
+	/// プレイヤー本体と敵の乱射弾の当たり判定(リスト)
+	/// </summary>
+	/// <param name="player">プレイヤー本体</param>
+	/// <param name="rampagebullets">敵の乱射弾</param>
+	static void checkPlayerEnemyRampages(Player* player, Enemy* enemy);
+#pragma endregion
+
 #pragma region プレイヤーと敵のロックオン判定
 	/// <summary>
 	/// プレイヤーカーソルと敵のロックオン判定(単体)

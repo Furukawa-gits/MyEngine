@@ -507,6 +507,8 @@ void GameScene::Play_updata()
 		newenemy->updata();
 		checkHitManager::checkPlayerEnemy(player_p.get(), newenemy.get());
 		checkHitManager::chackPlayerEnemyBullet(player_p.get(), newenemy.get());
+		checkHitManager::checkPlayerEnemyRampages(player_p.get(), newenemy.get());
+		checkHitManager::checkBulletsEnemyRampage(&player_p->bulletsList, newenemy.get());
 	}
 
 	//ホーミング弾発射
@@ -559,6 +561,8 @@ void GameScene::Play_updata()
 	{
 		checkHitManager::checkPlayerEnemy(player_p.get(), testBoss.get());
 		checkHitManager::chackPlayerEnemyBullet(player_p.get(), testBoss.get());
+		checkHitManager::checkPlayerEnemyRampages(player_p.get(), testBoss.get());
+		checkHitManager::checkBulletsEnemyRampage(&player_p->bulletsList, testBoss.get());
 	}
 
 	//死んでいる雑魚敵をカウント
@@ -838,7 +842,7 @@ void GameScene::TitleDraw2d()
 	startButton.DrawSprite(directx->cmdList.Get());
 }
 
-//レクと画面描画
+//セレクト画面描画
 void GameScene::SelectDraw3d()
 {
 	if (scene != sceneType::select)
