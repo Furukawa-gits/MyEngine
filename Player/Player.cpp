@@ -458,6 +458,7 @@ void Player::reset()
 	playerHP = 10;
 	isInvisible = -1;
 	playerObject->SetPosition({ 0,5,0 });
+	playerObject->setRotMatrix(XMMatrixIdentity());
 	pitch = 0.0f;
 	yow = 0.0f;
 	qLocal = quaternion();
@@ -466,6 +467,25 @@ void Player::reset()
 	followCamera->SetEye({ 0,5,-10 });
 	followCamera->SetTarget({ 0,5,0 });
 	followCamera->setTargets(playerObject->getPosition(), playerObject->getRotation());
+
+	//「プレイヤーから見て」右・上・前方向のベクトル
+	XMFLOAT3 vSideAxis = getAxis(quaternion(unitX, qLocal));
+	XMFLOAT3 vUpAxis = getAxis(quaternion(unitY, qLocal));
+	XMFLOAT3 vForwordAxis = getAxis(quaternion(unitZ, qLocal));
+
+	//ロール・ピッチ・ヨーの回転角度を求める
+	Quaternion qRoll = quaternion(vForwordAxis, roll);
+	Quaternion qPitch = quaternion(vSideAxis, pitch);
+	Quaternion qYow = quaternion(vUpAxis, yow);
+
+	//順番にかけていく
+	qLocal = qRoll * qLocal;
+	qLocal = qPitch * qLocal;
+	qLocal = qYow * qLocal;
+
+	//追従
+	followCamera->Following(vUpAxis, vForwordAxis, playerObject->getPosition());
+
 	targetFirst.position = { (float)mouseOffsetX,(float)mouseOffsetY ,0 };
 	SetCursorPos(mouseOffsetX, mouseOffsetY);
 	cameraMoveCount = 0;

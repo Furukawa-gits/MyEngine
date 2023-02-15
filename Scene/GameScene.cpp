@@ -1075,6 +1075,8 @@ void GameScene::countDown()
 		return;
 	}
 
+	Object3d_FBX::SetCamera(player_p->followCamera);
+
 	if (isCountDown)
 	{
 		countDownSprite[countDownNum].size = { countDownEase.easing(),countDownEase.easing() };
