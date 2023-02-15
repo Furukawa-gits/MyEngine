@@ -492,6 +492,9 @@ void GameScene::Play_updata()
 		return;
 	}
 
+	//パーティクルの共通カメラを設定
+	SingleParticle::setCamera(player_p->followCamera);
+
 	//プレイヤー更新
 	player_p->update();
 	checkHitManager::checkMissilesEnemy(&player_p->missilesList);
