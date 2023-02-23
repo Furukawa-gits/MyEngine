@@ -450,7 +450,6 @@ void GameScene::Select_updata()
 		isScreenEase = false;
 		isTextEase = false;
 		isPushTitle = false;
-		isTutorial = false;
 
 		nowStageLevel = 1;
 
@@ -478,7 +477,7 @@ void GameScene::Play_updata()
 	countDown();
 
 	//敵に共通して必要なプレイヤーの情報を渡す
-	Enemy::staticUpdata(player_p->getPlayerPos(),player_p->getPlayerFront());
+	Enemy::staticUpdata(player_p->getPlayerPos(), player_p->getPlayerFront(), player_p->isArive);
 
 	if (!isCountDown && !isStartIcon)
 	{
@@ -486,7 +485,8 @@ void GameScene::Play_updata()
 		totalPlayFlameCount++;
 	}
 
-	if (isTutorial)
+	//チュートリアル
+	if (stageNum == 0)
 	{
 		tutorial();
 		return;
@@ -494,6 +494,11 @@ void GameScene::Play_updata()
 
 	//パーティクルの共通カメラを設定
 	SingleParticle::setCamera(player_p->followCamera);
+
+	if (input->Triger(DIK_LSHIFT))
+	{
+		player_p->playerHP = 0;
+	}
 
 	//プレイヤー更新
 	player_p->update();
@@ -645,7 +650,7 @@ void GameScene::Play_updata()
 		bossHitPoints.clear();
 	}
 
-	if (player_p->playerHP <= 0)
+	if (!player_p->isArive && !player_p->isOverStaging && player_p->playerHP <= 0)
 	{
 		isMoveScreen = true;
 		isScreenEase = true;
@@ -1146,7 +1151,7 @@ void GameScene::tutorial()
 	checkHitManager::checkMissilesEnemy(&player_p->missilesList);
 
 	//一定量カメラを動かしたら敵出現
-	if (player_p->cameraMoveCount >= 300 && isMoveText)
+	if (player_p->cameraMoveCount >= 250 && isMoveText)
 	{
 		for (int i = 0; i < 20; i++)
 		{
@@ -1304,6 +1309,11 @@ void GameScene::loadStage()
 	if (stageNum < 1)
 	{
 		return;
+	}
+
+	if (isTutorial == false)
+	{
+		//return;
 	}
 
 	for (int i = 0; i < stageNum + 4; i++)

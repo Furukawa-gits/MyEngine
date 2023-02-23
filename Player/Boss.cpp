@@ -419,6 +419,11 @@ void Boss::bossChase()
 		return;
 	}
 
+	if (!playerPointer->isArive)
+	{
+		return;
+	}
+
 	//’ÇÕ
 	if (isChase)
 	{
@@ -480,6 +485,11 @@ void Boss::bossShot()
 		return;
 	}
 
+	if (!playerPointer->isArive)
+	{
+		return;
+	}
+
 	XMFLOAT3 pPos = playerPointer->playerObject->getPosition();
 
 	XMFLOAT3 startToTarget =
@@ -532,6 +542,11 @@ void Boss::bossHoming()
 	}
 
 	if (isAppear)
+	{
+		return;
+	}
+
+	if (!playerPointer->isArive)
 	{
 		return;
 	}
@@ -629,6 +644,16 @@ void Boss::bossHoming()
 void Boss::bossRampage()
 {
 	if (enemyMovePattern != enemyPattern::rampage)
+	{
+		return;
+	}
+
+	if (isAppear)
+	{
+		return;
+	}
+
+	if (!playerPointer->isArive)
 	{
 		return;
 	}

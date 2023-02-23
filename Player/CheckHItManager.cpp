@@ -176,7 +176,7 @@ void checkHitManager::chackPlayerEnemyBullet(Player* player, Enemy* enemy)
 		return;
 	}
 
-	if (player->isArmor)
+	if (player->isArmor || player->isArive == false)
 	{
 		return;
 	}
@@ -242,7 +242,7 @@ void checkHitManager::checkPlayerEnemyRampage(Player* player, enemyBullet* rampa
 		return;
 	}
 
-	if (player->isArmor)
+	if (player->isArmor || player->isArive == false)
 	{
 		return;
 	}
@@ -274,6 +274,11 @@ void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& target
 	}
 
 	if (enemy->isDraw == false)
+	{
+		return;
+	}
+
+	if (player->isArive == false)
 	{
 		return;
 	}

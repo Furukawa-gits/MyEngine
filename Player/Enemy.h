@@ -77,7 +77,7 @@ public:
 	~Enemy();
 
 	static void staticInit();
-	static void staticUpdata(XMFLOAT3 playerpos, XMFLOAT3 playerfront);
+	static void staticUpdata(XMFLOAT3 playerpos, XMFLOAT3 playerfront,bool playerisarive);
 	static void staticDestroy();
 
 	//‰Šú‰»
@@ -165,6 +165,7 @@ private:
 
 	static XMFLOAT3 playerPosition;
 	static XMFLOAT3 playerFront;
+	static bool playerIsArive;
 
 	//“oê‰‰oŠÔ
 	int enemyArrivalTime;

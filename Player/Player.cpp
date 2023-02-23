@@ -99,6 +99,11 @@ void Player::Move()
 		return;
 	}
 
+	if (!isArive)
+	{
+		return;
+	}
+
 	//オブジェクトの更新
 	playerObject->Update();
 	playerCollision.center =
@@ -314,6 +319,8 @@ void Player::setStaging(bool isclear)
 	{
 		isClearStaging = false;
 		isOverStaging = true;
+
+		fallCount = 0;
 	}
 
 	isStagingSet = true;
@@ -322,11 +329,6 @@ void Player::setStaging(bool isclear)
 //更新
 void Player::update()
 {
-	if (!isArive)
-	{
-		return;
-	}
-
 	//死んだ弾は削除
 	bulletsList.remove_if([](std::unique_ptr<bullet>& newbullet)
 		{
@@ -387,6 +389,7 @@ void Player::update()
 	if (playerHP <= 0)
 	{
 		isArive = false;
+		setStaging(false);
 	}
 
 	//通常弾の更新(ユニークリスト)
@@ -411,6 +414,11 @@ void Player::update()
 void Player::targetUpdate()
 {
 	if (isStop)
+	{
+		return;
+	}
+
+	if (!isArive)
 	{
 		return;
 	}

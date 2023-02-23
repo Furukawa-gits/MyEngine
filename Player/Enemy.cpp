@@ -4,6 +4,7 @@
 std::unique_ptr<Model> Enemy::enemyModelS = std::make_unique<Model>();
 XMFLOAT3 Enemy::playerPosition = { 0,0,0 };
 XMFLOAT3 Enemy::playerFront = { 0,0,0 };
+bool Enemy::playerIsArive = false;
 const float Enemy::forPlayer = 200.0f;
 
 #pragma region 敵本体
@@ -26,10 +27,11 @@ void Enemy::staticInit()
 	enemyBullet::staticInit();
 }
 
-void Enemy::staticUpdata(XMFLOAT3 playerpos, XMFLOAT3 playerfront)
+void Enemy::staticUpdata(XMFLOAT3 playerpos, XMFLOAT3 playerfront, bool playerisarive)
 {
 	playerPosition = playerpos;
 	playerFront = playerfront;
+	playerIsArive = playerisarive;
 }
 
 void Enemy::staticDestroy()
@@ -130,6 +132,11 @@ void Enemy::chase()
 		return;
 	}
 
+	if (!playerIsArive)
+	{
+		return;
+	}
+
 	//追跡
 	if (isChase)
 	{
@@ -162,8 +169,8 @@ void Enemy::chase()
 	}
 
 	position = enemyObject->getPosition();
-	XMFLOAT3 dis = 
-	{ 
+	XMFLOAT3 dis =
+	{
 		playerPosition.x - position.x,
 		playerPosition.y - position.y,
 		playerPosition.z - position.z
@@ -183,6 +190,11 @@ void Enemy::chase()
 void Enemy::shot()
 {
 	if (enemyMovePattern != enemyPattern::shot)
+	{
+		return;
+	}
+
+	if (!playerIsArive)
 	{
 		return;
 	}
@@ -236,6 +248,11 @@ void Enemy::shot()
 void Enemy::homing()
 {
 	if (enemyMovePattern != enemyPattern::homing)
+	{
+		return;
+	}
+
+	if (!playerIsArive)
 	{
 		return;
 	}
@@ -313,8 +330,8 @@ void Enemy::homing()
 	}
 
 	position = enemyObject->getPosition();
-	XMFLOAT3 dis = 
-	{ 
+	XMFLOAT3 dis =
+	{
 		playerPosition.x - position.x,
 		playerPosition.y - position.y,
 		playerPosition.z - position.z
@@ -334,6 +351,11 @@ void Enemy::homing()
 void Enemy::rampage()
 {
 	if (enemyMovePattern != enemyPattern::rampage)
+	{
+		return;
+	}
+
+	if (!playerIsArive)
 	{
 		return;
 	}
@@ -552,7 +574,7 @@ void Enemy::ariveMove()
 #pragma region 爆発パーティクル生成
 		std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
 		newparticle->generate();
-		newparticle->set(maxFallCount - 20, enemyObject->getPosition(), {0,0,0}, {0,0,0}, 0.2f, 10.0f);
+		newparticle->set(maxFallCount - 20, enemyObject->getPosition(), { 0,0,0 }, { 0,0,0 }, 0.2f, 10.0f);
 		bomParticles.push_back(std::move(newparticle));
 #pragma endregion 爆発パーティクル生成
 	}
