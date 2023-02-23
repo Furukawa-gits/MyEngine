@@ -663,6 +663,11 @@ void Enemy::draw3D(directX* directx)
 		return;
 	}
 
+	if (!playerIsArive)
+	{
+		return;
+	}
+
 	enemyObject->Draw(directx->cmdList.Get());
 
 	if (enemyMovePattern == enemyPattern::shot || enemyMovePattern == enemyPattern::homing)
@@ -699,6 +704,11 @@ void Enemy::draw3D(directX* directx)
 void Enemy::draw2D(directX* directx)
 {
 	if (isFar || !Isarive)
+	{
+		return;
+	}
+
+	if (!playerIsArive)
 	{
 		return;
 	}

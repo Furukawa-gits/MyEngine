@@ -149,6 +149,7 @@ public:
 	//ゲームオーバー演出
 	bool isOverStaging = false;
 	int fallCount = 0;
-	const int maxFallCount = 120;
+	const int maxFallCount = 360;
 	XMFLOAT3 fallRot = { 0,0,0 };
+	XMFLOAT3 fallScale = { 0,0,0 };
 };

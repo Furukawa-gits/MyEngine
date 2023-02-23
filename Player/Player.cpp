@@ -288,15 +288,24 @@ void Player::playerDeathMove()
 	}
 
 	//回転しながら落ちて行く
-	fallRot.x += 0.1;
-	fallRot.y += 0.1;
-	fallRot.z += 0.1;
+	fallRot.x = 0.05;
+	fallRot.y = 0.05;
+	fallRot.z = 0.05;
 	playerObject->setRotMatrix(fallRot.x, fallRot.y, fallRot.z);
-	playerObject->addMoveFront({ 0,-2,0 });
+
+	playerObject->addMoveFront({ 0,-0.03,0 });
+
+	fallScale.x -= 0.0000555f;
+	fallScale.y -= 0.0000555f;
+	fallScale.z -= 0.0000555f;
+	playerObject->SetScale(fallScale);
+
+	playerObject->Update();
 
 	//カメラ処理
 	followCamera->SetTarget(playerObject->getPosition());
-	followCamera->SetUp({ 0,1,0 });
+
+	followCamera->Update();
 }
 
 void Player::setStaging(bool isclear)
@@ -308,7 +317,9 @@ void Player::setStaging(bool isclear)
 
 	XMFLOAT3 pos = playerObject->getPosition();
 
-	followCamera->SetEye({ pos.x,pos.y + 3,pos.z - 5 });
+	followCamera->SetEye({ pos.x,pos.y + 20,pos.z - 10 });
+
+	fallScale = playerObject->getScale();
 
 	if (isclear)
 	{
@@ -560,9 +571,11 @@ void Player::addMissile(Enemy* enemy)
 void Player::reset()
 {
 	isArive = true;
+	isStagingSet = false;
 	playerHP = 10;
 	isInvisible = -1;
 	playerObject->SetPosition({ 0,5,0 });
+	playerObject->SetScale({ 0.02f,0.02f,0.02f });
 	playerObject->setRotMatrix(XMMatrixIdentity());
 	roll = 0.0f;
 	pitch = 0.0f;
@@ -603,7 +616,7 @@ void Player::draw3D(directX* directx)
 {
 	if (!isArive)
 	{
-		return;
+		//return;
 	}
 
 	//プレイヤー本体の描画
