@@ -51,6 +51,11 @@ public:
 
 private:
 	static std::unique_ptr<Model> playerModel;
+
+	//クォータニオン回転行列
+	Quaternion qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
+	Quaternion qLocalCamera = quaternion(XMFLOAT3(0, 0, 1), 0);
+
 	//クォータニオン回転角度
 	float roll = 0.0f;
 	float pitch = 0.0f;
@@ -64,6 +69,9 @@ private:
 	float moveSpeed = 0.3f;
 	const float defaultMoveSpeed = 0.3f;
 	const float boostMoveSpeed = 2.5f;
+
+	//roll回転の合計
+	float sumRoll = 0.0f;
 
 	SingleSprite targetSecond;
 	SingleSprite targetThird;
@@ -102,9 +110,6 @@ public:
 	int rockOnCount = 0;
 	bool isRockOn = false;
 
-	//クォータニオン回転行列
-	Quaternion qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
-
 	//Hpスプライト
 	std::vector<SingleSprite> HPUI[10];
 
@@ -128,6 +133,9 @@ public:
 	bool isArive = false;
 
 	int playerHP = 10;
+
+	//ブースト
+	bool isBoost = false;
 
 	//無敵時間フラグ
 	bool isArmor = false;

@@ -104,7 +104,8 @@ void Player::Move()
 		return;
 	}
 
-	boostMove();
+	//ブースト(仮)
+	//boostMove();
 
 	//オブジェクトの更新
 	playerObject->Update();
@@ -132,18 +133,26 @@ void Player::Move()
 	XMFLOAT3 vUpAxis = getAxis(quaternion(unitY, qLocal));
 	XMFLOAT3 vForwordAxis = getAxis(quaternion(unitZ, qLocal));
 
+	XMFLOAT3 vUpAxisCamera = getAxis(quaternion(unitY, qLocalCamera));
+
 	//ロール・ピッチ・ヨーの回転角度を求める
 	Quaternion qRoll = quaternion(vForwordAxis, roll);
 	Quaternion qPitch = quaternion(vSideAxis, pitch);
 	Quaternion qYow = quaternion(vUpAxis, yow);
+
+	Quaternion qRollCamera = quaternion(vForwordAxis, 0.0f);
 
 	//順番にかけていく
 	qLocal = qRoll * qLocal;
 	qLocal = qPitch * qLocal;
 	qLocal = qYow * qLocal;
 
+	qLocalCamera = qRollCamera * qLocalCamera;
+	qLocalCamera = qPitch * qLocalCamera;
+	qLocalCamera = qYow * qLocalCamera;
+
 	//追従
-	followCamera->Following(vUpAxis, vForwordAxis, playerObject->getPosition());
+	followCamera->Following(vUpAxisCamera, vForwordAxis, playerObject->getPosition());
 
 	//XMMATRIXに変換したクォータニオンをプレイヤーの回転行列にセット
 	playerObject->setRotMatrix(rotate(qLocal));
@@ -154,19 +163,23 @@ void Player::Move()
 
 void Player::boostMove()
 {
-	if (input->Triger(DIK_SPACE) && moveSpeed <= defaultMoveSpeed)
+	if (input->Triger(DIK_SPACE) && !isBoost)
 	{
 		moveSpeed = boostMoveSpeed;
 	}
 
 	if (moveSpeed > defaultMoveSpeed)
 	{
+		isBoost = true;
 		moveSpeed -= 0.05;
 		roll = 0.2f;
+		sumRoll += 0.2f;
 	}
-	else
+	else if(isBoost)
 	{
+		isBoost = false;
 		moveSpeed = defaultMoveSpeed;
+		roll -= sumRoll;
 		roll = 0.0f;
 	}
 }
@@ -668,11 +681,6 @@ void Player::reset()
 //描画
 void Player::draw3D(directX* directx)
 {
-	if (!isArive)
-	{
-		//return;
-	}
-
 	//プレイヤー本体の描画
 	if (isInvisible == -1)
 	{
