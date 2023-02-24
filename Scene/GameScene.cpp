@@ -391,12 +391,13 @@ void GameScene::Select_updata()
 
 	if (isPushStart && !startButtonEase_y.getIsActive())
 	{
+		isPushStart = false;
+
 		//タイトルに戻る
 		if (stageNum == -1)
 		{
 			startButton.size = { 340,50 };
 			startButton.SpriteTransferVertexBuffer();
-			isPushStart = false;
 			scene = sceneType::title;
 			return;
 		}
@@ -434,29 +435,32 @@ void GameScene::Select_updata()
 		else
 		{
 			//ステージ読み込み
-			loadStage();
+			isLoadStage = loadStage();
 		}
 
-		//スタートのカウントダウンを設定
-		countDownEase.set(easingType::easeOut, easingPattern::Quintic, countDownTime, 450, 0);
-		countDownSprite[0].rotation = 0;
-		countDownSprite[1].rotation = 0;
-		countDownSprite[2].rotation = 0;
-		countDownNum = 0;
-		isCountDown = true;
-		isStartIcon = false;
+		if (isLoadStage)
+		{
+			//スタートのカウントダウンを設定
+			countDownEase.set(easingType::easeOut, easingPattern::Quintic, countDownTime, 450, 0);
+			countDownSprite[0].rotation = 0;
+			countDownSprite[1].rotation = 0;
+			countDownSprite[2].rotation = 0;
+			countDownNum = 0;
+			isCountDown = true;
+			isStartIcon = false;
 
-		isMoveScreen = false;
-		isScreenEase = false;
-		isTextEase = false;
-		isPushTitle = false;
+			isMoveScreen = false;
+			isScreenEase = false;
+			isTextEase = false;
+			isPushTitle = false;
 
-		nowStageLevel = 1;
+			nowStageLevel = 1;
 
-		player_p->update();
-		Object3d_FBX::SetCamera(player_p->followCamera);
+			player_p->update();
+			Object3d_FBX::SetCamera(player_p->followCamera);
 
-		scene = sceneType::play;
+			scene = sceneType::play;
+		}
 	}
 }
 
@@ -485,15 +489,15 @@ void GameScene::Play_updata()
 		totalPlayFlameCount++;
 	}
 
+	//パーティクルの共通カメラを設定
+	SingleParticle::setCamera(player_p->followCamera);
+
 	//チュートリアル
 	if (stageNum == 0)
 	{
 		tutorial();
 		return;
 	}
-
-	//パーティクルの共通カメラを設定
-	SingleParticle::setCamera(player_p->followCamera);
 
 	if (input->Triger(DIK_LSHIFT))
 	{
@@ -1168,6 +1172,8 @@ void GameScene::tutorial()
 
 		isMoveText = false;
 		isShotText = true;
+
+		player_p->isNormalShot = true;
 	}
 
 	//敵が出現演出途中ならカメラをセットする
@@ -1201,6 +1207,8 @@ void GameScene::tutorial()
 	{
 		isShotText = false;
 		isMissileText = true;
+
+		player_p->isHomingMissile = true;
 	}
 
 	//ミサイル -> Lets Shooting!!!
@@ -1304,16 +1312,16 @@ void GameScene::tutorial()
 	}
 }
 
-void GameScene::loadStage()
+bool GameScene::loadStage()
 {
 	if (stageNum < 1)
 	{
-		return;
+		return false;
 	}
 
 	if (isTutorial == false)
 	{
-		//return;
+		return false;
 	}
 
 	for (int i = 0; i < stageNum + 4; i++)
@@ -1394,4 +1402,6 @@ void GameScene::loadStage()
 
 		bossHitPoints.push_back(std::move(newsprite));
 	}
+
+	return true;
 }

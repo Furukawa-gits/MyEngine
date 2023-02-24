@@ -21,6 +21,8 @@ public:
 
 	void Move();
 
+	void boostMove();
+
 	void cameraMove();
 
 	void playerClearMove();
@@ -60,6 +62,8 @@ private:
 
 	//移動スピード
 	float moveSpeed = 0.3f;
+	const float defaultMoveSpeed = 0.3f;
+	const float boostMoveSpeed = 2.5f;
 
 	SingleSprite targetSecond;
 	SingleSprite targetThird;
@@ -152,4 +156,8 @@ public:
 	const int maxFallCount = 360;
 	XMFLOAT3 fallRot = { 0,0,0 };
 	XMFLOAT3 fallScale = { 0,0,0 };
+
+	//射撃フラグ(チュートリアル用)
+	bool isNormalShot = false;
+	bool isHomingMissile = false;
 };

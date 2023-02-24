@@ -104,6 +104,8 @@ void Player::Move()
 		return;
 	}
 
+	boostMove();
+
 	//オブジェクトの更新
 	playerObject->Update();
 	playerCollision.center =
@@ -148,6 +150,25 @@ void Player::Move()
 
 	//前への移動量を計算
 	followCamera->setFrontVec(moveSpeed);
+}
+
+void Player::boostMove()
+{
+	if (input->Triger(DIK_SPACE) && moveSpeed <= defaultMoveSpeed)
+	{
+		moveSpeed = boostMoveSpeed;
+	}
+
+	if (moveSpeed > defaultMoveSpeed)
+	{
+		moveSpeed -= 0.05;
+		roll = 0.2f;
+	}
+	else
+	{
+		moveSpeed = defaultMoveSpeed;
+		roll = 0.0f;
+	}
 }
 
 //カメラ移動
@@ -284,7 +305,38 @@ void Player::playerDeathMove()
 	if (fallCount == maxFallCount)
 	{
 		isOverStaging = false;
+		smokeParticles.clear();
 		return;
+	}
+
+#pragma region 黒煙パーティクル
+	if (fallCount % 30 == 0)
+	{
+		std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
+		newparticle->generate();
+
+		XMFLOAT3 smokePos = playerObject->getPosition();
+
+		smokePos =
+		{
+			smokePos.x + (float)(rand() % 6 - 3),
+			smokePos.y + (float)(rand() % 6 - 3),
+			smokePos.z + (float)(rand() % 6 - 3)
+		};
+		newparticle->set(100, smokePos, { 0,0,0 }, { 0,0,0 }, 5.0, 2.0);
+
+		smokeParticles.push_back(std::move(newparticle));
+	}
+#pragma endregion 黒煙パーティクル
+
+	//煙パーティクル更新
+	smokeParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
+		{
+			return newparticle->frame == newparticle->num_frame;
+		});
+	for (std::unique_ptr<SingleParticle>& newparticle : smokeParticles)
+	{
+		newparticle->updata();
 	}
 
 	//回転しながら落ちて行く
@@ -501,7 +553,7 @@ void Player::targetUpdate()
 	targetThird.SpriteUpdate();
 
 	//左クリックで通常弾
-	if (input->Mouse_LeftTriger())
+	if (input->Mouse_LeftTriger() && isNormalShot)
 	{
 		//リスト化
 		std::unique_ptr<bullet> newBullet = std::make_unique<bullet>();
@@ -513,7 +565,7 @@ void Player::targetUpdate()
 	}
 
 	//ロックオンモードに切り替え
-	if (input->Mouse_LeftPush())
+	if (input->Mouse_LeftPush() && isHomingMissile)
 	{
 		targetCount++;
 	}
@@ -609,6 +661,8 @@ void Player::reset()
 	SetCursorPos(mouseOffsetX, mouseOffsetY);
 	cameraMoveCount = 0;
 	Object3d_FBX::SetCamera(followCamera);
+
+	smokeParticles.clear();
 }
 
 //描画
@@ -634,6 +688,11 @@ void Player::draw3D(directX* directx)
 	for (std::unique_ptr<Missile>& missile : missilesList)
 	{
 		missile->draw(directx);
+	}
+
+	for (std::unique_ptr<SingleParticle>& newparticle : smokeParticles)
+	{
+		newparticle->drawSpecifyTex("smoke.png");
 	}
 }
 

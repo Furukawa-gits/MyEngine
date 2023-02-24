@@ -78,7 +78,7 @@ private:
 	void tutorial();
 
 	//ステージ読み込み
-	void loadStage();
+	bool loadStage();
 
 	//シーンごとの描画
 	void TitleDraw3d();
@@ -287,4 +287,6 @@ private:
 
 	//チュートリアル
 	bool isTutorial = false;
+
+	bool isLoadStage = false;
 };
