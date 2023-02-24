@@ -68,10 +68,7 @@ private:
 	//移動スピード
 	float moveSpeed = 0.3f;
 	const float defaultMoveSpeed = 0.3f;
-	const float boostMoveSpeed = 2.5f;
-
-	//roll回転の合計
-	float sumRoll = 0.0f;
+	const float boostMoveSpeed = 2.0f;
 
 	SingleSprite targetSecond;
 	SingleSprite targetThird;
@@ -113,6 +110,11 @@ public:
 	//Hpスプライト
 	std::vector<SingleSprite> HPUI[10];
 
+	//HPゲージ
+	SingleSprite HPGaugeBar;
+	SingleSprite boostGaugeBar;
+	SingleSprite gaugeFrame;
+
 	//ダメージ表現
 	SingleSprite damage;
 
@@ -136,6 +138,8 @@ public:
 
 	//ブースト
 	bool isBoost = false;
+	float boostGauge = 0;
+	const float maxBoostGauge = 300;
 
 	//無敵時間フラグ
 	bool isArmor = false;

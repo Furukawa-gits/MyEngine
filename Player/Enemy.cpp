@@ -383,11 +383,19 @@ void Enemy::rampage()
 
 	nextBulletTime++;
 
-	if (nextBulletTime % 15 == 0)
+	if (nextBulletTime % 10 == 0)
 	{
 		std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
 		newBullet->init();
-		newBullet->set(playerPosition, this->position);
+
+		XMFLOAT3 rampageTargetPos =
+		{
+			playerPosition.x - (float)(rand() % 8 - 4),
+			playerPosition.y - (float)(rand() % 8 - 4),
+			playerPosition.z - (float)(rand() % 8 - 4)
+		};
+
+		newBullet->set(rampageTargetPos, this->position);
 		Bullets.push_back(std::move(newBullet));
 
 		bulletCount++;
@@ -811,7 +819,7 @@ void enemyBullet::update()
 		bulletObject->getPosition().z,1.0f
 	};
 
-	if (ariveTime >= 100)
+	if (ariveTime >= maxAriveTime)
 	{
 		isArive = false;
 		ariveTime = 0;

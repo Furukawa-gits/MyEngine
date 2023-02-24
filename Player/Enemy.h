@@ -43,6 +43,8 @@ public:
 	//生存時間
 	int ariveTime = 0;
 
+	const int maxAriveTime = 200;
+
 	//当たり判定
 	Sphere bulletCollision;
 
@@ -240,7 +242,7 @@ public:
 	int bulletCount = 0;
 	int nextBulletTime = 0;
 
-	int maxBulletCount = 5;
+	int maxBulletCount = 7;
 
 	//撃墜エフェクト
 	std::list<std::unique_ptr<SingleParticle>> bomParticles;	//爆発

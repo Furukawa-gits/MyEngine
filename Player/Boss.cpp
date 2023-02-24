@@ -41,6 +41,7 @@ void Boss::bossInit()
 	enemyObject->Initialize();
 	enemyObject->SetModel(bossModel.get());
 	enemyObject->SetScale({ 1.0f,1.0f,1.0f });
+	enemyObject->setColor({ 0.3f,0.3f,0.3f,1 });
 
 	enemyCollision.radius = 2.0f;
 
@@ -54,7 +55,6 @@ void Boss::bossInit()
 
 	HP = 5;
 	bossbaseScale = { 5,5,5 };
-	enemyObject->setColor({ 0.3f,0.3f,0.3f,1 });
 	enemyCollision.radius = 9.0f;
 	deathRotSpeed = 0.1f;
 }
@@ -685,7 +685,15 @@ void Boss::bossRampage()
 	{
 		std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
 		newBullet->init();
-		newBullet->set(playerPointer->getPlayerPos(), this->position);
+
+		XMFLOAT3 rampageTargetPos =
+		{
+			playerPointer->getPlayerPos().x - (float)(rand() % 8 - 4),
+			playerPointer->getPlayerPos().y - (float)(rand() % 8 - 4),
+			playerPointer->getPlayerPos().z - (float)(rand() % 8 - 4)
+		};
+
+		newBullet->set(rampageTargetPos, this->position);
 		Bullets.push_back(std::move(newBullet));
 
 		bulletCount++;

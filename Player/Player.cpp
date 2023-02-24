@@ -105,10 +105,10 @@ void Player::Move()
 	}
 
 	//ブースト(仮)
-	//boostMove();
+	boostMove();
 
 	//オブジェクトの更新
-	playerObject->Update();
+	playerObject->setRotMatrix(XMMatrixIdentity());
 	playerCollision.center =
 	{
 		playerObject->getPosition().x,
@@ -152,10 +152,12 @@ void Player::Move()
 	qLocalCamera = qYow * qLocalCamera;
 
 	//追従
-	followCamera->Following(vUpAxisCamera, vForwordAxis, playerObject->getPosition());
+	followCamera->Following(vUpAxis, vForwordAxis, playerObject->getPosition());
 
 	//XMMATRIXに変換したクォータニオンをプレイヤーの回転行列にセット
 	playerObject->setRotMatrix(rotate(qLocal));
+
+	playerObject->Update();
 
 	//前への移動量を計算
 	followCamera->setFrontVec(moveSpeed);
@@ -163,24 +165,35 @@ void Player::Move()
 
 void Player::boostMove()
 {
+	if (boostGauge < maxBoostGauge)
+	{
+		boostGauge += 0.5f;
+	}
+	else
+	{
+		boostGauge = maxBoostGauge;
+	}
+
+	if (boostGauge < 100)
+	{
+		return;
+	}
+
 	if (input->Triger(DIK_SPACE) && !isBoost)
 	{
 		moveSpeed = boostMoveSpeed;
+		boostGauge -= 100;
+		isBoost = true;
 	}
 
 	if (moveSpeed > defaultMoveSpeed)
 	{
-		isBoost = true;
 		moveSpeed -= 0.05;
-		roll = 0.2f;
-		sumRoll += 0.2f;
 	}
 	else if(isBoost)
 	{
 		isBoost = false;
 		moveSpeed = defaultMoveSpeed;
-		roll -= sumRoll;
-		roll = 0.0f;
 	}
 }
 
@@ -638,6 +651,7 @@ void Player::reset()
 	isArive = true;
 	isStagingSet = false;
 	playerHP = 10;
+	boostGauge = 0;
 	isInvisible = -1;
 	playerObject->SetPosition({ 0,5,0 });
 	playerObject->SetScale({ 0.02f,0.02f,0.02f });

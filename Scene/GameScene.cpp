@@ -1321,7 +1321,7 @@ bool GameScene::loadStage()
 
 	if (isTutorial == false)
 	{
-		return false;
+		//return false;
 	}
 
 	for (int i = 0; i < stageNum + 4; i++)
@@ -1339,6 +1339,9 @@ bool GameScene::loadStage()
 
 	//プレイヤーのリセット
 	player_p->reset();
+
+	player_p->isNormalShot = true;
+	player_p->isHomingMissile = true;
 
 	isBoss = false;
 
