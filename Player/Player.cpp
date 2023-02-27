@@ -105,7 +105,7 @@ void Player::Move()
 	}
 
 	//ブースト(仮)
-	boostMove();
+	//boostMove();
 
 	//オブジェクトの更新
 	playerObject->setRotMatrix(XMMatrixIdentity());
@@ -154,6 +154,11 @@ void Player::Move()
 	//追従
 	followCamera->Following(vUpAxis, vForwordAxis, playerObject->getPosition());
 
+	if (!isBoost)
+	{
+		roll = 0.0;
+	}
+
 	//XMMATRIXに変換したクォータニオンをプレイヤーの回転行列にセット
 	playerObject->setRotMatrix(rotate(qLocal));
 
@@ -183,17 +188,21 @@ void Player::boostMove()
 	{
 		moveSpeed = boostMoveSpeed;
 		boostGauge -= 100;
+		roll = 0.02f;
 		isBoost = true;
 	}
 
 	if (moveSpeed > defaultMoveSpeed)
 	{
 		moveSpeed -= 0.05;
+		totalRoll += 0.02f;
 	}
 	else if(isBoost)
 	{
-		isBoost = false;
 		moveSpeed = defaultMoveSpeed;
+		roll -= totalRoll;
+		totalRoll = 0.0f;
+		isBoost = false;
 	}
 }
 
