@@ -195,6 +195,9 @@ private:
 	SingleSprite titleButton;
 	SingleSprite selectButton;
 
+	//チュートリアル誘導
+	SingleSprite toTutorial;
+
 	//プレイシーンの時間
 	int totalPlayFlameCount = 0;
 

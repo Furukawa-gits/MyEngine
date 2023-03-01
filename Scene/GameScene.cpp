@@ -92,6 +92,11 @@ void GameScene::Load_Sprites()
 	selects[2].position = { 640,420,0 };
 	selects[2].GenerateSprite("selectIcon.png");
 
+	toTutorial.anchorpoint = { 0.5f,0.5f };
+	toTutorial.size = { 220,50 };
+	toTutorial.position = { 640,470,0 };
+	toTutorial.GenerateSprite("toTutorial.png");
+
 #pragma region	//カウントダウンアイコン
 	countDownSprite[0].anchorpoint = { 0.5f,0.5f };
 	countDownSprite[0].size = { 100,100 };
@@ -388,6 +393,7 @@ void GameScene::Select_updata()
 	selects[0].SpriteUpdate();
 	selects[1].SpriteUpdate();
 	selects[2].SpriteUpdate();
+	toTutorial.SpriteUpdate();
 
 	if (isPushStart && !startButtonEase_y.getIsActive())
 	{
@@ -879,6 +885,11 @@ void GameScene::SelectDraw2d()
 	selects[0].DrawSprite(directx->cmdList.Get());
 	selects[1].DrawSprite(directx->cmdList.Get());
 	selects[2].DrawSprite(directx->cmdList.Get());
+
+	if (!isTutorial && stageNum > 0)
+	{
+		toTutorial.DrawSprite(directx->cmdList.Get());
+	}
 }
 
 //プレイ画面描画
@@ -1321,7 +1332,7 @@ bool GameScene::loadStage()
 
 	if (isTutorial == false)
 	{
-		//return false;
+		return false;
 	}
 
 	for (int i = 0; i < stageNum + 4; i++)
