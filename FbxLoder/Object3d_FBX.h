@@ -79,6 +79,8 @@ public:
 
 	void setColor(XMFLOAT4 col) { this->color = col; }
 
+	void setParent(Object3d_FBX* parent) { this->parent = parent; }
+
 	XMFLOAT2 worldToScleen();
 
 	XMFLOAT2 worldToScleenSpecifyPosition(XMFLOAT3 pos);
@@ -195,4 +197,6 @@ private:
 	XMFLOAT4 color = { 1,0,0,1 };
 
 	bool isSetOtherPipeline = false;
+
+	Object3d_FBX* parent = nullptr;
 };

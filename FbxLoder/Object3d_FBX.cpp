@@ -385,6 +385,11 @@ void Object3d_FBX::Update()
 	matWorld *= matRot;
 	matWorld *= matTrans;
 
+	if (parent != nullptr)
+	{
+		matWorld *= parent->matWorld;
+	}
+
 	const XMMATRIX& matViewProjection =
 		camera->GetViewProjectionMatrix();
 
