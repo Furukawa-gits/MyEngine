@@ -156,6 +156,7 @@
     <ClCompile Include="Player\CheckHItManager.cpp" />
     <ClCompile Include="Player\Enemy.cpp" />
     <ClCompile Include="Player\Player.cpp" />
+    <ClCompile Include="Player\uniteBoss.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="staging\Easing.cpp" />
     <ClCompile Include="staging\Shake.cpp" />

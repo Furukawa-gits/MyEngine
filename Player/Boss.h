@@ -97,8 +97,6 @@ private:
 
 	int resetHitPoint = 3;
 	int arrivalTime = 0;
-	//“oê‰‰oƒtƒ‰ƒO
-	bool isAppear = false;
 	easingManager bossRotEase;
 	XMFLOAT3 bossbaseScale;
 	XMFLOAT3 bossScale;

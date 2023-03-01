@@ -31,7 +31,7 @@ void bullet::init()
 	bulletObject->SetModel(bulletModelS.get());
 	bulletObject->SetScale({ 0.5f,0.5f,0.5f });
 
-	bulletCollision.radius = 2.0f;
+	bulletCollision.radius = 4.0f;
 }
 
 void bullet::set(XMFLOAT3 start_pos, XMFLOAT3 Target)

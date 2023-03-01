@@ -6,6 +6,7 @@
 #include"Player.h"
 #include"Enemy.h"
 #include"Bullets.h"
+#include"uniteBoss.h"
 
 using namespace std;
 
