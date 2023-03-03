@@ -295,6 +295,8 @@ void GameScene::Title_updata()
 		startButton.SpriteTransferVertexBuffer();
 	}
 
+	int test = sizeof(enemyPattern);
+
 	startButton.SpriteUpdate();
 	resultScreen[0].SpriteUpdate();
 	gameTitle.SpriteUpdate();

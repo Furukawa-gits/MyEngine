@@ -59,7 +59,7 @@ public:
 	void bossArrival(Player* player);
 
 	/// <summary>
-	/// ¶‘¶ˆ—
+	/// ¶‘¶ˆ—
 	/// </summary>
 	void bossAriveMove();
 
