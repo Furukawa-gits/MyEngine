@@ -5,27 +5,41 @@ class uniteParts
 	:public Enemy
 {
 public:
-	void initParts(int ID);
+	void partsInit(int ID);
 
-	void setStaticData(XMFLOAT3* motherposition);
+	static void setStaticData(XMFLOAT3* motherposition);
 
-	void updataParts();
+	void partsUpdata();
 
-	void setParts(XMFLOAT3 position, float theta, float phi);
+	void partsShotBullet(XMFLOAT3 targetposition);
+
+	void partsSet(XMFLOAT3 position, float theta, float phi);
+
+	void partsDraw3D(directX* directx);
+
+	void partsDraw2D(directX* directx);
+
+	//角速度
+	float angleSpeed = 0.2f;
 
 private:
 
-	static float defaultPosition;
+	//本体の座標
+	static XMFLOAT3* motherPosition;
+
+	//本体からパーツまでの距離
+	static const float partsRadius;
 
 	//パーツごとの固有番号(1～パーツの個数)
 	int partsID = 0;
 
 	//パーツごとのHP
-	std::list<std::unique_ptr<SingleSprite>> partsHitPoint;
+	std::vector<std::unique_ptr<SingleSprite>> partsHitPoint;
 
 	//パーツの座標
 	XMFLOAT3 partsPosition = { 0,0,0 };
 
+	//角度(極座標用)
 	float angleTheta;
 	float anglePhi;
 };
@@ -40,7 +54,7 @@ public:
 	/// <summary>
 	/// モデル読み込み
 	/// </summary>
-	static void uniteBossStaticInit();
+	static void uniteBossStaticInit(Player* player);
 
 	/// <summary>
 	/// 初期化
@@ -66,7 +80,7 @@ public:
 	/// 登場演出
 	/// </summary>
 	/// <param name="player">プレイヤー</param>
-	void uniteBossArrival(Player* player);
+	void uniteBossArrival();
 
 	/// <summary>
 	/// 生存時処理
@@ -110,6 +124,9 @@ public:
 	/// <param name="directx"></param>
 	void uniteBossDraw2d(directX* directx);
 
+	//登場演出フラグの取得
+	bool getIsAppear() { return isAppear; }
+
 private:
 
 	//モデル
@@ -119,15 +136,12 @@ private:
 	static const int unitNum = 6;
 
 	//プレイヤーのアドレス
-	static Player* player;
-
-	//本体からパーツまでの距離
-	static const float partsRadius;
+	static Player* playerPointer;
 
 	//パーツたち
 	std::list<std::unique_ptr<uniteParts>> partsList;
 
-	//パーツの球面座標を設定するときのインデックス
+	//パーツの球面座標を設定するときのインデックス(角度θ,φ)
 	XMFLOAT2 defaultPartsAngle[6] =
 	{
 		{0,0},
@@ -139,7 +153,7 @@ private:
 	};
 
 	//HPゲージ
-	std::list<std::unique_ptr<SingleSprite>> motherHitPoint;
+	std::vector<std::unique_ptr<SingleSprite>> motherHitPoint;
 
 	//攻撃パターン一覧
 	enum class uniteBossPattern
@@ -150,7 +164,7 @@ private:
 	};
 
 	//現在の攻撃パターン
-	uniteBossPattern nowPattern;
+	uniteBossPattern uniteBossNowPattern;
 
 	/// <summary>
 	/// 攻撃目標
@@ -160,8 +174,16 @@ private:
 	/// </summary>
 	XMFLOAT3 targetPos;
 
+	XMFLOAT3 uniteBossScale;
+
 	//全てのパーツが壊れたかどうか
 	bool isAllPartsBreak = false;
+
+	//行動パターンを選択中かどうか
+	bool isSelectPattern = false;
+
+	int resetHitPoint = 21;
+	int arrivalTime = 0;
 
 	//演出用変数
 	XMFLOAT3 arrivalStartPos;
