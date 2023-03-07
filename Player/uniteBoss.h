@@ -194,10 +194,13 @@ private:
 	//弾を撃つ最大数(乱射)
 	const int maxRanpageCount = 10;
 
-	//演出用変数
+	//演出用座標
 	XMFLOAT3 arrivalStartPos;
 	XMFLOAT3 arrivalEndPos;
 
+	//撃墜演出用カメラの回転角速度
+	float CameraAngleSpeed = 0.0f;
+
 	//ボス演出用のカメラ
-	Camera* bossCamera;
+	Camera* uniteBossCamera;
 };

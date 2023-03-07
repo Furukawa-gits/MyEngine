@@ -236,6 +236,11 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	Boss::staticInitBoss();
 	testBoss = std::make_unique<Boss>();
 	testBoss->bossInit();
+
+	//ボス(ユニット)
+	uniteBoss::uniteBossStaticInit(player_p.get());
+	testUniteBoss = std::make_unique<uniteBoss>();
+	testUniteBoss->uniteBossInit();
 }
 
 //デバッグテキスト
@@ -603,9 +608,16 @@ void GameScene::Play_updata()
 		//最後のウェーブならボス戦
 		if (nowStageLevel == stageLevel && !isBoss)
 		{
-			//ボス出現
-			testBoss->bossSet({ 0,5,0 });
-			isBoss = true;
+			if (stageNum < 3)
+			{
+				//ボス出現
+				testBoss->bossSet({ 0,5,0 });
+				isBoss = true;
+			}
+			else
+			{
+
+			}
 		}
 		//でなければ次の敵軍
 		else

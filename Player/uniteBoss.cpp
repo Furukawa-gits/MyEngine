@@ -94,6 +94,7 @@ uniteBoss::~uniteBoss()
 {
 }
 
+//静的初期化
 void uniteBoss::uniteBossStaticInit(Player* player)
 {
 	uniteBossModel.reset(FbxLoader::GetInstance()->LoadmodelFromFile("boss"));
@@ -101,6 +102,7 @@ void uniteBoss::uniteBossStaticInit(Player* player)
 	playerPointer = player;
 }
 
+//初期化
 void uniteBoss::uniteBossInit()
 {
 	isThisBoss = true;
@@ -147,6 +149,7 @@ void uniteBoss::uniteBossInit()
 	}
 }
 
+//更新
 void uniteBoss::uniteBossUpdata()
 {
 	enemyObject->Update();
@@ -202,6 +205,7 @@ void uniteBoss::uniteBossUpdata()
 	uniteBossDeathMove();
 }
 
+//スプライト更新
 void uniteBoss::uniteBossSpriteUpdata()
 {
 	XMFLOAT2 targetPos = enemyObject->worldToScleen();
@@ -265,6 +269,7 @@ void uniteBoss::uniteBossSpriteUpdata()
 	outScreenIcon[1]->SpriteUpdate();
 }
 
+//登場演出
 void uniteBoss::uniteBossArrival()
 {
 	if (!isAppear)
@@ -275,6 +280,7 @@ void uniteBoss::uniteBossArrival()
 	isAppear = false;
 }
 
+//生存時処理
 void uniteBoss::uniteBossAriveMove()
 {
 	if (!Isarive || isAppear)
@@ -317,6 +323,7 @@ void uniteBoss::uniteBossAriveMove()
 		Isarive = false;
 		fallDownCount = 0;
 		deathRotSpeed = 0.5f;
+		CameraAngleSpeed = 0.0f;
 	}
 
 	uniteBossSpriteUpdata();
@@ -330,14 +337,118 @@ void uniteBoss::uniteBossAriveMove()
 	};
 }
 
+//撃墜処理
 void uniteBoss::uniteBossDeathMove()
 {
+	playerPointer->isStop = true;
+	playerPointer->isInvisible = 1;
+
+	position = enemyObject->getPosition();
+
+	//ボスの周囲をカメラが回転する
+	XMFLOAT3 setvec =
+	{
+		position.x + (cosf(CameraAngleSpeed * (M_PI / 180.0f)) * 30),
+		position.y - 5,
+		position.z + (sinf(CameraAngleSpeed * (M_PI / 180.0f)) * 30),
+	};
+
+	CameraAngleSpeed += 0.5f;
+
+	uniteBossCamera->SetEye(setvec);
+	uniteBossCamera->SetTarget(position);
+	uniteBossCamera->Update();
+
+	Object3d_FBX::SetCamera(uniteBossCamera);
+	SingleParticle::setCamera(uniteBossCamera);
+
+	//撃墜演出のカウント
+	fallDownCount++;
+
+	float scale = 1.0f - ((float)fallDownCount / ((float)maxFallCount * 5));
+
+	rot.x += deathRotSpeed;
+	rot.y += deathRotSpeed;
+	rot.z += deathRotSpeed;
+	enemyObject->setRotMatrix(rot.x, rot.y, rot.z);
+	enemyObject->SetScale({ uniteBossScale.x * scale,uniteBossScale.y * scale,uniteBossScale.z * scale });
+
+	//一定間隔でエフェクト
+	if (fallDownCount % 20 == 0)
+	{
+#pragma region パーティクル生成
+		//生成位置を球体表面上で指定
+		float radius = 10;
+		float theta = (float)(rand() % 180) - 90.0f;
+		float phi = (float)(rand() % 360);
+		XMFLOAT3 spherepos =
+		{
+			radius * sinf(phi) * cosf(theta),
+			radius * sinf(phi) * sinf(theta),
+			radius * sinf(phi),
+		};
+		XMFLOAT3 startPos =
+		{
+			enemyObject->getPosition().x + spherepos.x,
+			enemyObject->getPosition().y + spherepos.y,
+			enemyObject->getPosition().z + spherepos.z
+		};
+
+		//爆発パーティクル
+		std::unique_ptr<SingleParticle> newBomparticle = std::make_unique<SingleParticle>();
+		newBomparticle->generate();
+		newBomparticle->set(50, startPos, { 0,0,0 }, { 0,0,0 }, 0.2, 9.0);
+		bomParticles.push_back(std::move(newBomparticle));
+
+		//黒煙パーティクル
+		std::unique_ptr<SingleParticle> newSmokeparticle = std::make_unique<SingleParticle>();
+		newSmokeparticle->generate();
+		newSmokeparticle->set(50, startPos, { 0,0,0 }, { 0,0,0 }, 0.2, 5.0);
+		smokeParticles.push_back(std::move(newSmokeparticle));
+#pragma endregion パーティクル生成
+	}
+
+	//爆発パーティクル更新
+	bomParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
+		{
+			return newparticle->frame == newparticle->num_frame;
+		});
+	for (std::unique_ptr<SingleParticle>& newparticle : bomParticles)
+	{
+		newparticle->updata();
+	}
+
+	//煙パーティクル更新
+	smokeParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
+		{
+			return newparticle->frame == newparticle->num_frame;
+		});
+	for (std::unique_ptr<SingleParticle>& newparticle : smokeParticles)
+	{
+		newparticle->updata();
+	}
+
+	//演出が終わったら
+	if (fallDownCount >= maxFallCount * 4)
+	{
+		bomParticles.clear();
+		smokeParticles.clear();
+		isDraw = false;
+		fallDownCount = 0;
+	}
+
+	if (enemyMovePattern == enemyPattern::shot)
+	{
+		bullet->isArive = false;
+	}
 }
 
+//セット
 void uniteBoss::uniteBossSet()
 {
+	arrivalStartPos = { 0,50,0 };
+	arrivalEndPos = { 0,5,0 };
 	position = { 0,0,0 };
-	startPosition = { 0,0,0 };
 	isTargetSet = false;
 	chaseCount = 0;
 	waitCount = 0;
@@ -365,14 +476,15 @@ void uniteBoss::uniteBossSet()
 	enemyObject->Update();
 
 	//演出用カメラをセット
-	bossCamera = new Camera;
-	bossCamera->SetEye({ 0,0,0 });
-	bossCamera->SetTarget({ 0,0,0 });
-	Object3d_FBX::SetCamera(bossCamera);
+	uniteBossCamera = new Camera;
+	uniteBossCamera->SetEye({ 0,0,0 });
+	uniteBossCamera->SetTarget({ 0,0,0 });
+	Object3d_FBX::SetCamera(uniteBossCamera);
 
 	isAppear = true;
 }
 
+//行動パターン抽選
 void uniteBoss::selectMovePattern()
 {
 	if (!isSelectPattern)
@@ -385,6 +497,7 @@ void uniteBoss::selectMovePattern()
 	isSelectPattern = false;
 }
 
+//突進
 void uniteBoss::uniteBossChargeAttack()
 {
 	if (uniteBossNowPattern != uniteBossPattern::chargeAttack)
@@ -457,6 +570,7 @@ void uniteBoss::uniteBossChargeAttack()
 	enemyObject->SetPosition(position);
 }
 
+//乱射
 void uniteBoss::uniteBossRampage()
 {
 	if (uniteBossNowPattern != uniteBossPattern::rampageBullet)
@@ -525,6 +639,7 @@ void uniteBoss::uniteBossRampage()
 	}
 }
 
+//自機狙い弾
 void uniteBoss::uniteBossShotPlayerTarget()
 {
 	if (uniteBossNowPattern != uniteBossPattern::shotPlayerTarget)
@@ -600,6 +715,7 @@ void uniteBoss::uniteBossShotPlayerTarget()
 	bullet->update();
 }
 
+//描画_3D
 void uniteBoss::uniteBossDraw3d(directX* directx)
 {
 	draw3D(directx);
@@ -611,6 +727,7 @@ void uniteBoss::uniteBossDraw3d(directX* directx)
 	}
 }
 
+//描画_2D
 void uniteBoss::uniteBossDraw2d(directX* directx)
 {
 	draw2D(directx);

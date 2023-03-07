@@ -12,6 +12,7 @@
 #include"../Player/Player.h"
 #include"../Player/Enemy.h"
 #include"../Player/Boss.h"
+#include"../Player/uniteBoss.h"
 #include"../Player/CheckHItManager.h"
 
 #include"../staging/Easing.h"
@@ -148,6 +149,8 @@ private:
 	/// オブジェクトのサイズは大きくして分かりやすく
 	/// </summary>
 	std::unique_ptr<Boss> testBoss;
+
+	std::unique_ptr<uniteBoss> testUniteBoss;
 
 	//ボスのhpゲージ
 	std::vector<std::unique_ptr<SingleSprite>> bossHitPoints;
