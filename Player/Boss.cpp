@@ -512,13 +512,13 @@ void Boss::bossShot()
 
 	if (!bullet->isBulletArive() && isInRange)
 	{
-		shotCount++;
+		nextShotTime++;
 	}
 
-	if (shotCount >= 10 && bullet->isBulletArive() == false)
+	if (nextShotTime >= 10 && bullet->isBulletArive() == false)
 	{
 		isShot = true;
-		shotCount = 0;
+		nextShotTime = 0;
 	}
 	else
 	{
@@ -573,13 +573,13 @@ void Boss::bossHoming()
 
 	if (!bullet->isBulletArive() && isInRange)
 	{
-		shotCount++;
+		nextShotTime++;
 	}
 
-	if (shotCount >= 10 && bullet->isBulletArive() == false)
+	if (nextShotTime >= 10 && bullet->isBulletArive() == false)
 	{
 		isShot = true;
-		shotCount = 0;
+		nextShotTime = 0;
 	}
 	else
 	{

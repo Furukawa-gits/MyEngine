@@ -36,9 +36,6 @@ private:
 	//パーツごとのHP
 	std::vector<std::unique_ptr<SingleSprite>> partsHitPoint;
 
-	//パーツの座標
-	XMFLOAT3 partsPosition = { 0,0,0 };
-
 	//角度(極座標用)
 	float angleTheta;
 	float anglePhi;
@@ -184,6 +181,18 @@ private:
 
 	int resetHitPoint = 21;
 	int arrivalTime = 0;
+
+	//突進の回数
+	int chargeAttackCount = 0;
+	//突進の最大数
+	const int maxChargeAttackCount = 3;
+
+	//弾を撃った数
+	int shotCount = 0;
+	//弾を撃つ最大数(自機狙い)
+	const int maxShotCount = 5;
+	//弾を撃つ最大数(乱射)
+	const int maxRanpageCount = 10;
 
 	//演出用変数
 	XMFLOAT3 arrivalStartPos;

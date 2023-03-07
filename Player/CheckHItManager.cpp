@@ -8,6 +8,11 @@ void checkHitManager::checkPlayerEnemy(Player* player, Enemy* enemy)
 		return;
 	}
 
+	if (enemy->isArmor)
+	{
+		return;
+	}
+
 	if (player->isArmor)
 	{
 		return;
@@ -42,6 +47,11 @@ void checkHitManager::checkBulletEnemy(bullet* bullet, Enemy* enemy)
 		return;
 	}
 
+	if (enemy->isArmor)
+	{
+		return;
+	}
+
 	if (Collision::CheckSphere2Sphere(bullet->bulletCollision, enemy->enemyCollision))
 	{
 		bullet->count = 0;
@@ -55,6 +65,11 @@ void checkHitManager::checkBulletEnemy(bullet* bullet, Enemy* enemy)
 void checkHitManager::checkBulletsEnemy(list<unique_ptr<bullet>>* bulletsList, Enemy* enemy)
 {
 	if (enemy->Isarive == false)
+	{
+		return;
+	}
+
+	if (enemy->isArmor)
 	{
 		return;
 	}
@@ -126,7 +141,7 @@ void checkHitManager::checkBulletsEnemyBullets(list<unique_ptr<bullet>>* bullets
 	}
 }
 
-// プレイヤーのミサイルと敵の当たり判定
+// プレイヤーのミサイルと敵本体の当たり判定(単体)
 void checkHitManager::checkMissilesEnemy(list<unique_ptr<Missile>>* missilesList)
 {
 	for (std::unique_ptr<Missile>& newmissile : *missilesList)
@@ -142,7 +157,10 @@ void checkHitManager::checkMissilesEnemy(list<unique_ptr<Missile>>* missilesList
 			{
 				if (newmissile->enemyPointer->isThisBoss)
 				{
-					newmissile->enemyPointer->HP--;
+					if (newmissile->enemyPointer->isArmor)
+					{
+						newmissile->enemyPointer->HP--;
+					}
 
 					if (newmissile->enemyPointer->HP <= 0)
 					{
@@ -151,7 +169,10 @@ void checkHitManager::checkMissilesEnemy(list<unique_ptr<Missile>>* missilesList
 				}
 				else
 				{
-					newmissile->enemyPointer->HP = 0;
+					if (newmissile->enemyPointer->isArmor)
+					{
+						newmissile->enemyPointer->HP = 0;
+					}
 				}
 				newmissile->isTargetSet = false;
 				newmissile->enemyPointer->isTargetSet = false;

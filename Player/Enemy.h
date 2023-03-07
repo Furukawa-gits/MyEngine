@@ -225,11 +225,14 @@ public:
 
 	//パターン２：射撃
 	bool isShot = false;//射撃フラグ
-	int shotCount = 0;//次の射撃までの待機時間
+	int nextShotTime = 0;//次の射撃までの待機時間
 	bool isInRange = false;//射程範囲内かどうか
 
 	//この敵がボスかどうか
 	bool isThisBoss = false;
+
+	//この敵に攻撃が通るかどうか
+	bool isArmor = false;
 
 	//弾(1発のみ：shotで使う)
 	std::unique_ptr<enemyBullet> bullet;

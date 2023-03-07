@@ -13,6 +13,7 @@ void uniteParts::partsInit(int ID)
 {
 	//基底クラスの初期化
 	init(enemyPattern::shot);
+	enemyObject->SetScale({ 0.8f,0.8f,0.8f });
 	enemyObject->setColor({ 1.0f,1.0f,1.0f,1 });
 	isThisBoss = true;
 }
@@ -40,14 +41,14 @@ void uniteParts::partsUpdata()
 	anglePhi += angleSpeed;
 	angleTheta += angleSpeed;
 
-	partsPosition =
+	position =
 	{
 		partsRadius * sinf(angleTheta * (M_PI / 180.0f)) * cosf(anglePhi * (M_PI / 180.0f)),
 		partsRadius * sinf(angleTheta * (M_PI / 180.0f)) * sinf(anglePhi * (M_PI / 180.0f)),
 		partsRadius * cosf(angleTheta * (M_PI / 180.0f)),
 	};
 
-	enemyObject->SetPosition(partsPosition);
+	enemyObject->SetPosition(position);
 	enemyObject->Update();
 }
 
@@ -62,7 +63,7 @@ void uniteParts::partsShotBullet(XMFLOAT3 targetposition)
 
 void uniteParts::partsSet(XMFLOAT3 position, float theta, float phi)
 {
-	partsPosition = position;
+	this->position = position;
 	anglePhi = phi;
 	angleTheta = theta;
 	HP = 6;
@@ -271,7 +272,7 @@ void uniteBoss::uniteBossArrival()
 		return;
 	}
 
-	isAppear = true;
+	isAppear = false;
 }
 
 void uniteBoss::uniteBossAriveMove()
@@ -281,16 +282,33 @@ void uniteBoss::uniteBossAriveMove()
 		return;
 	}
 
+	//行動パターンの抽選
+	selectMovePattern();
+
+	//突進
 	uniteBossChargeAttack();
 
+	//自機狙い弾
 	uniteBossShotPlayerTarget();
 
+	//弾乱射
 	uniteBossRampage();
 
 	//パーツの更新
+	partsList.remove_if([](std::unique_ptr<uniteParts>& parts)
+		{
+			return parts->isDraw == false;
+		});
+
 	for (std::unique_ptr<uniteParts>& parts : partsList)
 	{
 		parts->partsUpdata();
+	}
+
+	//全てのパーツが破壊されたかどうか
+	if (partsList.size() <= 0)
+	{
+		isAllPartsBreak = true;
 	}
 
 	//HPが0になったら消滅
@@ -318,6 +336,8 @@ void uniteBoss::uniteBossDeathMove()
 
 void uniteBoss::uniteBossSet()
 {
+	position = { 0,0,0 };
+	startPosition = { 0,0,0 };
 	isTargetSet = false;
 	chaseCount = 0;
 	waitCount = 0;
@@ -372,7 +392,7 @@ void uniteBoss::uniteBossChargeAttack()
 		return;
 	}
 
-	if (isAppear)
+	if (isAppear || isSelectPattern)
 	{
 		return;
 	}
@@ -382,12 +402,17 @@ void uniteBoss::uniteBossChargeAttack()
 		return;
 	}
 
+	if (chargeAttackCount >= maxChargeAttackCount)
+	{
+		isSelectPattern = true;
+	}
+
 	//追跡
 	if (isChase)
 	{
 		//追尾カウント加算
 		chaseCount++;
-		enemySpeed = 0.35f;
+		enemySpeed = 0.45f;
 		if (chaseCount >= 1)
 		{
 			isChase = false;
@@ -410,6 +435,7 @@ void uniteBoss::uniteBossChargeAttack()
 			isWait = false;
 			waitCount = 0;
 			isChase = true;
+			chargeAttackCount++;
 		}
 	}
 
@@ -438,7 +464,7 @@ void uniteBoss::uniteBossRampage()
 		return;
 	}
 
-	if (isAppear)
+	if (isAppear || isSelectPattern)
 	{
 		return;
 	}
@@ -473,18 +499,19 @@ void uniteBoss::uniteBossRampage()
 
 	if (nextBulletTime % 15 == 0)
 	{
-		std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
-		newBullet->init();
-
-		XMFLOAT3 rampageTargetPos =
+		//パーツから弾を発射
+		for (std::unique_ptr<uniteParts>& parts : partsList)
 		{
-			playerPointer->getPlayerPos().x - (float)(rand() % 8 - 4),
-			playerPointer->getPlayerPos().y - (float)(rand() % 8 - 4),
-			playerPointer->getPlayerPos().z - (float)(rand() % 8 - 4)
-		};
+			XMFLOAT3 target =
+			{
+				parts->position.x + (parts->position.x - position.x),
+				parts->position.y + (parts->position.y - position.y),
+				parts->position.z + (parts->position.z - position.z),
+			};
 
-		newBullet->set(rampageTargetPos, this->position);
-		Bullets.push_back(std::move(newBullet));
+			parts->partsShotBullet(target);
+		}
+		shotCount++;
 
 		bulletCount++;
 	}
@@ -505,7 +532,7 @@ void uniteBoss::uniteBossShotPlayerTarget()
 		return;
 	}
 
-	if (isAppear)
+	if (isAppear || isSelectPattern)
 	{
 		return;
 	}
@@ -513,6 +540,11 @@ void uniteBoss::uniteBossShotPlayerTarget()
 	if (!playerPointer->isArive)
 	{
 		return;
+	}
+
+	if (shotCount >= maxShotCount)
+	{
+		isSelectPattern = true;
 	}
 
 	XMFLOAT3 pPos = playerPointer->playerObject->getPosition();
@@ -524,9 +556,11 @@ void uniteBoss::uniteBossShotPlayerTarget()
 		pPos.z - this->position.z
 	};
 
+	//本体からプレイヤーへの距離を計算
 	float length = sqrtf(powf(startToTarget.x, 2) + powf(startToTarget.y, 2) + powf(startToTarget.z, 2));
 
-	if (length <= forPlayer / 2)
+	//射程範囲内か判断
+	if (length <= forPlayer)
 	{
 		isInRange = true;
 	}
@@ -535,24 +569,31 @@ void uniteBoss::uniteBossShotPlayerTarget()
 		isInRange = false;
 	}
 
+
 	if (!bullet->isBulletArive() && isInRange)
 	{
-		shotCount++;
+		nextShotTime++;
 	}
 
-	if (shotCount >= 10 && bullet->isBulletArive() == false)
+	if (nextShotTime >= 10 && bullet->isBulletArive() == false)
 	{
 		isShot = true;
-		shotCount = 0;
+		nextShotTime = 0;
 	}
 	else
 	{
 		isShot = false;
 	}
 
+	//射撃
 	if (isShot)
 	{
-		bullet->set(pPos, this->position);
+		//パーツから弾を発射
+		for (std::unique_ptr<uniteParts>& parts : partsList)
+		{
+			parts->partsShotBullet(pPos);
+		}
+		shotCount++;
 		isShot = false;
 	}
 

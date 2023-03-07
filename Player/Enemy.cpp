@@ -221,14 +221,14 @@ void Enemy::shot()
 	//弾を撃っていないかつ射程範囲内なら射撃までのカウントダウンを進める
 	if (!bullet->isBulletArive() && isInRange)
 	{
-		shotCount++;
+		nextShotTime++;
 	}
 
 	//一定カウントごとに射撃フラグを立てる
-	if (shotCount >= 10 && bullet->isBulletArive() == false)
+	if (nextShotTime >= 10 && bullet->isBulletArive() == false)
 	{
 		isShot = true;
-		shotCount = 0;
+		nextShotTime = 0;
 	}
 	else
 	{
@@ -277,13 +277,13 @@ void Enemy::homing()
 
 	if (!bullet->isBulletArive() && isInRange)
 	{
-		shotCount++;
+		nextShotTime++;
 	}
 
-	if (shotCount >= 10 && bullet->isBulletArive() == false)
+	if (nextShotTime >= 10 && bullet->isBulletArive() == false)
 	{
 		isShot = true;
-		shotCount = 0;
+		nextShotTime = 0;
 	}
 	else
 	{
