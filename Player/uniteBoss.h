@@ -124,6 +124,9 @@ public:
 	//登場演出フラグの取得
 	bool getIsAppear() { return isAppear; }
 
+
+	//パーツたち
+	std::list<std::unique_ptr<uniteParts>> partsList;
 private:
 
 	//モデル
@@ -135,11 +138,8 @@ private:
 	//プレイヤーのアドレス
 	static Player* playerPointer;
 
-	//パーツたち
-	std::list<std::unique_ptr<uniteParts>> partsList;
-
 	//パーツの球面座標を設定するときのインデックス(角度θ,φ)
-	XMFLOAT2 defaultPartsAngle[6] =
+	std::list<XMFLOAT2> defaultPartsAngle =
 	{
 		{0,0},
 		{90,0},

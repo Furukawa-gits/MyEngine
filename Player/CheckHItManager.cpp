@@ -100,6 +100,11 @@ void checkHitManager::checkBulletEnemybullet(bullet* bullet, Enemy* enemy)
 		return;
 	}
 
+	if (enemy->bullet == nullptr)
+	{
+		return;
+	}
+
 	if (enemy->bullet->isBulletArive() == false)
 	{
 		return;
@@ -157,7 +162,7 @@ void checkHitManager::checkMissilesEnemy(list<unique_ptr<Missile>>* missilesList
 			{
 				if (newmissile->enemyPointer->isThisBoss)
 				{
-					if (newmissile->enemyPointer->isArmor)
+					if (!newmissile->enemyPointer->isArmor)
 					{
 						newmissile->enemyPointer->HP--;
 					}
@@ -169,7 +174,7 @@ void checkHitManager::checkMissilesEnemy(list<unique_ptr<Missile>>* missilesList
 				}
 				else
 				{
-					if (newmissile->enemyPointer->isArmor)
+					if (!newmissile->enemyPointer->isArmor)
 					{
 						newmissile->enemyPointer->HP = 0;
 					}
@@ -188,6 +193,11 @@ void checkHitManager::checkMissilesEnemy(list<unique_ptr<Missile>>* missilesList
 void checkHitManager::chackPlayerEnemyBullet(Player* player, Enemy* enemy)
 {
 	if (enemy->enemyMovePattern != enemyPattern::shot)
+	{
+		return;
+	}
+
+	if (enemy->bullet == nullptr)
 	{
 		return;
 	}
@@ -223,6 +233,11 @@ void checkHitManager::checkPlayerEnemyBullets(Player* player, list<unique_ptr<En
 // ƒvƒŒƒCƒ„[‚Ì’Êí’e‚Æ“G‚Ì—ŽË’e‚Ì“–‚½‚è”»’è(’P‘Ì“¯Žm)
 void checkHitManager::checkBulletEnemyRampage(bullet* playerbullet, enemyBullet* rampagebullet)
 {
+	if (rampagebullet == nullptr)
+	{
+		return;
+	}
+
 	if (rampagebullet->isBulletArive() == false)
 	{
 		return;
@@ -258,6 +273,11 @@ void checkHitManager::checkBulletsEnemyRampage(list<unique_ptr<bullet>>* bullets
 // ƒvƒŒƒCƒ„[–{‘Ì‚Æ“G‚Ì—ŽË’e‚Ì“–‚½‚è”»’è(’P‘Ì)
 void checkHitManager::checkPlayerEnemyRampage(Player* player, enemyBullet* rampagebullet)
 {
+	if (rampagebullet == nullptr)
+	{
+		return;
+	}
+
 	if (rampagebullet->isBulletArive() == false)
 	{
 		return;
@@ -300,6 +320,11 @@ void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& target
 	}
 
 	if (player->isArive == false)
+	{
+		return;
+	}
+
+	if (enemy->isArmor)
 	{
 		return;
 	}

@@ -581,13 +581,36 @@ void GameScene::Play_updata()
 	checkHitManager::checkBulletsEnemy(&player_p->bulletsList, testBoss.get());
 	checkHitManager::checkBulletsEnemybullet(&player_p->bulletsList, testBoss.get());
 
+	//通常弾とユニットボス本体の当たり判定
+	checkHitManager::checkBulletsEnemy(&player_p->bulletsList, testUniteBoss.get());
+
+	//パーツ
+	for (std::unique_ptr<uniteParts>& newparts : testUniteBoss->partsList)
+	{
+		checkHitManager::checkBulletsEnemy(&player_p->bulletsList, newparts.get());
+		checkHitManager::checkBulletsEnemybullet(&player_p->bulletsList, newparts.get());
+	}
+
+
 	//プレイヤーとボスの当たり判定
-	if (testBoss->getIsAppear() == false)
+	if (!testBoss->getIsAppear() && stageNum < 3)
 	{
 		checkHitManager::checkPlayerEnemy(player_p.get(), testBoss.get());
 		checkHitManager::chackPlayerEnemyBullet(player_p.get(), testBoss.get());
 		checkHitManager::checkPlayerEnemyRampages(player_p.get(), testBoss.get());
 		checkHitManager::checkBulletsEnemyRampage(&player_p->bulletsList, testBoss.get());
+	}
+
+	if (!testUniteBoss->getIsAppear() && stageNum == 3)
+	{
+		checkHitManager::checkPlayerEnemy(player_p.get(), testUniteBoss.get());
+
+		for (std::unique_ptr<uniteParts>& newparts : testUniteBoss->partsList)
+		{
+			checkHitManager::chackPlayerEnemyBullet(player_p.get(), newparts.get());
+			checkHitManager::checkPlayerEnemyRampages(player_p.get(), newparts.get());
+			checkHitManager::checkBulletsEnemyRampage(&player_p->bulletsList, newparts.get());
+		}
 	}
 
 	//死んでいる雑魚敵をカウント
@@ -616,7 +639,9 @@ void GameScene::Play_updata()
 			}
 			else
 			{
-
+				//ユニットボス出現
+				testUniteBoss->uniteBossSet();
+				isBoss = true;
 			}
 		}
 		//でなければ次の敵軍
@@ -645,17 +670,25 @@ void GameScene::Play_updata()
 
 	if (isBoss)
 	{
-		//ボス更新
-		testBoss->bossUpdate(player_p.get());
-
-		for (std::unique_ptr<SingleSprite>& newsprite : bossHitPoints)
+		if (stageNum < 3)
 		{
-			newsprite->SpriteUpdate();
+			//ボス更新
+			testBoss->bossUpdate(player_p.get());
+
+			for (std::unique_ptr<SingleSprite>& newsprite : bossHitPoints)
+			{
+				newsprite->SpriteUpdate();
+			}
+		}
+		else
+		{
+			//ユニットボス更新
+			testUniteBoss->uniteBossUpdata();
 		}
 	}
 
 	//ボスを倒したorプレイヤーが死んだらリザルト
-	if (isBoss && (!testBoss->isDraw))
+	if (isBoss && (!testBoss->isDraw) && (!testUniteBoss->isDraw))
 	{
 		isMoveScreen = true;
 		isScreenEase = true;
@@ -927,6 +960,8 @@ void GameScene::PlayDraw3d()
 
 	//ボス描画
 	testBoss->draw3D(directx);
+
+	testUniteBoss->uniteBossDraw3d(directx);
 }
 void GameScene::PlayDraw2d()
 {
@@ -952,6 +987,8 @@ void GameScene::PlayDraw2d()
 			bossHitPoints[i]->DrawSprite(directx->cmdList.Get());
 		}
 	}
+
+	testUniteBoss->uniteBossDraw2d(directx);
 
 	if (isCountDown)
 	{
@@ -1100,6 +1137,13 @@ void GameScene::checkHitPlayerTarget()
 
 	//ボス
 	checkHitManager::checkRockonEnemy(player_p.get(), testBoss.get(), targetnum);
+
+	checkHitManager::checkRockonEnemy(player_p.get(), testUniteBoss.get(), targetnum);
+
+	for (std::unique_ptr<uniteParts>& newparts : testUniteBoss->partsList)
+	{
+		checkHitManager::checkRockonEnemy(player_p.get(), newparts.get(), targetnum);
+	}
 }
 
 void GameScene::countDown()
@@ -1156,6 +1200,8 @@ void GameScene::countDown()
 
 		testBoss->isStop = true;
 
+		testUniteBoss->isStop = true;
+
 		return;
 	}
 	else
@@ -1169,6 +1215,8 @@ void GameScene::countDown()
 		}
 
 		testBoss->isStop = false;
+
+		testUniteBoss->isStop = false;
 	}
 
 	return;
@@ -1346,8 +1394,11 @@ bool GameScene::loadStage()
 
 	if (isTutorial == false)
 	{
-		return false;
+		//return false;
 	}
+
+	player_p->isNormalShot = true;
+	player_p->isHomingMissile = true;
 
 	for (int i = 0; i < stageNum + 4; i++)
 	{
@@ -1406,17 +1457,11 @@ bool GameScene::loadStage()
 	{
 		stageLevel = stageNum + 2;
 
-		//敵
-		testBoss->changePattern(enemyPattern::homing);
-
 		//敵　リスト
 		for (std::unique_ptr<Enemy>& newenemy : enemyList)
 		{
 			newenemy->changePattern(enemyPattern::rampage);
 		}
-
-		//ボスの設定
-		testBoss->setHitPoint(stageLevel + 5);
 	}
 
 	for (int i = 0; i < testBoss->HP; i++)

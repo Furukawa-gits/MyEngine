@@ -43,9 +43,16 @@ void uniteParts::partsUpdata()
 
 	position =
 	{
-		partsRadius * sinf(angleTheta * (M_PI / 180.0f)) * cosf(anglePhi * (M_PI / 180.0f)),
-		partsRadius * sinf(angleTheta * (M_PI / 180.0f)) * sinf(anglePhi * (M_PI / 180.0f)),
-		partsRadius * cosf(angleTheta * (M_PI / 180.0f)),
+		partsRadius * sinf(angleTheta) * cosf(anglePhi),
+		partsRadius * sinf(angleTheta) * sinf(anglePhi),
+		partsRadius * cosf(angleTheta)
+	};
+
+	XMFLOAT3 test =
+	{
+		partsRadius * sinf(angleTheta) * cosf(anglePhi),
+		partsRadius * sinf(angleTheta) * sinf(anglePhi),
+		partsRadius * cosf(angleTheta)
 	};
 
 	enemyObject->SetPosition(position);
@@ -67,6 +74,12 @@ void uniteParts::partsSet(XMFLOAT3 position, float theta, float phi)
 	anglePhi = phi;
 	angleTheta = theta;
 	HP = 6;
+
+	isDraw = true;
+	isAppear = true;
+	isTargetSet = false;
+	isStop = true;
+	Bullets.clear();
 }
 
 void uniteParts::partsDraw3D(directX* directx)
@@ -80,7 +93,7 @@ void uniteParts::partsDraw2D(directX* directx)
 
 	for (int i = 0; i < HP; i++)
 	{
-		partsHitPoint[i]->DrawSprite(directx->cmdList.Get());
+		//partsHitPoint[i]->DrawSprite(directx->cmdList.Get());
 	}
 }
 #pragma endregion パーツ
@@ -277,7 +290,46 @@ void uniteBoss::uniteBossArrival()
 		return;
 	}
 
-	isAppear = false;
+	playerPointer->isStop = true;
+	playerPointer->isInvisible = 1;
+
+	isStop = true;
+
+	position.y -= 0.5f;
+	enemyObject->SetPosition(position);
+	enemyObject->Update();
+
+	uniteBossCamera->SetTarget(position);
+	uniteBossCamera->Update();
+
+	for (std::unique_ptr<uniteParts>& parts : partsList)
+	{
+		parts->partsUpdata();
+	}
+
+	if (position.y <= arrivalEndPos.y)
+	{
+		enemyObject->SetRotation({ 0,0,0 });
+		enemyObject->SetPosition(arrivalEndPos);
+		enemyObject->Update();
+		isStop = false;
+		Isarive = true;
+		isAppear = false;
+		playerPointer->isStop = false;
+		playerPointer->isInvisible = -1;
+		isSelectPattern = true;
+
+		for (std::unique_ptr<uniteParts>& parts : partsList)
+		{
+			parts->partsUpdata();
+			parts->isStop = false;
+			parts->Isarive = true;
+			parts->isAppear = false;
+			parts->angleSpeed = 0.2f;
+		}
+
+		Object3d_FBX::SetCamera(playerPointer->followCamera);
+	}
 }
 
 //生存時処理
@@ -340,6 +392,11 @@ void uniteBoss::uniteBossAriveMove()
 //撃墜処理
 void uniteBoss::uniteBossDeathMove()
 {
+	if (Isarive || isAppear)
+	{
+		return;
+	}
+
 	playerPointer->isStop = true;
 	playerPointer->isInvisible = 1;
 
@@ -446,9 +503,9 @@ void uniteBoss::uniteBossDeathMove()
 //セット
 void uniteBoss::uniteBossSet()
 {
-	arrivalStartPos = { 0,50,0 };
+	arrivalStartPos = { 0,80,0 };
 	arrivalEndPos = { 0,5,0 };
-	position = { 0,0,0 };
+	position = arrivalStartPos;
 	isTargetSet = false;
 	chaseCount = 0;
 	waitCount = 0;
@@ -477,10 +534,20 @@ void uniteBoss::uniteBossSet()
 
 	//演出用カメラをセット
 	uniteBossCamera = new Camera;
-	uniteBossCamera->SetEye({ 0,0,0 });
-	uniteBossCamera->SetTarget({ 0,0,0 });
+	uniteBossCamera->SetEye({ 0,0,position.z - 35 });
+	uniteBossCamera->SetTarget(position);
 	Object3d_FBX::SetCamera(uniteBossCamera);
 
+	std::list<XMFLOAT2>::iterator itr = defaultPartsAngle.begin();
+
+	for (std::unique_ptr<uniteParts>& parts : partsList)
+	{
+		parts->partsSet({ 0,0,0 }, itr->x, itr->y);
+		parts->angleSpeed = 0.0f;
+		itr++;
+	}
+
+	isSelectPattern = true;
 	isAppear = true;
 }
 
@@ -624,8 +691,9 @@ void uniteBoss::uniteBossRampage()
 			};
 
 			parts->partsShotBullet(target);
+
+			parts->angleSpeed = 0.5f;
 		}
-		shotCount++;
 
 		bulletCount++;
 	}
@@ -636,6 +704,12 @@ void uniteBoss::uniteBossRampage()
 		rampageWaitCount = 0;
 		nextBulletTime = 0;
 		bulletCount = 0;
+		shotCount++;
+		if (shotCount >= maxRanpageCount)
+		{
+			shotCount = 0;
+			isSelectPattern = true;
+		}
 	}
 }
 
@@ -734,7 +808,7 @@ void uniteBoss::uniteBossDraw2d(directX* directx)
 
 	for (int i = 0; i < HP; i++)
 	{
-		motherHitPoint[i]->DrawSprite(directx->cmdList.Get());
+		//motherHitPoint[i]->DrawSprite(directx->cmdList.Get());
 	}
 
 	//パーツの描画
