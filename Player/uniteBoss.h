@@ -11,6 +11,8 @@ public:
 
 	void partsUpdata();
 
+	void partsDeathMove();
+
 	void partsShotBullet(XMFLOAT3 targetposition);
 
 	void partsSet(XMFLOAT3 position, float theta, float phi);
@@ -20,7 +22,7 @@ public:
 	void partsDraw2D(directX* directx);
 
 	//Šp‘¬“x
-	float angleSpeed = 0.2f;
+	float angleSpeed = 0.01f;
 
 private:
 

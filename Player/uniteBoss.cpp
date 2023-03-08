@@ -2,7 +2,7 @@
 
 //static変数(パーツ)
 XMFLOAT3* uniteParts::motherPosition = nullptr;
-const float uniteParts::partsRadius = 5.0f;
+const float uniteParts::partsRadius = 15.0f;
 
 //static変数(本体)
 std::unique_ptr<Model> uniteBoss::uniteBossModel = std::make_unique<Model>();
@@ -13,7 +13,7 @@ void uniteParts::partsInit(int ID)
 {
 	//基底クラスの初期化
 	init(enemyPattern::shot);
-	enemyObject->SetScale({ 0.8f,0.8f,0.8f });
+	enemyObject->SetScale({ 0.6f,0.6f,0.6f });
 	enemyObject->setColor({ 1.0f,1.0f,1.0f,1 });
 	isThisBoss = true;
 }
@@ -43,20 +43,90 @@ void uniteParts::partsUpdata()
 
 	position =
 	{
-		partsRadius * sinf(angleTheta) * cosf(anglePhi),
-		partsRadius * sinf(angleTheta) * sinf(anglePhi),
-		partsRadius * cosf(angleTheta)
-	};
-
-	XMFLOAT3 test =
-	{
-		partsRadius * sinf(angleTheta) * cosf(anglePhi),
-		partsRadius * sinf(angleTheta) * sinf(anglePhi),
-		partsRadius * cosf(angleTheta)
+		motherPosition->x + partsRadius * sinf(angleTheta) * cosf(anglePhi),
+		motherPosition->y + partsRadius * sinf(angleTheta) * sinf(anglePhi),
+		motherPosition->z + partsRadius * cosf(angleTheta)
 	};
 
 	enemyObject->SetPosition(position);
 	enemyObject->Update();
+
+	//HPが0になったら消滅
+	if (HP <= 0)
+	{
+		Isarive = false;
+		fallDownCount = 0;
+
+#pragma region 爆発パーティクル生成
+		std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
+		newparticle->generate();
+		newparticle->set(maxFallCount - 20, enemyObject->getPosition(), { 0,0,0 }, { 0,0,0 }, 0.2f, 10.0f);
+		bomParticles.push_back(std::move(newparticle));
+#pragma endregion 爆発パーティクル生成
+	}
+
+	partsDeathMove();
+}
+
+void uniteParts::partsDeathMove()
+{
+	if (Isarive || isAppear)
+	{
+		return;
+	}
+
+	//爆発パーティクル更新
+	bomParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
+		{
+			return newparticle->frame == newparticle->num_frame;
+		});
+	for (std::unique_ptr<SingleParticle>& newparticle : bomParticles)
+	{
+		newparticle->updata();
+	}
+
+	fallDownCount++;
+
+	position.y -= 0.2f;
+	rot.x += deathRotSpeed;
+	rot.y += deathRotSpeed;
+	rot.z += deathRotSpeed;
+	enemyObject->setRotMatrix(rot.x, rot.y, rot.z);
+
+#pragma region 黒煙パーティクル
+	if (fallDownCount % 15 == 0)
+	{
+		std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
+		newparticle->generate();
+		newparticle->set((maxFallCount - fallDownCount) + 10, enemyObject->getPosition(), { 0,0,0 }, { 0,0,0 }, 3.5, 0.5);
+
+		smokeParticles.push_back(std::move(newparticle));
+	}
+#pragma endregion 黒煙パーティクル
+
+	//煙パーティクル更新
+	smokeParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
+		{
+			return newparticle->frame == newparticle->num_frame;
+		});
+	for (std::unique_ptr<SingleParticle>& newparticle : smokeParticles)
+	{
+		newparticle->updata();
+	}
+
+	//落ちきったら
+	if (fallDownCount >= maxFallCount)
+	{
+		bomParticles.clear();
+		smokeParticles.clear();
+		isDraw = false;
+		fallDownCount = 0;
+	}
+
+	if (enemyMovePattern == enemyPattern::shot)
+	{
+		bullet->isArive = false;
+	}
 }
 
 void uniteParts::partsShotBullet(XMFLOAT3 targetposition)
@@ -80,6 +150,10 @@ void uniteParts::partsSet(XMFLOAT3 position, float theta, float phi)
 	isTargetSet = false;
 	isStop = true;
 	Bullets.clear();
+	enemyObject->SetPosition(position);
+	enemyObject->Update();
+
+	changePattern(enemyPattern::rampage);
 }
 
 void uniteParts::partsDraw3D(directX* directx)
@@ -150,6 +224,9 @@ void uniteBoss::uniteBossInit()
 	uniteBossScale = { 4,4,4 };
 	enemyCollision.radius = 9.0f;
 	deathRotSpeed = 0.1f;
+
+	bullet = std::make_unique<enemyBullet>();
+	bullet->init();
 
 	uniteParts::setStaticData(&position);
 
@@ -315,6 +392,7 @@ void uniteBoss::uniteBossArrival()
 		isStop = false;
 		Isarive = true;
 		isAppear = false;
+		isArmor = true;
 		playerPointer->isStop = false;
 		playerPointer->isInvisible = -1;
 		isSelectPattern = true;
@@ -325,7 +403,7 @@ void uniteBoss::uniteBossArrival()
 			parts->isStop = false;
 			parts->Isarive = true;
 			parts->isAppear = false;
-			parts->angleSpeed = 0.2f;
+			parts->angleSpeed = 0.01f;
 		}
 
 		Object3d_FBX::SetCamera(playerPointer->followCamera);
@@ -367,6 +445,7 @@ void uniteBoss::uniteBossAriveMove()
 	if (partsList.size() <= 0)
 	{
 		isAllPartsBreak = true;
+		isArmor = false;
 	}
 
 	//HPが0になったら消滅
@@ -521,7 +600,7 @@ void uniteBoss::uniteBossSet()
 
 	nextBulletTime = 0;
 	bulletCount = 0;
-	maxBulletCount = 10;
+	maxBulletCount = 20;
 	isRampageWait = true;
 	rampageWaitCount = 0;
 	Bullets.clear();
@@ -584,6 +663,10 @@ void uniteBoss::uniteBossChargeAttack()
 
 	if (chargeAttackCount >= maxChargeAttackCount)
 	{
+		isChase = false;
+		chaseCount = 0;
+		waitCount = 0;
+		isWait = true;
 		isSelectPattern = true;
 	}
 
@@ -598,6 +681,7 @@ void uniteBoss::uniteBossChargeAttack()
 			isChase = false;
 			chaseCount = 0;
 			isWait = true;
+			chargeAttackCount++;
 		}
 	}
 
@@ -610,12 +694,11 @@ void uniteBoss::uniteBossChargeAttack()
 		{
 			enemySpeed -= 0.01f;
 		}
-		if (waitCount >= 40)
+		if (waitCount >= 100)
 		{
 			isWait = false;
 			waitCount = 0;
 			isChase = true;
-			chargeAttackCount++;
 		}
 	}
 
@@ -655,16 +738,6 @@ void uniteBoss::uniteBossRampage()
 		return;
 	}
 
-	Bullets.remove_if([](std::unique_ptr<enemyBullet>& bullet)
-		{
-			return bullet->isBulletArive() == false;
-		});
-
-	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
-	{
-		bullet->update();
-	}
-
 	if (isRampageWait)
 	{
 		rampageWaitCount++;
@@ -678,7 +751,7 @@ void uniteBoss::uniteBossRampage()
 
 	nextBulletTime++;
 
-	if (nextBulletTime % 15 == 0)
+	if (nextBulletTime % 5 == 0)
 	{
 		//パーツから弾を発射
 		for (std::unique_ptr<uniteParts>& parts : partsList)
@@ -692,7 +765,7 @@ void uniteBoss::uniteBossRampage()
 
 			parts->partsShotBullet(target);
 
-			parts->angleSpeed = 0.5f;
+			parts->angleSpeed = 0.08f;
 		}
 
 		bulletCount++;
@@ -709,6 +782,11 @@ void uniteBoss::uniteBossRampage()
 		{
 			shotCount = 0;
 			isSelectPattern = true;
+
+			for (std::unique_ptr<uniteParts>& parts : partsList)
+			{
+				parts->angleSpeed = 0.01f;
+			}
 		}
 	}
 }
@@ -733,6 +811,8 @@ void uniteBoss::uniteBossShotPlayerTarget()
 
 	if (shotCount >= maxShotCount)
 	{
+		shotCount = 0;
+		nextShotTime = 0;
 		isSelectPattern = true;
 	}
 
@@ -764,7 +844,7 @@ void uniteBoss::uniteBossShotPlayerTarget()
 		nextShotTime++;
 	}
 
-	if (nextShotTime >= 10 && bullet->isBulletArive() == false)
+	if (nextShotTime >= 40 && bullet->isBulletArive() == false)
 	{
 		isShot = true;
 		nextShotTime = 0;

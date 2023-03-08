@@ -319,6 +319,11 @@ void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& target
 		return;
 	}
 
+	if (enemy->isArmor)
+	{
+		return;
+	}
+
 	if (player->isArive == false)
 	{
 		return;
