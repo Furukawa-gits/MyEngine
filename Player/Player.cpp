@@ -152,11 +152,11 @@ void Player::Move()
 	qLocalCamera = qYow * qLocalCamera;
 
 	//追従
-	followCamera->Following(vUpAxis, vForwordAxis, playerObject->getPosition());
+	followCamera->Following(vUpAxisCamera, vForwordAxis, playerObject->getPosition());
 
 	if (!isBoost)
 	{
-		roll = 0.0;
+		roll = 0.0f;
 	}
 
 	//XMMATRIXに変換したクォータニオンをプレイヤーの回転行列にセット
@@ -188,19 +188,19 @@ void Player::boostMove()
 	{
 		moveSpeed = boostMoveSpeed;
 		boostGauge -= 100;
-		roll = 0.02f;
+		roll = 0.04f;
 		isBoost = true;
 	}
 
 	if (moveSpeed > defaultMoveSpeed)
 	{
 		moveSpeed -= 0.05;
-		totalRoll += 0.02f;
+		totalRoll += 0.04f;
 	}
 	else if(isBoost)
 	{
 		moveSpeed = defaultMoveSpeed;
-		roll -= totalRoll;
+		roll = -totalRoll;
 		totalRoll = 0.0f;
 		isBoost = false;
 	}
@@ -210,6 +210,11 @@ void Player::boostMove()
 void Player::cameraMove()
 {
 	if (isClearStaging || isOverStaging)
+	{
+		return;
+	}
+
+	if (isBoost)
 	{
 		return;
 	}

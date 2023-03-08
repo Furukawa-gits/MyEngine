@@ -11,6 +11,8 @@ public:
 
 	void partsUpdata();
 
+	void partsAriveMove();
+
 	void partsDeathMove();
 
 	void partsShotBullet(XMFLOAT3 targetposition);
@@ -25,6 +27,9 @@ public:
 	float angleSpeed = 0.01f;
 
 private:
+
+	const float pi = 3.1415f;
+	const float radiannum = 180.0f;
 
 	//本体の座標
 	static XMFLOAT3* motherPosition;
@@ -140,15 +145,15 @@ private:
 	//プレイヤーのアドレス
 	static Player* playerPointer;
 
-	//パーツの球面座標を設定するときのインデックス(角度θ,φ)
+	//パーツの球面座標を設定するときのインデックス(角度{θ,φ})
 	std::list<XMFLOAT2> defaultPartsAngle =
 	{
-		{0,0},
-		{90,0},
-		{180,0},
-		{270,0},
-		{0,90},
-		{0,180}
+		{  0.0f,  0.0f},
+		{ 90.0f, 90.0f},
+		{180.0f,180.0f},
+		{  0.0f,270.0f},
+		{ 90.0f,  0.0f},
+		{180.0f, 90.0f}
 	};
 
 	//HPゲージ

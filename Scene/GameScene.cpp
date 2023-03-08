@@ -561,6 +561,28 @@ void GameScene::Play_updata()
 			testBoss->isSetMissile = true;
 		}
 
+		if (testUniteBoss->isTargetSet && !testUniteBoss->isSetMissile)
+		{
+			player_p->addMissile(testUniteBoss.get());
+
+			testUniteBoss->isSetMissile = true;
+		}
+
+		for (int i = 0; i < targetnum; i++)
+		{
+			for (std::unique_ptr<uniteParts>& newparts : testUniteBoss->partsList)
+			{
+				if (newparts->isTargetSet && !newparts->isSetMissile)
+				{
+					player_p->addMissile(newparts.get());
+
+					newparts->isSetMissile = true;
+
+					break;
+				}
+			}
+		}
+
 		targetnum = 0;
 	}
 

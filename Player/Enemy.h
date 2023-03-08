@@ -165,9 +165,6 @@ private:
 	//モデル
 	static std::unique_ptr<Model> enemyModelS;
 
-	static XMFLOAT3 playerPosition;
-	static XMFLOAT3 playerFront;
-	static bool playerIsArive;
 
 	//登場演出時間
 	int enemyArrivalTime;
@@ -183,6 +180,9 @@ public:
 
 	//プレイヤーの索敵ライン
 	static const float forPlayer;
+	static XMFLOAT3 playerPosition;
+	static XMFLOAT3 playerFront;
+	static bool playerIsArive;
 
 	bool isDraw = false;//描画フラグ
 	bool Isarive = false;//生存フラグ

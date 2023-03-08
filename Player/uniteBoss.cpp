@@ -13,9 +13,9 @@ void uniteParts::partsInit(int ID)
 {
 	//基底クラスの初期化
 	init(enemyPattern::shot);
-	enemyObject->SetScale({ 0.6f,0.6f,0.6f });
 	enemyObject->setColor({ 1.0f,1.0f,1.0f,1 });
 	isThisBoss = true;
+	partsID = ID;
 }
 
 void uniteParts::setStaticData(XMFLOAT3* motherposition)
@@ -37,9 +37,78 @@ void uniteParts::partsUpdata()
 		bullet->update();
 	}
 
+	enemyObject->SetPosition(position);
+	enemyObject->Update();
+
+	if (isStop)
+	{
+		return;
+	}
+
+	//プレイヤーとの位置関係を計算
+	XMFLOAT3 playerToEnemy =
+	{
+		position.x - playerPosition.x,
+		position.y - playerPosition.y,
+		position.z - playerPosition.z,
+	};
+
+	float length = sqrtf(powf(playerToEnemy.x, 2) + powf(playerToEnemy.y, 2) + powf(playerToEnemy.z, 2));
+
+	//プレイヤーと距離が離れすぎているか
+	if (length >= forPlayer)
+	{
+		isFar = true;
+	}
+	else
+	{
+		isFar = false;
+	}
+
+	//ベクトルの内積から角度を求めて、ロックオンの範囲を絞る
+	float dot = playerToEnemy.x * playerFront.x + playerToEnemy.y * playerFront.y + playerToEnemy.z * playerFront.z;
+
+	float vecLen = sqrtf((powf(playerToEnemy.x, 2) + powf(playerToEnemy.y, 2) + powf(playerToEnemy.z, 2)) * (powf(playerFront.x, 2) + powf(playerFront.y, 2) + powf(playerFront.z, 2)));
+
+	toPlayerAngle = acosf(dot / vecLen) * (180.0f / (float)M_PI);
+
+	if (toPlayerAngle > 90)
+	{
+		//画面外(自分の位置がプレイヤーの向きと直角以上)にいるとき画面外フラグを立てる
+		isOutScreen = true;
+	}
+	else
+	{
+		isOutScreen = false;
+	}
+
+	//生存時処理
+	partsAriveMove();
+
+	//撃墜演出
+	partsDeathMove();
+}
+
+void uniteParts::partsAriveMove()
+{
+	if (!Isarive || isAppear)
+	{
+		return;
+	}
+
 	//本体の周りを回転する
 	anglePhi += angleSpeed;
 	angleTheta += angleSpeed;
+
+	if (anglePhi > 360)
+	{
+		anglePhi -= 360;
+	}
+
+	if (angleTheta > 360)
+	{
+		angleTheta -= 360;
+	}
 
 	position =
 	{
@@ -56,6 +125,10 @@ void uniteParts::partsUpdata()
 	{
 		Isarive = false;
 		fallDownCount = 0;
+		angleTheta = 0;
+		anglePhi = 0;
+
+		enemyObject->setParent(nullptr);
 
 #pragma region 爆発パーティクル生成
 		std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
@@ -65,7 +138,17 @@ void uniteParts::partsUpdata()
 #pragma endregion 爆発パーティクル生成
 	}
 
-	partsDeathMove();
+	//当たり判定更新
+	enemyObject->SetPosition(position);
+	enemyCollision.center =
+	{
+		enemyObject->getPosition().x,
+		enemyObject->getPosition().y,
+		enemyObject->getPosition().z,1.0f
+	};
+
+	//スプライト更新
+	updataSprite();
 }
 
 void uniteParts::partsDeathMove()
@@ -149,8 +232,21 @@ void uniteParts::partsSet(XMFLOAT3 position, float theta, float phi)
 	isAppear = true;
 	isTargetSet = false;
 	isStop = true;
+	isRampageWait = true;
+	chaseCount = 0;
+	waitCount = 0;
+	rampageWaitCount = 0;
+	nextShotTime = 0;
 	Bullets.clear();
-	enemyObject->SetPosition(position);
+
+	this->position =
+	{
+		motherPosition->x + partsRadius * sinf(angleTheta) * cosf(anglePhi),
+		motherPosition->y + partsRadius * sinf(angleTheta) * sinf(anglePhi),
+		motherPosition->z + partsRadius * cosf(angleTheta)
+	};
+
+	enemyObject->SetPosition(this->position);
 	enemyObject->Update();
 
 	changePattern(enemyPattern::rampage);
@@ -357,6 +453,11 @@ void uniteBoss::uniteBossSpriteUpdata()
 	outScreenIcon[0]->SpriteUpdate();
 	outScreenIcon[1]->SpriteTransferVertexBuffer();
 	outScreenIcon[1]->SpriteUpdate();
+
+	for (std::unique_ptr<uniteParts>& parts : partsList)
+	{
+		parts->updataSprite();
+	}
 }
 
 //登場演出
@@ -372,7 +473,7 @@ void uniteBoss::uniteBossArrival()
 
 	isStop = true;
 
-	position.y -= 0.5f;
+	position.y -= 0.2f;
 	enemyObject->SetPosition(position);
 	enemyObject->Update();
 
@@ -501,7 +602,7 @@ void uniteBoss::uniteBossDeathMove()
 	//撃墜演出のカウント
 	fallDownCount++;
 
-	float scale = 1.0f - ((float)fallDownCount / ((float)maxFallCount * 5));
+	float scale = 1.0f - ((float)fallDownCount / ((float)maxFallCount * 7));
 
 	rot.x += deathRotSpeed;
 	rot.y += deathRotSpeed;
@@ -565,7 +666,7 @@ void uniteBoss::uniteBossDeathMove()
 	}
 
 	//演出が終わったら
-	if (fallDownCount >= maxFallCount * 4)
+	if (fallDownCount >= maxFallCount * 6)
 	{
 		bomParticles.clear();
 		smokeParticles.clear();
@@ -591,12 +692,6 @@ void uniteBoss::uniteBossSet()
 	isChase = false;
 	isWait = true;
 	isDraw = true;
-	if (enemyMovePattern == enemyPattern::chase)
-	{
-		waitCount = rand() % 40;
-		isChase = false;
-		isWait = true;
-	}
 
 	nextBulletTime = 0;
 	bulletCount = 0;

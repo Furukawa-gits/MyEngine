@@ -197,9 +197,9 @@ void Missile::update()
 
 	//‹È‚°‚é—Í‚É•â³‚ğ“ü‚ê‚é
 	XMFLOAT3 Force = {
-		centri_to_enemy.x * 2.0f,
-		centri_to_enemy.y * 2.0f,
-		centri_to_enemy.z * 2.0f
+		centri_to_enemy.x * 2.3f,
+		centri_to_enemy.y * 2.3f,
+		centri_to_enemy.z * 2.3f
 	};
 
 	Force.x += bullet_vec_nml.x * 0.7f;
