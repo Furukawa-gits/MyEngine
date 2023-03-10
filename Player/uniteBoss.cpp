@@ -26,6 +26,9 @@ void uniteParts::setStaticData(XMFLOAT3* motherposition)
 
 void uniteParts::partsUpdata()
 {
+	//登場演出
+	partsArrival();
+
 	//弾の更新
 	Bullets.remove_if([](std::unique_ptr<enemyBullet>& bullet)
 		{
@@ -37,6 +40,7 @@ void uniteParts::partsUpdata()
 		bullet->update();
 	}
 
+	position = enemyObject->getPosition();
 	enemyObject->SetPosition(position);
 	enemyObject->Update();
 
@@ -89,12 +93,37 @@ void uniteParts::partsUpdata()
 	partsDeathMove();
 }
 
+void uniteParts::partsArrival()
+{
+	if (!isAppear)
+	{
+		return;
+	}
+
+	position = enemyObject->getPosition();
+
+	angleThetaRad = angleTheta * (pi / radiannum);
+	anglePhiRad = anglePhi * (pi / radiannum);
+
+	position =
+	{
+		motherPosition->x + partsRadius * sinf(angleThetaRad) * cosf(anglePhiRad),
+		motherPosition->y + partsRadius * sinf(angleThetaRad) * sinf(anglePhiRad),
+		motherPosition->z + partsRadius * cosf(angleThetaRad)
+	};
+
+	enemyObject->SetPosition(position);
+	enemyObject->Update();
+}
+
 void uniteParts::partsAriveMove()
 {
 	if (!Isarive || isAppear)
 	{
 		return;
 	}
+
+	position = enemyObject->getPosition();
 
 	//本体の周りを回転する
 	anglePhi += angleSpeed;
@@ -110,11 +139,14 @@ void uniteParts::partsAriveMove()
 		angleTheta -= 360;
 	}
 
+	angleThetaRad = angleTheta * (pi / radiannum);
+	anglePhiRad = anglePhi * (pi / radiannum);
+
 	position =
 	{
-		motherPosition->x + partsRadius * sinf(angleTheta) * cosf(anglePhi),
-		motherPosition->y + partsRadius * sinf(angleTheta) * sinf(anglePhi),
-		motherPosition->z + partsRadius * cosf(angleTheta)
+		motherPosition->x + partsRadius * sinf(angleThetaRad) * cosf(anglePhiRad),
+		motherPosition->y + partsRadius * sinf(angleThetaRad) * sinf(anglePhiRad),
+		motherPosition->z + partsRadius * cosf(angleThetaRad)
 	};
 
 	enemyObject->SetPosition(position);
@@ -157,6 +189,8 @@ void uniteParts::partsDeathMove()
 	{
 		return;
 	}
+
+	position = enemyObject->getPosition();
 
 	//爆発パーティクル更新
 	bomParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)

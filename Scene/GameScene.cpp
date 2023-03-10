@@ -1002,7 +1002,8 @@ void GameScene::PlayDraw2d()
 	//ボス描画(2d)
 	testBoss->draw2D(directx);
 
-	if (isBoss)
+	//ユニットボスのHPではないのでステージ３以下で描画
+	if (isBoss && stageNum < 3)
 	{
 		for (int i = 0; i < testBoss->HP; i++)
 		{
@@ -1416,7 +1417,11 @@ bool GameScene::loadStage()
 
 	if (isTutorial == false)
 	{
-		//return false;
+#ifdef _DEBUG
+#else
+		return false;
+#endif
+
 	}
 
 	player_p->isNormalShot = true;

@@ -11,6 +11,8 @@ public:
 
 	void partsUpdata();
 
+	void partsArrival();
+
 	void partsAriveMove();
 
 	void partsDeathMove();
@@ -46,6 +48,9 @@ private:
 	//角度(極座標用)
 	float angleTheta;
 	float anglePhi;
+
+	float angleThetaRad;
+	float anglePhiRad;
 };
 
 class uniteBoss
@@ -151,11 +156,11 @@ private:
 		{  0.0f,  0.0f},
 		{ 90.0f, 90.0f},
 		{180.0f,180.0f},
-		{  0.0f,270.0f},
+		{180.0f,270.0f},
 		{ 90.0f,  0.0f},
 		{180.0f, 90.0f}
 	};
-
+	
 	//HPゲージ
 	std::vector<std::unique_ptr<SingleSprite>> motherHitPoint;
 
@@ -186,7 +191,7 @@ private:
 	//行動パターンを選択中かどうか
 	bool isSelectPattern = false;
 
-	int resetHitPoint = 21;
+	int resetHitPoint = 11;
 	int arrivalTime = 0;
 
 	//突進の回数
