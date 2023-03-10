@@ -197,7 +197,7 @@ void Player::boostMove()
 		moveSpeed -= 0.05;
 		totalRoll += 0.04f;
 	}
-	else if(isBoost)
+	else if (isBoost)
 	{
 		moveSpeed = defaultMoveSpeed;
 		roll = -totalRoll;
@@ -748,7 +748,7 @@ void Player::draw2D(directX* directx, int targetnum)
 	targetSecond.DrawSprite(directx->cmdList.Get());
 	targetFirst.DrawSprite(directx->cmdList.Get());
 
-	if (isArmor)
+	if (isArmor && armorTime < 5)
 	{
 		damage.DrawSprite(directx->cmdList.Get());
 	}

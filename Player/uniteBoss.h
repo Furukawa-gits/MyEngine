@@ -194,7 +194,7 @@ private:
 	//行動パターンを選択中かどうか
 	bool isSelectPattern = false;
 
-	int resetHitPoint = 11;
+	int resetHitPoint = 7;
 	int arrivalTime = 0;
 
 	//突進の回数
