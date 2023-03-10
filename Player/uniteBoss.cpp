@@ -14,7 +14,7 @@ void uniteParts::partsInit(int ID)
 {
 	isThisBoss = true;
 
-	Isarive = false;
+	isArive = false;
 	isDraw = false;
 
 	rockTarget = std::make_unique<SingleSprite>();
@@ -170,7 +170,7 @@ void uniteParts::partsArrival()
 
 void uniteParts::partsAriveMove()
 {
-	if (!Isarive || isAppear)
+	if (!isArive || isAppear)
 	{
 		return;
 	}
@@ -207,7 +207,7 @@ void uniteParts::partsAriveMove()
 	//HP‚ª0‚É‚È‚Á‚½‚çÁ–Å
 	if (HP <= 0)
 	{
-		Isarive = false;
+		isArive = false;
 		fallDownCount = 0;
 		angleTheta = 0;
 		anglePhi = 0;
@@ -237,7 +237,7 @@ void uniteParts::partsAriveMove()
 
 void uniteParts::partsDeathMove()
 {
-	if (Isarive || isAppear)
+	if (isArive || isAppear)
 	{
 		return;
 	}
@@ -376,7 +376,7 @@ void uniteBoss::uniteBossInit()
 {
 	isThisBoss = true;
 
-	Isarive = false;
+	isArive = false;
 	isDraw = false;
 
 	rockTarget = std::make_unique<SingleSprite>();
@@ -577,7 +577,7 @@ void uniteBoss::uniteBossArrival()
 		enemyObject->SetPosition(arrivalEndPos);
 		enemyObject->Update();
 		isStop = false;
-		Isarive = true;
+		isArive = true;
 		isAppear = false;
 		isArmor = true;
 		playerPointer->isStop = false;
@@ -588,7 +588,7 @@ void uniteBoss::uniteBossArrival()
 		{
 			parts->partsUpdata();
 			parts->isStop = false;
-			parts->Isarive = true;
+			parts->isArive = true;
 			parts->isAppear = false;
 			parts->angleSpeed = 0.01f;
 		}
@@ -600,7 +600,7 @@ void uniteBoss::uniteBossArrival()
 //¶‘¶ˆ—
 void uniteBoss::uniteBossAriveMove()
 {
-	if (!Isarive || isAppear)
+	if (!isArive || isAppear)
 	{
 		return;
 	}
@@ -638,7 +638,7 @@ void uniteBoss::uniteBossAriveMove()
 	//HP‚ª0‚É‚È‚Á‚½‚çÁ–Å
 	if (HP <= 0)
 	{
-		Isarive = false;
+		isArive = false;
 		fallDownCount = 0;
 		deathRotSpeed = 0.5f;
 		CameraAngleSpeed = 0.0f;
@@ -658,7 +658,7 @@ void uniteBoss::uniteBossAriveMove()
 //Œ‚’Äˆ—
 void uniteBoss::uniteBossDeathMove()
 {
-	if (Isarive || isAppear)
+	if (isArive || isAppear)
 	{
 		return;
 	}

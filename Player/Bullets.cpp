@@ -148,7 +148,7 @@ void Missile::update()
 	}
 
 	//ミサイルが当たる前にターゲットがいなくなれば次フレームから更新しない
-	if (enemyPointer->Isarive == false)
+	if (enemyPointer->isArive == false)
 	{
 		isArive = false;
 	}

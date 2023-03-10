@@ -40,7 +40,7 @@ void Enemy::staticDestroy()
 
 void Enemy::init(enemyPattern pattern)
 {
-	Isarive = false;
+	isArive = false;
 	isDraw = false;
 
 	rockTarget = std::make_unique<SingleSprite>();
@@ -79,7 +79,7 @@ void Enemy::set(XMFLOAT3 pos)
 	position = pos;
 	startPosition = pos;
 	enemyObject->SetPosition(pos);
-	Isarive = false;
+	isArive = false;
 	isTargetSet = false;
 	chaseCount = 0;
 	waitCount = 0;
@@ -108,7 +108,7 @@ void Enemy::reSet()
 	waitCount = 0;
 	isChase = false;
 	isWait = true;
-	Isarive = true;
+	isArive = true;
 	HP = 1;
 	isTargetSet = false;
 	isSetMissile = false;
@@ -551,14 +551,14 @@ void Enemy::arrival()
 		enemyObject->Update();
 		enemyArrivaCount = 0;
 		isStop = false;
-		Isarive = true;
+		isArive = true;
 		isAppear = false;
 	}
 }
 
 void Enemy::ariveMove()
 {
-	if (!Isarive || isAppear)
+	if (!isArive || isAppear)
 	{
 		return;
 	}
@@ -576,7 +576,7 @@ void Enemy::ariveMove()
 	//HPが0になったら消滅
 	if (HP <= 0)
 	{
-		Isarive = false;
+		isArive = false;
 		fallDownCount = 0;
 
 #pragma region 爆発パーティクル生成
@@ -600,7 +600,7 @@ void Enemy::ariveMove()
 
 void Enemy::deathMove()
 {
-	if (Isarive || isAppear)
+	if (isArive || isAppear)
 	{
 		return;
 	}
@@ -680,7 +680,7 @@ void Enemy::draw3D(directX* directx)
 
 	if (enemyMovePattern == enemyPattern::shot || enemyMovePattern == enemyPattern::homing)
 	{
-		if (Isarive)
+		if (isArive)
 		{
 			bullet->draw(directx);
 		}
@@ -688,7 +688,7 @@ void Enemy::draw3D(directX* directx)
 
 	if (enemyMovePattern == enemyPattern::rampage)
 	{
-		if (Isarive)
+		if (isArive)
 		{
 			for (std::unique_ptr<enemyBullet>& bullet : Bullets)
 			{
@@ -711,7 +711,7 @@ void Enemy::draw3D(directX* directx)
 
 void Enemy::draw2D(directX* directx)
 {
-	if (isFar || !Isarive)
+	if (isFar || !isArive)
 	{
 		return;
 	}

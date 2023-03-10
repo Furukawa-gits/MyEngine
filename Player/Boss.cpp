@@ -19,7 +19,7 @@ void Boss::bossInit()
 {
 	isThisBoss = true;
 
-	Isarive = false;
+	isArive = false;
 	isDraw = false;
 
 	rockTarget = std::make_unique<SingleSprite>();
@@ -260,7 +260,7 @@ void Boss::bossArrival(Player* player)
 		enemyObject->SetPosition(position);
 		enemyObject->Update();
 		isStop = false;
-		Isarive = true;
+		isArive = true;
 		isAppear = false;
 		player->isStop = false;
 		player->isInvisible = -1;
@@ -270,7 +270,7 @@ void Boss::bossArrival(Player* player)
 
 void Boss::bossAriveMove()
 {
-	if (!Isarive || isAppear)
+	if (!isArive || isAppear)
 	{
 		return;
 	}
@@ -284,7 +284,7 @@ void Boss::bossAriveMove()
 	//HPÇ™0Ç…Ç»Ç¡ÇΩÇÁè¡ñ≈
 	if (HP <= 0)
 	{
-		Isarive = false;
+		isArive = false;
 		fallDownCount = 0;
 		deathRotSpeed = 0.5f;
 	}
@@ -302,7 +302,7 @@ void Boss::bossAriveMove()
 
 void Boss::bossDeathMove()
 {
-	if (Isarive || isAppear)
+	if (isArive || isAppear)
 	{
 		return;
 	}

@@ -3,7 +3,7 @@
 // プレイヤー本体と敵本体の当たり判定(単体)
 void checkHitManager::checkPlayerEnemy(Player* player, Enemy* enemy)
 {
-	if (enemy->Isarive == false || player->isArive == false)
+	if (enemy->isArive == false || player->isArive == false)
 	{
 		return;
 	}
@@ -37,7 +37,7 @@ void checkHitManager::checkPlayerEnemys(Player* player, list<unique_ptr<Enemy>>*
 // プレイヤーの通常弾と敵本体の当たり判定(単体)
 void checkHitManager::checkBulletEnemy(bullet* bullet, Enemy* enemy)
 {
-	if (enemy->Isarive == false || bullet->isArive == false)
+	if (enemy->isArive == false || bullet->isArive == false)
 	{
 		return;
 	}
@@ -59,7 +59,7 @@ void checkHitManager::checkBulletEnemy(bullet* bullet, Enemy* enemy)
 // プレイヤーの通常弾と敵本体の当たり判定(ボス)
 void checkHitManager::checkBulletsEnemy(list<unique_ptr<bullet>>* bulletsList, Enemy* enemy)
 {
-	if (enemy->Isarive == false)
+	if (enemy->isArive == false)
 	{
 		return;
 	}
@@ -151,7 +151,7 @@ void checkHitManager::checkMissilesEnemy(list<unique_ptr<Missile>>* missilesList
 			return;
 		}
 
-		if (newmissile->enemyPointer->Isarive == true && newmissile->isArive == true)
+		if (newmissile->enemyPointer->isArive == true && newmissile->isArive == true)
 		{
 			if (Collision::CheckSphere2Sphere(newmissile->missileCollision, newmissile->enemyPointer->enemyCollision))
 			{

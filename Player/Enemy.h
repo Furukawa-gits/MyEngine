@@ -185,7 +185,7 @@ public:
 	static bool playerIsArive;
 
 	bool isDraw = false;//描画フラグ
-	bool Isarive = false;//生存フラグ
+	bool isArive = false;//生存フラグ
 	bool isTargetSet = false;//狙われているかどうか
 	bool isSetMissile = false;//ミサイルが自分にセットされているか
 	bool isOutScreen = false;//画面外にいるかどうか
