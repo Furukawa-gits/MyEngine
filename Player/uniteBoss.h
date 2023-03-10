@@ -33,6 +33,9 @@ private:
 	const float pi = 3.1415f;
 	const float radiannum = 180.0f;
 
+	//モデル
+	static std::unique_ptr<Model> partsModel;
+
 	//本体の座標
 	static XMFLOAT3* motherPosition;
 
@@ -46,11 +49,11 @@ private:
 	std::vector<std::unique_ptr<SingleSprite>> partsHitPoint;
 
 	//角度(極座標用)
-	float angleTheta;
-	float anglePhi;
+	float angleTheta = 0.0f;
+	float anglePhi = 0.0f;
 
-	float angleThetaRad;
-	float anglePhiRad;
+	float angleThetaRad = 0.0f;
+	float anglePhiRad = 0.0f;
 };
 
 class uniteBoss
@@ -158,9 +161,9 @@ private:
 		{180.0f,180.0f},
 		{180.0f,270.0f},
 		{ 90.0f,  0.0f},
-		{180.0f, 90.0f}
+		{180.0f,180.0f}
 	};
-	
+
 	//HPゲージ
 	std::vector<std::unique_ptr<SingleSprite>> motherHitPoint;
 
@@ -198,13 +201,15 @@ private:
 	int chargeAttackCount = 0;
 	//突進の最大数
 	const int maxChargeAttackCount = 3;
+	//突進する向き
+	XMFLOAT3 chargeAttackVec = {};
 
 	//弾を撃った数
 	int shotCount = 0;
 	//弾を撃つ最大数(自機狙い)
 	const int maxShotCount = 5;
 	//弾を撃つ最大数(乱射)
-	const int maxRanpageCount = 10;
+	const int maxRanpageCount = 3;
 
 	//演出用座標
 	XMFLOAT3 arrivalStartPos;

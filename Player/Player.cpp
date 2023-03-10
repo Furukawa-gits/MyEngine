@@ -58,7 +58,7 @@ void Player::init(dxinput* input, directX* directx)
 	playerObject->SetScale({ 0.02f,0.02f,0.02f });
 	playerObject->setSpeed(2.0f);
 	//Player_object->PlayAnimation();
-	playerObject->setColor({ 0,1,1,1 });
+	playerObject->setColor({ 1,1,1,1 });
 
 	followCamera = new FollowCamera();
 

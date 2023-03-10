@@ -1,6 +1,7 @@
 #include "uniteBoss.h"
 
 //static変数(パーツ)
+std::unique_ptr<Model> uniteParts::partsModel = std::make_unique<Model>();
 XMFLOAT3* uniteParts::motherPosition = nullptr;
 const float uniteParts::partsRadius = 15.0f;
 
@@ -11,10 +12,44 @@ Player* uniteBoss::playerPointer = nullptr;
 #pragma region パーツ
 void uniteParts::partsInit(int ID)
 {
-	//基底クラスの初期化
-	init(enemyPattern::shot);
-	enemyObject->setColor({ 1.0f,1.0f,1.0f,1 });
 	isThisBoss = true;
+
+	Isarive = false;
+	isDraw = false;
+
+	rockTarget = std::make_unique<SingleSprite>();
+	rockTarget->anchorpoint = { 0.5f,0.5f };
+	rockTarget->size = { 70,70 };
+	rockTarget->GenerateSprite("Rock_on.png");
+
+	outScreenIcon[0] = std::make_unique<SingleSprite>();
+	outScreenIcon[0]->anchorpoint = { 0.5f,0.5f };
+	outScreenIcon[0]->size = { 100,100 };
+	outScreenIcon[0]->GenerateSprite("enemyPos.png");
+
+	outScreenIcon[1] = std::make_unique<SingleSprite>();
+	outScreenIcon[1]->anchorpoint = { 0.5f,0.5f };
+	outScreenIcon[1]->size = { 100,100 };
+	outScreenIcon[1]->GenerateSprite("!.png");
+
+	enemyObject = new Object3d_FBX;
+	enemyObject->Initialize();
+	enemyObject->SetModel(partsModel.get());
+	enemyObject->SetScale({ 0.7f,0.7f,0.7f });
+	enemyObject->setColor({ 0.3f,0.9f,0.3f,1 });
+
+	enemyCollision.radius = 2.0f;
+
+	enemyMovePattern = enemyPattern::shot;
+
+	if (enemyMovePattern == enemyPattern::shot)
+	{
+		bullet = std::make_unique<enemyBullet>();
+		bullet->init();
+	}
+
+	enemyCollision.radius = 9.0f;
+	deathRotSpeed = 0.1f;
 	partsID = ID;
 }
 
@@ -22,6 +57,9 @@ void uniteParts::setStaticData(XMFLOAT3* motherposition)
 {
 	//本体の座標をセット
 	motherPosition = motherposition;
+
+	//モデル読み込み
+	partsModel.reset(FbxLoader::GetInstance()->LoadmodelFromFile("boss"));
 }
 
 void uniteParts::partsUpdata()
@@ -100,6 +138,20 @@ void uniteParts::partsArrival()
 		return;
 	}
 
+	//本体の周りを回転する
+	anglePhi += angleSpeed;
+	angleTheta += angleSpeed;
+
+	if (anglePhi > 360)
+	{
+		anglePhi -= 360;
+	}
+
+	if (angleTheta > 360)
+	{
+		angleTheta -= 360;
+	}
+
 	position = enemyObject->getPosition();
 
 	angleThetaRad = angleTheta * (pi / radiannum);
@@ -107,9 +159,9 @@ void uniteParts::partsArrival()
 
 	position =
 	{
-		motherPosition->x + partsRadius * sinf(angleThetaRad) * cosf(anglePhiRad),
-		motherPosition->y + partsRadius * sinf(angleThetaRad) * sinf(anglePhiRad),
-		motherPosition->z + partsRadius * cosf(angleThetaRad)
+		motherPosition->x + partsRadius * sinf(angleTheta) * cosf(anglePhi),
+		motherPosition->y + partsRadius * sinf(angleTheta) * sinf(anglePhi),
+		motherPosition->z + partsRadius * cosf(angleTheta)
 	};
 
 	enemyObject->SetPosition(position);
@@ -144,9 +196,9 @@ void uniteParts::partsAriveMove()
 
 	position =
 	{
-		motherPosition->x + partsRadius * sinf(angleThetaRad) * cosf(anglePhiRad),
-		motherPosition->y + partsRadius * sinf(angleThetaRad) * sinf(anglePhiRad),
-		motherPosition->z + partsRadius * cosf(angleThetaRad)
+		motherPosition->x + partsRadius * sinf(angleTheta) * cosf(anglePhi),
+		motherPosition->y + partsRadius * sinf(angleTheta) * sinf(anglePhi),
+		motherPosition->z + partsRadius * cosf(angleTheta)
 	};
 
 	enemyObject->SetPosition(position);
@@ -346,7 +398,7 @@ void uniteBoss::uniteBossInit()
 	enemyObject->Initialize();
 	enemyObject->SetModel(uniteBossModel.get());
 	enemyObject->SetScale({ 1.0f,1.0f,1.0f });
-	enemyObject->setColor({ 0.3f,0.3f,0.3f,1 });
+	enemyObject->setColor({ 0.8f,0.8f,0.8f,1 });
 
 	enemyCollision.radius = 2.0f;
 
@@ -624,7 +676,7 @@ void uniteBoss::uniteBossDeathMove()
 		position.z + (sinf(CameraAngleSpeed * (M_PI / 180.0f)) * 30),
 	};
 
-	CameraAngleSpeed += 0.5f;
+	CameraAngleSpeed += 0.8f;
 
 	uniteBossCamera->SetEye(setvec);
 	uniteBossCamera->SetTarget(position);
@@ -721,12 +773,13 @@ void uniteBoss::uniteBossSet()
 	arrivalEndPos = { 0,5,0 };
 	position = arrivalStartPos;
 	isTargetSet = false;
-	chaseCount = 0;
-	waitCount = 0;
-	isChase = false;
-	isWait = true;
 	isDraw = true;
 
+	isChase = false;
+	isWait = true;
+	chaseCount = 0;
+	waitCount = 0;
+	chargeAttackCount = 0;
 	nextBulletTime = 0;
 	bulletCount = 0;
 	maxBulletCount = 20;
@@ -746,13 +799,10 @@ void uniteBoss::uniteBossSet()
 	uniteBossCamera->SetTarget(position);
 	Object3d_FBX::SetCamera(uniteBossCamera);
 
-	std::list<XMFLOAT2>::iterator itr = defaultPartsAngle.begin();
-
 	for (std::unique_ptr<uniteParts>& parts : partsList)
 	{
-		parts->partsSet({ 0,0,0 }, itr->x, itr->y);
-		parts->angleSpeed = 0.0f;
-		itr++;
+		parts->partsSet({ 0,0,0 }, (float)(rand() % 360), (float)(rand() % 360));
+		parts->angleSpeed = 0.05f;
 	}
 
 	isSelectPattern = true;
@@ -797,6 +847,7 @@ void uniteBoss::uniteBossChargeAttack()
 		waitCount = 0;
 		isWait = true;
 		isSelectPattern = true;
+		chargeAttackCount = 0;
 	}
 
 	//追跡
@@ -804,47 +855,51 @@ void uniteBoss::uniteBossChargeAttack()
 	{
 		//追尾カウント加算
 		chaseCount++;
-		enemySpeed = 0.45f;
+		enemySpeed = 1.8f;
 		if (chaseCount >= 1)
 		{
 			isChase = false;
 			chaseCount = 0;
 			isWait = true;
-			chargeAttackCount++;
 		}
 	}
 
-	//待機
+	//減速
 	if (isWait)
 	{
 		//待機カウント加算
 		waitCount++;
 		if (enemySpeed > 0.0f)
 		{
-			enemySpeed -= 0.01f;
+			enemySpeed -= 0.05f;
 		}
-		if (waitCount >= 100)
+		else
 		{
+			chargeAttackCount++;
 			isWait = false;
 			waitCount = 0;
+			enemySpeed = 0.0f;
 			isChase = true;
 		}
 	}
 
-	XMFLOAT3 pPos = playerPointer->playerObject->getPosition();
+	if (isChase)
+	{
+		XMFLOAT3 pPos = playerPointer->playerObject->getPosition();
 
-	position = enemyObject->getPosition();
-	XMFLOAT3 dis = { pPos.x - position.x,pPos.y - position.y,pPos.z - position.z };
+		position = enemyObject->getPosition();
+		chargeAttackVec = { pPos.x - position.x,pPos.y - position.y,pPos.z - position.z };
 
-	float lengthDis = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
+		float lengthDis = sqrtf(powf(chargeAttackVec.x, 2) + powf(chargeAttackVec.y, 2) + powf(chargeAttackVec.z, 2));
 
-	dis.x /= lengthDis;
-	dis.y /= lengthDis;
-	dis.z /= lengthDis;
+		chargeAttackVec.x /= lengthDis;
+		chargeAttackVec.y /= lengthDis;
+		chargeAttackVec.z /= lengthDis;
+	}
 
-	position.x += dis.x * enemySpeed;
-	position.y += dis.y * enemySpeed;
-	position.z += dis.z * enemySpeed;
+	position.x += chargeAttackVec.x * enemySpeed;
+	position.y += chargeAttackVec.y * enemySpeed;
+	position.z += chargeAttackVec.z * enemySpeed;
 
 	enemyObject->SetPosition(position);
 }
@@ -880,7 +935,7 @@ void uniteBoss::uniteBossRampage()
 
 	nextBulletTime++;
 
-	if (nextBulletTime % 5 == 0)
+	if (nextBulletTime % 3 == 0)
 	{
 		//パーツから弾を発射
 		for (std::unique_ptr<uniteParts>& parts : partsList)

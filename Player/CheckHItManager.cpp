@@ -8,11 +8,6 @@ void checkHitManager::checkPlayerEnemy(Player* player, Enemy* enemy)
 		return;
 	}
 
-	if (enemy->isArmor)
-	{
-		return;
-	}
-
 	if (player->isArmor)
 	{
 		return;
@@ -165,11 +160,6 @@ void checkHitManager::checkMissilesEnemy(list<unique_ptr<Missile>>* missilesList
 					if (!newmissile->enemyPointer->isArmor)
 					{
 						newmissile->enemyPointer->HP--;
-					}
-
-					if (newmissile->enemyPointer->HP <= 0)
-					{
-						newmissile->enemyPointer->Isarive = false;
 					}
 				}
 				else

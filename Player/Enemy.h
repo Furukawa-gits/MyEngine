@@ -188,8 +188,6 @@ public:
 	bool Isarive = false;//生存フラグ
 	bool isTargetSet = false;//狙われているかどうか
 	bool isSetMissile = false;//ミサイルが自分にセットされているか
-	bool isChase = false;//追跡フラグ
-	bool isWait = false;//待機フラグ
 	bool isOutScreen = false;//画面外にいるかどうか
 	std::unique_ptr<SingleSprite> rockTarget;//マーカー
 	std::unique_ptr<SingleSprite>outScreenIcon[2];//画面外アイコン
@@ -220,6 +218,8 @@ public:
 	enemyPattern enemyMovePattern = enemyPattern::chase;
 
 	//パターン１：追尾
+	bool isChase = false;//追跡フラグ
+	bool isWait = false;//待機フラグ
 	int chaseCount = 0;//追尾カウント
 	int waitCount = 0;//待機カウント
 

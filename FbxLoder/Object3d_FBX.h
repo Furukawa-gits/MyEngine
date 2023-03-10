@@ -194,7 +194,7 @@ private:
 
 	bool isPlay = false;
 
-	XMFLOAT4 color = { 1,0,0,1 };
+	XMFLOAT4 color = { 1,1,1,1 };
 
 	bool isSetOtherPipeline = false;
 

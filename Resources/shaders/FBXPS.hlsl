@@ -20,8 +20,8 @@ PSOutput main(VSOutput input) : SV_TARGET
 	float brightness = diffuse + 0.3f;
 	float4 shadercolor = float4(brightness, brightness, brightness, 1.0f);
 
-	output.target0 = shadercolor * texcolor;
-	output.target1 = shadercolor * texcolor;
+	output.target0 = shadercolor * texcolor * input.color;
+	output.target1 = shadercolor * texcolor * input.color;
 
 	return output;
 }

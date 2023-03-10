@@ -41,7 +41,7 @@ void Boss::bossInit()
 	enemyObject->Initialize();
 	enemyObject->SetModel(bossModel.get());
 	enemyObject->SetScale({ 1.0f,1.0f,1.0f });
-	enemyObject->setColor({ 0.3f,0.3f,0.3f,1 });
+	enemyObject->setColor({ 0.8f,0.8f,0.8f,1 });
 
 	enemyCollision.radius = 2.0f;
 
