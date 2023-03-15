@@ -43,6 +43,21 @@ void Player::init(dxinput* input, directX* directx)
 	damage.size = { 1280,720 };
 	damage.GenerateSprite("damage.png");
 
+	HPGaugeBar.anchorpoint = { 0,0 };
+	HPGaugeBar.size = { 50,20 };
+	HPGaugeBar.position = { 20,670,0 };
+	HPGaugeBar.GenerateSprite("playerHPGauge.png");
+
+	boostGaugeBar.anchorpoint = { 0,0 };
+	boostGaugeBar.size = { 50,20 };
+	boostGaugeBar.position = { 20,630,0 };
+	boostGaugeBar.GenerateSprite("boostGauge.png");
+
+	gaugeFrame.anchorpoint = { 0,0 };
+	gaugeFrame.size = { 470,62 };
+	gaugeFrame.position = { 0,629,0 };
+	gaugeFrame.GenerateSprite("gaugeFrame.png");
+
 	for (int i = 0; i < 9; i++)
 	{
 		remainingMissileNum[i].GenerateSprite("remainingMissileNum.png");
@@ -170,6 +185,11 @@ void Player::Move()
 
 void Player::boostMove()
 {
+	if (!isBoostTutorial)
+	{
+		return;
+	}
+
 	if (boostGauge < maxBoostGauge)
 	{
 		boostGauge += 0.5f;
@@ -179,29 +199,29 @@ void Player::boostMove()
 		boostGauge = maxBoostGauge;
 	}
 
-	if (boostGauge < 100)
-	{
-		return;
-	}
-
-	if (input->Triger(DIK_SPACE) && !isBoost)
-	{
-		moveSpeed = boostMoveSpeed;
-		boostGauge -= 100;
-		yow = 0.0f;
-		pitch = 0.0f;
-		isBoost = true;
-		boostCount++;
-	}
-
 	if (moveSpeed > defaultMoveSpeed)
 	{
-		moveSpeed -= 0.05;
+		moveSpeed -= 0.08f;
 	}
 	else if (isBoost)
 	{
 		moveSpeed = defaultMoveSpeed;
 		isBoost = false;
+	}
+
+	if (boostGauge < 100)
+	{
+		return;
+	}
+
+	if (input->Triger(DIK_SPACE) && !isBoost && moveSpeed == defaultMoveSpeed)
+	{
+		moveSpeed = boostMoveSpeed;
+		boostGauge -= 100;
+		yow = 0.0f;
+		pitch = 0.0f;
+		boostCount++;
+		isBoost = true;
 	}
 }
 
@@ -467,7 +487,7 @@ void Player::update()
 	{
 		armorTime++;
 
-		if (armorTime % 20 == 0)
+		if (armorTime % 10 == 0)
 		{
 			isInvisible *= -1;
 		}
@@ -487,6 +507,16 @@ void Player::update()
 	//ダメージ表現スプライト
 	damage.SpriteTransferVertexBuffer();
 	damage.SpriteUpdate();
+
+	HPGaugeBar.size = { (float)playerHP * 40,20 };
+	HPGaugeBar.SpriteTransferVertexBuffer();
+	HPGaugeBar.SpriteUpdate();
+
+	boostGaugeBar.size = { (float)boostGauge * 0.5f,20 };
+	boostGaugeBar.SpriteTransferVertexBuffer();
+	boostGaugeBar.SpriteUpdate();
+
+	gaugeFrame.SpriteUpdate();
 
 	if (playerHP <= 0)
 	{
@@ -664,8 +694,9 @@ void Player::reset()
 {
 	isArive = true;
 	isStagingSet = false;
-	playerHP = 10;
-	boostGauge = 0;
+	playerHP = maxHP;
+	boostGauge = maxBoostGauge;
+	moveSpeed = defaultMoveSpeed;
 	isInvisible = -1;
 	playerObject->SetPosition({ 0,5,0 });
 	playerObject->SetScale({ 0.02f,0.02f,0.02f });
@@ -765,7 +796,11 @@ void Player::draw2D(directX* directx, int targetnum)
 		{
 			break;
 		}
-		itr->DrawSprite(directx->cmdList.Get());
+		//itr->DrawSprite(directx->cmdList.Get());
 		i++;
 	}
+
+	gaugeFrame.DrawSprite(directx->cmdList.Get());
+	boostGaugeBar.DrawSprite(directx->cmdList.Get());
+	HPGaugeBar.DrawSprite(directx->cmdList.Get());
 }

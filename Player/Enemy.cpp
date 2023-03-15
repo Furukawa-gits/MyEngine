@@ -6,6 +6,9 @@ XMFLOAT3 Enemy::playerPosition = { 0,0,0 };
 XMFLOAT3 Enemy::playerFront = { 0,0,0 };
 bool Enemy::playerIsArive = false;
 const float Enemy::forPlayer = 200.0f;
+const XMFLOAT2 Enemy::defaultRockIconSize = { 70.0f,70.0f };
+const XMFLOAT2 Enemy::setRockIconSize = { 180.0f,180.0f };
+const float Enemy::decreaseSize = 9.0f;
 
 #pragma region 敵本体
 Enemy::Enemy()
@@ -453,7 +456,7 @@ void Enemy::updata()
 
 	toPlayerAngle = acosf(dot / vecLen) * (180.0f / (float)M_PI);
 
-	if (toPlayerAngle > 90)
+	if (toPlayerAngle > 90 && !isAppear)
 	{
 		//画面外(自分の位置がプレイヤーの向きと直角以上)にいるとき画面外フラグを立てる
 		isOutScreen = true;
@@ -478,9 +481,20 @@ void Enemy::updataSprite()
 {
 	XMFLOAT2 targetPos = enemyObject->worldToScleen();
 
-	rockTarget->rotation += 1.5f;
+	rockTarget->rotation += 2.5f;
 
-	//ターゲットアイコンと画面外アイコンの処理
+	//ロックオンアイコンのサイズが大きければデフォルトに近づけていく
+	if (rockTarget->size.x > defaultRockIconSize.x)
+	{
+		rockTarget->size.x -= decreaseSize;
+		rockTarget->size.y -= decreaseSize;
+	}
+	else
+	{
+		rockTarget->size = defaultRockIconSize;
+	}
+
+	//各アイコンが画面外に行かないようにする
 	if (targetPos.x < outScreenIcon[0]->size.x / 2)
 	{
 		targetPos.x = outScreenIcon[0]->size.x / 2;
@@ -498,6 +512,7 @@ void Enemy::updataSprite()
 		targetPos.y = 720 - outScreenIcon[0]->size.y / 2;
 	}
 
+	//プレイヤーの視界外に行ったら、画面の下にアイコンを移動させる
 	if (isOutScreen)
 	{
 		targetPos.y = 720 - outScreenIcon[0]->size.y / 2;

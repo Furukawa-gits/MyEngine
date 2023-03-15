@@ -37,6 +37,11 @@ void Boss::bossInit()
 	outScreenIcon[1]->size = { 100,100 };
 	outScreenIcon[1]->GenerateSprite("!.png");
 
+	bossHitPointGauge.anchorpoint = { 0.5f,0.5f };
+	bossHitPointGauge.size = { 50,20 };
+	bossHitPointGauge.position = { 640,40,0 };
+	bossHitPointGauge.GenerateSprite("bossHPGauge.png");
+
 	enemyObject = new Object3d_FBX;
 	enemyObject->Initialize();
 	enemyObject->SetModel(bossModel.get());
@@ -121,8 +126,20 @@ void Boss::bossSpriteUpdata()
 	XMFLOAT2 targetPos = enemyObject->worldToScleen();
 	XMFLOAT2 targetPosOutScreen = enemyObject->worldToScleen();
 
-	rockTarget->rotation += 1.5f;
+	rockTarget->rotation += 2.5f;
 
+	//ロックオンアイコンのサイズが大きければデフォルトに近づけていく
+	if (rockTarget->size.x > defaultRockIconSize.x)
+	{
+		rockTarget->size.x -= decreaseSize;
+		rockTarget->size.y -= decreaseSize;
+	}
+	else
+	{
+		rockTarget->size = defaultRockIconSize;
+	}
+
+	//各アイコンが画面外に行かないようにする
 	//ターゲットアイコン
 	if (targetPos.x < rockTarget->size.x / 2)
 	{
@@ -159,7 +176,7 @@ void Boss::bossSpriteUpdata()
 		targetPosOutScreen.y = 720 - outScreenIcon[0]->size.y / 2;
 	}
 
-
+	//プレイヤーの視界外に行ったら、画面の下にアイコンを移動させる
 	if (isOutScreen)
 	{
 		targetPos.y = 720 - rockTarget->size.y / 2;
@@ -177,6 +194,10 @@ void Boss::bossSpriteUpdata()
 	outScreenIcon[0]->SpriteUpdate();
 	outScreenIcon[1]->SpriteTransferVertexBuffer();
 	outScreenIcon[1]->SpriteUpdate();
+
+	bossHitPointGauge.size.x = (float)HP * 30;
+	bossHitPointGauge.SpriteTransferVertexBuffer();
+	bossHitPointGauge.SpriteUpdate();
 }
 
 void Boss::bossSet(XMFLOAT3 pos)
@@ -706,4 +727,16 @@ void Boss::bossRampage()
 		nextBulletTime = 0;
 		bulletCount = 0;
 	}
+}
+
+void Boss::bossDraw3D(directX* directx)
+{
+	draw3D(directx);
+}
+
+void Boss::bossDraw2D(directX* directx)
+{
+	draw2D(directx);
+
+	bossHitPointGauge.DrawSprite(directx->cmdList.Get());
 }

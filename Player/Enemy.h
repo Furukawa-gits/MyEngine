@@ -184,6 +184,10 @@ public:
 	static XMFLOAT3 playerFront;
 	static bool playerIsArive;
 
+	static const XMFLOAT2 defaultRockIconSize;
+	static const XMFLOAT2 setRockIconSize;
+	static const float decreaseSize;
+
 	bool isDraw = false;//描画フラグ
 	bool isArive = false;//生存フラグ
 	bool isTargetSet = false;//狙われているかどうか

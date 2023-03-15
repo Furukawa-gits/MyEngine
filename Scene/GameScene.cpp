@@ -986,7 +986,7 @@ void GameScene::PlayDraw3d()
 	}
 
 	//ボス描画
-	testBoss->draw3D(directx);
+	testBoss->bossDraw3D(directx);
 
 	testUniteBoss->uniteBossDraw3d(directx);
 }
@@ -1005,16 +1005,7 @@ void GameScene::PlayDraw2d()
 	}
 
 	//ボス描画(2d)
-	testBoss->draw2D(directx);
-
-	//ユニットボスのHPではないのでステージ３以下で描画
-	if (isBoss && stageNum < 3)
-	{
-		for (int i = 0; i < testBoss->HP; i++)
-		{
-			bossHitPoints[i]->DrawSprite(directx->cmdList.Get());
-		}
-	}
+	testBoss->bossDraw2D(directx);
 
 	testUniteBoss->uniteBossDraw2d(directx);
 
@@ -1067,7 +1058,7 @@ void GameScene::ResultDraw3d()
 	player_p->draw3D(directx);
 
 	//ボス描画
-	testBoss->draw3D(directx);
+	testBoss->bossDraw3D(directx);
 }
 void GameScene::ResultDraw2d()
 {
@@ -1443,6 +1434,7 @@ bool GameScene::loadStage()
 
 	}
 
+	player_p->isBoostTutorial = true;
 	player_p->isNormalShot = true;
 	player_p->isHomingMissile = true;
 

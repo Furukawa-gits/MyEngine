@@ -265,10 +265,6 @@ private:
 	SingleSprite shootingText;
 	bool isShootingText = false;
 
-	//ボスのHPゲージ出現のイージング
-	easingManager bossHpEase;
-	bool isBossHp = false;
-
 	//リザルト画面のイージングフラグ
 	//背景＆テキスト
 	bool isMoveScreen = false;

@@ -348,6 +348,7 @@ void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& target
 	if (dis < 56.5685f && enemy->isTargetSet == false && targetnum < MaxPlayerMissileNum)
 	{
 		enemy->isTargetSet = true;
+		enemy->rockTarget->size = Enemy::setRockIconSize;
 
 		targetnum++;
 	}

@@ -88,6 +88,9 @@ public:
 	/// </summary>
 	void bossRampage();
 
+	void bossDraw3D(directX* directx);
+	void bossDraw2D(directX* directx);
+
 	//“oê‰‰oƒtƒ‰ƒO‚Ìæ“¾
 	bool getIsAppear() { return isAppear; }
 
@@ -100,6 +103,7 @@ private:
 	easingManager bossRotEase;
 	XMFLOAT3 bossbaseScale;
 	XMFLOAT3 bossScale;
+	SingleSprite bossHitPointGauge;
 
 	Player* playerPointer = nullptr;
 

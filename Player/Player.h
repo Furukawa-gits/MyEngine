@@ -41,7 +41,7 @@ public:
 
 	void draw3D(directX* directx);
 
-	void draw2D(directX* directx,int targetnum);
+	void draw2D(directX* directx, int targetnum);
 
 	//プレイヤーの位置を取得
 	XMFLOAT3 getPlayerPos() { return playerObject->getPosition(); }
@@ -65,9 +65,9 @@ private:
 	float totalRoll = 0.0f;
 
 	//移動スピード
-	float moveSpeed = 0.3f;
-	const float defaultMoveSpeed = 0.3f;
-	const float boostMoveSpeed = 2.0f;
+	float moveSpeed = 0.0f;
+	const float defaultMoveSpeed = 0.4f;
+	const float boostMoveSpeed = 2.5f;
 
 	SingleSprite targetSecond;
 	SingleSprite targetThird;
@@ -130,10 +130,10 @@ public:
 
 	Sphere playerCollision;
 
-	//生存
+	//生存フラグ
 	bool isArive = false;
-
 	int playerHP = 10;
+	const int maxHP = 10;
 
 	//ブースト
 	bool isBoost = false;
