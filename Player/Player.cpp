@@ -186,8 +186,10 @@ void Player::boostMove()
 
 	if (input->Triger(DIK_SPACE) && !isBoost)
 	{
-		
+		moveSpeed = boostMoveSpeed;
 		boostGauge -= 100;
+		yow = 0.0f;
+		pitch = 0.0f;
 		isBoost = true;
 		boostCount++;
 	}
