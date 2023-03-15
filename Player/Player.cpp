@@ -105,7 +105,7 @@ void Player::Move()
 	}
 
 	//ブースト(仮)
-	//boostMove();
+	boostMove();
 
 	//オブジェクトの更新
 	playerObject->setRotMatrix(XMMatrixIdentity());
@@ -186,22 +186,19 @@ void Player::boostMove()
 
 	if (input->Triger(DIK_SPACE) && !isBoost)
 	{
-		moveSpeed = boostMoveSpeed;
+		
 		boostGauge -= 100;
-		roll = 0.04f;
 		isBoost = true;
+		boostCount++;
 	}
 
 	if (moveSpeed > defaultMoveSpeed)
 	{
 		moveSpeed -= 0.05;
-		totalRoll += 0.04f;
 	}
 	else if (isBoost)
 	{
 		moveSpeed = defaultMoveSpeed;
-		roll = -totalRoll;
-		totalRoll = 0.0f;
 		isBoost = false;
 	}
 }
@@ -602,6 +599,7 @@ void Player::targetUpdate()
 			playerObject->screenToWorld({ targetFirst.position.x,targetFirst.position.y }));
 
 		bulletsList.push_back(std::move(newBullet));
+		normalShotCount++;
 	}
 
 	//ロックオンモードに切り替え

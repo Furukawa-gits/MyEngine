@@ -158,6 +158,11 @@ void GameScene::Load_Sprites()
 	moveText.position = { 640,600,0 };
 	moveText.GenerateSprite("moveText.png");
 
+	boostText.anchorpoint = { 0.5f,0.5f };
+	boostText.size = { 265,50 };
+	boostText.position = { 640,600,0 };
+	boostText.GenerateSprite("boostText.png");
+
 	shotText.anchorpoint = { 0.5f,0.5f };
 	shotText.size = { 200,50 };
 	shotText.position = { 640,600,0 };
@@ -1029,6 +1034,10 @@ void GameScene::PlayDraw2d()
 		{
 			moveText.DrawSprite(directx->cmdList.Get());
 		}
+		else if (isBoostText)
+		{
+			boostText.DrawSprite(directx->cmdList.Get());
+		}
 		else if (isShotText && !player_p->isStop)
 		{
 			shotText.DrawSprite(directx->cmdList.Get());
@@ -1253,6 +1262,15 @@ void GameScene::tutorial()
 	//一定量カメラを動かしたら敵出現
 	if (player_p->cameraMoveCount >= 250 && isMoveText)
 	{
+		isMoveText = false;
+		isBoostText = true;
+
+		player_p->isBoostTutorial = true;
+	}
+
+	//3回ブーストしたら敵出現
+	if (!player_p->isBoost && player_p->boostCount > 2 && isBoostText)
+	{
 		for (int i = 0; i < 20; i++)
 		{
 			//敵　リスト
@@ -1266,7 +1284,7 @@ void GameScene::tutorial()
 			enemyList.push_back(std::move(newenemy));
 		}
 
-		isMoveText = false;
+		isBoostText = false;
 		isShotText = true;
 
 		player_p->isNormalShot = true;
@@ -1299,7 +1317,7 @@ void GameScene::tutorial()
 	}
 
 	//通常弾 -> ミサイル
-	if (player_p->bulletsList.size() > 3)
+	if (player_p->normalShotCount > 3)
 	{
 		isShotText = false;
 		isMissileText = true;
@@ -1315,6 +1333,7 @@ void GameScene::tutorial()
 	}
 
 	moveText.SpriteUpdate();
+	boostText.SpriteUpdate();
 	shotText.SpriteUpdate();
 	missileText.SpriteUpdate();
 	shootingText.SpriteUpdate();

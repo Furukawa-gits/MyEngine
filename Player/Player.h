@@ -150,9 +150,6 @@ public:
 	//停止フラグ
 	bool isStop = false;
 
-	//カメラが動いた総量
-	int cameraMoveCount = 0;
-
 	//演出セットフラグ
 	bool isStagingSet = false;
 
@@ -168,7 +165,13 @@ public:
 	XMFLOAT3 fallRot = { 0,0,0 };
 	XMFLOAT3 fallScale = { 0,0,0 };
 
-	//射撃フラグ(チュートリアル用)
+	//チュートリアル用変数
+	//フラグ
+	bool isBoostTutorial = false;
 	bool isNormalShot = false;
 	bool isHomingMissile = false;
+	//カウント
+	int cameraMoveCount = 0;//カメラが動いた総量
+	int normalShotCount = 0;//通常弾を撃った数
+	int boostCount = 0;		//加速した回数
 };

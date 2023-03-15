@@ -256,6 +256,8 @@ private:
 	//チュートリアル用テキスト
 	SingleSprite moveText;
 	bool isMoveText = false;
+	SingleSprite boostText;
+	bool isBoostText = false;
 	SingleSprite shotText;
 	bool isShotText = false;
 	SingleSprite missileText;
