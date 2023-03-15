@@ -731,12 +731,12 @@ void Boss::bossRampage()
 
 void Boss::bossDraw3D(directX* directx)
 {
-	draw3D(directx);
+	bossDraw3D(directx);
 }
 
 void Boss::bossDraw2D(directX* directx)
 {
-	draw2D(directx);
+	bossDraw2D(directx);
 
 	bossHitPointGauge.DrawSprite(directx->cmdList.Get());
 }
