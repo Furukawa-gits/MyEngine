@@ -11,6 +11,8 @@ public:
 
 	void partsUpdata();
 
+	void partsSpriteUpdata();
+
 	void partsArrival();
 
 	void partsAriveMove();
@@ -44,9 +46,6 @@ private:
 
 	//パーツごとの固有番号(1～パーツの個数)
 	int partsID = 0;
-
-	//パーツごとのHP
-	std::vector<std::unique_ptr<SingleSprite>> partsHitPoint;
 
 	//角度(極座標用)
 	float angleTheta = 0.0f;
@@ -165,7 +164,9 @@ private:
 	};
 
 	//HPゲージ
-	std::vector<std::unique_ptr<SingleSprite>> motherHitPoint;
+	SingleSprite motherHitPointGauge;
+	//パーツの合計HP
+	SingleSprite allPartsHitPointGauge;
 
 	//攻撃パターン一覧
 	enum class uniteBossPattern

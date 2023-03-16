@@ -195,7 +195,7 @@ void Boss::bossSpriteUpdata()
 	outScreenIcon[1]->SpriteTransferVertexBuffer();
 	outScreenIcon[1]->SpriteUpdate();
 
-	bossHitPointGauge.size.x = (float)HP * 40;
+	bossHitPointGauge.size.x = (float)HP * 50;
 	bossHitPointGauge.SpriteTransferVertexBuffer();
 	bossHitPointGauge.SpriteUpdate();
 }

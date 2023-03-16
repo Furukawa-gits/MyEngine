@@ -131,6 +131,69 @@ void uniteParts::partsUpdata()
 	partsDeathMove();
 }
 
+void uniteParts::partsSpriteUpdata()
+{
+	XMFLOAT2 targetPos = enemyObject->worldToScleen();
+	XMFLOAT2 targetPosOutScreen = enemyObject->worldToScleen();
+
+	rockTarget->rotation += 1.5f;
+
+	//ターゲットアイコン
+	if (targetPos.x < rockTarget->size.x / 2)
+	{
+		targetPos.x = rockTarget->size.x / 2;
+	}
+	else if (targetPos.x > 1280 - rockTarget->size.x / 2)
+	{
+		targetPos.x = 1280 - rockTarget->size.x / 2;
+	}
+	if (targetPos.y < rockTarget->size.y / 2)
+	{
+		targetPos.y = rockTarget->size.y / 2;
+	}
+	else if (targetPos.y > 720 - rockTarget->size.y / 2)
+	{
+		targetPos.y = 720 - rockTarget->size.y / 2;
+	}
+
+	//画面外アイコン
+	if (targetPosOutScreen.x < outScreenIcon[0]->size.x / 2)
+	{
+		targetPosOutScreen.x = outScreenIcon[0]->size.x / 2;
+	}
+	else if (targetPosOutScreen.x > 1280 - outScreenIcon[0]->size.x / 2)
+	{
+		targetPosOutScreen.x = 1280 - outScreenIcon[0]->size.x / 2;
+	}
+	if (targetPosOutScreen.y < outScreenIcon[0]->size.y / 2)
+	{
+		targetPosOutScreen.y = outScreenIcon[0]->size.y / 2;
+	}
+	else if (targetPosOutScreen.y > 720 - outScreenIcon[0]->size.y / 2)
+	{
+		targetPosOutScreen.y = 720 - outScreenIcon[0]->size.y / 2;
+	}
+
+
+	if (isOutScreen)
+	{
+		targetPos.y = 720 - rockTarget->size.y / 2;
+		targetPosOutScreen.y = 720 - outScreenIcon[0]->size.y / 2;
+	}
+
+	rockTarget->position = { targetPos.x,targetPos.y,0 };
+	outScreenIcon[0]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
+	outScreenIcon[1]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
+
+	rockTarget->SpriteTransferVertexBuffer();
+	rockTarget->SpriteUpdate();
+
+	outScreenIcon[0]->SpriteTransferVertexBuffer();
+	outScreenIcon[0]->SpriteUpdate();
+	outScreenIcon[1]->SpriteTransferVertexBuffer();
+	outScreenIcon[1]->SpriteUpdate();
+}
+
 void uniteParts::partsArrival()
 {
 	if (!isAppear)
@@ -345,11 +408,25 @@ void uniteParts::partsDraw3D(directX* directx)
 
 void uniteParts::partsDraw2D(directX* directx)
 {
-	draw2D(directx);
-
-	for (int i = 0; i < HP; i++)
+	if (!isArive)
 	{
-		//partsHitPoint[i]->DrawSprite(directx->cmdList.Get());
+		return;
+	}
+
+	if (!playerIsArive)
+	{
+		return;
+	}
+
+	if (isOutScreen)
+	{
+		outScreenIcon[0]->DrawSprite(directx->cmdList.Get());
+		outScreenIcon[1]->DrawSprite(directx->cmdList.Get());
+	}
+
+	if (isTargetSet)
+	{
+		rockTarget->DrawSprite(directx->cmdList.Get());
 	}
 }
 #pragma endregion パーツ
@@ -393,6 +470,16 @@ void uniteBoss::uniteBossInit()
 	outScreenIcon[1]->anchorpoint = { 0.5f,0.5f };
 	outScreenIcon[1]->size = { 100,100 };
 	outScreenIcon[1]->GenerateSprite("!.png");
+
+	motherHitPointGauge.anchorpoint = { 0.5f,0.5f };
+	motherHitPointGauge.size = { 50,20 };
+	motherHitPointGauge.position = { 640,40,0 };
+	motherHitPointGauge.GenerateSprite("bossHPGauge.png");
+
+	allPartsHitPointGauge.anchorpoint = { 0.5f,0.5f };
+	allPartsHitPointGauge.size = { 50,20 };
+	allPartsHitPointGauge.position = { 640,40,0 };
+	allPartsHitPointGauge.GenerateSprite("partsHPGauge.png");
 
 	enemyObject = new Object3d_FBX;
 	enemyObject->Initialize();
@@ -540,9 +627,24 @@ void uniteBoss::uniteBossSpriteUpdata()
 	outScreenIcon[1]->SpriteTransferVertexBuffer();
 	outScreenIcon[1]->SpriteUpdate();
 
+	motherHitPointGauge.size.x = (float)HP * 70;
+	motherHitPointGauge.SpriteTransferVertexBuffer();
+	motherHitPointGauge.SpriteUpdate();
+
+	int allPartsHP = 0;
+
 	for (std::unique_ptr<uniteParts>& parts : partsList)
 	{
-		parts->updataSprite();
+		allPartsHP += parts->HP;
+	}
+
+	allPartsHitPointGauge.size.x = (float)allPartsHP * 14;
+	allPartsHitPointGauge.SpriteTransferVertexBuffer();
+	allPartsHitPointGauge.SpriteUpdate();
+
+	for (std::unique_ptr<uniteParts>& parts : partsList)
+	{
+		parts->partsSpriteUpdata();
 	}
 }
 
@@ -1068,12 +1170,29 @@ void uniteBoss::uniteBossDraw3d(directX* directx)
 //描画_2D
 void uniteBoss::uniteBossDraw2d(directX* directx)
 {
-	draw2D(directx);
-
-	for (int i = 0; i < HP; i++)
+	if (!isArive)
 	{
-		//motherHitPoint[i]->DrawSprite(directx->cmdList.Get());
+		return;
 	}
+
+	if (!playerIsArive)
+	{
+		return;
+	}
+
+	if (isOutScreen)
+	{
+		outScreenIcon[0]->DrawSprite(directx->cmdList.Get());
+		outScreenIcon[1]->DrawSprite(directx->cmdList.Get());
+	}
+
+	if (isTargetSet)
+	{
+		rockTarget->DrawSprite(directx->cmdList.Get());
+	}
+
+	motherHitPointGauge.DrawSprite(directx->cmdList.Get());
+	allPartsHitPointGauge.DrawSprite(directx->cmdList.Get());
 
 	//パーツの描画
 	for (std::unique_ptr<uniteParts>& parts : partsList)

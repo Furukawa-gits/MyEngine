@@ -158,11 +158,6 @@ private:
 	//ボス出現フラグ
 	bool isBoss = false;
 
-	//照準スプライト関連
-	int mousePressCount = 0;
-	SingleSprite target;
-	bool isTarget = false;
-
 	//スプライト(各クラスに依存しないやつ)
 	//背景
 	std::unique_ptr<SingleSprite> sample_back;

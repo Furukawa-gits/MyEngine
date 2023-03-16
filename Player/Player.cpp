@@ -6,10 +6,6 @@ std::unique_ptr<Model> Player::playerModel = std::make_unique<Model>();
 
 Player::Player()
 {
-	for (int i = 0; i < 10; i++)
-	{
-		HPUI->push_back(SingleSprite());
-	}
 }
 
 Player::~Player()
@@ -88,17 +84,6 @@ void Player::init(dxinput* input, directX* directx)
 
 	bullet::staticInit();
 	Missile::staticInit();
-
-	//HP(vector)
-	int i = 0;
-	for (auto itr = HPUI->begin(); itr != HPUI->end(); itr++)
-	{
-		itr->GenerateSprite("Player_HP.png");
-		itr->size = { 40,60 };
-		itr->position = { i * 30.0f + 10.0f,650.0f,0.0f };
-		itr->SpriteTransferVertexBuffer(false);
-		i++;
-	}
 
 	playerCollision.radius = 2.0f;
 
@@ -500,6 +485,7 @@ void Player::update()
 	damage.SpriteTransferVertexBuffer();
 	damage.SpriteUpdate();
 
+	//HPゲージの更新
 	HPGaugeBar.size = { (float)playerHP * 40,20 };
 	HPGaugeBar.SpriteTransferVertexBuffer();
 	HPGaugeBar.SpriteUpdate();
@@ -526,12 +512,6 @@ void Player::update()
 	for (std::unique_ptr<Missile>& missile : missilesList)
 	{
 		missile->update();
-	}
-
-	//HPゲージの更新
-	for (auto itr = HPUI->begin(); itr != HPUI->end(); itr++)
-	{
-		itr->SpriteUpdate();
 	}
 }
 
@@ -782,17 +762,6 @@ void Player::draw2D(directX* directx, int targetnum)
 	if (isRockOn)
 	{
 		remainingMissileNum[MaxPlayerMissileNum - targetnum].DrawSprite(directx->cmdList.Get());
-	}
-
-	int i = 0;
-	for (auto itr = HPUI->begin(); itr != HPUI->end(); itr++)
-	{
-		if (i >= playerHP)
-		{
-			break;
-		}
-		//itr->DrawSprite(directx->cmdList.Get());
-		i++;
 	}
 
 	gaugeFrame.DrawSprite(directx->cmdList.Get());

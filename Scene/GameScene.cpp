@@ -701,11 +701,6 @@ void GameScene::Play_updata()
 		{
 			//ボス更新
 			testBoss->bossUpdate(player_p.get());
-
-			for (std::unique_ptr<SingleSprite>& newsprite : bossHitPoints)
-			{
-				newsprite->SpriteUpdate();
-			}
 		}
 		else
 		{
@@ -730,8 +725,6 @@ void GameScene::Play_updata()
 
 		//ステージクリア
 		scene = sceneType::clear;
-
-		bossHitPoints.clear();
 	}
 
 	if (!player_p->isArive && !player_p->isOverStaging && player_p->playerHP <= 0)
@@ -1398,8 +1391,6 @@ void GameScene::tutorial()
 		ButtonEase_y.reSet();
 		ButtonEase_x.reSet();
 		scene = sceneType::clear;
-
-		bossHitPoints.clear();
 	}
 	if (player_p->playerHP <= 0)
 	{
@@ -1496,18 +1487,6 @@ bool GameScene::loadStage()
 		{
 			newenemy->changePattern(enemyPattern::rampage);
 		}
-	}
-
-	for (int i = 0; i < testBoss->HP; i++)
-	{
-		std::unique_ptr<SingleSprite> newsprite = std::make_unique<SingleSprite>();
-		newsprite->anchorpoint = { 0.5f,0 };
-		newsprite->GenerateSprite("Enemy_HP.png");
-		newsprite->size = { 40,60 };
-		newsprite->position = { i * 30 + 660 - (30 * floorf(testBoss->HP / 2)),30,0 };
-		newsprite->SpriteTransferVertexBuffer(false);
-
-		bossHitPoints.push_back(std::move(newsprite));
 	}
 
 	return true;
