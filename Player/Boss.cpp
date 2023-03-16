@@ -195,7 +195,7 @@ void Boss::bossSpriteUpdata()
 	outScreenIcon[1]->SpriteTransferVertexBuffer();
 	outScreenIcon[1]->SpriteUpdate();
 
-	bossHitPointGauge.size.x = (float)HP * 30;
+	bossHitPointGauge.size.x = (float)HP * 40;
 	bossHitPointGauge.SpriteTransferVertexBuffer();
 	bossHitPointGauge.SpriteUpdate();
 }
@@ -731,12 +731,31 @@ void Boss::bossRampage()
 
 void Boss::bossDraw3D(directX* directx)
 {
-	bossDraw3D(directx);
+	draw3D(directx);
 }
 
 void Boss::bossDraw2D(directX* directx)
 {
-	bossDraw2D(directx);
+	if (!isArive)
+	{
+		return;
+	}
+
+	if (!playerIsArive)
+	{
+		return;
+	}
+
+	if (isOutScreen)
+	{
+		outScreenIcon[0]->DrawSprite(directx->cmdList.Get());
+		outScreenIcon[1]->DrawSprite(directx->cmdList.Get());
+	}
+
+	if (isTargetSet)
+	{
+		rockTarget->DrawSprite(directx->cmdList.Get());
+	}
 
 	bossHitPointGauge.DrawSprite(directx->cmdList.Get());
 }

@@ -148,26 +148,18 @@ void Player::Move()
 	XMFLOAT3 vUpAxis = getAxis(quaternion(unitY, qLocal));
 	XMFLOAT3 vForwordAxis = getAxis(quaternion(unitZ, qLocal));
 
-	XMFLOAT3 vUpAxisCamera = getAxis(quaternion(unitY, qLocalCamera));
-
 	//ロール・ピッチ・ヨーの回転角度を求める
 	Quaternion qRoll = quaternion(vForwordAxis, roll);
 	Quaternion qPitch = quaternion(vSideAxis, pitch);
 	Quaternion qYow = quaternion(vUpAxis, yow);
-
-	Quaternion qRollCamera = quaternion(vForwordAxis, 0.0f);
 
 	//順番にかけていく
 	qLocal = qRoll * qLocal;
 	qLocal = qPitch * qLocal;
 	qLocal = qYow * qLocal;
 
-	qLocalCamera = qRollCamera * qLocalCamera;
-	qLocalCamera = qPitch * qLocalCamera;
-	qLocalCamera = qYow * qLocalCamera;
-
 	//追従
-	followCamera->Following(vUpAxisCamera, vForwordAxis, playerObject->getPosition());
+	followCamera->Following(vUpAxis, vForwordAxis, playerObject->getPosition());
 
 	if (!isBoost)
 	{
@@ -695,8 +687,11 @@ void Player::reset()
 	isArive = true;
 	isStagingSet = false;
 	playerHP = maxHP;
+	isBoost = false;
 	boostGauge = maxBoostGauge;
 	moveSpeed = defaultMoveSpeed;
+	armorTime = 0;
+	isArmor = false;
 	isInvisible = -1;
 	playerObject->SetPosition({ 0,5,0 });
 	playerObject->SetScale({ 0.02f,0.02f,0.02f });

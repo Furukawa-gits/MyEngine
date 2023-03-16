@@ -726,7 +726,7 @@ void Enemy::draw3D(directX* directx)
 
 void Enemy::draw2D(directX* directx)
 {
-	if (isFar || !isArive)
+	if (!isArive)
 	{
 		return;
 	}

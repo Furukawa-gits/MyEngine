@@ -1428,15 +1428,14 @@ bool GameScene::loadStage()
 	if (isTutorial == false)
 	{
 #ifdef _DEBUG
+		player_p->isBoostTutorial = true;
+		player_p->isNormalShot = true;
+		player_p->isHomingMissile = true;
 #else
 		return false;
 #endif
 
 	}
-
-	player_p->isBoostTutorial = true;
-	player_p->isNormalShot = true;
-	player_p->isHomingMissile = true;
 
 	for (int i = 0; i < stageNum + 4; i++)
 	{
@@ -1453,9 +1452,6 @@ bool GameScene::loadStage()
 
 	//プレイヤーのリセット
 	player_p->reset();
-
-	player_p->isNormalShot = true;
-	player_p->isHomingMissile = true;
 
 	isBoss = false;
 
