@@ -173,5 +173,6 @@ public:
 	//カウント
 	int cameraMoveCount = 0;//カメラが動いた総量
 	int normalShotCount = 0;//通常弾を撃った数
+	int missileCount = 0;	//ミサイルを撃った数
 	int boostCount = 0;		//加速した回数
 };

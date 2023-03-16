@@ -659,6 +659,9 @@ void Player::addMissile(Enemy* enemy)
 	newMissile->start(playerObject->getPosition());
 
 	missilesList.push_back(std::move(newMissile));
+
+	//ミサイルを撃った数をカウント
+	missileCount++;
 }
 
 //リセット

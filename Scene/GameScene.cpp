@@ -425,6 +425,7 @@ void GameScene::Select_updata()
 			//プレイヤーのリセット
 			player_p->reset();
 			isMoveText = true;
+			isBoostText = false;
 			isShotText = false;
 			isMissileText = false;
 			isShootingText = false;
@@ -1310,7 +1311,7 @@ void GameScene::tutorial()
 	}
 
 	//ミサイル -> Lets Shooting!!!
-	if (player_p->missilesList.size() > 3)
+	if (player_p->missileCount > 1)
 	{
 		isMissileText = false;
 		isShootingText = true;
@@ -1427,6 +1428,13 @@ bool GameScene::loadStage()
 #endif
 
 	}
+
+	//チュートリアルのテキストを表示しないようにする
+	isMoveText = false;
+	isBoostText = false;
+	isShotText = false;
+	isMissileText = false;
+	isShootingText = false;
 
 	for (int i = 0; i < stageNum + 4; i++)
 	{
