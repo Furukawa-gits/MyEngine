@@ -52,11 +52,32 @@ public:
 
 	void loadTexture(const std::string& filepath);
 
-	void set(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel, float start_scale, float end_scale, bool isextinction = true);
+	/// <summary>
+	/// セッティング
+	/// </summary>
+	/// <param name="life">寿命</param>
+	/// <param name="position">初期位置</param>
+	/// <param name="velocity">移動する方向</param>
+	/// <param name="accel">加速度</param>
+	/// <param name="start_scale">初期サイズ</param>
+	/// <param name="end_scale">最終サイズ</param>
+	/// <param name="isextinctionframe">寿命で消えるかどうか</param>
+	/// <param name="issetpos">インスタンス側で座標をセットするかどうか</param>
+	void set(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel, float start_scale, float end_scale, bool isextinctionframe = true, bool issetpos = false);
 
 	static void UpdateViewMatrix();
 
 	void updata();
+
+	void setPosition(XMFLOAT3 setposition)
+	{
+		if (!isSetPosition)
+		{
+			return;
+		}
+
+		position = setposition;
+	}
 
 	void draw();
 
@@ -65,6 +86,8 @@ public:
 	void setPiplineAddBlend();
 
 	void resetPipeline();
+
+	void setIsActive(bool isactive) { isActive = isactive; }
 
 	bool getIsActive() { return isActive; }
 
@@ -91,6 +114,8 @@ public:
 	bool isActive = false;
 	//消滅する条件がフレームかどうか
 	bool isExtinctionFrame = true;
+	//インスタンス側でpositionをセットするかどうか
+	bool isSetPosition = false;
 	// 定数バッファ
 	ComPtr<ID3D12Resource> constBuff;
 	// テクスチャバッファ

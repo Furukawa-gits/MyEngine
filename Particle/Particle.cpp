@@ -603,7 +603,7 @@ void SingleParticle::loadTexture(const std::string& filepath)
 	);
 }
 
-void SingleParticle::set(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel, float start_scale, float end_scale, bool isextinction)
+void SingleParticle::set(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel, float start_scale, float end_scale, bool isextinctionframe, bool issetpos)
 {
 	//値のセット
 	this->position = position;
@@ -613,7 +613,8 @@ void SingleParticle::set(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT
 	scale = start_scale;
 	e_scale = end_scale;
 	num_frame = life;
-	isExtinctionFrame = isextinction;
+	isExtinctionFrame = isextinctionframe;
+	isSetPosition = issetpos;
 	isActive = true;
 }
 
@@ -713,24 +714,33 @@ void SingleParticle::updata()
 	matScale = XMMatrixScaling(scale, scale, scale);
 
 	//パーティクル更新
-	//経過フレーム数をカウント
-	frame++;
-	//速度医加速度を加算
-	velocity.x += accel.x;
-	velocity.y += accel.y;
-	velocity.z += accel.z;
-	//速度による移動
-	position.x += velocity.x;
-	position.y += velocity.y;
-	position.z += velocity.z;
 
-	float f = (float)num_frame / frame;
+	//寿命で消えるパーティクルなら経過フレーム数をカウント
+	if (isExtinctionFrame)
+	{
+		frame++;
+	}
+
+	//isSetPositionがfalseなら速度による移動
+	if (!isSetPosition)
+	{
+		//速度と加速度を加算
+		velocity.x += accel.x;
+		velocity.y += accel.y;
+		velocity.z += accel.z;
+
+		//移動
+		position.x += velocity.x;
+		position.y += velocity.y;
+		position.z += velocity.z;
+	}
 
 	//スケールの線形補間
+	float f = (float)num_frame / frame;
 	scale = (e_scale - s_scale) / f;
 	scale += s_scale;
 
-	//終了フレームに到達してかつ、消滅条件がフレームなら更新を終了
+	//寿命に到達してかつ、消滅条件が寿命なら更新を終了
 	if (frame == num_frame && isExtinctionFrame)
 	{
 		isActive = false;
