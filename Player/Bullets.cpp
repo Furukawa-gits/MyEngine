@@ -31,12 +31,17 @@ void bullet::init()
 	bulletObject->SetModel(bulletModelS.get());
 	bulletObject->SetScale({ 0.5f,0.5f,0.5f });
 
+	//親パーティクル生成
+	motherParticle = std::make_unique<SingleParticle>();
+	motherParticle->set(0, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 2.0f, 2.0f, false, true);
+
 	bulletCollision.radius = 4.0f;
 }
 
 void bullet::set(XMFLOAT3 start_pos, XMFLOAT3 Target)
 {
-	bulletObject->SetPosition({ start_pos.x,start_pos.y,start_pos.z });
+	position = start_pos;
+	bulletObject->SetPosition(start_pos);
 
 	XMFLOAT3 dis = {
 		Target.x - start_pos.x,
@@ -58,7 +63,7 @@ void bullet::update()
 		return;
 	}
 
-	bulletObject->addMoveFront(bullet_vec);
+	addBulletVec();
 
 	count++;
 
@@ -68,11 +73,12 @@ void bullet::update()
 		isArive = false;
 	}
 
+	bulletObject->SetPosition(position);
 	bulletObject->Update();
 	bulletCollision.center = {
-		bulletObject->getPosition().x,
-		bulletObject->getPosition().y,
-		bulletObject->getPosition().z,
+		position.x,
+		position.y,
+		position.z,
 		1.0f };
 }
 
@@ -134,6 +140,7 @@ void Missile::start(XMFLOAT3 start_pos)
 	}
 
 	bulletVec = bulletVecIndex[rand() % 8];
+	position = start_pos;
 	bulletObject->SetPosition(start_pos);
 
 	isArive = true;
@@ -155,9 +162,9 @@ void Missile::update()
 
 	//ターゲットへのベクトル
 	XMFLOAT3 to_enemy = {
-		enemyPointer->position.x - bulletObject->getPosition().x,
-		enemyPointer->position.y - bulletObject->getPosition().y,
-		enemyPointer->position.z - bulletObject->getPosition().z
+		enemyPointer->position.x - position.x,
+		enemyPointer->position.y - position.y,
+		enemyPointer->position.z - position.z
 	};
 
 	//ベクトルを正規化
@@ -178,9 +185,9 @@ void Missile::update()
 
 	//ミサイルの進行ベクトルをターゲットの方に曲げるベクトルを計算
 	XMFLOAT3 centripetalAccel = {
-		bulletObject->getPosition().x - closs_bullet_vec.x,
-		bulletObject->getPosition().y - closs_bullet_vec.y,
-		bulletObject->getPosition().z - closs_bullet_vec.z
+		position.x - closs_bullet_vec.x,
+		position.y - closs_bullet_vec.y,
+		position.z - closs_bullet_vec.z
 	};
 
 	XMFLOAT3 centri_to_enemy = {
@@ -219,14 +226,15 @@ void Missile::update()
 	bulletVec.y *= 1.5f;
 	bulletVec.z *= 1.5f;
 
-	bulletObject->addMoveFront(bulletVec);
+	addBulletVec();
 
+	bulletObject->SetPosition(position);
 	bulletObject->Update();
 
 	missileCollision.center = {
-	bulletObject->getPosition().x,
-	bulletObject->getPosition().y,
-	bulletObject->getPosition().z,
+	position.x,
+	position.y,
+	position.z,
 	1.0f };
 }
 
