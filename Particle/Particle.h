@@ -50,7 +50,7 @@ public:
 
 	void loadTexture(const std::string& filepath);
 
-	void set(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel, float start_scale, float end_scale);
+	void set(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel, float start_scale, float end_scale, bool isextinction = true);
 
 	static void UpdateViewMatrix();
 
@@ -59,6 +59,8 @@ public:
 	void draw();
 
 	void drawSpecifyTex(const std::string texturename);
+
+	bool getIsActive() { return isActive; }
 
 public:
 	//座標
@@ -77,6 +79,10 @@ public:
 	int frame = 0;
 	//終了フレーム
 	int num_frame = 0;
+	//消滅するかどうか
+	bool isActive = false;
+	//消滅する条件がフレームかどうか
+	bool isExtinctionFrame = true;
 	// 定数バッファ
 	ComPtr<ID3D12Resource> constBuff;
 	// テクスチャバッファ

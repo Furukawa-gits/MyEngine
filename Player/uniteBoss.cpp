@@ -310,7 +310,7 @@ void uniteParts::partsDeathMove()
 	//爆発パーティクル更新
 	bomParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
 		{
-			return newparticle->frame == newparticle->num_frame;
+			return newparticle->getIsActive() == false;
 		});
 	for (std::unique_ptr<SingleParticle>& newparticle : bomParticles)
 	{
@@ -339,7 +339,7 @@ void uniteParts::partsDeathMove()
 	//煙パーティクル更新
 	smokeParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
 		{
-			return newparticle->frame == newparticle->num_frame;
+			return newparticle->getIsActive() == false;
 		});
 	for (std::unique_ptr<SingleParticle>& newparticle : smokeParticles)
 	{
@@ -836,7 +836,7 @@ void uniteBoss::uniteBossDeathMove()
 	//爆発パーティクル更新
 	bomParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
 		{
-			return newparticle->frame == newparticle->num_frame;
+			return newparticle->getIsActive() == false;
 		});
 	for (std::unique_ptr<SingleParticle>& newparticle : bomParticles)
 	{
@@ -846,7 +846,7 @@ void uniteBoss::uniteBossDeathMove()
 	//煙パーティクル更新
 	smokeParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
 		{
-			return newparticle->frame == newparticle->num_frame;
+			return newparticle->getIsActive() == false;
 		});
 	for (std::unique_ptr<SingleParticle>& newparticle : smokeParticles)
 	{

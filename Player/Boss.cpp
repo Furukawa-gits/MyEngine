@@ -396,7 +396,7 @@ void Boss::bossDeathMove()
 	//爆発パーティクル更新
 	bomParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
 		{
-			return newparticle->frame == newparticle->num_frame;
+			return newparticle->getIsActive() == false;
 		});
 	for (std::unique_ptr<SingleParticle>& newparticle : bomParticles)
 	{
@@ -406,7 +406,7 @@ void Boss::bossDeathMove()
 	//煙パーティクル更新
 	smokeParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
 		{
-			return newparticle->frame == newparticle->num_frame;
+			return newparticle->getIsActive() == false;
 		});
 	for (std::unique_ptr<SingleParticle>& newparticle : smokeParticles)
 	{

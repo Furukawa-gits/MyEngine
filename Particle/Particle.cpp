@@ -422,7 +422,7 @@ void SingleParticle::loadTexture(const std::string& filepath)
 	);
 }
 
-void SingleParticle::set(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel, float start_scale, float end_scale)
+void SingleParticle::set(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel, float start_scale, float end_scale, bool isextinction)
 {
 	//値のセット
 	this->position = position;
@@ -432,6 +432,8 @@ void SingleParticle::set(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT
 	scale = start_scale;
 	e_scale = end_scale;
 	num_frame = life;
+	isExtinctionFrame = isextinction;
+	isActive = true;
 }
 
 void SingleParticle::UpdateViewMatrix()
@@ -516,6 +518,11 @@ void SingleParticle::UpdateViewMatrix()
 
 void SingleParticle::updata()
 {
+	if (!isActive)
+	{
+		return;
+	}
+
 	HRESULT result;
 	XMMATRIX matScale, matRot, matTrans;
 
@@ -542,6 +549,11 @@ void SingleParticle::updata()
 	scale = (e_scale - s_scale) / f;
 	scale += s_scale;
 
+	//終了フレームに到達してかつ、消滅条件がフレームなら更新を終了
+	if (frame == num_frame && isExtinctionFrame)
+	{
+		isActive = false;
+	}
 
 	//頂点バッファえデータ転送
 	VertexPos* vertMap = nullptr;
@@ -569,6 +581,11 @@ void SingleParticle::updata()
 
 void SingleParticle::draw()
 {
+	if (!isActive)
+	{
+		return;
+	}
+
 	// パイプラインステートの設定
 	directx->cmdList->SetPipelineState(pipelinestate.Get());
 	// ルートシグネチャの設定
