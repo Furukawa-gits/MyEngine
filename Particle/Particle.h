@@ -44,6 +44,8 @@ public:
 
 	static void createPipeline();
 
+	static void createPipelineAddBlend();
+
 	static void loadTexInMap(const std::string& filepath);
 
 	void generate();
@@ -60,6 +62,10 @@ public:
 
 	void drawSpecifyTex(const std::string texturename);
 
+	void setPiplineAddBlend();
+
+	void resetPipeline();
+
 	bool getIsActive() { return isActive; }
 
 public:
@@ -69,6 +75,8 @@ public:
 	XMFLOAT3 velocity = {};
 	//加速度
 	XMFLOAT3 accel = {};
+	//色
+	XMFLOAT4 color = { 1,1,1,1 };
 	//スケール
 	float scale = 1.0f;
 	//初期値
@@ -101,9 +109,11 @@ private:
 	// デバイス
 	static directX* directx;
 	// ルートシグネチャ
-	static ComPtr<ID3D12RootSignature> rootsignature;
+	static ComPtr<ID3D12RootSignature> rootSignature;
+	static ComPtr<ID3D12RootSignature> rootSignatureAddBlend;
 	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestate;
+	static ComPtr<ID3D12PipelineState> pipeLineState;
+	static ComPtr<ID3D12PipelineState> pipeLineStateAddBlend;
 	// ビュー行列
 	static XMMATRIX matView;
 	//ビルボード行列
@@ -116,4 +126,7 @@ private:
 	//テクスチャ格納マップ
 	static std::map<std::string, ComPtr<ID3D12DescriptorHeap>> texDescMap;
 	static std::map<std::string, ComPtr<ID3D12Resource>> texBufMap;
+
+	//通常時以外のパイプラインをセットしているか
+	bool isSetOtherPipeline = false;
 };

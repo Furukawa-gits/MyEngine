@@ -224,7 +224,6 @@ void Missile::update()
 	bulletObject->getPosition().y,
 	bulletObject->getPosition().z,
 	1.0f };
-
 }
 
 void Missile::draw(directX* directx)
