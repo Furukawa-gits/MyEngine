@@ -215,6 +215,10 @@ void Missile::update()
 	bulletVec.y += Force.y;
 	bulletVec.z += Force.z;
 
+	bulletVec.x *= 1.5f;
+	bulletVec.y *= 1.5f;
+	bulletVec.z *= 1.5f;
+
 	bulletObject->addMoveFront(bulletVec);
 
 	bulletObject->Update();

@@ -957,7 +957,7 @@ void uniteBoss::uniteBossChargeAttack()
 	{
 		//’Ç”öƒJƒEƒ“ƒg‰ÁŽZ
 		chaseCount++;
-		enemySpeed = 1.8f;
+		enemySpeed = 1.5f;
 		if (chaseCount >= 1)
 		{
 			isChase = false;
@@ -973,7 +973,7 @@ void uniteBoss::uniteBossChargeAttack()
 		waitCount++;
 		if (enemySpeed > 0.0f)
 		{
-			enemySpeed -= 0.05f;
+			enemySpeed -= 0.03f;
 		}
 		else
 		{

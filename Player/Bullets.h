@@ -10,6 +10,19 @@ class bullet
 {
 private:
 	static std::unique_ptr<Model> bulletModelS;
+	
+	/// <summary>
+	/// 弾の本体となるパーティクル
+	/// <para>弾の生存に依存するのでこいつは時間経過で消えない</para>
+	/// </summary>
+	std::unique_ptr<SingleParticle> motherParticle;
+
+	/// <summary>
+	/// 残像パーティクル
+	/// <para>こいつらは弾の生存時間に関係ないので時間経過で消える</para>
+	/// </summary>
+	std::list<std::unique_ptr<SingleParticle>> childParticles;
+
 public:
 	float count = 0;
 	XMFLOAT3 bullet_vec = { 0.0f,0.0f,0.0f };
@@ -38,6 +51,19 @@ class Missile
 {
 private:
 	static std::unique_ptr<Model> MissileModelS;
+
+	/// <summary>
+	/// 弾の本体となるパーティクル
+	/// <para>弾の生存に依存するのでこいつは時間経過で消えない</para>
+	/// </summary>
+	std::unique_ptr<SingleParticle> motherParticle;
+
+	/// <summary>
+	/// 残像パーティクル
+	/// <para>こいつらは弾の生存時間に関係ないので時間経過で消える</para>
+	/// </summary>
+	std::list<std::unique_ptr<SingleParticle>> childParticles;
+
 public:
 
 	Enemy* enemyPointer = nullptr;
