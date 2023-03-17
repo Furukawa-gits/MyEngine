@@ -245,7 +245,7 @@ private:
 	bool isStartIcon = false;
 	int countDownNum = 0;
 	int startIconTime = 0;
-	int countDownTime = 120;
+	int countDownTime = 60;
 	easingManager countDownEase;
 
 	//チュートリアル用テキスト

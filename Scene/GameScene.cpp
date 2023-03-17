@@ -103,18 +103,21 @@ void GameScene::Load_Sprites()
 	countDownSprite[0].position = { 640,360,0 };
 	countDownSprite[0].GenerateSprite("count3.png");
 	countDownSprite[0].SpriteTransferVertexBuffer();
+	countDownSprite[0].SpriteUpdate();
 
 	countDownSprite[1].anchorpoint = { 0.5f,0.5f };
 	countDownSprite[1].size = { 100,100 };
 	countDownSprite[1].position = { 640,360,0 };
 	countDownSprite[1].GenerateSprite("count2.png");
 	countDownSprite[1].SpriteTransferVertexBuffer();
+	countDownSprite[1].SpriteUpdate();
 
 	countDownSprite[2].anchorpoint = { 0.5f,0.5f };
 	countDownSprite[2].size = { 100,100 };
 	countDownSprite[2].position = { 640,360,0 };
 	countDownSprite[2].GenerateSprite("count1.png");
 	countDownSprite[2].SpriteTransferVertexBuffer();
+	countDownSprite[2].SpriteUpdate();
 #pragma endregion //カウントダウンアイコン
 
 	playStart.anchorpoint = { 0.5f,0.5f };
@@ -1172,8 +1175,10 @@ void GameScene::countDown()
 
 	if (isCountDown)
 	{
-		countDownSprite[countDownNum].size = { countDownEase.easing(),countDownEase.easing() };
+		float countDownSize = countDownEase.easing();
+		countDownSprite[countDownNum].size = { countDownSize,countDownSize };
 		countDownSprite[countDownNum].rotation -= 4;
+		countDownSprite[countDownNum].position = { 640,360,0 };
 		countDownSprite[countDownNum].SpriteTransferVertexBuffer();
 		countDownSprite[countDownNum].SpriteUpdate();
 

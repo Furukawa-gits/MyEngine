@@ -54,10 +54,16 @@ void Player::init(dxinput* input, directX* directx)
 	gaugeFrame.position = { 0,629,0 };
 	gaugeFrame.GenerateSprite("gaugeFrame.png");
 
-	for (int i = 0; i < 9; i++)
+	//ミサイルの残りゲージ
+	for (int i = 0; i < 8; i++)
 	{
-		remainingMissileNum[i].GenerateSprite("remainingMissileNum.png");
+		remainingMissileNum[i].anchorpoint = { 0.5f,0.5f };
+		remainingMissileNum[i].size = { 200,200 };
+		remainingMissileNum[i].rotation = (float)i * 45;
+		remainingMissileNum[i].GenerateSprite("homingGauge.png");
 	}
+
+	remainingMissileNum[8].GenerateSprite("remainingMissileNum.png");
 
 	playerModel.reset(FbxLoader::GetInstance()->LoadmodelFromFile("player"));
 
@@ -632,17 +638,21 @@ void Player::targetUpdate()
 	}
 
 	//ミサイル残弾数の表示
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < 8; i++)
 	{
-		remainingMissileNum[i].anchorpoint = { 0,0 };
-		remainingMissileNum[i].position = { 640 + (remainingMissileNum[i].size.x / 2),360,0 };
-		remainingMissileNum[i].texLeftTop = { (float)i * 100,0 };
-		remainingMissileNum[i].texSize = { 100,100 };
-		remainingMissileNum[i].size = { 70,70 };
-
-		remainingMissileNum[i].SpriteTransferVertexBuffer(true);
+		remainingMissileNum[i].position = { 640,360,0 };
+		remainingMissileNum[i].SpriteTransferVertexBuffer();
 		remainingMissileNum[i].SpriteUpdate();
 	}
+
+	remainingMissileNum[8].anchorpoint = { 0,0 };
+	remainingMissileNum[8].position = { 640 + (remainingMissileNum[8].size.x / 2),360,0 };
+	remainingMissileNum[8].texLeftTop = { 0,0 };
+	remainingMissileNum[8].texSize = { 100,100 };
+	remainingMissileNum[8].size = { 70,70 };
+
+	remainingMissileNum[8].SpriteTransferVertexBuffer(true);
+	remainingMissileNum[8].SpriteUpdate();
 }
 
 void Player::addMissile(Enemy* enemy)
@@ -764,7 +774,15 @@ void Player::draw2D(directX* directx, int targetnum)
 
 	if (isRockOn)
 	{
-		remainingMissileNum[MaxPlayerMissileNum - targetnum].DrawSprite(directx->cmdList.Get());
+		for (int i = 0; i < MaxPlayerMissileNum - targetnum; i++)
+		{
+			remainingMissileNum[i].DrawSprite(directx->cmdList.Get());
+		}
+
+		if (targetnum >= MaxPlayerMissileNum)
+		{
+			remainingMissileNum[8].DrawSprite(directx->cmdList.Get());
+		}
 	}
 
 	gaugeFrame.DrawSprite(directx->cmdList.Get());
