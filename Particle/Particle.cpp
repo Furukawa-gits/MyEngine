@@ -19,6 +19,7 @@ void SingleParticle::particleStaticInit(directX* Directx, Camera* Camera)
 
 	//グラフィックスパイプライン生成
 	createPipeline();
+	createPipelineAddBlend();
 
 	return;
 }
@@ -326,9 +327,11 @@ void SingleParticle::createPipelineAddBlend()
 	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
 	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	// RBGA全てのチャンネルを描画
 	blenddesc.BlendEnable = true;
-	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
-	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+
+	//半透明合成
+	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
 
 	//加算合成
 	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
