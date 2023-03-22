@@ -770,6 +770,7 @@ void SingleParticle::updata()
 	//s—ñ‚Ì‡¬
 	constMap->mat = matView * camera->GetProjectionMatrix();
 	constMap->matBillboard = matBillboard;
+	constMap->color = color;
 	constBuff->Unmap(0, nullptr);
 }
 

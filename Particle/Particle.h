@@ -35,6 +35,7 @@ private:
 	{
 		XMMATRIX mat;	// ÇRÇcïœä∑çsóÒ
 		XMMATRIX matBillboard;
+		XMFLOAT4 color;
 	};
 
 public:
