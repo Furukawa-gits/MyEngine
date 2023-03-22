@@ -42,12 +42,6 @@ void uniteParts::partsInit(int ID)
 
 	enemyMovePattern = enemyPattern::shot;
 
-	if (enemyMovePattern == enemyPattern::shot)
-	{
-		bullet = std::make_unique<enemyBullet>();
-		bullet->init();
-	}
-
 	enemyCollision.radius = 9.0f;
 	deathRotSpeed = 0.1f;
 	partsID = ID;
@@ -354,11 +348,6 @@ void uniteParts::partsDeathMove()
 		isDraw = false;
 		fallDownCount = 0;
 	}
-
-	if (enemyMovePattern == enemyPattern::shot)
-	{
-		bullet->isArive = false;
-	}
 }
 
 void uniteParts::partsShotBullet(XMFLOAT3 targetposition)
@@ -493,9 +482,6 @@ void uniteBoss::uniteBossInit()
 	uniteBossScale = { 4,4,4 };
 	enemyCollision.radius = 9.0f;
 	deathRotSpeed = 0.1f;
-
-	bullet = std::make_unique<enemyBullet>();
-	bullet->init();
 
 	uniteParts::setStaticData(&position);
 
@@ -861,11 +847,6 @@ void uniteBoss::uniteBossDeathMove()
 		isDraw = false;
 		fallDownCount = 0;
 	}
-
-	if (enemyMovePattern == enemyPattern::shot)
-	{
-		bullet->isArive = false;
-	}
 }
 
 //ƒZƒbƒg
@@ -1125,12 +1106,12 @@ void uniteBoss::uniteBossShotPlayerTarget()
 	}
 
 
-	if (!bullet->isBulletArive() && isInRange)
+	if (isInRange)
 	{
 		nextShotTime++;
 	}
 
-	if (nextShotTime >= 40 && bullet->isBulletArive() == false)
+	if (nextShotTime >= 60)
 	{
 		isShot = true;
 		nextShotTime = 0;
@@ -1151,8 +1132,6 @@ void uniteBoss::uniteBossShotPlayerTarget()
 		shotCount++;
 		isShot = false;
 	}
-
-	bullet->update();
 }
 
 //•`‰æ_3D

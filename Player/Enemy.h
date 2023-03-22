@@ -215,9 +215,10 @@ public:
 	//登場演出フラグ
 	bool isAppear = false;
 
-	//座標・初期位置・速度・回転
+	//座標・初期位置・スケール・速度・回転
 	XMFLOAT3 position = {};
 	XMFLOAT3 startPosition = {};
+	float scale = 1.0f;
 	float enemySpeed = 0.0f;
 	XMFLOAT3 rot = {};
 	XMFLOAT3 outScreenPos = {};
@@ -246,9 +247,6 @@ public:
 
 	//この敵に攻撃が通るかどうか
 	bool isArmor = false;
-
-	//弾(1発のみ：shotで使う)
-	std::unique_ptr<enemyBullet> bullet;
 
 	//弾(乱射：rampageで使う)
 	std::list<std::unique_ptr<enemyBullet>> Bullets;

@@ -540,7 +540,6 @@ void GameScene::Play_updata()
 	{
 		newenemy->updata();
 		checkHitManager::checkPlayerEnemy(player_p.get(), newenemy.get());
-		checkHitManager::chackPlayerEnemyBullet(player_p.get(), newenemy.get());
 		checkHitManager::checkPlayerEnemyRampages(player_p.get(), newenemy.get());
 		checkHitManager::checkBulletsEnemyRampage(&player_p->bulletsList, newenemy.get());
 	}
@@ -606,11 +605,9 @@ void GameScene::Play_updata()
 
 	//プレイヤーの通常弾当たり判定
 	checkHitManager::checkBulletsEnemys(&player_p->bulletsList, &enemyList);
-	checkHitManager::checkBulletsEnemyBullets(&player_p->bulletsList, &enemyList);
 
 	//通常弾とボスの当たり判定
 	checkHitManager::checkBulletsEnemy(&player_p->bulletsList, testBoss.get());
-	checkHitManager::checkBulletsEnemybullet(&player_p->bulletsList, testBoss.get());
 
 	//通常弾とユニットボス本体の当たり判定
 	checkHitManager::checkBulletsEnemy(&player_p->bulletsList, testUniteBoss.get());
@@ -619,7 +616,6 @@ void GameScene::Play_updata()
 	for (std::unique_ptr<uniteParts>& newparts : testUniteBoss->partsList)
 	{
 		checkHitManager::checkBulletsEnemy(&player_p->bulletsList, newparts.get());
-		checkHitManager::checkBulletsEnemybullet(&player_p->bulletsList, newparts.get());
 	}
 
 
@@ -627,7 +623,6 @@ void GameScene::Play_updata()
 	if (!testBoss->getIsAppear() && stageNum < 3)
 	{
 		checkHitManager::checkPlayerEnemy(player_p.get(), testBoss.get());
-		checkHitManager::chackPlayerEnemyBullet(player_p.get(), testBoss.get());
 		checkHitManager::checkPlayerEnemyRampages(player_p.get(), testBoss.get());
 		checkHitManager::checkBulletsEnemyRampage(&player_p->bulletsList, testBoss.get());
 	}
@@ -638,7 +633,6 @@ void GameScene::Play_updata()
 
 		for (std::unique_ptr<uniteParts>& newparts : testUniteBoss->partsList)
 		{
-			checkHitManager::chackPlayerEnemyBullet(player_p.get(), newparts.get());
 			checkHitManager::checkPlayerEnemyRampages(player_p.get(), newparts.get());
 			checkHitManager::checkBulletsEnemyRampage(&player_p->bulletsList, newparts.get());
 		}
@@ -1338,7 +1332,6 @@ void GameScene::tutorial()
 	{
 		newenemy->updata();
 		checkHitManager::checkPlayerEnemy(player_p.get(), newenemy.get());
-		checkHitManager::chackPlayerEnemyBullet(player_p.get(), newenemy.get());
 	}
 
 	//ホーミング弾発射
@@ -1380,7 +1373,6 @@ void GameScene::tutorial()
 
 	//プレイヤーの通常弾当たり判定
 	checkHitManager::checkBulletsEnemys(&player_p->bulletsList, &enemyList);
-	checkHitManager::checkBulletsEnemyBullets(&player_p->bulletsList, &enemyList);
 
 	//敵をすべて倒したorプレイヤーが死んだらリザルト
 	if (enemyList.size() <= 0 && !isMoveText && isShootingText)

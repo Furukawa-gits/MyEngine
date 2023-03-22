@@ -52,12 +52,6 @@ void Boss::bossInit()
 
 	enemyMovePattern = enemyPattern::shot;
 
-	if (enemyMovePattern == enemyPattern::shot)
-	{
-		bullet = std::make_unique<enemyBullet>();
-		bullet->init();
-	}
-
 	HP = 5;
 	bossbaseScale = { 5,5,5 };
 	enemyCollision.radius = 9.0f;
@@ -421,11 +415,6 @@ void Boss::bossDeathMove()
 		isDraw = false;
 		fallDownCount = 0;
 	}
-
-	if (enemyMovePattern == enemyPattern::shot)
-	{
-		bullet->isArive = false;
-	}
 }
 
 void Boss::bossChase()
@@ -511,6 +500,16 @@ void Boss::bossShot()
 		return;
 	}
 
+	Bullets.remove_if([](std::unique_ptr<enemyBullet>& bullet)
+		{
+			return bullet->isBulletArive() == false;
+		});
+
+	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
+	{
+		bullet->update();
+	}
+
 	XMFLOAT3 pPos = playerPointer->playerObject->getPosition();
 
 	XMFLOAT3 startToTarget =
@@ -531,28 +530,34 @@ void Boss::bossShot()
 		isInRange = false;
 	}
 
-	if (!bullet->isBulletArive() && isInRange)
+	if (isInRange)
 	{
 		nextShotTime++;
 	}
 
-	if (nextShotTime >= 10 && bullet->isBulletArive() == false)
+	if (nextShotTime >= 120)
 	{
 		isShot = true;
-		nextShotTime = 0;
-	}
-	else
-	{
-		isShot = false;
 	}
 
 	if (isShot)
 	{
-		bullet->set(pPos, this->position);
+		std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
+		newBullet->init();
+
+		XMFLOAT3 rampageTargetPos =
+		{
+			playerPosition.x - (float)(rand() % 8 - 4),
+			playerPosition.y - (float)(rand() % 8 - 4),
+			playerPosition.z - (float)(rand() % 8 - 4)
+		};
+
+		newBullet->set(rampageTargetPos, this->position);
+		Bullets.push_back(std::move(newBullet));
+
+		nextShotTime = 0;
 		isShot = false;
 	}
-
-	bullet->update();
 }
 
 void Boss::bossHoming()
@@ -572,6 +577,17 @@ void Boss::bossHoming()
 		return;
 	}
 
+	//íeÇÃçXêV
+	Bullets.remove_if([](std::unique_ptr<enemyBullet>& bullet)
+		{
+			return bullet->isBulletArive() == false;
+		});
+
+	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
+	{
+		bullet->update();
+	}
+
 	XMFLOAT3 pPos = playerPointer->playerObject->getPosition();
 
 	XMFLOAT3 startToTarget =
@@ -592,28 +608,34 @@ void Boss::bossHoming()
 		isInRange = false;
 	}
 
-	if (!bullet->isBulletArive() && isInRange)
+	if (isInRange)
 	{
 		nextShotTime++;
 	}
 
-	if (nextShotTime >= 10 && bullet->isBulletArive() == false)
+	if (nextShotTime >= 120)
 	{
 		isShot = true;
-		nextShotTime = 0;
-	}
-	else
-	{
-		isShot = false;
 	}
 
 	if (isShot)
 	{
-		bullet->set(pPos, this->position);
+		std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
+		newBullet->init();
+
+		XMFLOAT3 rampageTargetPos =
+		{
+			playerPosition.x - (float)(rand() % 8 - 4),
+			playerPosition.y - (float)(rand() % 8 - 4),
+			playerPosition.z - (float)(rand() % 8 - 4)
+		};
+
+		newBullet->set(rampageTargetPos, this->position);
+		Bullets.push_back(std::move(newBullet));
+
+		nextShotTime = 0;
 		isShot = false;
 	}
-
-	bullet->update();
 
 	//í«ê’
 	if (isChase)

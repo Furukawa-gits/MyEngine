@@ -69,12 +69,6 @@ void Enemy::init(enemyPattern pattern)
 	enemyCollision.radius = 2.0f;
 
 	enemyMovePattern = pattern;
-
-	if (enemyMovePattern == enemyPattern::shot)
-	{
-		bullet = std::make_unique<enemyBullet>();
-		bullet->init();
-	}
 }
 
 void Enemy::set(XMFLOAT3 pos)
@@ -202,6 +196,16 @@ void Enemy::shot()
 		return;
 	}
 
+	Bullets.remove_if([](std::unique_ptr<enemyBullet>& bullet)
+		{
+			return bullet->isBulletArive() == false;
+		});
+
+	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
+	{
+		bullet->update();
+	}
+
 	//射程範囲かどうかを計算
 	XMFLOAT3 startToTarget =
 	{
@@ -222,30 +226,38 @@ void Enemy::shot()
 	}
 
 	//弾を撃っていないかつ射程範囲内なら射撃までのカウントダウンを進める
-	if (!bullet->isBulletArive() && isInRange)
+	if (isInRange)
 	{
 		nextShotTime++;
+		scale += 0.005f;
 	}
 
 	//一定カウントごとに射撃フラグを立てる
-	if (nextShotTime >= 10 && bullet->isBulletArive() == false)
+	if (nextShotTime >= 120)
 	{
+		scale = 1.0f;
 		isShot = true;
-		nextShotTime = 0;
-	}
-	else
-	{
-		isShot = false;
 	}
 
 	//弾を撃つ
 	if (isShot)
 	{
-		bullet->set(playerPosition, this->position);
+		std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
+		newBullet->init();
+
+		XMFLOAT3 rampageTargetPos =
+		{
+			playerPosition.x - (float)(rand() % 8 - 4),
+			playerPosition.y - (float)(rand() % 8 - 4),
+			playerPosition.z - (float)(rand() % 8 - 4)
+		};
+
+		newBullet->set(rampageTargetPos, this->position);
+		Bullets.push_back(std::move(newBullet));
+
+		nextShotTime = 0;
 		isShot = false;
 	}
-
-	bullet->update();
 }
 
 void Enemy::homing()
@@ -258,6 +270,17 @@ void Enemy::homing()
 	if (!playerIsArive)
 	{
 		return;
+	}
+
+	//弾の更新
+	Bullets.remove_if([](std::unique_ptr<enemyBullet>& bullet)
+		{
+			return bullet->isBulletArive() == false;
+		});
+
+	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
+	{
+		bullet->update();
 	}
 
 	XMFLOAT3 startToTarget =
@@ -278,28 +301,34 @@ void Enemy::homing()
 		isInRange = false;
 	}
 
-	if (!bullet->isBulletArive() && isInRange)
+	if (isInRange)
 	{
 		nextShotTime++;
 	}
 
-	if (nextShotTime >= 10 && bullet->isBulletArive() == false)
+	if (nextShotTime >= 120)
 	{
 		isShot = true;
-		nextShotTime = 0;
-	}
-	else
-	{
-		isShot = false;
 	}
 
 	if (isShot)
 	{
-		bullet->set(playerPosition, this->position);
+		std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
+		newBullet->init();
+
+		XMFLOAT3 rampageTargetPos =
+		{
+			playerPosition.x - (float)(rand() % 8 - 4),
+			playerPosition.y - (float)(rand() % 8 - 4),
+			playerPosition.z - (float)(rand() % 8 - 4)
+		};
+
+		newBullet->set(rampageTargetPos, this->position);
+		Bullets.push_back(std::move(newBullet));
+
+		nextShotTime = 0;
 		isShot = false;
 	}
-
-	bullet->update();
 
 	//追跡
 	if (isChase)
@@ -472,6 +501,7 @@ void Enemy::updata()
 	//敵が撃墜
 	deathMove();
 
+	enemyObject->SetScale({ scale ,scale ,scale });
 	enemyObject->SetPosition(position);
 
 	return;
@@ -667,11 +697,6 @@ void Enemy::deathMove()
 		isDraw = false;
 		fallDownCount = 0;
 	}
-
-	if (enemyMovePattern == enemyPattern::shot)
-	{
-		bullet->isArive = false;
-	}
 }
 
 void Enemy::draw3D(directX* directx)
@@ -693,23 +718,9 @@ void Enemy::draw3D(directX* directx)
 
 	enemyObject->Draw(directx->cmdList.Get());
 
-	if (enemyMovePattern == enemyPattern::shot || enemyMovePattern == enemyPattern::homing)
+	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
 	{
-		if (isArive)
-		{
-			bullet->draw(directx);
-		}
-	}
-
-	if (enemyMovePattern == enemyPattern::rampage)
-	{
-		if (isArive)
-		{
-			for (std::unique_ptr<enemyBullet>& bullet : Bullets)
-			{
-				bullet->draw(directx);
-			}
-		}
+		bullet->draw(directx);
 	}
 
 	//爆発パーティクル描画
