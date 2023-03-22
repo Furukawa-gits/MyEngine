@@ -884,7 +884,7 @@ void uniteBoss::uniteBossSet()
 	chargeAttackCount = 0;
 	nextBulletTime = 0;
 	bulletCount = 0;
-	maxBulletCount = 20;
+	maxBulletCount = 10;
 	isRampageWait = true;
 	rampageWaitCount = 0;
 	Bullets.clear();

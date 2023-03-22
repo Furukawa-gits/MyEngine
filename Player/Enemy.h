@@ -29,7 +29,7 @@ public:
 
 	bool isBulletArive()
 	{
-		return (bulletObject != nullptr) && isArive;
+		return isArive;
 	}
 
 	Sphere getCollision()
@@ -49,9 +49,18 @@ public:
 	Sphere bulletCollision;
 
 private:
-	//モデル・オブジェクト
-	static std::unique_ptr<Model> buletModelS;
-	Object3d_FBX* bulletObject = nullptr;
+
+	/// <summary>
+	/// 弾の本体となるパーティクル
+	/// <para>弾の生存に依存するのでこいつは時間経過で消えない</para>
+	/// </summary>
+	std::unique_ptr<SingleParticle> motherParticle;
+
+	/// <summary>
+	/// 残像パーティクル
+	/// <para>こいつらは弾の生存時間に関係ないので時間経過で消える</para>
+	/// </summary>
+	std::list<std::unique_ptr<SingleParticle>> childParticles;
 
 	//座標・方向・弾速
 	XMFLOAT3 position = {};
@@ -249,7 +258,7 @@ public:
 	int bulletCount = 0;
 	int nextBulletTime = 0;
 
-	int maxBulletCount = 7;
+	int maxBulletCount = 5;
 
 	//撃墜エフェクト
 	std::list<std::unique_ptr<SingleParticle>> bomParticles;	//爆発

@@ -750,20 +750,16 @@ void Enemy::draw2D(directX* directx)
 #pragma endregion
 
 #pragma region 敵の弾
-std::unique_ptr<Model> enemyBullet::buletModelS = std::make_unique<Model>();
-
 enemyBullet::enemyBullet()
 {
 }
 
 enemyBullet::~enemyBullet()
 {
-	delete(bulletObject);
 }
 
 void enemyBullet::staticInit()
 {
-	buletModelS.reset(FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01"));
 }
 
 void enemyBullet::staticDestroy()
@@ -772,12 +768,11 @@ void enemyBullet::staticDestroy()
 
 void enemyBullet::init()
 {
-	bulletObject = new Object3d_FBX;
-	bulletObject->Initialize();
-	bulletObject->SetModel(buletModelS.get());
-	bulletObject->SetScale({ 0.3f,0.3f,0.3f });
-
-	bulletObject->setColor({ 0,0,1,1 });
+	//親パーティクル生成
+	motherParticle = std::make_unique<SingleParticle>();
+	motherParticle->generate();
+	motherParticle->set(0, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 3.0f, 0.0f, false, true);
+	motherParticle->color = { 1,0,0,1 };
 
 	bulletCollision.radius = 0.3f;
 }
@@ -819,23 +814,35 @@ void enemyBullet::update()
 	position.y += bulletVec.y * bulletSpeed;
 	position.z += bulletVec.z * bulletSpeed;
 
-	rot.x += 4;
-	rot.y += 4;
-	rot.z += 4;
-	bulletObject->setRotMatrix(rot.x, rot.y, rot.z);
-
-	bulletObject->SetPosition(position);
-	bulletObject->Update();
-
-	bulletCollision.center =
+	//一定フレームごとにパーティクルを生成
+	if (ariveTime % 10 == 0)
 	{
-		bulletObject->getPosition().x,
-		bulletObject->getPosition().y,
-		bulletObject->getPosition().z,1.0f
-	};
+		std::unique_ptr<SingleParticle> newParticle = std::make_unique<SingleParticle>();
+		newParticle->generate();
+		newParticle->set(20, position, { 0,0,0 }, { 0,0,0 }, 2.0f, 0.0f);
+		newParticle->color = { 1,0,0,1 };
+		childParticles.push_back(std::move(newParticle));
+	}
+
+	//サブパーティクル更新
+	childParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
+		{
+			return newparticle->getIsActive() == false;
+		});
+	for (std::unique_ptr<SingleParticle>& newparticle : childParticles)
+	{
+		newparticle->updata();
+	}
+
+	//本体パーティクル更新
+	motherParticle->setPosition(position);
+	motherParticle->updata();
+
+	bulletCollision.center = XMLoadFloat3(&position);
 
 	if (ariveTime >= maxAriveTime)
 	{
+		motherParticle->setIsActive(false);
 		isArive = false;
 		ariveTime = 0;
 	}
@@ -848,7 +855,13 @@ void enemyBullet::draw(directX* directx)
 		return;
 	}
 
-	bulletObject->SetPipelineSimple(directx->cmdList.Get());
-	bulletObject->Draw(directx->cmdList.Get());
+	for (std::unique_ptr<SingleParticle>& newparticle : childParticles)
+	{
+		newparticle->setPiplineAddBlend();
+		newparticle->drawSpecifyTex("effect1.png");
+	}
+
+	motherParticle->setPiplineAddBlend();
+	motherParticle->drawSpecifyTex("effect1.png");
 }
 #pragma endregion

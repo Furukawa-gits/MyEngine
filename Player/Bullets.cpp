@@ -28,7 +28,7 @@ void bullet::init()
 	motherParticle = std::make_unique<SingleParticle>();
 	motherParticle->generate();
 	motherParticle->set(0, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 3.0f, 0.0f, false, true);
-	motherParticle->color = { 0,1,1,1 };
+	motherParticle->color = { 0,1,0,1 };
 
 	bulletCollision.radius = 4.0f;
 }
@@ -67,7 +67,7 @@ void bullet::update()
 		std::unique_ptr<SingleParticle> newParticle = std::make_unique<SingleParticle>();
 		newParticle->generate();
 		newParticle->set(30, position, { 0,0,0 }, { 0,0,0 }, 2.0f, 0.0f);
-		newParticle->color = { 0,1,1,1 };
+		newParticle->color = { 0,1,0,1 };
 		childParticles.push_back(std::move(newParticle));
 	}
 
