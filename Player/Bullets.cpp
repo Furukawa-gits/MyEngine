@@ -3,7 +3,6 @@
 #include"../3D/3Dobject.h"
 
 #pragma region 通常弾
-std::unique_ptr<Model> bullet::bulletModelS = std::make_unique<Model>();
 
 bullet::bullet()
 {
@@ -11,12 +10,11 @@ bullet::bullet()
 
 bullet::~bullet()
 {
-	delete(bulletObject);
 }
 
 void bullet::staticInit()
 {
-	bulletModelS.reset(FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01"));
+	SingleParticle::loadTexInMap("effect1.png");
 }
 
 void bullet::staticDestroy()
@@ -26,14 +24,11 @@ void bullet::staticDestroy()
 
 void bullet::init()
 {
-	bulletObject = new Object3d_FBX;
-	bulletObject->Initialize();
-	bulletObject->SetModel(bulletModelS.get());
-	bulletObject->SetScale({ 0.5f,0.5f,0.5f });
-
 	//親パーティクル生成
 	motherParticle = std::make_unique<SingleParticle>();
-	motherParticle->set(0, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 2.0f, 2.0f, false, true);
+	motherParticle->generate();
+	motherParticle->set(0, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 3.0f, 0.0f, false, true);
+	motherParticle->color = { 0,1,1,1 };
 
 	bulletCollision.radius = 4.0f;
 }
@@ -41,7 +36,6 @@ void bullet::init()
 void bullet::set(XMFLOAT3 start_pos, XMFLOAT3 Target)
 {
 	position = start_pos;
-	bulletObject->SetPosition(start_pos);
 
 	XMFLOAT3 dis = {
 		Target.x - start_pos.x,
@@ -67,19 +61,39 @@ void bullet::update()
 
 	count++;
 
-	if (count >= 100)
+	//一定フレームごとにパーティクルを生成
+	if (count % 5 == 0)
+	{
+		std::unique_ptr<SingleParticle> newParticle = std::make_unique<SingleParticle>();
+		newParticle->generate();
+		newParticle->set(30, position, { 0,0,0 }, { 0,0,0 }, 2.0f, 0.0f);
+		newParticle->color = { 0,1,1,1 };
+		childParticles.push_back(std::move(newParticle));
+	}
+
+	//サブパーティクル更新
+	childParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
+		{
+			return newparticle->getIsActive() == false;
+		});
+	for (std::unique_ptr<SingleParticle>& newparticle : childParticles)
+	{
+		newparticle->updata();
+	}
+
+	//弾の寿命が来たら消滅
+	if (count >= maxBulletCount)
 	{
 		count = 0;
+		motherParticle->setIsActive(false);
 		isArive = false;
 	}
 
-	bulletObject->SetPosition(position);
-	bulletObject->Update();
-	bulletCollision.center = {
-		position.x,
-		position.y,
-		position.z,
-		1.0f };
+	//本体パーティクル更新
+	motherParticle->setPosition(position);
+	motherParticle->updata();
+
+	bulletCollision.center = XMLoadFloat3(&position);
 }
 
 void bullet::draw(directX* directx)
@@ -89,12 +103,18 @@ void bullet::draw(directX* directx)
 		return;
 	}
 
-	bulletObject->Draw(directx->cmdList.Get());
+	for (std::unique_ptr<SingleParticle>& newparticle : childParticles)
+	{
+		newparticle->setPiplineAddBlend();
+		newparticle->drawSpecifyTex("effect1.png");
+	}
+
+	motherParticle->setPiplineAddBlend();
+	motherParticle->drawSpecifyTex("effect1.png");
 }
 #pragma endregion
 
 #pragma region ミサイル
-std::unique_ptr<Model> Missile::MissileModelS = std::make_unique<Model>();
 
 Missile::Missile()
 {
@@ -102,12 +122,11 @@ Missile::Missile()
 
 Missile::~Missile()
 {
-	delete(bulletObject);
 }
 
 void Missile::staticInit()
 {
-	MissileModelS.reset(FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_01"));
+	
 }
 
 void Missile::staticDestroy()
@@ -116,12 +135,11 @@ void Missile::staticDestroy()
 
 void Missile::init()
 {
-	bulletObject = new Object3d_FBX;
-	bulletObject->Initialize();
-	bulletObject->SetModel(MissileModelS.get());
-	bulletObject->SetScale({ 0.5f,0.5f,0.5f });
-
-	bulletObject->setColor({ 1,1,0,1 });
+	//親パーティクル生成
+	motherParticle = std::make_unique<SingleParticle>();
+	motherParticle->generate();
+	motherParticle->set(0, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 3.0f, 0.0f, false, true);
+	motherParticle->color = { 1,1,0,1 };
 
 	missileCollision.radius = 3.0f;
 }
@@ -141,7 +159,6 @@ void Missile::start(XMFLOAT3 start_pos)
 
 	bulletVec = bulletVecIndex[rand() % 8];
 	position = start_pos;
-	bulletObject->SetPosition(start_pos);
 
 	isArive = true;
 }
@@ -228,14 +245,40 @@ void Missile::update()
 
 	addBulletVec();
 
-	bulletObject->SetPosition(position);
-	bulletObject->Update();
+	//パーティクル更新
+	particleUpdata();
 
-	missileCollision.center = {
-	position.x,
-	position.y,
-	position.z,
-	1.0f };
+	missileCollision.center = XMLoadFloat3(&position);
+}
+
+void Missile::particleUpdata()
+{
+	//パーティクル用のカウント
+	particleCount++;
+
+	//一定フレームごとにパーティクルを生成
+	if (particleCount % 2 == 0)
+	{
+		std::unique_ptr<SingleParticle> newParticle = std::make_unique<SingleParticle>();
+		newParticle->generate();
+		newParticle->set(20, position, { 0,0,0 }, { 0,0,0 }, 2.0f, 0.0f);
+		newParticle->color = { 1,1,0,1 };
+		childParticles.push_back(std::move(newParticle));
+	}
+
+	//サブパーティクル更新
+	childParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
+		{
+			return newparticle->getIsActive() == false;
+		});
+	for (std::unique_ptr<SingleParticle>& newparticle : childParticles)
+	{
+		newparticle->updata();
+	}
+
+	//本体パーティクル更新
+	motherParticle->setPosition(position);
+	motherParticle->updata();
 }
 
 void Missile::draw(directX* directx)
@@ -245,7 +288,13 @@ void Missile::draw(directX* directx)
 		return;
 	}
 
-	bulletObject->SetPipelineSimple(directx->cmdList.Get());
-	bulletObject->Draw(directx->cmdList.Get());
+	for (std::unique_ptr<SingleParticle>& newparticle : childParticles)
+	{
+		newparticle->setPiplineAddBlend();
+		newparticle->drawSpecifyTex("effect1.png");
+	}
+
+	motherParticle->setPiplineAddBlend();
+	motherParticle->drawSpecifyTex("effect1.png");
 }
 #pragma endregion

@@ -9,8 +9,6 @@
 class bullet
 {
 private:
-	static std::unique_ptr<Model> bulletModelS;
-
 	/// <summary>
 	/// 弾の本体となるパーティクル
 	/// <para>弾の生存に依存するのでこいつは時間経過で消えない</para>
@@ -24,11 +22,10 @@ private:
 	std::list<std::unique_ptr<SingleParticle>> childParticles;
 
 public:
-	float count = 0;
+	int count = 0;
+	const int maxBulletCount = 100;
 	XMFLOAT3 position = { 0,0,0 };
 	XMFLOAT3 bullet_vec = { 0.0f,0.0f,0.0f };
-
-	Object3d_FBX* bulletObject = nullptr;
 	float bulletSpeed = 3.0f;
 
 	bool isArive = false;
@@ -57,7 +54,6 @@ public:
 class Missile
 {
 private:
-	static std::unique_ptr<Model> MissileModelS;
 
 	/// <summary>
 	/// 弾の本体となるパーティクル
@@ -71,13 +67,15 @@ private:
 	/// </summary>
 	std::list<std::unique_ptr<SingleParticle>> childParticles;
 
+	//パーティクル生成の為のカウント
+	int particleCount = 0;
+
 public:
 
 	Enemy* enemyPointer = nullptr;
 	XMFLOAT3 position = { 0,0,0 };
 	XMFLOAT3 bulletVec = { 0.0f,0.0f,0.0f };
 
-	Object3d_FBX* bulletObject = nullptr;
 	bool isArive = false;
 	bool isTargetSet = false;
 
@@ -103,6 +101,10 @@ public:
 	void setPenemy(Enemy* enemy);
 	void start(XMFLOAT3 start_pos);
 	void update();
+	/// <summary>
+	/// 通常弾と違い、処理が多いのでパーティクルの更新は分ける
+	/// </summary>
+	void particleUpdata();
 	void addBulletVec()
 	{
 		position.x += bulletVec.x;

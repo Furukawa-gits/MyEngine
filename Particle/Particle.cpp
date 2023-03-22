@@ -739,9 +739,12 @@ void SingleParticle::updata()
 	}
 
 	//スケールの線形補間
-	float f = (float)num_frame / frame;
-	scale = (e_scale - s_scale) / f;
-	scale += s_scale;
+	if (isExtinctionFrame)
+	{
+		float f = (float)num_frame / frame;
+		scale = (e_scale - s_scale) / f;
+		scale += s_scale;
+	}
 
 	//寿命に到達してかつ、消滅条件が寿命なら更新を終了
 	if (frame == num_frame && isExtinctionFrame)
