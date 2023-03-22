@@ -630,6 +630,9 @@ void Enemy::ariveMove()
 		newparticle->set(maxFallCount - 20, enemyObject->getPosition(), { 0,0,0 }, { 0,0,0 }, 0.2f, 10.0f);
 		bomParticles.push_back(std::move(newparticle));
 #pragma endregion 爆発パーティクル生成
+
+		//弾も消す
+		Bullets.clear();
 	}
 
 	enemyObject->SetPosition(position);
@@ -816,6 +819,10 @@ void enemyBullet::update()
 {
 	if (!isArive)
 	{
+		for (std::unique_ptr<SingleParticle>& newparticle : childParticles)
+		{
+			newparticle->setIsActive(false);
+		}
 		return;
 	}
 

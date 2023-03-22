@@ -277,6 +277,9 @@ void uniteParts::partsAriveMove()
 		newparticle->set(maxFallCount - 20, enemyObject->getPosition(), { 0,0,0 }, { 0,0,0 }, 0.2f, 10.0f);
 		bomParticles.push_back(std::move(newparticle));
 #pragma endregion 爆発パーティクル生成
+
+		//弾も消す
+		Bullets.clear();
 	}
 
 	//当たり判定更新
@@ -730,6 +733,9 @@ void uniteBoss::uniteBossAriveMove()
 		fallDownCount = 0;
 		deathRotSpeed = 0.5f;
 		CameraAngleSpeed = 0.0f;
+
+		//弾も消す
+		Bullets.clear();
 	}
 
 	uniteBossSpriteUpdata();

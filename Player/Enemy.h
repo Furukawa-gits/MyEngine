@@ -48,7 +48,6 @@ public:
 	//当たり判定
 	Sphere bulletCollision;
 
-private:
 
 	/// <summary>
 	/// 弾の本体となるパーティクル
@@ -62,6 +61,7 @@ private:
 	/// </summary>
 	std::list<std::unique_ptr<SingleParticle>> childParticles;
 
+private:
 	//座標・方向・弾速
 	XMFLOAT3 position = {};
 	XMFLOAT3 bulletVec = {};

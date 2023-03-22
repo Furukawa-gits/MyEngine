@@ -302,6 +302,9 @@ void Boss::bossAriveMove()
 		isArive = false;
 		fallDownCount = 0;
 		deathRotSpeed = 0.5f;
+
+		//íeÇ‡è¡Ç∑
+		Bullets.clear();
 	}
 
 	bossSpriteUpdata();
