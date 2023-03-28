@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "FbxLoader.h"
 #include "../camera/Camera.h"
+#include "../Light/Light.h"
 
 #include <Windows.h>
 #include <wrl.h>
@@ -54,6 +55,7 @@ public:
 
 	static void SetDevice(ID3D12Device* device) { Object3d_FBX::device = device; }
 	static void SetCamera(Camera* camera) { Object3d_FBX::camera = camera; }
+	static void setLight(Light* light) { Object3d_FBX::light = light; }
 
 	void Initialize();
 
@@ -138,9 +140,12 @@ protected:
 	ComPtr<ID3D12Resource> constBufferSkin;
 
 private:
+	//デバイス
 	static ID3D12Device* device;
-
+	//カメラ
 	static Camera* camera;
+	//ライト
+	static Light* light;
 
 	//パイプライン(通常)
 	static ComPtr<ID3D12RootSignature> rootsignature;

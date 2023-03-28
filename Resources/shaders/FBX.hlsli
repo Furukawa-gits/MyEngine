@@ -8,6 +8,12 @@ cbuffer cbuff0 : register(b0)
 	float4 color;
 };
 
+cbuffer cbuff1 : register(b1)
+{
+	float3 lightv;
+	float3 lightcolor;
+}
+
 cbuffer skinning:register(b3)
 {
 	matrix matSkinning[MAX_BONES];
@@ -28,4 +34,5 @@ struct VSOutput
 	float3 normal : NORMAL;
 	float2 uv : TEXCOORD;
 	float4 color : COLOR;
+	float4 worldpos : POSITION;
 };

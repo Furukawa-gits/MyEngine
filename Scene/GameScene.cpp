@@ -209,7 +209,15 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	//スプライト生成
 	Load_Sprites();
 
+	//ライト生成
+	Light::Staticinitialize(directx->dev.Get());
+	light = Light::Create();
+	light->SetLightColor({ 1,1,1 });
+	light->SetLightDir({ 0,-1,0,0 });
+
 	//3dオブジェクト生成
+	Object3d_FBX::setLight(light);
+
 	Object3d_FBX::SetDevice(directx->dev.Get());
 
 	Object3d_FBX::CreateGraphicsPipeline();
@@ -1086,6 +1094,9 @@ void GameScene::Updata()
 	//マウス座標更新
 	MOUSE_POS = { (float)input->mouse_p.x,(float)input->mouse_p.y,0.0f };
 
+	//ライト更新
+	light->Update();
+
 	//シーン切り替え
 
 	//タイトル画面
@@ -1104,8 +1115,6 @@ void GameScene::Updata()
 	}
 
 	sample_back->SpriteUpdate();
-
-	//camera->Updata();
 
 	debugs_print();
 }

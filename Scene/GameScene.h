@@ -128,6 +128,9 @@ private:
 	Object3d_FBX* skySphere = nullptr;
 	Object3d_FBX* cameraobj = nullptr;
 
+	//ライト
+	Light* light = nullptr;
+
 	Camera* stagingCamera = nullptr;
 
 	//プレイヤー
