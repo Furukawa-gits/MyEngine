@@ -21,6 +21,8 @@ public:
 
 	void Move();
 
+	void outArea();
+
 	void boostMove();
 
 	void cameraMove();
@@ -100,6 +102,14 @@ public:
 	//追従カメラ
 	FollowCamera* followCamera = nullptr;
 
+	//場外判定用変数
+	const XMFLOAT3 groundPosition = { 0,-180,0 };		//地面の座標(当たり判定用)
+	float lengthForPlayerPosition;						//原点からの距離
+	bool isOutArea = false;								//エリア外にいるかどうか
+	int outAreaCount = 0;								//エリア外にいる時間(戻るとリセット)
+	bool isCautionDraw = false;							//エリア外警告の描画フラグ
+	SingleSprite outAreaCaution;						//エリア外警告
+
 	//ターゲットスプライト
 	SingleSprite targetFirst;
 	int targetCount = 0;
@@ -132,6 +142,7 @@ public:
 	//入力
 	static dxinput* input;
 
+	//当たり判定
 	Sphere playerCollision;
 
 	//生存フラグ

@@ -54,6 +54,11 @@ void Player::init(dxinput* input, directX* directx)
 	gaugeFrame.position = { 0,629,0 };
 	gaugeFrame.GenerateSprite("gaugeFrame.png");
 
+	outAreaCaution.anchorpoint = { 0.5f,0.5f };
+	outAreaCaution.size = { 430,100 };
+	outAreaCaution.position = { 640,360,0 };
+	outAreaCaution.GenerateSprite("outAreaCaution.png");
+
 	//ミサイルの残りゲージ
 	for (int i = 0; i < 8; i++)
 	{
@@ -110,6 +115,11 @@ void Player::Move()
 		return;
 	}
 
+	if (isStop)
+	{
+		return;
+	}
+
 	//煙パーティクル更新
 	moveParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
 		{
@@ -122,11 +132,12 @@ void Player::Move()
 
 	moveParticlesCount++;
 
-	if (moveParticlesCount % 20 == 0)
+	if (moveParticlesCount % 10 == 0)
 	{
 		std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
 		newparticle->generate();
-		newparticle->set(30, playerObject->getPosition(), { 0,0,0 }, { 0,0,0 }, 2.0, 0.0);
+		newparticle->set(25, playerObject->getPosition(), { 0,0,0 }, { 0,0,0 }, 2.0, 0.0);
+		newparticle->color = { 0.5f,0.5f,0.5f,1.0f };
 
 		moveParticles.push_back(std::move(newparticle));
 	}
@@ -143,11 +154,6 @@ void Player::Move()
 		playerObject->getPosition().z,
 		1.0f
 	};
-
-	if (isStop)
-	{
-		return;
-	}
 
 	//自動で前に進み続ける
 	playerObject->addMoveFront(followCamera->getFrontVec());
@@ -185,6 +191,41 @@ void Player::Move()
 
 	//前への移動量を計算
 	followCamera->setFrontVec(moveSpeed);
+}
+
+void Player::outArea()
+{
+	XMFLOAT3 ppos = playerObject->getPosition();
+	//原点からの距離を計算
+	lengthForPlayerPosition = sqrtf(powf(ppos.x, 2) + powf(ppos.y, 2) + powf(ppos.z, 2));
+
+	if (lengthForPlayerPosition >= 430 || ppos.y <= groundPosition.y)
+	{
+		isOutArea = true;
+	}
+	else
+	{
+		isOutArea = false;
+		isCautionDraw = false;
+		outAreaCount = 0;
+	}
+
+	if (isOutArea)
+	{
+		outAreaCount++;
+
+		if (outAreaCount % 10 == 0)
+		{
+			isCautionDraw = !isCautionDraw;
+		}
+	}
+
+	if (outAreaCount >= 1000)
+	{
+		playerHP = 0;
+	}
+
+	outAreaCaution.SpriteUpdate();
 }
 
 void Player::boostMove()
@@ -474,6 +515,9 @@ void Player::update()
 	//移動
 	Move();
 
+	//エリア外判定
+	outArea();
+
 	//ターゲットカーソルの処理
 	targetUpdate();
 
@@ -547,7 +591,7 @@ void Player::targetUpdate()
 	if (isStop)
 	{
 		return;
-}
+	}
 
 	if (!isArive)
 	{
@@ -565,7 +609,7 @@ void Player::targetUpdate()
 
 	//リリース時のみマウスカーソル固定
 #ifdef _DEBUG
-
+	SetCursorPos(mouseOffsetX, mouseOffsetY);
 #else
 	SetCursorPos(mouseOffsetX, mouseOffsetY);
 #endif // DEBUG
@@ -754,11 +798,15 @@ void Player::reset()
 void Player::draw3D(directX* directx)
 {
 	//プレイヤー本体の描画
-	if (isInvisible == 1)
+	if (isInvisible == -1)
+	{
+		playerObject->Draw(directx->cmdList.Get());
+	}
+
+	if (isStop)
 	{
 		return;
 	}
-	playerObject->Draw(directx->cmdList.Get());
 
 	//移動エフェクト
 	for (std::unique_ptr<SingleParticle>& newparticle : moveParticles)
@@ -822,4 +870,9 @@ void Player::draw2D(directX* directx, int targetnum)
 	gaugeFrame.DrawSprite(directx->cmdList.Get());
 	boostGaugeBar.DrawSprite(directx->cmdList.Get());
 	HPGaugeBar.DrawSprite(directx->cmdList.Get());
+
+	if (isCautionDraw)
+	{
+		outAreaCaution.DrawSprite(directx->cmdList.Get());
+	}
 }

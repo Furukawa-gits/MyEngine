@@ -242,8 +242,8 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	ground = new Object3d_FBX;
 	ground->Initialize();
 	ground->SetModel(groundModel);
-	ground->SetPosition({ 0,-180,0 });
-	ground->SetScale({ 0.8f,0.8f,0.8f });
+	ground->SetPosition(player_p->groundPosition);
+	ground->SetScale({ 0.5f,0.5f,0.5f });
 
 	cameraobj = new Object3d_FBX;
 	cameraobj->Initialize();
@@ -1411,7 +1411,7 @@ void GameScene::tutorial()
 		ButtonEase_x.reSet();
 		scene = sceneType::clear;
 	}
-	if (player_p->playerHP <= 0)
+	if (!player_p->isArive && !player_p->isOverStaging && player_p->playerHP <= 0)
 	{
 		isMoveScreen = true;
 		isScreenEase = true;
