@@ -110,6 +110,27 @@ void Player::Move()
 		return;
 	}
 
+	//煙パーティクル更新
+	moveParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
+		{
+			return newparticle->getIsActive() == false;
+		});
+	for (std::unique_ptr<SingleParticle>& newparticle : moveParticles)
+	{
+		newparticle->updata();
+	}
+
+	moveParticlesCount++;
+
+	if (moveParticlesCount % 20 == 0)
+	{
+		std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
+		newparticle->generate();
+		newparticle->set(30, playerObject->getPosition(), { 0,0,0 }, { 0,0,0 }, 2.0, 0.0);
+
+		moveParticles.push_back(std::move(newparticle));
+	}
+
 	//ブースト(仮)
 	boostMove();
 
@@ -526,7 +547,7 @@ void Player::targetUpdate()
 	if (isStop)
 	{
 		return;
-	}
+}
 
 	if (!isArive)
 	{
@@ -544,7 +565,7 @@ void Player::targetUpdate()
 
 	//リリース時のみマウスカーソル固定
 #ifdef _DEBUG
-	
+
 #else
 	SetCursorPos(mouseOffsetX, mouseOffsetY);
 #endif // DEBUG
@@ -733,9 +754,17 @@ void Player::reset()
 void Player::draw3D(directX* directx)
 {
 	//プレイヤー本体の描画
-	if (isInvisible == -1)
+	if (isInvisible == 1)
 	{
-		playerObject->Draw(directx->cmdList.Get());
+		return;
+	}
+	playerObject->Draw(directx->cmdList.Get());
+
+	//移動エフェクト
+	for (std::unique_ptr<SingleParticle>& newparticle : moveParticles)
+	{
+		newparticle->setPiplineAddBlend();
+		newparticle->drawSpecifyTex("effect1.png");
 	}
 
 	//通常弾の描画(ユニークリスト)
@@ -743,12 +772,13 @@ void Player::draw3D(directX* directx)
 	{
 		bullet->draw(directx);
 	}
-	//ミサイルの更新(ユニークリスト)
+	//ミサイルの描画(ユニークリスト)
 	for (std::unique_ptr<Missile>& missile : missilesList)
 	{
 		missile->draw(directx);
 	}
 
+	//撃墜エフェクト
 	for (std::unique_ptr<SingleParticle>& newparticle : smokeParticles)
 	{
 		newparticle->drawSpecifyTex("smoke.png");

@@ -114,6 +114,10 @@ public:
 	SingleSprite boostGaugeBar;
 	SingleSprite gaugeFrame;
 
+	//ジェットエンジンエフェクト
+	std::list<std::unique_ptr<SingleParticle>> moveParticles;
+	int moveParticlesCount = 0;
+
 	//ダメージ表現
 	SingleSprite damage;
 
