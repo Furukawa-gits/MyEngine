@@ -124,9 +124,14 @@ private:
 	//3dオブジェクト
 	Model* model = nullptr;
 	Model* SkyModel = nullptr;
+	Model* groundModel = nullptr;
 	Object3d_FBX* object = nullptr;
 	Object3d_FBX* skySphere = nullptr;
+	Object3d_FBX* ground = nullptr;
 	Object3d_FBX* cameraobj = nullptr;
+
+	//スカイドームの回転
+	float skyShpereRotY = 0.0002f;
 
 	//ライト
 	Light* light = nullptr;

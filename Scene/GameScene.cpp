@@ -11,9 +11,11 @@ GameScene::~GameScene()
 {
 	delete(object);
 	delete(skySphere);
+	delete(ground);
 	delete(cameraobj);
 	delete(model);
 	delete(SkyModel);
+	delete(groundModel);
 
 	enemyList.clear();
 
@@ -226,6 +228,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	model = FbxLoader::GetInstance()->LoadmodelFromFile("boneTest");
 	SkyModel = FbxLoader::GetInstance()->LoadmodelFromFile("skySphere");
+	groundModel = FbxLoader::GetInstance()->LoadmodelFromFile("floar");
 
 	//プレイヤー初期化
 	player_p = std::make_unique<Player>();
@@ -235,6 +238,12 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	skySphere->Initialize();
 	skySphere->SetModel(SkyModel);
 	skySphere->SetScale({ 8.0f,8.0f,8.0f });
+
+	ground = new Object3d_FBX;
+	ground->Initialize();
+	ground->SetModel(groundModel);
+	ground->SetPosition({ 0,-180,0 });
+	ground->SetScale({ 0.8f,0.8f,0.8f });
 
 	cameraobj = new Object3d_FBX;
 	cameraobj->Initialize();
@@ -522,6 +531,13 @@ void GameScene::Play_updata()
 	//パーティクルの共通カメラを設定
 	SingleParticle::setCamera(player_p->followCamera);
 
+	//スカイドーム更新
+	skySphere->setRotMatrix(0, 0, skyShpereRotY);
+	skySphere->Update();
+
+	//地面更新
+	ground->Update();
+
 	//チュートリアル
 	if (stageNum == 0)
 	{
@@ -601,9 +617,6 @@ void GameScene::Play_updata()
 
 		targetnum = 0;
 	}
-
-	//スカイドーム
-	skySphere->Update();
 
 	//マウスカーソル非表示
 	ShowCursor(false);
@@ -973,6 +986,7 @@ void GameScene::PlayDraw3d()
 		return;
 	}
 
+	ground->Draw(directx->cmdList.Get());
 	skySphere->Draw(directx->cmdList.Get());
 
 	//プレイヤー描画
@@ -1051,6 +1065,7 @@ void GameScene::ResultDraw3d()
 		return;
 	}
 
+	ground->Draw(directx->cmdList.Get());
 	skySphere->Draw(directx->cmdList.Get());
 
 	//プレイヤー描画
@@ -1370,9 +1385,6 @@ void GameScene::tutorial()
 
 		targetnum = 0;
 	}
-
-	//スカイドーム
-	skySphere->Update();
 
 	//マウスカーソル非表示
 	ShowCursor(false);
