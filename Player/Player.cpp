@@ -55,7 +55,7 @@ void Player::init(dxinput* input, directX* directx)
 	gaugeFrame.GenerateSprite("gaugeFrame.png");
 
 	outAreaCaution.anchorpoint = { 0.5f,0.5f };
-	outAreaCaution.size = { 430,100 };
+	outAreaCaution.size = { 645,150 };
 	outAreaCaution.position = { 640,360,0 };
 	outAreaCaution.GenerateSprite("outAreaCaution.png");
 
@@ -79,7 +79,6 @@ void Player::init(dxinput* input, directX* directx)
 	playerObject->SetScale({ 1,1,1 });
 	playerObject->SetScale({ 0.02f,0.02f,0.02f });
 	playerObject->setSpeed(2.0f);
-	//Player_object->PlayAnimation();
 	playerObject->setColor({ 1,1,1,1 });
 
 	followCamera = new FollowCamera();
@@ -195,21 +194,26 @@ void Player::Move()
 
 void Player::outArea()
 {
+	//プレイヤーの座標
 	XMFLOAT3 ppos = playerObject->getPosition();
+
 	//原点からの距離を計算
 	lengthForPlayerPosition = sqrtf(powf(ppos.x, 2) + powf(ppos.y, 2) + powf(ppos.z, 2));
 
-	if (lengthForPlayerPosition >= 430 || ppos.y <= groundPosition.y)
+	//天球の外or地面に近いなら警告
+	if (lengthForPlayerPosition >= 400 || ppos.y <= groundPosition.y - 30)
 	{
 		isOutArea = true;
 	}
 	else
 	{
+		//エリア内に戻ったらリセット
 		isOutArea = false;
 		isCautionDraw = false;
 		outAreaCount = 0;
 	}
 
+	//エリア外にいる時間をカウント
 	if (isOutArea)
 	{
 		outAreaCount++;
@@ -220,11 +224,13 @@ void Player::outArea()
 		}
 	}
 
+	//警告を無視し続ける場合は死亡
 	if (outAreaCount >= 1000)
 	{
 		playerHP = 0;
 	}
 
+	//警告スプライトの更新
 	outAreaCaution.SpriteUpdate();
 }
 
