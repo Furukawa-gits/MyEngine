@@ -136,7 +136,7 @@ void Player::Move()
 		std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
 		newparticle->generate();
 		newparticle->set(25, playerObject->getPosition(), { 0,0,0 }, { 0,0,0 }, 2.0, 0.0);
-		newparticle->color = { 0.5f,0.5f,0.5f,1.0f };
+		newparticle->color = { 0.5f,0.5f,0.5f,0.5f };
 
 		moveParticles.push_back(std::move(newparticle));
 	}

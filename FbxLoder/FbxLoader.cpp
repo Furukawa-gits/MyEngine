@@ -120,8 +120,6 @@ void FbxLoader::ParseMesh(Model* model, FbxNode* fbxNode)
 {
 	//ノードのメッシュ読み取り
 	FbxMesh* fbxMesh = fbxNode->GetMesh();
-	//頂点座標読み取り
-	//ParseMeshVertices(model, fbxMesh);
 	//面を構成するデータの読み取り
 	ParseMeshFaces(model, fbxMesh);
 	//マテリアルの読み取り
@@ -172,7 +170,6 @@ void FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
 
 	//vertices のサイズを ポリゴン数 * 1ポリゴン当たりの頂点数に変更
 	Model::VertexPosNormalUvSkin vert{};
-	//model->vertices.resize(polygonCount * 3, vert);
 
 	for (int i = 0; i < polygonCount; i++)
 	{
@@ -187,7 +184,6 @@ void FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
 			int index = fbxMesh->GetPolygonVertex(i, j);
 			assert(index >= 0);
 
-			//Model::VertexPosNormalUvSkin& vertex = vertices[index];
 			Model::VertexPosNormalUvSkin vertex = {};
 
 			//頂点座標
