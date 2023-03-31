@@ -121,7 +121,7 @@ void FbxLoader::ParseMesh(Model* model, FbxNode* fbxNode)
 	//ノードのメッシュ読み取り
 	FbxMesh* fbxMesh = fbxNode->GetMesh();
 	//頂点座標読み取り
-	ParseMeshVertices(model, fbxMesh);
+	//ParseMeshVertices(model, fbxMesh);
 	//面を構成するデータの読み取り
 	ParseMeshFaces(model, fbxMesh);
 	//マテリアルの読み取り
@@ -162,13 +162,25 @@ void FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
 
 	const int textureUVCount = fbxMesh->GetTextureUVCount();
 
+	const int controlpointsCount = fbxMesh->GetControlPointsCount();
+
 	FbxStringList uvNames;
 	fbxMesh->GetUVSetNames(uvNames);
+
+	//頂点座標配列の先頭を取得
+	FbxVector4* pCoord = fbxMesh->GetControlPoints();
+
+	//vertices のサイズを ポリゴン数 * 1ポリゴン当たりの頂点数に変更
+	Model::VertexPosNormalUvSkin vert{};
+	model->vertices.resize(polygonCount * 3, vert);
 
 	for (int i = 0; i < polygonCount; i++)
 	{
 		const int polygonSize = fbxMesh->GetPolygonSize(i);
-		assert(polygonSize <= 4);
+		if (polygonSize > 3)
+		{
+			assert(polygonSize <= 3);
+		}
 
 		for (int j = 0; j < polygonSize; j++)
 		{
@@ -176,6 +188,15 @@ void FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
 			assert(index >= 0);
 
 			Model::VertexPosNormalUvSkin& vertex = vertices[index];
+			//Model::VertexPosNormalUvSkin vertex = {};
+
+			//頂点座標
+			//頂点配列の先頭 + index
+			vertex.pos.x = (float)(*(pCoord + index))[0];
+			vertex.pos.y = (float)(*(pCoord + index))[1];
+			vertex.pos.z = (float)(*(pCoord + index))[2];
+
+			//法線
 			FbxVector4 normal;
 			if (fbxMesh->GetPolygonVertexNormal(i, j, normal))
 			{
@@ -184,6 +205,7 @@ void FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
 				vertex.normal.z = (float)normal[2];
 			}
 
+			//UV
 			if (textureUVCount > 0)
 			{
 				FbxVector2 uvs;
@@ -192,13 +214,17 @@ void FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
 				if (fbxMesh->GetPolygonVertexUV(i, j, uvNames[0], uvs, lUnmappedUV))
 				{
 					vertex.uv.x = (float)uvs[0];
-					vertex.uv.y = (float)uvs[1];
+					vertex.uv.y = 1.0f - (float)uvs[1];
 				}
+
+				int test = 0;
 			}
 
 			if (j < 3)
 			{
 				indices.push_back(index);
+				//vertices.push_back(vertex);
+
 			}
 			else
 			{

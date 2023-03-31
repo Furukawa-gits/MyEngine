@@ -225,7 +225,7 @@ void Player::outArea()
 	}
 
 	//警告を無視し続ける場合は死亡
-	if (outAreaCount >= 1000)
+	if (outAreaCount >= 700)
 	{
 		playerHP = 0;
 	}
@@ -455,7 +455,7 @@ void Player::playerDeathMove()
 	fallRot.z = 0.05;
 	playerObject->setRotMatrix(fallRot.x, fallRot.y, fallRot.z);
 
-	playerObject->addMoveFront({ 0,-0.03,0 });
+	//playerObject->addMoveFront({ 0,-0.03,0 });
 
 	fallScale.x -= 0.0000555f;
 	fallScale.y -= 0.0000555f;
@@ -615,7 +615,7 @@ void Player::targetUpdate()
 
 	//リリース時のみマウスカーソル固定
 #ifdef _DEBUG
-	SetCursorPos(mouseOffsetX, mouseOffsetY);
+	
 #else
 	SetCursorPos(mouseOffsetX, mouseOffsetY);
 #endif // DEBUG
@@ -814,6 +814,17 @@ void Player::draw3D(directX* directx)
 		return;
 	}
 
+	//撃墜エフェクト
+	for (std::unique_ptr<SingleParticle>& newparticle : smokeParticles)
+	{
+		newparticle->drawSpecifyTex("smoke.png");
+	}
+
+	if (!isArive)
+	{
+		return;
+	}
+
 	//移動エフェクト
 	for (std::unique_ptr<SingleParticle>& newparticle : moveParticles)
 	{
@@ -830,12 +841,6 @@ void Player::draw3D(directX* directx)
 	for (std::unique_ptr<Missile>& missile : missilesList)
 	{
 		missile->draw(directx);
-	}
-
-	//撃墜エフェクト
-	for (std::unique_ptr<SingleParticle>& newparticle : smokeParticles)
-	{
-		newparticle->drawSpecifyTex("smoke.png");
 	}
 }
 
