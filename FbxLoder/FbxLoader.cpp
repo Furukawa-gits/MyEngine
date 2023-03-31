@@ -172,7 +172,7 @@ void FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
 
 	//vertices のサイズを ポリゴン数 * 1ポリゴン当たりの頂点数に変更
 	Model::VertexPosNormalUvSkin vert{};
-	model->vertices.resize(polygonCount * 3, vert);
+	//model->vertices.resize(polygonCount * 3, vert);
 
 	for (int i = 0; i < polygonCount; i++)
 	{
@@ -187,8 +187,8 @@ void FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
 			int index = fbxMesh->GetPolygonVertex(i, j);
 			assert(index >= 0);
 
-			Model::VertexPosNormalUvSkin& vertex = vertices[index];
-			//Model::VertexPosNormalUvSkin vertex = {};
+			//Model::VertexPosNormalUvSkin& vertex = vertices[index];
+			Model::VertexPosNormalUvSkin vertex = {};
 
 			//頂点座標
 			//頂点配列の先頭 + index
@@ -216,25 +216,11 @@ void FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
 					vertex.uv.x = (float)uvs[0];
 					vertex.uv.y = 1.0f - (float)uvs[1];
 				}
-
-				int test = 0;
 			}
 
-			if (j < 3)
-			{
-				indices.push_back(index);
-				//vertices.push_back(vertex);
-
-			}
-			else
-			{
-				int index2 = indices[indices.size() - 1];
-				int index3 = index;
-				int index0 = indices[indices.size() - 3];
-				indices.push_back(index2);
-				indices.push_back(index3);
-				indices.push_back(index0);
-			}
+			//頂点とインデックスを動的に増やす
+			indices.push_back(vertices.size());
+			vertices.push_back(vertex);
 		}
 	}
 }
