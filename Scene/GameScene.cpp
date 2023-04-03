@@ -444,6 +444,10 @@ void GameScene::Select_updata()
 		{
 			//プレイヤーのリセット
 			player_p->reset();
+			player_p->cameraMoveCount = 0;
+			player_p->boostCount = 0;
+			player_p->normalShotCount = 0;
+			player_p->missileCount = 0;
 			isMoveText = true;
 			isBoostText = false;
 			isShotText = false;
