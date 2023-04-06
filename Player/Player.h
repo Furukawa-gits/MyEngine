@@ -121,6 +121,7 @@ public:
 
 	//HPゲージ
 	SingleSprite HPGaugeBar;
+	SingleSprite dangarHPGaugeBar;
 	SingleSprite boostGaugeBar;
 	SingleSprite gaugeFrame;
 
@@ -147,8 +148,14 @@ public:
 
 	//生存フラグ
 	bool isArive = false;
+
+	//HP
 	int playerHP = 10;
 	const int maxHP = 10;
+
+	//HPが危険になった時の警告
+	bool isDangerHP = false;
+	int cautionHPCount = 0;
 
 	//ブースト
 	bool isBoost = false;

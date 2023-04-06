@@ -41,17 +41,22 @@ void Player::init(dxinput* input, directX* directx)
 
 	HPGaugeBar.anchorpoint = { 0,0 };
 	HPGaugeBar.size = { 50,20 };
-	HPGaugeBar.position = { 20,670,0 };
+	HPGaugeBar.position = { 20,640,0 };
 	HPGaugeBar.GenerateSprite("playerHPGauge.png");
+
+	dangarHPGaugeBar.anchorpoint = { 0,0 };
+	dangarHPGaugeBar.size = { (float)maxHP * 40,20 };
+	dangarHPGaugeBar.position = { 20,640,0 };
+	dangarHPGaugeBar.GenerateSprite("bossHPGauge.png");
 
 	boostGaugeBar.anchorpoint = { 0,0 };
 	boostGaugeBar.size = { 50,20 };
-	boostGaugeBar.position = { 20,630,0 };
+	boostGaugeBar.position = { 20,590,0 };
 	boostGaugeBar.GenerateSprite("boostGauge.png");
 
 	gaugeFrame.anchorpoint = { 0,0 };
-	gaugeFrame.size = { 470,62 };
-	gaugeFrame.position = { 0,629,0 };
+	gaugeFrame.size = { 500,120 };
+	gaugeFrame.position = { 0,550,0 };
 	gaugeFrame.GenerateSprite("gaugeFrame.png");
 
 	outAreaCaution.anchorpoint = { 0.5f,0.5f };
@@ -567,11 +572,29 @@ void Player::update()
 	HPGaugeBar.SpriteTransferVertexBuffer();
 	HPGaugeBar.SpriteUpdate();
 
-	boostGaugeBar.size = { (float)boostGauge * 0.5f,20 };
+	boostGaugeBar.size = { (float)boostGauge / 1.5f,20 };
 	boostGaugeBar.SpriteTransferVertexBuffer();
 	boostGaugeBar.SpriteUpdate();
 
+	dangarHPGaugeBar.SpriteTransferVertexBuffer();
+	dangarHPGaugeBar.SpriteUpdate();
+
 	gaugeFrame.SpriteUpdate();
+
+	if (playerHP < 4)
+	{
+		cautionHPCount++;
+
+		if (cautionHPCount % 7 == 0)
+		{
+			isDangerHP = !isDangerHP;
+		}
+	}
+	else
+	{
+		cautionHPCount = 0;
+		isDangerHP = false;
+	}
 
 	if (playerHP <= 0)
 	{
@@ -761,6 +784,8 @@ void Player::reset()
 	armorTime = 0;
 	isArmor = false;
 	isInvisible = -1;
+	isDangerHP = false;
+	cautionHPCount = 0;
 	playerObject->SetPosition({ 0,5,0 });
 	playerObject->SetScale({ 0.02f,0.02f,0.02f });
 	playerObject->setRotMatrix(XMMatrixIdentity());
@@ -880,6 +905,10 @@ void Player::draw2D(directX* directx, int targetnum)
 
 	gaugeFrame.DrawSprite(directx->cmdList.Get());
 	boostGaugeBar.DrawSprite(directx->cmdList.Get());
+	if (isDangerHP)
+	{
+		dangarHPGaugeBar.DrawSprite(directx->cmdList.Get());
+	}
 	HPGaugeBar.DrawSprite(directx->cmdList.Get());
 
 	if (isCautionDraw)
