@@ -487,14 +487,6 @@ void uniteBoss::uniteBossInit()
 	deathRotSpeed = 0.1f;
 
 	uniteParts::setStaticData(&position);
-
-	//パーツ初期化＆親オブジェクト設定
-	for (int i = 0; i < unitNum; i++)
-	{
-		std::unique_ptr<uniteParts> newParts = std::make_unique<uniteParts>();
-		newParts->partsInit(i);
-		partsList.push_back(std::move(newParts));
-	}
 }
 
 //更新
@@ -888,10 +880,16 @@ void uniteBoss::uniteBossSet()
 	uniteBossCamera->SetTarget(position);
 	Object3d_FBX::SetCamera(uniteBossCamera);
 
-	for (std::unique_ptr<uniteParts>& parts : partsList)
+	partsList.clear();
+
+	//パーツ初期化＆親オブジェクト設定
+	for (int i = 0; i < unitNum; i++)
 	{
-		parts->partsSet({ 0,0,0 }, (float)(rand() % 360), (float)(rand() % 360));
-		parts->angleSpeed = 0.05f;
+		std::unique_ptr<uniteParts> newParts = std::make_unique<uniteParts>();
+		newParts->partsInit(i);
+		newParts->partsSet({ 0,0,0 }, (float)(rand() % 360), (float)(rand() % 360));
+		newParts->angleSpeed = 0.05f;
+		partsList.push_back(std::move(newParts));
 	}
 
 	isSelectPattern = true;

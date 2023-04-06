@@ -921,6 +921,7 @@ void GameScene::Result_updata()
 			startButton.size = { 340,50 };
 			startButton.SpriteTransferVertexBuffer();
 			isPushStart = false;
+			selects[2].position = { 640,420,0 };
 			scene = sceneType::title;
 		}
 	}
