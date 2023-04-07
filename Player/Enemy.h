@@ -104,7 +104,7 @@ public:
 	/// 行動パターン変更
 	/// <param name="pattern">行動パターン</param>
 	/// </summary>
-	void changePattern(enemyPattern pattern) { enemyMovePattern = pattern; }
+	void changePattern(enemyPattern pattern);
 
 	//リセット
 	void reSet();

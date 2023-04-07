@@ -51,6 +51,9 @@ public:
 	//プレイヤーの正面ベクトルを取得
 	XMFLOAT3 getPlayerFront() { return followCamera->getFrontVec(); }
 
+	//ターゲットアイコンの座標を取得
+	XMFLOAT3 getTargetPosition() { return targetFirst.position; }
+
 private:
 	static std::unique_ptr<Model> playerModel;
 
@@ -116,8 +119,8 @@ public:
 	int rockOnCount = 0;
 	bool isRockOn = false;
 
-	//Hpスプライト
-	std::vector<SingleSprite> HPUI[10];
+	//ロックオンモードのゲージ
+	SingleSprite rockonGauge[2];
 
 	//HPゲージ
 	SingleSprite HPGaugeBar;

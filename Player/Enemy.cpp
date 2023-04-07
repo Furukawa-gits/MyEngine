@@ -97,6 +97,37 @@ void Enemy::set(XMFLOAT3 pos)
 	isAppear = true;
 }
 
+void Enemy::changePattern(enemyPattern pattern)
+{
+	enemyMovePattern = pattern;
+
+	switch (enemyMovePattern)
+	{
+	case enemyPattern::tutorial:
+		enemyObject->setColor({ 1,1,1,1 });
+		break;
+
+	case enemyPattern::chase:
+		enemyObject->setColor({ 0.3f,1,0.3f,1 });
+		break;
+
+	case enemyPattern::shot:
+		enemyObject->setColor({ 0.2f,0.2f,1,1 });
+		break;
+
+	case enemyPattern::homing:
+		enemyObject->setColor({ 0,1,1,1 });
+		break;
+
+	case enemyPattern::rampage:
+		enemyObject->setColor({ 1,0.2f,0.2f,1 });
+		break;
+
+	default:
+		break;
+	}
+}
+
 void Enemy::reSet()
 {
 	enemyObject->SetPosition(startPosition);

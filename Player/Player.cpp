@@ -23,6 +23,7 @@ void Player::init(dxinput* input, directX* directx)
 {
 	this->input = input;
 
+	//ターゲットアイコン
 	targetFirst.anchorpoint = { 0.5f,0.5f };
 	targetFirst.size = { 40,40 };
 	targetFirst.GenerateSprite("Target.png");
@@ -35,36 +36,53 @@ void Player::init(dxinput* input, directX* directx)
 	targetThird.size = { 80,80 };
 	targetThird.GenerateSprite("Target.png");
 
+	//ロックオンモードのゲージ
+	rockonGauge[0].anchorpoint = { 0.5f,0.5f };
+	rockonGauge[0].size = { 0,20 };
+	rockonGauge[0].position = { 640,420,0 };
+	rockonGauge[0].GenerateSprite("playerHPGauge.png");
+
+	rockonGauge[1].anchorpoint = { 0.5f,0.5f };
+	rockonGauge[1].size = { 0,10 };
+	rockonGauge[1].position = { 640,420,0 };
+	rockonGauge[1].GenerateSprite("boostGauge.png");
+
+	//ダメージエフェクト
 	damage.anchorpoint = { 0,0 };
 	damage.size = { 1280,720 };
 	damage.GenerateSprite("damage.png");
 
+	//HPゲージ
 	HPGaugeBar.anchorpoint = { 0,0 };
 	HPGaugeBar.size = { 50,20 };
 	HPGaugeBar.position = { 20,640,0 };
 	HPGaugeBar.GenerateSprite("playerHPGauge.png");
 
+	//HPバーの警告
 	dangarHPGaugeBar.anchorpoint = { 0,0 };
 	dangarHPGaugeBar.size = { (float)maxHP * 40,20 };
 	dangarHPGaugeBar.position = { 20,640,0 };
 	dangarHPGaugeBar.GenerateSprite("bossHPGauge.png");
 
+	//ブーストゲージ
 	boostGaugeBar.anchorpoint = { 0,0 };
 	boostGaugeBar.size = { 50,20 };
 	boostGaugeBar.position = { 20,590,0 };
 	boostGaugeBar.GenerateSprite("boostGauge.png");
 
+	//上記ゲージのフレーム
 	gaugeFrame.anchorpoint = { 0,0 };
 	gaugeFrame.size = { 500,120 };
 	gaugeFrame.position = { 0,550,0 };
 	gaugeFrame.GenerateSprite("gaugeFrame.png");
 
+	//エリア外警告
 	outAreaCaution.anchorpoint = { 0.5f,0.5f };
 	outAreaCaution.size = { 645,150 };
 	outAreaCaution.position = { 640,360,0 };
 	outAreaCaution.GenerateSprite("outAreaCaution.png");
 
-	//ミサイルの残りゲージ
+	//ミサイルの残り弾数
 	for (int i = 0; i < 8; i++)
 	{
 		remainingMissileNum[i].anchorpoint = { 0.5f,0.5f };
@@ -720,6 +738,14 @@ void Player::targetUpdate()
 		targetCount = 0;
 	}
 
+	rockonGauge[0].size.x = (targetCount - 5) * 2.5f;
+	rockonGauge[1].size.x = (targetCount - 5) * 2.5f;
+
+	rockonGauge[0].SpriteTransferVertexBuffer();
+	rockonGauge[0].SpriteUpdate();
+	rockonGauge[1].SpriteTransferVertexBuffer();
+	rockonGauge[1].SpriteUpdate();
+
 	if (targetCount > 70)
 	{
 		targetFirst.rotation -= 7.0f;
@@ -888,6 +914,12 @@ void Player::draw2D(directX* directx, int targetnum)
 	if (isArmor && armorTime < 5)
 	{
 		damage.DrawSprite(directx->cmdList.Get());
+	}
+
+	if (targetCount > 5 && targetCount <= 70)
+	{
+		rockonGauge[0].DrawSprite(directx->cmdList.Get());
+		rockonGauge[1].DrawSprite(directx->cmdList.Get());
 	}
 
 	if (isRockOn)

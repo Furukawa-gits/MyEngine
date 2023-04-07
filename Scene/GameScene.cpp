@@ -59,7 +59,7 @@ void GameScene::Load_Sprites()
 	stage[1].anchorpoint = { 0.5f,0.5f };
 	stage[1].size = { 128,128 };
 	stage[1].position = { 0,360,0 };
-	stage[1].GenerateSprite("howto.png");
+	stage[1].GenerateSprite("count0.png");
 
 	stage[2].anchorpoint = { 0.5f,0.5f };
 	stage[2].size = { 128,128 };
@@ -159,27 +159,27 @@ void GameScene::Load_Sprites()
 
 	//チュートリアル用のテキスト
 	moveText.anchorpoint = { 0.5f,0.5f };
-	moveText.size = { 250,50 };
+	moveText.size = { 375,75 };
 	moveText.position = { 640,600,0 };
 	moveText.GenerateSprite("moveText.png");
 
 	boostText.anchorpoint = { 0.5f,0.5f };
-	boostText.size = { 265,50 };
+	boostText.size = { 398,75 };
 	boostText.position = { 640,600,0 };
 	boostText.GenerateSprite("boostText.png");
 
 	shotText.anchorpoint = { 0.5f,0.5f };
-	shotText.size = { 200,50 };
+	shotText.size = { 300,75 };
 	shotText.position = { 640,600,0 };
 	shotText.GenerateSprite("shotText.png");
 
 	missileText.anchorpoint = { 0.5f,0.5f };
-	missileText.size = { 315,50 };
+	missileText.size = { 593,94 };
 	missileText.position = { 640,600,0 };
 	missileText.GenerateSprite("missileText.png");
 
 	shootingText.anchorpoint = { 0.5f,0.5f };
-	shootingText.size = { 265,50 };
+	shootingText.size = { 398,75 };
 	shootingText.position = { 640,600,0 };
 	shootingText.GenerateSprite("shootingText.png");
 }
@@ -333,10 +333,10 @@ void GameScene::Title_updata()
 
 	if (isPushStart && !startButtonEase_y.getIsActive())
 	{
-		stage[0].position.x = 640;
+		stage[0].position.x = 640 - 300;
 		isMoveStageIcon = false;
 		isPushStart = false;
-		stageNum = -1;
+		stageNum = 0;
 		selectIconSizeX = 350;
 		scene = sceneType::select;
 	}
@@ -448,6 +448,9 @@ void GameScene::Select_updata()
 			player_p->boostCount = 0;
 			player_p->normalShotCount = 0;
 			player_p->missileCount = 0;
+			player_p->isBoostTutorial = false;
+			player_p->isNormalShot = false;
+			player_p->isHomingMissile = false;
 			isMoveText = true;
 			isBoostText = false;
 			isShotText = false;
@@ -914,6 +917,11 @@ void GameScene::Result_updata()
 			isPushStart = false;
 			selectIconSizeX = 350;
 			selects[2].position = { 640,420,0 };
+			if (stageNum < 3)
+			{
+				stageNum++;
+				stage[0].position.x -= 300;
+			}
 			scene = sceneType::select;
 		}
 		else
@@ -922,6 +930,8 @@ void GameScene::Result_updata()
 			startButton.SpriteTransferVertexBuffer();
 			isPushStart = false;
 			selects[2].position = { 640,420,0 };
+			stageNum = 0;
+			stage[0].position.x = 640 - 300;
 			scene = sceneType::title;
 		}
 	}
@@ -1345,6 +1355,21 @@ void GameScene::tutorial()
 		isShootingText = true;
 	}
 
+	XMFLOAT3 playerTargetPos = player_p->getTargetPosition();
+
+	if (playerTargetPos.y < 100)
+	{
+		playerTargetPos.y = playerTargetPos.y + 40;
+	}
+	else
+	{
+		playerTargetPos.y = playerTargetPos.y - 40;
+	}
+
+	moveText.position = playerTargetPos;
+
+	shotText.position = playerTargetPos;
+
 	moveText.SpriteUpdate();
 	boostText.SpriteUpdate();
 	shotText.SpriteUpdate();
@@ -1407,6 +1432,9 @@ void GameScene::tutorial()
 		isScreenEase = true;
 		isTextEase = false;
 		isShootingText = false;
+		player_p->isBoostTutorial = true;
+		player_p->isNormalShot = true;
+		player_p->isHomingMissile = true;
 		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 40, 720, 0);
 		titleButton.SpriteTransferVertexBuffer();
 		selects[2].position = { 640 - 150,540,0 };
@@ -1521,4 +1549,4 @@ bool GameScene::loadStage()
 	}
 
 	return true;
-}
+	}
