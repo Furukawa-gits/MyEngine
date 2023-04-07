@@ -53,7 +53,7 @@ void uniteParts::setStaticData(XMFLOAT3* motherposition)
 	motherPosition = motherposition;
 
 	//モデル読み込み
-	partsModel.reset(FbxLoader::GetInstance()->LoadmodelFromFile("boss"));
+	partsModel.reset(FbxLoader::GetInstance()->LoadmodelFromFile("testEnemy_02"));
 }
 
 void uniteParts::partsUpdata()
@@ -709,6 +709,10 @@ void uniteBoss::uniteBossAriveMove()
 	for (std::unique_ptr<uniteParts>& parts : partsList)
 	{
 		parts->partsUpdata();
+		if (!parts->isArive)
+		{
+			parts->Bullets.clear();
+		}
 	}
 
 	//全てのパーツが破壊されたかどうか
