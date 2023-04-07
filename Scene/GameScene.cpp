@@ -122,6 +122,7 @@ void GameScene::Load_Sprites()
 	countDownSprite[2].SpriteUpdate();
 #pragma endregion //カウントダウンアイコン
 
+	//スタートテキスト
 	playStart.anchorpoint = { 0.5f,0.5f };
 	playStart.size = { 500,125 };
 	playStart.position = { 640,360,0 };
@@ -157,7 +158,7 @@ void GameScene::Load_Sprites()
 	selectButton.position = { 640 - 150,500,0 };
 	selectButton.SpriteTransferVertexBuffer();
 
-	//チュートリアル用のテキスト
+#pragma region	//チュートリアル用のテキスト
 	moveText.anchorpoint = { 0.5f,0.5f };
 	moveText.size = { 375,75 };
 	moveText.position = { 640,600,0 };
@@ -182,6 +183,19 @@ void GameScene::Load_Sprites()
 	shootingText.size = { 398,75 };
 	shootingText.position = { 640,600,0 };
 	shootingText.GenerateSprite("shootingText.png");
+#pragma endregion //チュートリアル用のテキスト
+
+#pragma region //ウェーブの表示
+	enemyWaveBar.anchorpoint = { 0.5f,0.0f };
+	enemyWaveBar.size = { 10,400 };
+	enemyWaveBar.position = { 1000,160,0 };
+	enemyWaveBar.GenerateSprite("enemyWaveBar.png");
+
+	playerWaveIcon.anchorpoint = { 0.5f,0.5f };
+	playerWaveIcon.size = { 240,150 };
+	playerWaveIcon.GenerateSprite("playerWaveIcon");
+
+#pragma endregion //ウェーブの表示
 }
 
 //初期化
@@ -1047,6 +1061,11 @@ void GameScene::PlayDraw2d()
 		playStart.DrawSprite(directx->cmdList.Get());
 	}
 
+	if (stageNum > 0)
+	{
+
+	}
+
 	if (isTutorial)
 	{
 		if (isMoveText)
@@ -1478,7 +1497,7 @@ bool GameScene::loadStage()
 		return false;
 #endif
 
-	}
+}
 
 	//チュートリアルのテキストを表示しないようにする
 	isMoveText = false;
@@ -1548,5 +1567,10 @@ bool GameScene::loadStage()
 		}
 	}
 
-	return true;
+	for (int i = 0; i < stageLevel; i++)
+	{
+
 	}
+
+	return true;
+}

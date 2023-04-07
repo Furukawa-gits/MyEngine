@@ -231,6 +231,12 @@ private:
 	//現在のステージレベル(敵を全滅させると1つ上がる)
 	int nowStageLevel = 1;
 
+	SingleSprite enemyWaveBar;
+	SingleSprite playerWaveIcon;
+	std::list<std::unique_ptr<SingleSprite>> enemyWaveIcons;
+
+	float nextWaveDis = 0;
+
 	//ステージごとの最大レベル(ここまで到達するとボス出現)
 	int stageLevel = 1;
 
