@@ -187,13 +187,16 @@ void GameScene::Load_Sprites()
 
 #pragma region //ウェーブの表示
 	enemyWaveBar.anchorpoint = { 0.5f,0.0f };
-	enemyWaveBar.size = { 10,400 };
-	enemyWaveBar.position = { 1000,160,0 };
+	enemyWaveBar.size = { 10,totalWaveBarLength };
+	enemyWaveBar.position = { waveBarPosX,360 - totalWaveBarLength / 2,0 };
 	enemyWaveBar.GenerateSprite("enemyWaveBar.png");
+	enemyWaveBar.SpriteTransferVertexBuffer();
 
 	playerWaveIcon.anchorpoint = { 0.5f,0.5f };
-	playerWaveIcon.size = { 240,150 };
-	playerWaveIcon.GenerateSprite("playerWaveIcon");
+	playerWaveIcon.size = { 120,75 };
+	playerWaveIcon.position = { waveBarPosX + 20,360 - totalWaveBarLength / 2,0 };
+	playerWaveIcon.GenerateSprite("playerWaveIcon.png");
+	playerWaveIcon.SpriteTransferVertexBuffer();
 
 #pragma endregion //ウェーブの表示
 }
@@ -695,6 +698,8 @@ void GameScene::Play_updata()
 	{
 		nowStageLevel++;
 
+		playerWaveIcon.position.y += nextWaveDis;
+
 		//最後のウェーブならボス戦
 		if (nowStageLevel == stageLevel && !isBoss)
 		{
@@ -748,6 +753,19 @@ void GameScene::Play_updata()
 			testUniteBoss->uniteBossUpdata();
 		}
 	}
+
+	//ウェーブUIの更新
+	enemyWaveBar.SpriteTransferVertexBuffer();
+	enemyWaveBar.SpriteUpdate();
+
+	for (std::unique_ptr<SingleSprite>& newsprite : enemyWaveIcons)
+	{
+		newsprite->SpriteTransferVertexBuffer();
+		newsprite->SpriteUpdate();
+	}
+
+	playerWaveIcon.SpriteTransferVertexBuffer();
+	playerWaveIcon.SpriteUpdate();
 
 	//ボスを倒したorプレイヤーが死んだらリザルト
 	if (isBoss && (!testBoss->isDraw) && (!testUniteBoss->isDraw))
@@ -1039,7 +1057,10 @@ void GameScene::PlayDraw2d()
 		return;
 	}
 
-	player_p->draw2D(directx, targetnum);
+	if (stageNum > 0)
+	{
+		player_p->draw2D(directx, targetnum);
+	}
 
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
@@ -1063,7 +1084,14 @@ void GameScene::PlayDraw2d()
 
 	if (stageNum > 0)
 	{
+		enemyWaveBar.DrawSprite(directx->cmdList.Get());
 
+		for (std::unique_ptr<SingleSprite>& newsprite : enemyWaveIcons)
+		{
+			newsprite->DrawSprite(directx->cmdList.Get());
+		}
+
+		playerWaveIcon.DrawSprite(directx->cmdList.Get());
 	}
 
 	if (isTutorial)
@@ -1088,6 +1116,8 @@ void GameScene::PlayDraw2d()
 		{
 			shootingText.DrawSprite(directx->cmdList.Get());
 		}
+
+		player_p->draw2D(directx, targetnum);
 	}
 }
 
@@ -1497,7 +1527,7 @@ bool GameScene::loadStage()
 		return false;
 #endif
 
-}
+	}
 
 	//チュートリアルのテキストを表示しないようにする
 	isMoveText = false;
@@ -1567,10 +1597,31 @@ bool GameScene::loadStage()
 		}
 	}
 
-	for (int i = 0; i < stageLevel; i++)
-	{
+	//アイコン同士の距離を計算
+	nextWaveDis = totalWaveBarLength / (stageLevel - 1);
 
+	enemyWaveIcons.clear();
+
+	playerWaveIcon.position.y = 360 - totalWaveBarLength / 2;
+
+	for (int i = 0; i < stageLevel - 1; i++)
+	{
+		std::unique_ptr<SingleSprite> newicon = std::make_unique<SingleSprite>();
+		newicon->anchorpoint = { 0.5f,0.5f };
+		newicon->size = { 50,50 };
+		newicon->position = { waveBarPosX,(360 - totalWaveBarLength / 2) + i * nextWaveDis,0 };
+		newicon->GenerateSprite("enemyWaveIcon.png");
+		newicon->SpriteTransferVertexBuffer();
+		enemyWaveIcons.push_back(std::move(newicon));
 	}
+
+	std::unique_ptr<SingleSprite> newicon = std::make_unique<SingleSprite>();
+	newicon->anchorpoint = { 0.5f,0.5f };
+	newicon->size = { 100,100 };
+	newicon->position = { waveBarPosX,(360 - totalWaveBarLength / 2) + totalWaveBarLength,0 };
+	newicon->GenerateSprite("bossWaveIcon.png");
+	newicon->SpriteTransferVertexBuffer();
+	enemyWaveIcons.push_back(std::move(newicon));
 
 	return true;
 }

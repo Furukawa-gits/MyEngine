@@ -235,6 +235,8 @@ private:
 	SingleSprite playerWaveIcon;
 	std::list<std::unique_ptr<SingleSprite>> enemyWaveIcons;
 
+	const float totalWaveBarLength = 500;
+	const float waveBarPosX = 1180;
 	float nextWaveDis = 0;
 
 	//ステージごとの最大レベル(ここまで到達するとボス出現)
