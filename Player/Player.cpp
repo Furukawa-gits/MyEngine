@@ -738,8 +738,8 @@ void Player::targetUpdate()
 		targetCount = 0;
 	}
 
-	rockonGauge[0].size.x = (targetCount - 5) * 2.5f;
-	rockonGauge[1].size.x = (targetCount - 5) * 2.5f;
+	rockonGauge[0].size.x = (targetCount - 5) * 3.5f;
+	rockonGauge[1].size.x = (targetCount - 5) * 3.5f;
 
 	rockonGauge[0].SpriteTransferVertexBuffer();
 	rockonGauge[0].SpriteUpdate();
