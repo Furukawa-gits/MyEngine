@@ -473,6 +473,10 @@ void uniteBoss::uniteBossInit()
 	allPartsHitPointGauge.position = { 640,40,0 };
 	allPartsHitPointGauge.GenerateSprite("partsHPGauge.png");
 
+	miniMapEnemy.anchorpoint = { 0.5f,0.5f };
+	miniMapEnemy.size = { 8,8 };
+	miniMapEnemy.GenerateSprite("bossHPGauge.png");
+
 	enemyObject = new Object3d_FBX;
 	enemyObject->Initialize();
 	enemyObject->SetModel(uniteBossModel.get());
@@ -539,6 +543,21 @@ void uniteBoss::uniteBossUpdata()
 	{
 		isOutScreen = false;
 	}
+
+	//ミニマップアイコン更新
+	XMFLOAT3 uniteBossPosition = position;
+
+	//上から見た位置なので X・Z座標
+	XMFLOAT3 minimapPosition =
+	{
+		(uniteBossPosition.x * 0.21f) + Enemy::miniMapPosition.x,
+		(uniteBossPosition.z * 0.21f) + Enemy::miniMapPosition.x,
+		0
+	};
+
+	miniMapEnemy.position = minimapPosition;
+	miniMapEnemy.SpriteTransferVertexBuffer();
+	miniMapEnemy.SpriteUpdate();
 
 	uniteBossAriveMove();
 

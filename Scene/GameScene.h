@@ -94,6 +94,12 @@ private:
 	void ResultDraw3d();
 	void ResultDraw2d();
 
+	//ウェーブバー描画
+	void drawNowWave();
+
+	//ミニマップ描画
+	void drawMiniMap();
+
 	//ホーミングターゲットのセッティング
 	void checkHitPlayerTarget();
 
@@ -169,43 +175,33 @@ private:
 	//スプライト(各クラスに依存しないやつ)
 	//背景
 	std::unique_ptr<SingleSprite> sample_back;
-
 	//タイトル
 	SingleSprite gameTitle;
-
 	//スタートボタン
 	SingleSprite startButton;
-
 	//ステージアイコン
 	SingleSprite stage[5];
-
 	//セレクトアイコン
 	SingleSprite selects[3];
-
 	float selectIconSizeX = 150;
-
 	//カウントダウン・スタートアイコン
 	SingleSprite countDownSprite[3];
 	SingleSprite playStart;
-
 	//リザルト画面
 	SingleSprite resultScreen[2];
-
 	//クリア画面
 	SingleSprite clearText;
-
 	//ゲームオーバー画面
 	SingleSprite overText;
-
 	//タイトル・セレクトボタン
 	SingleSprite titleButton;
 	SingleSprite selectButton;
-
 	//チュートリアル誘導
 	SingleSprite toTutorial;
-
 	//プレイシーンの時間
 	int totalPlayFlameCount = 0;
+	//ミニマップ
+	SingleSprite miniMap;
 
 	//シーン番号
 	sceneType scene = sceneType::title;

@@ -82,6 +82,11 @@ void Player::init(dxinput* input, directX* directx)
 	outAreaCaution.position = { 640,360,0 };
 	outAreaCaution.GenerateSprite("outAreaCaution.png");
 
+	//ミニマップアイコン
+	miniMapPlayer.anchorpoint = { 0.5f,0.5f };
+	miniMapPlayer.size = { 4,4 };
+	miniMapPlayer.GenerateSprite("playerHPGauge.png");
+
 	//ミサイルの残り弾数
 	for (int i = 0; i < 8; i++)
 	{
@@ -224,7 +229,7 @@ void Player::outArea()
 	lengthForPlayerPosition = sqrtf(powf(ppos.x, 2) + powf(ppos.y, 2) + powf(ppos.z, 2));
 
 	//天球の外or地面に近いなら警告
-	if (lengthForPlayerPosition >= 400 || ppos.y <= groundPosition.y - 30)
+	if (lengthForPlayerPosition >= 400 || ppos.y <= groundPosition.y + 30)
 	{
 		isOutArea = true;
 	}
@@ -599,6 +604,7 @@ void Player::update()
 
 	gaugeFrame.SpriteUpdate();
 
+	//HPが4未満ならHPバー点滅
 	if (playerHP < 4)
 	{
 		cautionHPCount++;
@@ -613,6 +619,21 @@ void Player::update()
 		cautionHPCount = 0;
 		isDangerHP = false;
 	}
+
+	//ミニマップアイコン更新
+	XMFLOAT3 playerPosition = playerObject->getPosition();
+
+	//上から見た位置なので X・Z座標
+	XMFLOAT3 minimapPosition =
+	{
+		(playerPosition.x * 0.21f) + Enemy::miniMapPosition.x,
+		(playerPosition.z * 0.21f) + Enemy::miniMapPosition.x,
+		0
+	};
+
+	miniMapPlayer.position = minimapPosition;
+	miniMapPlayer.SpriteTransferVertexBuffer();
+	miniMapPlayer.SpriteUpdate();
 
 	if (playerHP <= 0)
 	{
@@ -947,4 +968,19 @@ void Player::draw2D(directX* directx, int targetnum)
 	{
 		outAreaCaution.DrawSprite(directx->cmdList.Get());
 	}
+}
+
+void Player::drawMiniMapIcon(directX* directx)
+{
+	if (!isArive)
+	{
+		return;
+	}
+
+	if (isStop)
+	{
+		return;
+	}
+
+	miniMapPlayer.DrawSprite(directx->cmdList.Get());
 }

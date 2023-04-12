@@ -45,6 +45,12 @@ public:
 
 	void draw2D(directX* directx, int targetnum);
 
+	/// <summary>
+	/// ミニマップ描画
+	/// </summary>
+	/// <param name="directx">directX_Bace</param>
+	void drawMiniMapIcon(directX* directx);
+
 	//プレイヤーの位置を取得
 	XMFLOAT3 getPlayerPos() { return playerObject->getPosition(); }
 
@@ -127,6 +133,11 @@ public:
 	SingleSprite dangarHPGaugeBar;
 	SingleSprite boostGaugeBar;
 	SingleSprite gaugeFrame;
+
+	/// <summary>
+	/// ミニマップ上のアイコン
+	/// </summary>
+	SingleSprite miniMapPlayer;
 
 	//ジェットエンジンエフェクト
 	std::list<std::unique_ptr<SingleParticle>> moveParticles;

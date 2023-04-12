@@ -42,6 +42,10 @@ void Boss::bossInit()
 	bossHitPointGauge.position = { 640,40,0 };
 	bossHitPointGauge.GenerateSprite("bossHPGauge.png");
 
+	miniMapEnemy.anchorpoint = { 0.5f,0.5f };
+	miniMapEnemy.size = { 6,6 };
+	miniMapEnemy.GenerateSprite("bossHPGauge.png");
+
 	enemyObject = new Object3d_FBX;
 	enemyObject->Initialize();
 	enemyObject->SetModel(bossModel.get());
@@ -109,6 +113,21 @@ void Boss::bossUpdate(Player* player)
 	{
 		isOutScreen = false;
 	}
+
+	//ミニマップアイコン更新
+	XMFLOAT3 bossPosition = position;
+
+	//上から見た位置なので X・Z座標
+	XMFLOAT3 minimapPosition =
+	{
+		(bossPosition.x * 0.21f) + Enemy::miniMapPosition.x,
+		(bossPosition.z * 0.21f) + Enemy::miniMapPosition.x,
+		0
+	};
+
+	miniMapEnemy.position = minimapPosition;
+	miniMapEnemy.SpriteTransferVertexBuffer();
+	miniMapEnemy.SpriteUpdate();
 
 	bossAriveMove();
 

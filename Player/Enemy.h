@@ -131,6 +131,12 @@ public:
 	/// <param name="directx">directX_Bace</param>
 	void draw2D(directX* directx);
 
+	/// <summary>
+	/// ミニマップ描画
+	/// </summary>
+	/// <param name="directx">directX_Bace</param>
+	void drawMiniMapIcon(directX* directx);
+
 private:
 	/// <summary>
 	/// 出現
@@ -174,7 +180,6 @@ private:
 	//モデル
 	static std::unique_ptr<Model> enemyModelS;
 
-
 	//登場演出時間
 	int enemyArrivalTime;
 	int enemyArrivaCount;
@@ -186,6 +191,9 @@ private:
 public:
 	//オブジェクト
 	Object3d_FBX* enemyObject = nullptr;
+
+	//ミニマップの基準座標
+	static const XMFLOAT3 miniMapPosition;
 
 	//プレイヤーの索敵ライン
 	static const float forPlayer;
@@ -271,4 +279,9 @@ public:
 	int fallDownCount = 0;
 
 	float deathRotSpeed = 1.0f;
+
+	/// <summary>
+	/// ミニマップ上のアイコン
+	/// </summary>
+	SingleSprite miniMapEnemy;
 };

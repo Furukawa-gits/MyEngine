@@ -9,6 +9,7 @@ const float Enemy::forPlayer = 400.0f;
 const XMFLOAT2 Enemy::defaultRockIconSize = { 70.0f,70.0f };
 const XMFLOAT2 Enemy::setRockIconSize = { 180.0f,180.0f };
 const float Enemy::decreaseSize = 9.0f;
+const XMFLOAT3 Enemy::miniMapPosition = { 120,120,0 };
 
 #pragma region 敵本体
 Enemy::Enemy()
@@ -60,6 +61,10 @@ void Enemy::init(enemyPattern pattern)
 	outScreenIcon[1]->anchorpoint = { 0.5f,0.5f };
 	outScreenIcon[1]->size = { 100,100 };
 	outScreenIcon[1]->GenerateSprite("!.png");
+
+	miniMapEnemy.anchorpoint = { 0.5f,0.5f };
+	miniMapEnemy.size = { 4,4 };
+	miniMapEnemy.GenerateSprite("bossHPGauge.png");
 
 	enemyObject = new Object3d_FBX;
 	enemyObject->Initialize();
@@ -526,6 +531,21 @@ void Enemy::updata()
 		isOutScreen = false;
 	}
 
+	//ミニマップアイコン更新
+	XMFLOAT3 enemyPosition = position;
+
+	//上から見た位置なので X・Z座標
+	XMFLOAT3 minimapPosition =
+	{
+		(enemyPosition.x * 0.21f) + Enemy::miniMapPosition.x,
+		(enemyPosition.z * 0.21f) + Enemy::miniMapPosition.x,
+		0
+	};
+
+	miniMapEnemy.position = minimapPosition;
+	miniMapEnemy.SpriteTransferVertexBuffer();
+	miniMapEnemy.SpriteUpdate();
+
 	//敵が生存
 	ariveMove();
 
@@ -791,6 +811,21 @@ void Enemy::draw2D(directX* directx)
 	{
 		rockTarget->DrawSprite(directx->cmdList.Get());
 	}
+}
+
+void Enemy::drawMiniMapIcon(directX* directx)
+{
+	if (!isArive)
+	{
+		return;
+	}
+
+	if (!playerIsArive)
+	{
+		return;
+	}
+
+	miniMapEnemy.DrawSprite(directx->cmdList.Get());
 }
 #pragma endregion
 

@@ -197,8 +197,14 @@ void GameScene::Load_Sprites()
 	playerWaveIcon.position = { waveBarPosX + 20,360 - totalWaveBarLength / 2,0 };
 	playerWaveIcon.GenerateSprite("playerWaveIcon.png");
 	playerWaveIcon.SpriteTransferVertexBuffer();
-
 #pragma endregion //ウェーブの表示
+
+	//ミニマップ
+	miniMap.anchorpoint = { 0.5f,0.5f };
+	miniMap.size = { 200,200 };
+	miniMap.position = Enemy::miniMapPosition;
+	miniMap.GenerateSprite("minimap.png");
+	miniMap.SpriteTransferVertexBuffer();
 }
 
 //初期化
@@ -561,6 +567,9 @@ void GameScene::Play_updata()
 
 	//地面更新
 	ground->Update();
+
+	//ミニマップ
+	miniMap.SpriteUpdate();
 
 	//チュートリアル
 	if (stageNum == 0)
@@ -1082,18 +1091,13 @@ void GameScene::PlayDraw2d()
 		playStart.DrawSprite(directx->cmdList.Get());
 	}
 
-	if (stageNum > 0)
-	{
-		enemyWaveBar.DrawSprite(directx->cmdList.Get());
+	//ウェーブ描画
+	drawNowWave();
 
-		for (std::unique_ptr<SingleSprite>& newsprite : enemyWaveIcons)
-		{
-			newsprite->DrawSprite(directx->cmdList.Get());
-		}
+	//ミニマップ描画
+	drawMiniMap();
 
-		playerWaveIcon.DrawSprite(directx->cmdList.Get());
-	}
-
+	//チュートリアルテキストの都合上、プレイヤーの描画順は分けている
 	if (isTutorial)
 	{
 		if (isMoveText)
@@ -1232,6 +1236,50 @@ void GameScene::Draw2D()
 	//debugtext.DrawAll(directx->cmdList.Get());
 }
 
+void GameScene::drawNowWave()
+{
+	if (stageNum <= 0)
+	{
+		return;
+	}
+
+	if (player_p->isStop)
+	{
+		return;
+	}
+
+	enemyWaveBar.DrawSprite(directx->cmdList.Get());
+
+	for (std::unique_ptr<SingleSprite>& newsprite : enemyWaveIcons)
+	{
+		newsprite->DrawSprite(directx->cmdList.Get());
+	}
+
+	playerWaveIcon.DrawSprite(directx->cmdList.Get());
+
+}
+
+void GameScene::drawMiniMap()
+{
+	if (player_p->isStop)
+	{
+		return;
+	}
+
+	miniMap.DrawSprite(directx->cmdList.Get());
+
+	for (std::unique_ptr<Enemy>& newenemy : enemyList)
+	{
+		newenemy->drawMiniMapIcon(directx);
+	}
+
+	testBoss->drawMiniMapIcon(directx);
+
+	testUniteBoss->drawMiniMapIcon(directx);
+
+	player_p->drawMiniMapIcon(directx);
+}
+
 void GameScene::checkHitPlayerTarget()
 {
 	//通常の敵
@@ -1349,9 +1397,9 @@ void GameScene::tutorial()
 			std::unique_ptr<Enemy> newenemy = std::make_unique<Enemy>();
 			newenemy->init(enemyPattern::tutorial);
 			newenemy->set({
-			(float)(rand() % 50 - 25),
-			(float)(rand() % 30 + 15),
-			(float)(rand() % 50 - 25) });
+			(float)(rand() % 100 - 50),
+			(float)(rand() % 60 + 30),
+			(float)(rand() % 100 - 50) });
 
 			enemyList.push_back(std::move(newenemy));
 		}
@@ -1499,6 +1547,9 @@ void GameScene::tutorial()
 		isScreenEase = true;
 		isTextEase = false;
 		isShootingText = false;
+		player_p->isBoostTutorial = true;
+		player_p->isNormalShot = true;
+		player_p->isHomingMissile = true;
 		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 40, 720, 0);
 		titleButton.SpriteTransferVertexBuffer();
 		selects[2].position = { 640 - 150,540,0 };
@@ -1624,4 +1675,4 @@ bool GameScene::loadStage()
 	enemyWaveIcons.push_back(std::move(newicon));
 
 	return true;
-}
+	}
