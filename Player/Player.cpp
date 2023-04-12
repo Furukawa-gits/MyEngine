@@ -129,7 +129,7 @@ void Player::init(dxinput* input, directX* directx)
 	isArive = true;
 }
 
-//ˆÚ“®
+//ˆÚ“®*
 void Player::Move()
 {
 	if (isClearStaging || isOverStaging)

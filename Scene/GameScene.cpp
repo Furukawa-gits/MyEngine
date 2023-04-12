@@ -1667,7 +1667,7 @@ bool GameScene::loadStage()
 		//敵　リスト
 		for (std::unique_ptr<Enemy>& newenemy : enemyList)
 		{
-			newenemy->changePattern(enemyPattern::chase);
+			newenemy->changePattern(enemyPattern::shot);
 		}
 
 		//ボスの設定
@@ -1678,7 +1678,7 @@ bool GameScene::loadStage()
 		stageLevel = stageNum + 2;
 
 		//敵
-		testBoss->changePattern(enemyPattern::shot);
+		testBoss->changePattern(enemyPattern::rampage);
 
 		//敵　リスト
 		for (std::unique_ptr<Enemy>& newenemy : enemyList)

@@ -1,4 +1,5 @@
 #include "uniteBoss.h"
+#include <random>
 
 //staticïœêî(ÉpÅ[Éc)
 std::unique_ptr<Model> uniteParts::partsModel = std::make_unique<Model>();
@@ -359,6 +360,21 @@ void uniteParts::partsShotBullet(XMFLOAT3 targetposition)
 	std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
 	newBullet->init();
 	newBullet->set(targetposition, this->position);
+
+	std::random_device seed;
+	std::mt19937 rnd(seed());
+
+	std::uint32_t redResult = rnd();
+	std::uint32_t greenResult = rnd();
+	std::uint32_t blueResult = rnd();
+
+	newBullet->motherParticle->color =
+	{
+		(float)(redResult % 10) / 10,
+		(float)(greenResult % 10) / 10,
+		(float)(blueResult % 10) / 10,
+		1
+	};
 	Bullets.push_back(std::move(newBullet));
 }
 

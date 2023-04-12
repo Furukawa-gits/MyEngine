@@ -904,7 +904,7 @@ void enemyBullet::update()
 		std::unique_ptr<SingleParticle> newParticle = std::make_unique<SingleParticle>();
 		newParticle->generate();
 		newParticle->set(20, position, { 0,0,0 }, { 0,0,0 }, 2.0f, 0.0f);
-		newParticle->color = { 1,0,0,1 };
+		newParticle->color = motherParticle->color;
 		childParticles.push_back(std::move(newParticle));
 	}
 

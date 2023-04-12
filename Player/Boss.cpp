@@ -557,7 +557,7 @@ void Boss::bossShot()
 		nextShotTime++;
 	}
 
-	if (nextShotTime >= 120)
+	if (nextShotTime >= 80)
 	{
 		isShot = true;
 	}
@@ -737,7 +737,7 @@ void Boss::bossRampage()
 	{
 		rampageWaitCount++;
 
-		if (rampageWaitCount >= 100)
+		if (rampageWaitCount >= 80)
 		{
 			isRampageWait = false;
 		}
