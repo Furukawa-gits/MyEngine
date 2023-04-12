@@ -205,6 +205,24 @@ void GameScene::Load_Sprites()
 	miniMap.position = Enemy::miniMapPosition;
 	miniMap.GenerateSprite("minimap.png");
 	miniMap.SpriteTransferVertexBuffer();
+
+	//高度メーター
+	heightGauge.anchorpoint = { 0.5f,0.5f };
+	heightGauge.size = { 40,200 };
+	heightGauge.position = { Enemy::miniMapPosition.x + 120,Enemy::miniMapPosition.y,0 };
+	heightGauge.GenerateSprite("playerheightbar.png");
+	heightGauge.SpriteTransferVertexBuffer();
+
+	//プレイヤーの高度
+	playerHeight.anchorpoint = { 0.5f,0.5f };
+	playerHeight.size = { 32,5 };
+	playerHeight.GenerateSprite("playerHPGauge.png");
+	playerHeight.SpriteTransferVertexBuffer();
+
+	playerHeightIcon.anchorpoint = { 0.0f,0.5f };
+	playerHeightIcon.size = { 44,17 };
+	playerHeightIcon.GenerateSprite("playerHeightIcon.png");
+	playerHeightIcon.SpriteTransferVertexBuffer();
 }
 
 //初期化
@@ -571,6 +589,35 @@ void GameScene::Play_updata()
 	//ミニマップ
 	miniMap.SpriteUpdate();
 
+	//高度メーター更新
+	//プレイヤーのy座標に補正をかけてpositionに代入
+	float playerH = player_p->getPlayerPos().y - player_p->groundPosition.y;
+
+	//スプライトの座標系に変更＆メーターの上がり具合を調整
+	playerH = -(playerH * 0.3333f);
+
+	//実際に表示する座標に変更
+	playerH = playerH + heightGauge.position.y + (heightGauge.size.y / 2);
+
+	float underLimit = heightGauge.position.y + (heightGauge.size.y / 2) - 5;
+	float upperLimit = heightGauge.position.y - (heightGauge.size.y / 2) + 5;
+
+	if (playerH < upperLimit)
+	{
+		playerH = upperLimit;
+	}
+	else if (playerH > underLimit)
+	{
+		playerH = underLimit;
+	}
+
+	playerHeight.position = { heightGauge.position.x,playerH,0 };
+	playerHeightIcon.position = { playerHeight.position.x + 20,playerH-2,0 };
+
+	heightGauge.SpriteUpdate();
+	playerHeight.SpriteUpdate();
+	playerHeightIcon.SpriteUpdate();
+
 	//チュートリアル
 	if (stageNum == 0)
 	{
@@ -671,7 +718,6 @@ void GameScene::Play_updata()
 	{
 		checkHitManager::checkBulletsEnemy(&player_p->bulletsList, newparts.get());
 	}
-
 
 	//プレイヤーとボスの当たり判定
 	if (!testBoss->getIsAppear() && stageNum < 3)
@@ -1094,8 +1140,8 @@ void GameScene::PlayDraw2d()
 	//ウェーブ描画
 	drawNowWave();
 
-	//ミニマップ描画
-	drawMiniMap();
+	//ミニマップ＆高度メーター描画
+	drawPositionUI();
 
 	//チュートリアルテキストの都合上、プレイヤーの描画順は分けている
 	if (isTutorial)
@@ -1259,13 +1305,19 @@ void GameScene::drawNowWave()
 
 }
 
-void GameScene::drawMiniMap()
+void GameScene::drawPositionUI()
 {
 	if (player_p->isStop)
 	{
 		return;
 	}
 
+	//高度メーター
+	heightGauge.DrawSprite(directx->cmdList.Get());
+	playerHeight.DrawSprite(directx->cmdList.Get());
+	playerHeightIcon.DrawSprite(directx->cmdList.Get());
+
+	//ミニマップ
 	miniMap.DrawSprite(directx->cmdList.Get());
 
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
@@ -1675,4 +1727,4 @@ bool GameScene::loadStage()
 	enemyWaveIcons.push_back(std::move(newicon));
 
 	return true;
-	}
+}

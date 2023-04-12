@@ -98,7 +98,7 @@ private:
 	void drawNowWave();
 
 	//ミニマップ描画
-	void drawMiniMap();
+	void drawPositionUI();
 
 	//ホーミングターゲットのセッティング
 	void checkHitPlayerTarget();
@@ -202,6 +202,11 @@ private:
 	int totalPlayFlameCount = 0;
 	//ミニマップ
 	SingleSprite miniMap;
+	//高度メーター
+	SingleSprite heightGauge;
+	//プレイヤーの高度
+	SingleSprite playerHeight;
+	SingleSprite playerHeightIcon;
 
 	//シーン番号
 	sceneType scene = sceneType::title;
