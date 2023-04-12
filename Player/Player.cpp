@@ -48,30 +48,25 @@ void Player::init(dxinput* input, directX* directx)
 	rockonGauge[1].GenerateSprite("boostGauge.png");
 
 	//ダメージエフェクト
-	damage.anchorpoint = { 0,0 };
 	damage.size = { 1280,720 };
 	damage.GenerateSprite("damage.png");
 
 	//HPゲージ
-	HPGaugeBar.anchorpoint = { 0,0 };
 	HPGaugeBar.size = { 50,20 };
 	HPGaugeBar.position = { 20,640,0 };
 	HPGaugeBar.GenerateSprite("playerHPGauge.png");
 
 	//HPバーの警告
-	dangarHPGaugeBar.anchorpoint = { 0,0 };
 	dangarHPGaugeBar.size = { (float)maxHP * 40,20 };
 	dangarHPGaugeBar.position = { 20,640,0 };
 	dangarHPGaugeBar.GenerateSprite("bossHPGauge.png");
 
 	//ブーストゲージ
-	boostGaugeBar.anchorpoint = { 0,0 };
 	boostGaugeBar.size = { 50,20 };
 	boostGaugeBar.position = { 20,590,0 };
 	boostGaugeBar.GenerateSprite("boostGauge.png");
 
 	//上記ゲージのフレーム
-	gaugeFrame.anchorpoint = { 0,0 };
 	gaugeFrame.size = { 500,120 };
 	gaugeFrame.position = { 0,550,0 };
 	gaugeFrame.GenerateSprite("gaugeFrame.png");
