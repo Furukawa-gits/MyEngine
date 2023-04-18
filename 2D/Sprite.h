@@ -1,5 +1,6 @@
 #pragma once
 #include"../Base/WindowGenerate.h"
+#include"../Input/dxInput.h"
 #include<DirectXTex.h>
 #include<d3dx12.h>
 #include<wrl.h>
@@ -45,7 +46,7 @@ public:
 	/// 静的データセット
 	/// </summary>
 	/// <param name="dev">デバイス情報</param>
-	static void SetStaticData(ID3D12Device* dev);
+	static void SetStaticData(ID3D12Device* dev, dxinput* dxinput);
 
 	/// <summary>
 	/// 頂点バッファへのデータ転送
@@ -82,6 +83,21 @@ public:
 	/// <param name="texture">テクスチャマネージャー</param>
 	void DrawSprite(ID3D12GraphicsCommandList* cmdList);
 
+	/// <summary>
+	/// スプライトのマウス入力
+	/// </summary>
+	bool isSpriteMouseInput();
+
+	/// <summary>
+	/// 基準のサイズを入力
+	/// </summary>
+	/// <param name="bacesize">基準サイズ</param> 
+	void setBaceSize(XMFLOAT2 bacesize)
+	{
+		baceSize = bacesize;
+		choosingSize = { bacesize.x * 1.3f,bacesize.y * 1.3f };
+	}
+
 public:
 	//Z軸周りの回転角
 	float rotation = 0.0f;
@@ -101,6 +117,7 @@ public:
 	//入力用サイズ
 	//基準の大きさ
 	XMFLOAT2 baceSize;
+
 	//選択中の大きさ
 	XMFLOAT2 choosingSize;
 
@@ -122,8 +139,13 @@ public:
 	//非表示
 	bool isInvisible = false;
 
+	//マウス座標が重なっているか
+	bool isMouseSelect = false;
+
 private:
 	static ID3D12Device* device;
+
+	static dxinput* input;
 
 	static ComPtr<ID3D12RootSignature> SpriteRootsignature;//ルートシグネチャ
 

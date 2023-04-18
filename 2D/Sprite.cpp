@@ -1,13 +1,16 @@
 #include"Sprite.h"
 
 ID3D12Device* SingleSprite::device = nullptr;
+dxinput* SingleSprite::input = nullptr;
 ComPtr<ID3D12RootSignature> SingleSprite::SpriteRootsignature;
 ComPtr<ID3D12PipelineState> SingleSprite::SpritePipelinestate;
 XMMATRIX SingleSprite::matprojection;
 
-void SingleSprite::SetStaticData(ID3D12Device* dev)
+void SingleSprite::SetStaticData(ID3D12Device* dev, dxinput* dxinput)
 {
 	device = dev;
+
+	input = dxinput;
 
 	//パイプライン生成
 	SetPipelineStateSprite();
@@ -351,6 +354,9 @@ void SingleSprite::GenerateSprite(
 	constMap->mat = XMMatrixOrthographicOffCenterLH(
 		0.0f, win_width, win_hight, 0.0f, 0.0f, 1.0f);
 	this->spriteConstBuff->Unmap(0, nullptr);
+
+	//入力用のサイズを設定
+	setBaceSize(this->size);
 }
 
 //スプライト更新処理
@@ -398,4 +404,46 @@ void SingleSprite::DrawSprite(ID3D12GraphicsCommandList* cmdList)
 
 	//描画コマンド
 	cmdList->DrawInstanced(4, 1, 0, 0);
+}
+
+//マウス入力
+bool SingleSprite::isSpriteMouseInput()
+{
+	float left = (0.0f - this->anchorpoint.x) * this->baceSize.x + position.x;
+	float right = (1.0f - this->anchorpoint.x) * this->baceSize.x + position.x;
+	float top = (0.0f - this->anchorpoint.y) * this->baceSize.y + position.y;
+	float bottom = (1.0f - this->anchorpoint.y) * this->baceSize.y + position.y;
+
+	if (this->isFlipX == true)
+	{
+		left = -left;
+		right = -right;
+	}
+
+	if (this->isFlipY == true)
+	{
+		top = -top;
+		bottom = -bottom;
+	}
+
+	this->size = this->baceSize;
+
+	isMouseSelect = false;
+
+	if (left < input->mouse_position.x && input->mouse_position.x < right)
+	{
+		if (top < input->mouse_position.y && input->mouse_position.y < bottom)
+		{
+			this->size = this->choosingSize;
+
+			isMouseSelect = true;
+
+			if (input->Mouse_LeftTriger())
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
 }

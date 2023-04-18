@@ -45,7 +45,7 @@ void GameScene::Load_Sprites()
 
 	//スタートボタン
 	startButton.anchorpoint = { 0.5f,0.5f };
-	startButton.size = { 340,50 };
+	startButton.size = { 430,50 };
 	startButton.GenerateSprite("startButton.png");
 	startButton.position = { 640,500,0 };
 	startButton.SpriteTransferVertexBuffer();
@@ -146,14 +146,14 @@ void GameScene::Load_Sprites()
 
 	//タイトルボタン
 	titleButton.anchorpoint = { 0.5f,0.5f };
-	titleButton.size = { 150,50 };
+	titleButton.size = { 200,40 };
 	titleButton.GenerateSprite("titleText.png");
 	titleButton.position = { 640 + 150,500,0 };
 	titleButton.SpriteTransferVertexBuffer();
 
 	//セレクトボタン
 	selectButton.anchorpoint = { 0.5f,0.5f };
-	selectButton.size = { 200,50 };
+	selectButton.size = { 200,40 };
 	selectButton.GenerateSprite("selectText.png");
 	selectButton.position = { 640 - 150,500,0 };
 	selectButton.SpriteTransferVertexBuffer();
@@ -242,7 +242,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	Load_sounds();
 
 	//スプライトクラス初期化
-	SingleSprite::SetStaticData(directx->dev.Get());
+	SingleSprite::SetStaticData(directx->dev.Get(), input);
 
 	SingleParticle::particleStaticInit(directx, nullptr);
 
@@ -307,6 +307,9 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	uniteBoss::uniteBossStaticInit(player_p.get());
 	testUniteBoss = std::make_unique<uniteBoss>();
 	testUniteBoss->uniteBossInit();
+
+	//マウスカーソル非表示
+	//ShowCursor(false);
 }
 
 //デバッグテキスト
@@ -352,10 +355,10 @@ void GameScene::Title_updata()
 		return;
 	}
 
-	if (input->Triger(DIK_SPACE) && !isPushStart)
+	if ((input->Mouse_LeftTriger() || input->Triger(DIK_SPACE)) && !isPushStart)
 	{
-		startButtonEase_y.set(easingType::easeOut, easingPattern::Quadratic, 30, 50, 0);
-		startButtonEase_x.set(easingType::easeOut, easingPattern::Quadratic, 30, 340, 420);
+		startButtonEase_y.set(easingType::easeOut, easingPattern::Quadratic, 30, startButton.size.y, 0);
+		startButtonEase_x.set(easingType::easeOut, easingPattern::Quadratic, 30, startButton.size.x, startButton.size.x + 30);
 		isPushStart = true;
 	}
 
@@ -397,14 +400,14 @@ void GameScene::Select_updata()
 		float iconPos = stage[0].position.x;
 
 		//次のステージ
-		if (input->Triger(DIK_RIGHT) && stageNum < maxStageNum)
+		if (selects[1].isSpriteMouseInput() && stageNum < maxStageNum)
 		{
 			stageIconEase.set(easingType::easeOut, easingPattern::Cubic, 20, iconPos, iconPos - 300);
 			stageNum++;
 			isMoveStageIcon = true;
 		}
 		//前のステージ
-		else if (input->Triger(DIK_LEFT) && stageNum > -1)
+		else if (selects[0].isSpriteMouseInput() && stageNum > -1)
 		{
 			stageIconEase.set(easingType::easeOut, easingPattern::Quadratic, 20, iconPos, iconPos + 300);
 			stageNum--;
@@ -458,14 +461,16 @@ void GameScene::Select_updata()
 	}
 
 	//各スプライト更新
-	stage[0].SpriteUpdate();
-	stage[1].SpriteUpdate();
-	stage[2].SpriteUpdate();
-	stage[3].SpriteUpdate();
-	stage[4].SpriteUpdate();
-	selects[0].SpriteUpdate();
-	selects[1].SpriteUpdate();
-	selects[2].SpriteUpdate();
+	for (int i = 0; i < 5; i++)
+	{
+		stage[i].SpriteUpdate();
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		selects[i].SpriteTransferVertexBuffer();
+		selects[i].SpriteUpdate();
+	}
 	toTutorial.SpriteUpdate();
 
 	if (isPushStart && !startButtonEase_y.getIsActive())
@@ -612,7 +617,7 @@ void GameScene::Play_updata()
 	}
 
 	playerHeight.position = { heightGauge.position.x,playerH,0 };
-	playerHeightIcon.position = { playerHeight.position.x + 20,playerH-2,0 };
+	playerHeightIcon.position = { playerHeight.position.x + 20,playerH - 2,0 };
 
 	heightGauge.SpriteUpdate();
 	playerHeight.SpriteUpdate();
@@ -697,9 +702,6 @@ void GameScene::Play_updata()
 
 		targetnum = 0;
 	}
-
-	//マウスカーソル非表示
-	ShowCursor(false);
 
 	//敵がロックオンされているかどうか
 	checkHitPlayerTarget();
@@ -937,20 +939,25 @@ void GameScene::Result_updata()
 		return;
 	}
 
+	bool isTitleButton = titleButton.isSpriteMouseInput();
+	bool isSelectButton = selectButton.isSpriteMouseInput();
+
+	titleButton.SpriteTransferVertexBuffer();
 	titleButton.SpriteUpdate();
+	selectButton.SpriteTransferVertexBuffer();
 	selectButton.SpriteUpdate();
 
 	if (!isMoveSelectIcon)
 	{
 		//select画面
-		if (input->Triger(DIK_RIGHT) && isSelectOrTitle == -1)
+		if (titleButton.isMouseSelect && isSelectOrTitle == -1)
 		{
 			selectEase.set(easingType::easeOut, easingPattern::Cubic, 20, 640 - 150, 640 + 150);
 			isMoveSelectIcon = true;
 			isSelectOrTitle *= -1;
 		}
 		//title画面
-		else if (input->Triger(DIK_LEFT) && isSelectOrTitle == 1)
+		else if (!titleButton.isMouseSelect && isSelectOrTitle == 1)
 		{
 			selectEase.set(easingType::easeOut, easingPattern::Cubic, 20, 640 + 150, 640 - 150);
 			isMoveSelectIcon = true;
@@ -981,7 +988,7 @@ void GameScene::Result_updata()
 	}
 	selects[2].SpriteUpdate();
 
-	if (input->Triger(DIK_SPACE) && !isPushTitle && !isMoveSelectIcon)
+	if ((isTitleButton || isSelectButton) && !isPushTitle && !isMoveSelectIcon)
 	{
 		ButtonEase_y.set(easingType::easeOut, easingPattern::Quadratic, 30, 7, 0);
 		ButtonEase_x.set(easingType::easeOut, easingPattern::Quadratic, 30, 200, 300);
@@ -1564,9 +1571,6 @@ void GameScene::tutorial()
 
 		targetnum = 0;
 	}
-
-	//マウスカーソル非表示
-	ShowCursor(false);
 
 	//敵がロックオンされているかどうか
 	checkHitPlayerTarget();
