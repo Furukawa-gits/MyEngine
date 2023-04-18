@@ -121,7 +121,7 @@ void Player::init(dxinput* input, directX* directx)
 	playerCollision.radius = 2.0f;
 
 	playerHP = 10;
-	isArive = true;
+	isAlive = true;
 }
 
 //ˆÚ“®*
@@ -132,7 +132,7 @@ void Player::Move()
 		return;
 	}
 
-	if (!isArive)
+	if (!isAlive)
 	{
 		return;
 	}
@@ -528,12 +528,12 @@ void Player::update()
 	//€‚ñ‚¾’e‚Ííœ
 	bulletsList.remove_if([](std::unique_ptr<bullet>& newbullet)
 		{
-			return newbullet->isArive == false;
+			return newbullet->isAlive == false;
 		});
 
 	missilesList.remove_if([](std::unique_ptr<Missile>& newmissile)
 		{
-			return newmissile->isArive == false;
+			return newmissile->isAlive == false;
 		});
 
 	missilesList.remove_if([](std::unique_ptr<Missile>& newmissile)
@@ -632,7 +632,7 @@ void Player::update()
 
 	if (playerHP <= 0)
 	{
-		isArive = false;
+		isAlive = false;
 		setStaging(false);
 	}
 
@@ -656,7 +656,7 @@ void Player::targetUpdate()
 		return;
 	}
 
-	if (!isArive)
+	if (!isAlive)
 	{
 		return;
 	}
@@ -817,7 +817,7 @@ void Player::addMissile(Enemy* enemy)
 //ƒŠƒZƒbƒg
 void Player::reset()
 {
-	isArive = true;
+	isAlive = true;
 	isStagingSet = false;
 	playerHP = maxHP;
 	isBoost = false;
@@ -887,7 +887,7 @@ void Player::draw3D(directX* directx)
 		newparticle->drawSpecifyTex("smoke.png");
 	}
 
-	if (!isArive)
+	if (!isAlive)
 	{
 		return;
 	}
@@ -913,7 +913,7 @@ void Player::draw3D(directX* directx)
 
 void Player::draw2D(directX* directx, int targetnum)
 {
-	if (!isArive)
+	if (!isAlive)
 	{
 		return;
 	}
@@ -967,7 +967,7 @@ void Player::draw2D(directX* directx, int targetnum)
 
 void Player::drawMiniMapIcon(directX* directx)
 {
-	if (!isArive)
+	if (!isAlive)
 	{
 		return;
 	}

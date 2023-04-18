@@ -161,7 +161,7 @@ public:
 	Sphere playerCollision;
 
 	//¶‘¶ƒtƒ‰ƒO
-	bool isArive = false;
+	bool isAlive = false;
 
 	//HP
 	int playerHP = 10;

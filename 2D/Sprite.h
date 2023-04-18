@@ -98,6 +98,12 @@ public:
 	//大きさ
 	XMFLOAT2 size = { 100.0f,100.0f };
 
+	//入力用サイズ
+	//基準の大きさ
+	XMFLOAT2 baceSize;
+	//選択中の大きさ
+	XMFLOAT2 choosingSize;
+
 	//アンカーポイント
 	XMFLOAT2 anchorpoint = { 0.0f,0.0f };
 

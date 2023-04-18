@@ -4,7 +4,7 @@
 std::unique_ptr<Model> Enemy::enemyModelS = std::make_unique<Model>();
 XMFLOAT3 Enemy::playerPosition = { 0,0,0 };
 XMFLOAT3 Enemy::playerFront = { 0,0,0 };
-bool Enemy::playerIsArive = false;
+bool Enemy::playerIsAlive = false;
 const float Enemy::forPlayer = 400.0f;
 const XMFLOAT2 Enemy::defaultRockIconSize = { 70.0f,70.0f };
 const XMFLOAT2 Enemy::setRockIconSize = { 180.0f,180.0f };
@@ -35,7 +35,7 @@ void Enemy::staticUpdata(XMFLOAT3 playerpos, XMFLOAT3 playerfront, bool playeris
 {
 	playerPosition = playerpos;
 	playerFront = playerfront;
-	playerIsArive = playerisarive;
+	playerIsAlive = playerisarive;
 }
 
 void Enemy::staticDestroy()
@@ -44,7 +44,7 @@ void Enemy::staticDestroy()
 
 void Enemy::init(enemyPattern pattern)
 {
-	isArive = false;
+	isAlive = false;
 	isDraw = false;
 
 	rockTarget = std::make_unique<SingleSprite>();
@@ -81,7 +81,7 @@ void Enemy::set(XMFLOAT3 pos)
 	position = pos;
 	startPosition = pos;
 	enemyObject->SetPosition(pos);
-	isArive = false;
+	isAlive = false;
 	isTargetSet = false;
 	chaseCount = 0;
 	waitCount = 0;
@@ -141,7 +141,7 @@ void Enemy::reSet()
 	waitCount = 0;
 	isChase = false;
 	isWait = true;
-	isArive = true;
+	isAlive = true;
 	HP = 1;
 	isTargetSet = false;
 	isSetMissile = false;
@@ -165,7 +165,7 @@ void Enemy::chase()
 		return;
 	}
 
-	if (!playerIsArive)
+	if (!playerIsAlive)
 	{
 		return;
 	}
@@ -227,7 +227,7 @@ void Enemy::shot()
 		return;
 	}
 
-	if (!playerIsArive)
+	if (!playerIsAlive)
 	{
 		return;
 	}
@@ -303,7 +303,7 @@ void Enemy::homing()
 		return;
 	}
 
-	if (!playerIsArive)
+	if (!playerIsAlive)
 	{
 		return;
 	}
@@ -423,7 +423,7 @@ void Enemy::rampage()
 		return;
 	}
 
-	if (!playerIsArive)
+	if (!playerIsAlive)
 	{
 		return;
 	}
@@ -647,14 +647,14 @@ void Enemy::arrival()
 		enemyObject->Update();
 		enemyArrivaCount = 0;
 		isStop = false;
-		isArive = true;
+		isAlive = true;
 		isAppear = false;
 	}
 }
 
 void Enemy::ariveMove()
 {
-	if (!isArive || isAppear)
+	if (!isAlive || isAppear)
 	{
 		return;
 	}
@@ -672,7 +672,7 @@ void Enemy::ariveMove()
 	//HPが0になったら消滅
 	if (HP <= 0)
 	{
-		isArive = false;
+		isAlive = false;
 		fallDownCount = 0;
 
 #pragma region 爆発パーティクル生成
@@ -699,7 +699,7 @@ void Enemy::ariveMove()
 
 void Enemy::deathMove()
 {
-	if (isArive || isAppear)
+	if (isAlive || isAppear)
 	{
 		return;
 	}
@@ -765,7 +765,7 @@ void Enemy::draw3D(directX* directx)
 		return;
 	}
 
-	if (!playerIsArive)
+	if (!playerIsAlive)
 	{
 		return;
 	}
@@ -791,12 +791,12 @@ void Enemy::draw3D(directX* directx)
 
 void Enemy::draw2D(directX* directx)
 {
-	if (!isArive)
+	if (!isAlive)
 	{
 		return;
 	}
 
-	if (!playerIsArive)
+	if (!playerIsAlive)
 	{
 		return;
 	}
@@ -815,12 +815,12 @@ void Enemy::draw2D(directX* directx)
 
 void Enemy::drawMiniMapIcon(directX* directx)
 {
-	if (!isArive)
+	if (!isAlive)
 	{
 		return;
 	}
 
-	if (!playerIsArive)
+	if (!playerIsAlive)
 	{
 		return;
 	}
@@ -878,12 +878,12 @@ void enemyBullet::set(XMFLOAT3 playerpos, XMFLOAT3 shotpos)
 	};
 
 	ariveTime = 0;
-	isArive = true;
+	isAlive = true;
 }
 
 void enemyBullet::update()
 {
-	if (!isArive)
+	if (!isAlive)
 	{
 		for (std::unique_ptr<SingleParticle>& newparticle : childParticles)
 		{
@@ -927,14 +927,14 @@ void enemyBullet::update()
 	if (ariveTime >= maxAriveTime)
 	{
 		motherParticle->setIsActive(false);
-		isArive = false;
+		isAlive = false;
 		ariveTime = 0;
 	}
 }
 
 void enemyBullet::draw(directX* directx)
 {
-	if (!isArive)
+	if (!isAlive)
 	{
 		return;
 	}

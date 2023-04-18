@@ -15,7 +15,7 @@ void uniteParts::partsInit(int ID)
 {
 	isThisBoss = true;
 
-	isArive = false;
+	isAlive = false;
 	isDraw = false;
 
 	rockTarget = std::make_unique<SingleSprite>();
@@ -228,7 +228,7 @@ void uniteParts::partsArrival()
 
 void uniteParts::partsAriveMove()
 {
-	if (!isArive || isAppear)
+	if (!isAlive || isAppear)
 	{
 		return;
 	}
@@ -265,7 +265,7 @@ void uniteParts::partsAriveMove()
 	//HPÇ™0Ç…Ç»Ç¡ÇΩÇÁè¡ñ≈
 	if (HP <= 0)
 	{
-		isArive = false;
+		isAlive = false;
 		fallDownCount = 0;
 		angleTheta = 0;
 		anglePhi = 0;
@@ -298,7 +298,7 @@ void uniteParts::partsAriveMove()
 
 void uniteParts::partsDeathMove()
 {
-	if (isArive || isAppear)
+	if (isAlive || isAppear)
 	{
 		return;
 	}
@@ -416,12 +416,12 @@ void uniteParts::partsDraw3D(directX* directx)
 
 void uniteParts::partsDraw2D(directX* directx)
 {
-	if (!isArive)
+	if (!isAlive)
 	{
 		return;
 	}
 
-	if (!playerIsArive)
+	if (!playerIsAlive)
 	{
 		return;
 	}
@@ -461,7 +461,7 @@ void uniteBoss::uniteBossInit()
 {
 	isThisBoss = true;
 
-	isArive = false;
+	isAlive = false;
 	isDraw = false;
 
 	rockTarget = std::make_unique<SingleSprite>();
@@ -695,7 +695,7 @@ void uniteBoss::uniteBossArrival()
 		enemyObject->SetPosition(arrivalEndPos);
 		enemyObject->Update();
 		isStop = false;
-		isArive = true;
+		isAlive = true;
 		isAppear = false;
 		isArmor = true;
 		playerPointer->isStop = false;
@@ -706,7 +706,7 @@ void uniteBoss::uniteBossArrival()
 		{
 			parts->partsUpdata();
 			parts->isStop = false;
-			parts->isArive = true;
+			parts->isAlive = true;
 			parts->isAppear = false;
 			parts->angleSpeed = 0.01f;
 		}
@@ -718,7 +718,7 @@ void uniteBoss::uniteBossArrival()
 //ê∂ë∂éûèàóù
 void uniteBoss::uniteBossAriveMove()
 {
-	if (!isArive || isAppear)
+	if (!isAlive || isAppear)
 	{
 		return;
 	}
@@ -744,7 +744,7 @@ void uniteBoss::uniteBossAriveMove()
 	for (std::unique_ptr<uniteParts>& parts : partsList)
 	{
 		parts->partsUpdata();
-		if (!parts->isArive)
+		if (!parts->isAlive)
 		{
 			parts->Bullets.clear();
 		}
@@ -760,7 +760,7 @@ void uniteBoss::uniteBossAriveMove()
 	//HPÇ™0Ç…Ç»Ç¡ÇΩÇÁè¡ñ≈
 	if (HP <= 0)
 	{
-		isArive = false;
+		isAlive = false;
 		fallDownCount = 0;
 		deathRotSpeed = 0.5f;
 		CameraAngleSpeed = 0.0f;
@@ -783,7 +783,7 @@ void uniteBoss::uniteBossAriveMove()
 //åÇíƒèàóù
 void uniteBoss::uniteBossDeathMove()
 {
-	if (isArive || isAppear)
+	if (isAlive || isAppear)
 	{
 		return;
 	}
@@ -961,7 +961,7 @@ void uniteBoss::uniteBossChargeAttack()
 		return;
 	}
 
-	if (!playerPointer->isArive)
+	if (!playerPointer->isAlive)
 	{
 		return;
 	}
@@ -1043,7 +1043,7 @@ void uniteBoss::uniteBossRampage()
 		return;
 	}
 
-	if (!playerPointer->isArive)
+	if (!playerPointer->isAlive)
 	{
 		return;
 	}
@@ -1114,7 +1114,7 @@ void uniteBoss::uniteBossShotPlayerTarget()
 		return;
 	}
 
-	if (!playerPointer->isArive)
+	if (!playerPointer->isAlive)
 	{
 		return;
 	}
@@ -1192,12 +1192,12 @@ void uniteBoss::uniteBossDraw3d(directX* directx)
 //ï`âÊ_2D
 void uniteBoss::uniteBossDraw2d(directX* directx)
 {
-	if (!isArive)
+	if (!isAlive)
 	{
 		return;
 	}
 
-	if (!playerIsArive)
+	if (!playerIsAlive)
 	{
 		return;
 	}

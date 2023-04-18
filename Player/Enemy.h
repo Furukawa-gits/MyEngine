@@ -29,7 +29,7 @@ public:
 
 	bool isBulletArive()
 	{
-		return isArive;
+		return isAlive;
 	}
 
 	Sphere getCollision()
@@ -38,7 +38,7 @@ public:
 	}
 
 	//生存フラグ
-	bool isArive = false;
+	bool isAlive = false;
 
 	//生存時間
 	int ariveTime = 0;
@@ -199,14 +199,14 @@ public:
 	static const float forPlayer;
 	static XMFLOAT3 playerPosition;
 	static XMFLOAT3 playerFront;
-	static bool playerIsArive;
+	static bool playerIsAlive;
 
 	static const XMFLOAT2 defaultRockIconSize;
 	static const XMFLOAT2 setRockIconSize;
 	static const float decreaseSize;
 
 	bool isDraw = false;//描画フラグ
-	bool isArive = false;//生存フラグ
+	bool isAlive = false;//生存フラグ
 	bool isTargetSet = false;//狙われているかどうか
 	bool isSetMissile = false;//ミサイルが自分にセットされているか
 	bool isOutScreen = false;//画面外にいるかどうか

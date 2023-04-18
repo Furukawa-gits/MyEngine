@@ -28,7 +28,7 @@ public:
 	XMFLOAT3 bullet_vec = { 0.0f,0.0f,0.0f };
 	float bulletSpeed = 3.0f;
 
-	bool isArive = false;
+	bool isAlive = false;
 
 	Sphere bulletCollision;
 
@@ -76,7 +76,7 @@ public:
 	XMFLOAT3 position = { 0,0,0 };
 	XMFLOAT3 bulletVec = { 0.0f,0.0f,0.0f };
 
-	bool isArive = false;
+	bool isAlive = false;
 	bool isTargetSet = false;
 
 	Sphere missileCollision;

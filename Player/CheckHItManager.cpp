@@ -3,7 +3,7 @@
 // プレイヤー本体と敵本体の当たり判定(単体)
 void checkHitManager::checkPlayerEnemy(Player* player, Enemy* enemy)
 {
-	if (enemy->isArive == false || player->isArive == false)
+	if (enemy->isAlive == false || player->isAlive == false)
 	{
 		return;
 	}
@@ -37,7 +37,7 @@ void checkHitManager::checkPlayerEnemys(Player* player, list<unique_ptr<Enemy>>*
 // プレイヤーの通常弾と敵本体の当たり判定(単体)
 void checkHitManager::checkBulletEnemy(bullet* bullet, Enemy* enemy)
 {
-	if (enemy->isArive == false || bullet->isArive == false)
+	if (enemy->isAlive == false || bullet->isAlive == false)
 	{
 		return;
 	}
@@ -50,7 +50,7 @@ void checkHitManager::checkBulletEnemy(bullet* bullet, Enemy* enemy)
 	if (Collision::CheckSphere2Sphere(bullet->bulletCollision, enemy->enemyCollision))
 	{
 		bullet->count = 0;
-		bullet->isArive = false;
+		bullet->isAlive = false;
 
 		enemy->HP--;
 	}
@@ -59,7 +59,7 @@ void checkHitManager::checkBulletEnemy(bullet* bullet, Enemy* enemy)
 // プレイヤーの通常弾と敵本体の当たり判定(ボス)
 void checkHitManager::checkBulletsEnemy(list<unique_ptr<bullet>>* bulletsList, Enemy* enemy)
 {
-	if (enemy->isArive == false)
+	if (enemy->isAlive == false)
 	{
 		return;
 	}
@@ -97,7 +97,7 @@ void checkHitManager::checkMissilesEnemy(list<unique_ptr<Missile>>* missilesList
 			return;
 		}
 
-		if (newmissile->enemyPointer->isArive == true && newmissile->isArive == true)
+		if (newmissile->enemyPointer->isAlive == true && newmissile->isAlive == true)
 		{
 			if (Collision::CheckSphere2Sphere(newmissile->missileCollision, newmissile->enemyPointer->enemyCollision))
 			{
@@ -138,7 +138,7 @@ void checkHitManager::checkBulletEnemyRampage(bullet* playerbullet, enemyBullet*
 		return;
 	}
 
-	if (playerbullet->isArive == false)
+	if (playerbullet->isAlive == false)
 	{
 		return;
 	}
@@ -146,9 +146,9 @@ void checkHitManager::checkBulletEnemyRampage(bullet* playerbullet, enemyBullet*
 	if (Collision::CheckSphere2Sphere(playerbullet->bulletCollision, rampagebullet->bulletCollision))
 	{
 		playerbullet->count = 0;
-		playerbullet->isArive = false;
+		playerbullet->isAlive = false;
 
-		rampagebullet->isArive = false;
+		rampagebullet->isAlive = false;
 		rampagebullet->ariveTime = 0;
 	}
 }
@@ -178,7 +178,7 @@ void checkHitManager::checkPlayerEnemyRampage(Player* player, enemyBullet* rampa
 		return;
 	}
 
-	if (player->isArmor || player->isArive == false)
+	if (player->isArmor || player->isAlive == false)
 	{
 		return;
 	}
@@ -187,7 +187,7 @@ void checkHitManager::checkPlayerEnemyRampage(Player* player, enemyBullet* rampa
 	{
 		player->playerHP--;
 		player->isArmor = true;
-		rampagebullet->isArive = false;
+		rampagebullet->isAlive = false;
 		rampagebullet->ariveTime = 0;
 	}
 }
@@ -219,7 +219,7 @@ void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& target
 		return;
 	}
 
-	if (player->isArive == false)
+	if (player->isAlive == false)
 	{
 		return;
 	}

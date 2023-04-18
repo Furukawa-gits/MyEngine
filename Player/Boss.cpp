@@ -19,7 +19,7 @@ void Boss::bossInit()
 {
 	isThisBoss = true;
 
-	isArive = false;
+	isAlive = false;
 	isDraw = false;
 
 	rockTarget = std::make_unique<SingleSprite>();
@@ -294,7 +294,7 @@ void Boss::bossArrival(Player* player)
 		enemyObject->SetPosition(position);
 		enemyObject->Update();
 		isStop = false;
-		isArive = true;
+		isAlive = true;
 		isAppear = false;
 		player->isStop = false;
 		player->isInvisible = -1;
@@ -304,7 +304,7 @@ void Boss::bossArrival(Player* player)
 
 void Boss::bossAriveMove()
 {
-	if (!isArive || isAppear)
+	if (!isAlive || isAppear)
 	{
 		return;
 	}
@@ -318,7 +318,7 @@ void Boss::bossAriveMove()
 	//HPÇ™0Ç…Ç»Ç¡ÇΩÇÁè¡ñ≈
 	if (HP <= 0)
 	{
-		isArive = false;
+		isAlive = false;
 		fallDownCount = 0;
 		deathRotSpeed = 0.5f;
 
@@ -339,7 +339,7 @@ void Boss::bossAriveMove()
 
 void Boss::bossDeathMove()
 {
-	if (isArive || isAppear)
+	if (isAlive || isAppear)
 	{
 		return;
 	}
@@ -451,7 +451,7 @@ void Boss::bossChase()
 		return;
 	}
 
-	if (!playerPointer->isArive)
+	if (!playerPointer->isAlive)
 	{
 		return;
 	}
@@ -517,7 +517,7 @@ void Boss::bossShot()
 		return;
 	}
 
-	if (!playerPointer->isArive)
+	if (!playerPointer->isAlive)
 	{
 		return;
 	}
@@ -594,7 +594,7 @@ void Boss::bossHoming()
 		return;
 	}
 
-	if (!playerPointer->isArive)
+	if (!playerPointer->isAlive)
 	{
 		return;
 	}
@@ -718,7 +718,7 @@ void Boss::bossRampage()
 		return;
 	}
 
-	if (!playerPointer->isArive)
+	if (!playerPointer->isAlive)
 	{
 		return;
 	}
@@ -780,12 +780,12 @@ void Boss::bossDraw3D(directX* directx)
 
 void Boss::bossDraw2D(directX* directx)
 {
-	if (!isArive)
+	if (!isAlive)
 	{
 		return;
 	}
 
-	if (!playerIsArive)
+	if (!playerIsAlive)
 	{
 		return;
 	}

@@ -47,12 +47,12 @@ void bullet::set(XMFLOAT3 start_pos, XMFLOAT3 Target)
 
 	bullet_vec = { (dis.x / length) * bulletSpeed,(dis.y / length) * bulletSpeed ,(dis.z / length) * bulletSpeed };
 
-	isArive = true;
+	isAlive = true;
 }
 
 void bullet::update()
 {
-	if (!isArive)
+	if (!isAlive)
 	{
 		return;
 	}
@@ -86,7 +86,7 @@ void bullet::update()
 	{
 		count = 0;
 		motherParticle->setIsActive(false);
-		isArive = false;
+		isAlive = false;
 	}
 
 	//本体パーティクル更新
@@ -98,7 +98,7 @@ void bullet::update()
 
 void bullet::draw(directX* directx)
 {
-	if (!isArive)
+	if (!isAlive)
 	{
 		return;
 	}
@@ -160,21 +160,21 @@ void Missile::start(XMFLOAT3 start_pos)
 	bulletVec = bulletVecIndex[rand() % 8];
 	position = start_pos;
 
-	isArive = true;
+	isAlive = true;
 }
 
 void Missile::update()
 {
 	//セットされていないミサイルは更新処理を行わない
-	if (!isArive)
+	if (!isAlive)
 	{
 		return;
 	}
 
 	//ミサイルが当たる前にターゲットがいなくなれば次フレームから更新しない
-	if (enemyPointer->isArive == false)
+	if (enemyPointer->isAlive == false)
 	{
-		isArive = false;
+		isAlive = false;
 	}
 
 	//ターゲットへのベクトル
@@ -283,7 +283,7 @@ void Missile::particleUpdata()
 
 void Missile::draw(directX* directx)
 {
-	if (!isArive)
+	if (!isAlive)
 	{
 		return;
 	}

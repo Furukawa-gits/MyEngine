@@ -568,7 +568,7 @@ void GameScene::Play_updata()
 	countDown();
 
 	//敵に共通して必要なプレイヤーの情報を渡す
-	Enemy::staticUpdata(player_p->getPlayerPos(), player_p->getPlayerFront(), player_p->isArive);
+	Enemy::staticUpdata(player_p->getPlayerPos(), player_p->getPlayerFront(), player_p->isAlive);
 
 	if (!isCountDown && !isStartIcon)
 	{
@@ -840,7 +840,7 @@ void GameScene::Play_updata()
 		scene = sceneType::clear;
 	}
 
-	if (!player_p->isArive && !player_p->isOverStaging && player_p->playerHP <= 0)
+	if (!player_p->isAlive && !player_p->isOverStaging && player_p->playerHP <= 0)
 	{
 		isMoveScreen = true;
 		isScreenEase = true;
@@ -1593,7 +1593,7 @@ void GameScene::tutorial()
 		ButtonEase_x.reSet();
 		scene = sceneType::clear;
 	}
-	if (!player_p->isArive && !player_p->isOverStaging && player_p->playerHP <= 0)
+	if (!player_p->isAlive && !player_p->isOverStaging && player_p->playerHP <= 0)
 	{
 		isMoveScreen = true;
 		isScreenEase = true;
