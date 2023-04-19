@@ -211,6 +211,10 @@ private:
 	SingleSprite playerHeight;
 	SingleSprite playerHeightIcon;
 
+	//マウスカーソル
+	SingleSprite mouseCursur;
+	SingleSprite mouseCursurSub;
+
 	//シーン番号
 	sceneType scene = sceneType::title;
 

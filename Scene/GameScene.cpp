@@ -224,6 +224,15 @@ void GameScene::loadSprites()
 	playerHeightIcon.anchorpoint = { 0.0f,0.5f };
 	playerHeightIcon.size = { 44,17 };
 	playerHeightIcon.generateSprite("playerHeightIcon.png");
+
+	//マウスカーソル
+	mouseCursur.anchorpoint = { 0.5f,0.5f };
+	mouseCursur.size = { 20,20 };
+	mouseCursur.generateSprite("Target.png");
+
+	mouseCursurSub.anchorpoint = { 0.5f,0.5f };
+	mouseCursurSub.size = { 20,20 };
+	mouseCursurSub.generateSprite("Target.png");
 }
 
 //初期化
@@ -310,7 +319,7 @@ void GameScene::init(directX* directx, dxinput* input, Audio* audio)
 	testUniteBoss->uniteBossInit();
 
 	//マウスカーソル非表示
-	//ShowCursor(false);
+	ShowCursor(false);
 
 	//タイトルアニメーション準備
 	titleDragEase.set(easingType::easeOut, easingPattern::Quadratic, titleEaseTime, dragEaseStart, dragEaseEnd);
@@ -385,7 +394,7 @@ void GameScene::titleUpdata()
 	{
 		titleIconDrag.position.x = dragEaseEnd;
 		titleIconShoot.position.x = shootEaseEnd;
-		titleWhiteBackAlpha -= 1.0f / 120.0f;
+		titleWhiteBackAlpha -= 1.0f / 240.0f;
 		titleWhiteBack.color = { 1,1,1,titleWhiteBackAlpha };
 	}
 
@@ -999,14 +1008,14 @@ void GameScene::resultUpdata()
 	if (!isMoveSelectIcon)
 	{
 		//select画面
-		if (titleButton.isMouseSelect && isSelectOrTitle == -1)
+		if (selectButton.isMouseSelect && isSelectOrTitle == -1)
 		{
 			selectEase.set(easingType::easeOut, easingPattern::Cubic, 20, 640 - 150, 640 + 150);
 			isMoveSelectIcon = true;
 			isSelectOrTitle *= -1;
 		}
 		//title画面
-		else if (!titleButton.isMouseSelect && isSelectOrTitle == 1)
+		else if (titleButton.isMouseSelect && isSelectOrTitle == 1)
 		{
 			selectEase.set(easingType::easeOut, easingPattern::Cubic, 20, 640 + 150, 640 - 150);
 			isMoveSelectIcon = true;
@@ -1123,6 +1132,9 @@ void GameScene::titleDraw2d()
 
 	titleIconDrag.drawSprite(directx->cmdList.Get());
 	titleIconShoot.drawSprite(directx->cmdList.Get());
+
+	mouseCursurSub.drawSprite(directx->cmdList.Get());
+	mouseCursur.drawSprite(directx->cmdList.Get());
 }
 
 //セレクト画面描画
@@ -1155,6 +1167,9 @@ void GameScene::selectDraw2d()
 	{
 		toTutorial.drawSprite(directx->cmdList.Get());
 	}
+
+	mouseCursurSub.drawSprite(directx->cmdList.Get());
+	mouseCursur.drawSprite(directx->cmdList.Get());
 }
 
 //プレイ画面描画
@@ -1290,6 +1305,9 @@ void GameScene::resultDraw2d()
 	titleButton.drawSprite(directx->cmdList.Get());
 	selectButton.drawSprite(directx->cmdList.Get());
 	selects[2].drawSprite(directx->cmdList.Get());
+
+	mouseCursurSub.drawSprite(directx->cmdList.Get());
+	mouseCursur.drawSprite(directx->cmdList.Get());
 }
 
 #pragma endregion 各シーン描画
@@ -1299,6 +1317,16 @@ void GameScene::updata()
 {
 	//マウス座標更新
 	MOUSE_POS = { (float)input->mousePoint.x,(float)input->mousePoint.y,0.0f };
+
+	//マウスカーソル更新
+	mouseCursur.position = MOUSE_POS;
+	mouseCursur.rotation += 2.0f;
+	mouseCursur.spriteTransferVertexBuffer();
+	mouseCursur.spriteUpdata();
+	mouseCursurSub.position = MOUSE_POS;
+	mouseCursurSub.rotation -= 4.0f;
+	mouseCursurSub.spriteTransferVertexBuffer();
+	mouseCursurSub.spriteUpdata();
 
 	//ライト更新
 	light->Update();
