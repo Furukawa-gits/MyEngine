@@ -149,10 +149,9 @@ private:
 
 	int targetnum = 0;
 
-	//敵(test)
+	//敵
 	static const int maxEnemyNum = 10;
 	std::list<std::unique_ptr<Enemy>> enemyList;
-	bool isEnemySimple = false;
 
 	/// <summary>
 	/// テスト用ボス

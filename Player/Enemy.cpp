@@ -543,7 +543,6 @@ void Enemy::updata()
 	};
 
 	miniMapEnemy.position = minimapPosition;
-	miniMapEnemy.spriteTransferVertexBuffer();
 	miniMapEnemy.spriteUpdata();
 
 	//“G‚ª¶‘¶
@@ -603,12 +602,9 @@ void Enemy::updataSprite()
 	outScreenIcon[0]->position = { targetPos.x,targetPos.y,0 };
 	outScreenIcon[1]->position = { targetPos.x,targetPos.y,0 };
 
-	rockTarget->spriteTransferVertexBuffer();
 	rockTarget->spriteUpdata();
 
-	outScreenIcon[0]->spriteTransferVertexBuffer();
 	outScreenIcon[0]->spriteUpdata();
-	outScreenIcon[1]->spriteTransferVertexBuffer();
 	outScreenIcon[1]->spriteUpdata();
 }
 

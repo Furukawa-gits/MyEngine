@@ -371,9 +371,7 @@ void GameScene::titleUpdata()
 		return;
 	}
 
-	titleIconDrag.spriteTransferVertexBuffer();
 	titleIconDrag.spriteUpdata();
-	titleIconShoot.spriteTransferVertexBuffer();
 	titleIconShoot.spriteUpdata();
 
 	resultScreen[0].spriteUpdata();
@@ -401,7 +399,7 @@ void GameScene::titleUpdata()
 	titleWhiteBack.spriteUpdata();
 	titlePlayer.spriteUpdata();
 
-	if ((input->Mouse_LeftTriger() || input->Triger(DIK_SPACE)) && !isPushStart && !isTitleAnimation)
+	if ((startButton.isSpriteMouseInput() || input->Triger(DIK_SPACE)) && !isPushStart && !isTitleAnimation)
 	{
 		startButtonEase_y.set(easingType::easeOut, easingPattern::Quadratic, 30, startButton.size.y, 0);
 		startButtonEase_x.set(easingType::easeOut, easingPattern::Quadratic, 30, startButton.size.x, startButton.size.x + 30);
@@ -413,7 +411,6 @@ void GameScene::titleUpdata()
 	{
 		startButton.size.y = startButtonEase_y.easing();
 		startButton.size.x = startButtonEase_x.easing();
-		startButton.spriteTransferVertexBuffer();
 	}
 
 	int test = sizeof(enemyPattern);
@@ -485,7 +482,6 @@ void GameScene::selectUpdata()
 			selectIconSizeX = 350;
 		}
 		selects[2].size = { selectIconSizeX,10 };
-		selects[2].spriteTransferVertexBuffer();
 	}
 
 	//ステージ選択ムーブ中でなければ決定
@@ -503,7 +499,6 @@ void GameScene::selectUpdata()
 	{
 		selects[2].size.y = startButtonEase_y.easing();
 		selects[2].size.x = startButtonEase_x.easing();
-		selects[2].spriteTransferVertexBuffer();
 	}
 
 	//各スプライト更新
@@ -514,7 +509,6 @@ void GameScene::selectUpdata()
 
 	for (int i = 0; i < 3; i++)
 	{
-		selects[i].spriteTransferVertexBuffer();
 		selects[i].spriteUpdata();
 	}
 	toTutorial.spriteUpdata();
@@ -527,7 +521,6 @@ void GameScene::selectUpdata()
 		if (stageNum == -1)
 		{
 			startButton.size = { 340,50 };
-			startButton.spriteTransferVertexBuffer();
 
 			//タイトルアニメーション準備
 			titleDragEase.set(easingType::easeOut, easingPattern::Quadratic, titleEaseTime, dragEaseStart, dragEaseEnd);
@@ -536,9 +529,7 @@ void GameScene::selectUpdata()
 			titleWhiteBackAlpha = 1.0f;
 			titleIconDrag.position.x = dragEaseStart;
 			titleIconShoot.position.x = shootEaseStart;
-			titleIconDrag.spriteTransferVertexBuffer();
 			titleIconDrag.spriteUpdata();
-			titleIconShoot.spriteTransferVertexBuffer();
 			titleIconShoot.spriteUpdata();
 			scene = sceneType::title;
 			return;
@@ -870,16 +861,13 @@ void GameScene::playUpdata()
 	}
 
 	//ウェーブUIの更新
-	enemyWaveBar.spriteTransferVertexBuffer();
 	enemyWaveBar.spriteUpdata();
 
 	for (std::unique_ptr<SingleSprite>& newsprite : enemyWaveIcons)
 	{
-		newsprite->spriteTransferVertexBuffer();
 		newsprite->spriteUpdata();
 	}
 
-	playerWaveIcon.spriteTransferVertexBuffer();
 	playerWaveIcon.spriteUpdata();
 
 	//ボスを倒したorプレイヤーが死んだらリザルト
@@ -889,7 +877,7 @@ void GameScene::playUpdata()
 		isScreenEase = true;
 		isTextEase = false;
 		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 40, 720, 0);
-		titleButton.spriteTransferVertexBuffer();
+		titleButton.spriteUpdata();
 		selects[2].position = { 640 - 150,540,0 };
 		selectIconSizeX = 250;
 		isSelectOrTitle = -1;
@@ -906,7 +894,7 @@ void GameScene::playUpdata()
 		isScreenEase = true;
 		isTextEase = false;
 		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 40, 720, 0);
-		titleButton.spriteTransferVertexBuffer();
+		titleButton.spriteUpdata();
 		selects[2].position = { 640 - 150,540,0 };
 		selectIconSizeX = 250;
 		isSelectOrTitle = -1;
@@ -934,12 +922,10 @@ void GameScene::resultUpdata()
 
 		clearText.position.x = 640;
 		clearText.position.y = resultScreen[0].position.y;
-		clearText.spriteTransferVertexBuffer();
 		clearText.spriteUpdata();
 
 		overText.position.x = 640;
 		overText.position.y = resultScreen[0].position.y;
-		overText.spriteTransferVertexBuffer();
 		overText.spriteUpdata();
 
 		if (!resultScreenEase.getIsActive())
@@ -964,21 +950,17 @@ void GameScene::resultUpdata()
 	}
 
 	resultScreen[0].spriteUpdata();
-	resultScreen[0].spriteTransferVertexBuffer();
 	resultScreen[1].spriteUpdata();
-	resultScreen[1].spriteTransferVertexBuffer();
 
 	//CLEAR・OVERのテキストのイージング
 	if (isTextEase)
 	{
 		clearText.position.x = 640;
 		clearText.position.y = clearTextEase.easing();
-		clearText.spriteTransferVertexBuffer();
 		clearText.spriteUpdata();
 
 		overText.position.x = 640;
 		overText.position.y = overTextEase.easing();
-		overText.spriteTransferVertexBuffer();
 		overText.spriteUpdata();
 
 		if (!clearTextEase.getIsActive() && !overTextEase.getIsActive())
@@ -1000,22 +982,20 @@ void GameScene::resultUpdata()
 	bool isTitleButton = titleButton.isSpriteMouseInput();
 	bool isSelectButton = selectButton.isSpriteMouseInput();
 
-	titleButton.spriteTransferVertexBuffer();
 	titleButton.spriteUpdata();
-	selectButton.spriteTransferVertexBuffer();
 	selectButton.spriteUpdata();
 
 	if (!isMoveSelectIcon)
 	{
 		//select画面
-		if (selectButton.isMouseSelect && isSelectOrTitle == -1)
+		if (titleButton.isMouseSelect && isSelectOrTitle == -1)
 		{
 			selectEase.set(easingType::easeOut, easingPattern::Cubic, 20, 640 - 150, 640 + 150);
 			isMoveSelectIcon = true;
 			isSelectOrTitle *= -1;
 		}
 		//title画面
-		else if (titleButton.isMouseSelect && isSelectOrTitle == 1)
+		else if (selectButton.isMouseSelect && isSelectOrTitle == 1)
 		{
 			selectEase.set(easingType::easeOut, easingPattern::Cubic, 20, 640 + 150, 640 - 150);
 			isMoveSelectIcon = true;
@@ -1042,8 +1022,8 @@ void GameScene::resultUpdata()
 			selectIconSizeX = 200;
 		}
 		selects[2].size = { selectIconSizeX,7 };
-		selects[2].spriteTransferVertexBuffer();
 	}
+
 	selects[2].spriteUpdata();
 
 	if ((isTitleButton || isSelectButton) && !isPushTitle && !isMoveSelectIcon)
@@ -1057,7 +1037,6 @@ void GameScene::resultUpdata()
 	{
 		selects[2].size.y = ButtonEase_y.easing();
 		selects[2].size.x = ButtonEase_x.easing();
-		selects[2].spriteTransferVertexBuffer();
 	}
 
 	//タイトル画面準備
@@ -1079,7 +1058,7 @@ void GameScene::resultUpdata()
 		else
 		{
 			startButton.size = { 340,50 };
-			startButton.spriteTransferVertexBuffer();
+			startButton.spriteUpdata();
 			isPushStart = false;
 			selects[2].position = { 640,420,0 };
 			stageNum = 0;
@@ -1092,9 +1071,7 @@ void GameScene::resultUpdata()
 			titleWhiteBackAlpha = 1.0f;
 			titleIconDrag.position.x = dragEaseStart;
 			titleIconShoot.position.x = shootEaseStart;
-			titleIconDrag.spriteTransferVertexBuffer();
 			titleIconDrag.spriteUpdata();
-			titleIconShoot.spriteTransferVertexBuffer();
 			titleIconShoot.spriteUpdata();
 
 			scene = sceneType::title;
@@ -1321,11 +1298,9 @@ void GameScene::updata()
 	//マウスカーソル更新
 	mouseCursur.position = MOUSE_POS;
 	mouseCursur.rotation += 2.0f;
-	mouseCursur.spriteTransferVertexBuffer();
 	mouseCursur.spriteUpdata();
 	mouseCursurSub.position = MOUSE_POS;
 	mouseCursurSub.rotation -= 4.0f;
-	mouseCursurSub.spriteTransferVertexBuffer();
 	mouseCursurSub.spriteUpdata();
 
 	//ライト更新
@@ -1466,7 +1441,6 @@ void GameScene::countDown()
 		countDownSprite[countDownNum].size = { countDownSize,countDownSize };
 		countDownSprite[countDownNum].rotation -= 4;
 		countDownSprite[countDownNum].position = { 640,360,0 };
-		countDownSprite[countDownNum].spriteTransferVertexBuffer();
 		countDownSprite[countDownNum].spriteUpdata();
 
 		if (!countDownEase.getIsActive())
@@ -1687,7 +1661,7 @@ void GameScene::tutorial()
 		playerPointer->isNormalShot = true;
 		playerPointer->isHomingMissile = true;
 		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 40, 720, 0);
-		titleButton.spriteTransferVertexBuffer();
+		titleButton.spriteUpdata();
 		selects[2].position = { 640 - 150,540,0 };
 		selectIconSizeX = 250;
 		isSelectOrTitle = -1;
@@ -1705,7 +1679,7 @@ void GameScene::tutorial()
 		playerPointer->isNormalShot = true;
 		playerPointer->isHomingMissile = true;
 		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 40, 720, 0);
-		titleButton.spriteTransferVertexBuffer();
+		titleButton.spriteUpdata();
 		selects[2].position = { 640 - 150,540,0 };
 		selectIconSizeX = 250;
 		isSelectOrTitle = -1;
@@ -1816,7 +1790,7 @@ bool GameScene::loadStage()
 		newicon->size = { 50,50 };
 		newicon->position = { waveBarPosX,(360 - totalWaveBarLength / 2) + i * nextWaveDis,0 };
 		newicon->generateSprite("enemyWaveIcon.png");
-		newicon->spriteTransferVertexBuffer();
+		newicon->spriteUpdata();
 		enemyWaveIcons.push_back(std::move(newicon));
 	}
 
@@ -1825,7 +1799,7 @@ bool GameScene::loadStage()
 	newicon->size = { 100,100 };
 	newicon->position = { waveBarPosX,(360 - totalWaveBarLength / 2) + totalWaveBarLength,0 };
 	newicon->generateSprite("bossWaveIcon.png");
-	newicon->spriteTransferVertexBuffer();
+	newicon->spriteUpdata();
 	enemyWaveIcons.push_back(std::move(newicon));
 
 	return true;

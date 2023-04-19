@@ -582,19 +582,15 @@ void Player::updata()
 	}
 
 	//ダメージ表現スプライト
-	damage.spriteTransferVertexBuffer();
 	damage.spriteUpdata();
 
 	//HPゲージの更新
 	HPGaugeBar.size = { (float)playerHP * 40,20 };
-	HPGaugeBar.spriteTransferVertexBuffer();
 	HPGaugeBar.spriteUpdata();
 
 	boostGaugeBar.size = { (float)boostGauge / 1.5f,20 };
-	boostGaugeBar.spriteTransferVertexBuffer();
 	boostGaugeBar.spriteUpdata();
 
-	dangarHPGaugeBar.spriteTransferVertexBuffer();
 	dangarHPGaugeBar.spriteUpdata();
 
 	gaugeFrame.spriteUpdata();
@@ -627,7 +623,6 @@ void Player::updata()
 	};
 
 	miniMapPlayer.position = minimapPosition;
-	miniMapPlayer.spriteTransferVertexBuffer();
 	miniMapPlayer.spriteUpdata();
 
 	if (playerHP <= 0)
@@ -724,11 +719,8 @@ void Player::targetUpdata()
 		0.0f
 	};
 
-	targetFirst.spriteTransferVertexBuffer();
 	targetFirst.spriteUpdata();
-	targetSecond.spriteTransferVertexBuffer();
 	targetSecond.spriteUpdata();
-	targetThird.spriteTransferVertexBuffer();
 	targetThird.spriteUpdata();
 
 	//左クリックで通常弾
@@ -757,9 +749,7 @@ void Player::targetUpdata()
 	rockonGauge[0].size.x = (targetCount - 5) * 3.5f;
 	rockonGauge[1].size.x = (targetCount - 5) * 3.5f;
 
-	rockonGauge[0].spriteTransferVertexBuffer();
 	rockonGauge[0].spriteUpdata();
-	rockonGauge[1].spriteTransferVertexBuffer();
 	rockonGauge[1].spriteUpdata();
 
 	if (targetCount > 70)
@@ -781,7 +771,6 @@ void Player::targetUpdata()
 	for (int i = 0; i < 8; i++)
 	{
 		remainingMissileNum[i].position = { 640,360,0 };
-		remainingMissileNum[i].spriteTransferVertexBuffer();
 		remainingMissileNum[i].spriteUpdata();
 	}
 
@@ -791,8 +780,7 @@ void Player::targetUpdata()
 	remainingMissileNum[8].texSize = { 100,100 };
 	remainingMissileNum[8].size = { 70,70 };
 
-	remainingMissileNum[8].spriteTransferVertexBuffer(true);
-	remainingMissileNum[8].spriteUpdata();
+	remainingMissileNum[8].spriteUpdata(true);
 }
 
 void Player::addMissile(Enemy* enemy)

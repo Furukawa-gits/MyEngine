@@ -42,9 +42,7 @@ void DebugText::Print(const std::string& text, float x, float y, float scale)
 		sprites[spriteIndex].texSize = { FontWid,FontHei };
 		sprites[spriteIndex].size = { FontWid * scale,FontHei * scale };
 
-		sprites[spriteIndex].spriteTransferVertexBuffer(true);
-
-		sprites[spriteIndex].spriteUpdata();
+		sprites[spriteIndex].spriteUpdata(true);
 
 		spriteIndex++;
 	}

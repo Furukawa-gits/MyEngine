@@ -41,19 +41,19 @@ private:
 	/// <param name="filename">ファイル名</param>
 	void loadTexture(const std::string& filename);
 
-public:
-	/// <summary>
-	/// 静的データセット
-	/// </summary>
-	/// <param name="dev">デバイス情報</param>
-	static void setStaticData(ID3D12Device* dev, dxinput* dxinput);
-
 	/// <summary>
 	/// 頂点バッファへのデータ転送
 	/// </summary>
 	/// <param name="tex">テクスチャマネージャー</param>
 	/// <param name="isCutout">切り取るかどうか</param>
 	void spriteTransferVertexBuffer(bool isCutout = false);
+
+public:
+	/// <summary>
+	/// 静的データセット
+	/// </summary>
+	/// <param name="dev">デバイス情報</param>
+	static void setStaticData(ID3D12Device* dev, dxinput* dxinput);
 
 	/// <summary>
 	/// スプライト生成
@@ -74,7 +74,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="spritecommon">スプライト共通データ</param>
-	void spriteUpdata();
+	void spriteUpdata(bool iscutout = false);
 
 	/// <summary>
 	/// 描画

@@ -180,12 +180,9 @@ void uniteParts::partsSpriteUpdata()
 	outScreenIcon[0]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
 	outScreenIcon[1]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
 
-	rockTarget->spriteTransferVertexBuffer();
 	rockTarget->spriteUpdata();
 
-	outScreenIcon[0]->spriteTransferVertexBuffer();
 	outScreenIcon[0]->spriteUpdata();
-	outScreenIcon[1]->spriteTransferVertexBuffer();
 	outScreenIcon[1]->spriteUpdata();
 }
 
@@ -572,7 +569,6 @@ void uniteBoss::uniteBossUpdata()
 	};
 
 	miniMapEnemy.position = minimapPosition;
-	miniMapEnemy.spriteTransferVertexBuffer();
 	miniMapEnemy.spriteUpdata();
 
 	uniteBossAriveMove();
@@ -635,16 +631,12 @@ void uniteBoss::uniteBossSpriteUpdata()
 	outScreenIcon[0]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
 	outScreenIcon[1]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
 
-	rockTarget->spriteTransferVertexBuffer();
 	rockTarget->spriteUpdata();
 
-	outScreenIcon[0]->spriteTransferVertexBuffer();
 	outScreenIcon[0]->spriteUpdata();
-	outScreenIcon[1]->spriteTransferVertexBuffer();
 	outScreenIcon[1]->spriteUpdata();
 
 	motherHitPointGauge.size.x = (float)HP * 70;
-	motherHitPointGauge.spriteTransferVertexBuffer();
 	motherHitPointGauge.spriteUpdata();
 
 	int allPartsHP = 0;
@@ -655,7 +647,6 @@ void uniteBoss::uniteBossSpriteUpdata()
 	}
 
 	allPartsHitPointGauge.size.x = (float)allPartsHP * 14;
-	allPartsHitPointGauge.spriteTransferVertexBuffer();
 	allPartsHitPointGauge.spriteUpdata();
 
 	for (std::unique_ptr<uniteParts>& parts : partsList)

@@ -126,7 +126,6 @@ void Boss::bossUpdate(Player* player)
 	};
 
 	miniMapEnemy.position = minimapPosition;
-	miniMapEnemy.spriteTransferVertexBuffer();
 	miniMapEnemy.spriteUpdata();
 
 	bossAriveMove();
@@ -200,16 +199,12 @@ void Boss::bossSpriteUpdata()
 	outScreenIcon[0]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
 	outScreenIcon[1]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
 
-	rockTarget->spriteTransferVertexBuffer();
 	rockTarget->spriteUpdata();
 
-	outScreenIcon[0]->spriteTransferVertexBuffer();
 	outScreenIcon[0]->spriteUpdata();
-	outScreenIcon[1]->spriteTransferVertexBuffer();
 	outScreenIcon[1]->spriteUpdata();
 
 	bossHitPointGauge.size.x = (float)HP * 50;
-	bossHitPointGauge.spriteTransferVertexBuffer();
 	bossHitPointGauge.spriteUpdata();
 }
 
