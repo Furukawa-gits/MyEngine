@@ -9,22 +9,22 @@ class XAudio2VoiceCallback : public IXAudio2VoiceCallback
 public:
 	// ボイス処理パスの開始時
 	//STDMETHOD_(void, onVoiceProcessingPassStart) (THIS_ UINT32 BytesRequired) {};
-	void onVoiceProcessingPassStart(UINT32 BytesRequired) {};
+	void OnVoiceProcessingPassStart(UINT32 BytesRequired) {};
 	// ボイス処理パスの終了時
-	STDMETHOD_(void, onVoiceProcessingPassEnd) (THIS) {};
+	STDMETHOD_(void, OnVoiceProcessingPassEnd) (THIS) {};
 	// バッファストリームの再生が終了した時
-	STDMETHOD_(void, onStreamEnd) (THIS) {};
+	STDMETHOD_(void, OnStreamEnd) (THIS) {};
 	// バッファの使用開始時
-	STDMETHOD_(void, onBufferStart) (THIS_ void* pBufferContext) {};
+	STDMETHOD_(void, OnBufferStart) (THIS_ void* pBufferContext) {};
 	// バッファの末尾に達した時
-	STDMETHOD_(void, onBufferEnd) (THIS_ void* pBufferContext) {
+	STDMETHOD_(void, OnBufferEnd) (THIS_ void* pBufferContext) {
 		// バッファを解放する
 		delete[] pBufferContext;
 	};
 	// 再生がループ位置に達した時
-	STDMETHOD_(void, onLoopEnd) (THIS_ void* pBufferContext) {};
+	STDMETHOD_(void, OnLoopEnd) (THIS_ void* pBufferContext) {};
 	// ボイスの実行エラー時
-	STDMETHOD_(void, onVoiceError) (THIS_ void* pBufferContext, HRESULT Error) {};
+	STDMETHOD_(void, OnVoiceError) (THIS_ void* pBufferContext, HRESULT Error) {};
 };
 
 //音声データ
