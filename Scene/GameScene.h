@@ -176,7 +176,10 @@ private:
 	//背景
 	std::unique_ptr<SingleSprite> sample_back;
 	//タイトル
-	SingleSprite gameTitle;
+	SingleSprite titleIconDrag;
+	SingleSprite titleIconShoot;
+	SingleSprite titlePlayer;
+	SingleSprite titleWhiteBack;
 	//スタートボタン
 	SingleSprite startButton;
 	//ステージアイコン
@@ -210,6 +213,21 @@ private:
 
 	//シーン番号
 	sceneType scene = sceneType::title;
+
+	//タイトルアニメーション
+	bool isTitleAnimation = false;
+
+	easingManager titleDragEase;
+	const float dragEaseStart = -130;
+	const float dragEaseEnd = (win_width / 2) - 70;
+
+	easingManager titleShootEase;
+	const float shootEaseStart = 1450;
+	const float shootEaseEnd = (win_width / 2) + 70;
+
+	const int titleEaseTime = 80;
+
+	float titleWhiteBackAlpha = 1.0f;
 
 	//タイトル演出フラグ
 	bool isTitleStage = false;

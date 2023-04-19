@@ -38,21 +38,33 @@ void GameScene::Load_Sprites()
 	sample_back->GenerateSprite("sample_back.jpg");
 
 	//タイトル
-	gameTitle.anchorpoint = { 0.5f,0.5f };
-	gameTitle.size = { 500,220 };
-	gameTitle.position = { 640,200,0 };
-	gameTitle.GenerateSprite("DragShoot.png");
+	titleIconDrag.anchorpoint = { 0.5f,0.5f };
+	titleIconDrag.size = { 250,110 };
+	titleIconDrag.position = { 0,200,0 };
+	titleIconDrag.GenerateSprite("titleDrag.png");
+
+	titleIconShoot.anchorpoint = { 0.5f,0.5f };
+	titleIconShoot.size = { 300,100 };
+	titleIconShoot.position = { 0,310,0 };
+	titleIconShoot.GenerateSprite("titleShoot.png");
+
+	titlePlayer.anchorpoint = { 0.5f,0.5f };
+	titlePlayer.size = { 410,310 };
+	titlePlayer.position = { 600,300,0 };
+	titlePlayer.GenerateSprite("titlePlayer.png");
+
+	titleWhiteBack.size = { 1280,720 };
+	titleWhiteBack.GenerateSprite("white1x1.png");
 
 	//スタートボタン
 	startButton.anchorpoint = { 0.5f,0.5f };
 	startButton.size = { 430,50 };
-	startButton.GenerateSprite("startButton.png");
 	startButton.position = { 640,500,0 };
-	startButton.SpriteTransferVertexBuffer();
+	startButton.GenerateSprite("startButton.png");
 
-#pragma region //ステージアイコン０～２
+#pragma region //ステージアイコン
 	stage[0].anchorpoint = { 0.5f,0.5f };
-	stage[0].size = { 300,100 };
+	stage[0].size = { 500,100 };
 	stage[0].position = { 0,360,0 };
 	stage[0].GenerateSprite("titleText.png");
 
@@ -75,7 +87,7 @@ void GameScene::Load_Sprites()
 	stage[4].size = { 128,128 };
 	stage[4].position = { 0,360,0 };
 	stage[4].GenerateSprite("count3.png");
-#pragma endregion //ステージアイコン０～２
+#pragma endregion //ステージアイコン
 
 	//セレクト画面矢印
 	selects[0].anchorpoint = { 0.5f,0.5f };
@@ -104,21 +116,18 @@ void GameScene::Load_Sprites()
 	countDownSprite[0].size = { 100,100 };
 	countDownSprite[0].position = { 640,360,0 };
 	countDownSprite[0].GenerateSprite("count3.png");
-	countDownSprite[0].SpriteTransferVertexBuffer();
 	countDownSprite[0].SpriteUpdate();
 
 	countDownSprite[1].anchorpoint = { 0.5f,0.5f };
 	countDownSprite[1].size = { 100,100 };
 	countDownSprite[1].position = { 640,360,0 };
 	countDownSprite[1].GenerateSprite("count2.png");
-	countDownSprite[1].SpriteTransferVertexBuffer();
 	countDownSprite[1].SpriteUpdate();
 
 	countDownSprite[2].anchorpoint = { 0.5f,0.5f };
 	countDownSprite[2].size = { 100,100 };
 	countDownSprite[2].position = { 640,360,0 };
 	countDownSprite[2].GenerateSprite("count1.png");
-	countDownSprite[2].SpriteTransferVertexBuffer();
 	countDownSprite[2].SpriteUpdate();
 #pragma endregion //カウントダウンアイコン
 
@@ -147,16 +156,14 @@ void GameScene::Load_Sprites()
 	//タイトルボタン
 	titleButton.anchorpoint = { 0.5f,0.5f };
 	titleButton.size = { 200,40 };
-	titleButton.GenerateSprite("titleText.png");
 	titleButton.position = { 640 + 150,500,0 };
-	titleButton.SpriteTransferVertexBuffer();
+	titleButton.GenerateSprite("titleText.png");
 
 	//セレクトボタン
 	selectButton.anchorpoint = { 0.5f,0.5f };
 	selectButton.size = { 200,40 };
-	selectButton.GenerateSprite("selectText.png");
 	selectButton.position = { 640 - 150,500,0 };
-	selectButton.SpriteTransferVertexBuffer();
+	selectButton.GenerateSprite("selectText.png");
 
 #pragma region	//チュートリアル用のテキスト
 	moveText.anchorpoint = { 0.5f,0.5f };
@@ -190,13 +197,11 @@ void GameScene::Load_Sprites()
 	enemyWaveBar.size = { 10,totalWaveBarLength };
 	enemyWaveBar.position = { waveBarPosX,360 - totalWaveBarLength / 2,0 };
 	enemyWaveBar.GenerateSprite("enemyWaveBar.png");
-	enemyWaveBar.SpriteTransferVertexBuffer();
 
 	playerWaveIcon.anchorpoint = { 0.5f,0.5f };
 	playerWaveIcon.size = { 120,75 };
 	playerWaveIcon.position = { waveBarPosX + 20,360 - totalWaveBarLength / 2,0 };
 	playerWaveIcon.GenerateSprite("playerWaveIcon.png");
-	playerWaveIcon.SpriteTransferVertexBuffer();
 #pragma endregion //ウェーブの表示
 
 	//ミニマップ
@@ -204,25 +209,21 @@ void GameScene::Load_Sprites()
 	miniMap.size = { 200,200 };
 	miniMap.position = Enemy::miniMapPosition;
 	miniMap.GenerateSprite("minimap.png");
-	miniMap.SpriteTransferVertexBuffer();
 
 	//高度メーター
 	heightGauge.anchorpoint = { 0.5f,0.5f };
 	heightGauge.size = { 40,200 };
 	heightGauge.position = { Enemy::miniMapPosition.x + 120,Enemy::miniMapPosition.y,0 };
 	heightGauge.GenerateSprite("playerheightbar.png");
-	heightGauge.SpriteTransferVertexBuffer();
 
 	//プレイヤーの高度
 	playerHeight.anchorpoint = { 0.5f,0.5f };
 	playerHeight.size = { 32,5 };
 	playerHeight.GenerateSprite("playerHPGauge.png");
-	playerHeight.SpriteTransferVertexBuffer();
 
 	playerHeightIcon.anchorpoint = { 0.0f,0.5f };
 	playerHeightIcon.size = { 44,17 };
 	playerHeightIcon.GenerateSprite("playerHeightIcon.png");
-	playerHeightIcon.SpriteTransferVertexBuffer();
 }
 
 //初期化
@@ -310,6 +311,12 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 
 	//マウスカーソル非表示
 	//ShowCursor(false);
+
+	//タイトルアニメーション準備
+	titleDragEase.set(easingType::easeOut, easingPattern::Quadratic, titleEaseTime, dragEaseStart, dragEaseEnd);
+	titleShootEase.set(easingType::easeOut, easingPattern::Quadratic, titleEaseTime, shootEaseStart, shootEaseEnd);
+	isTitleAnimation = true;
+	titleWhiteBackAlpha = 1.0f;
 }
 
 //デバッグテキスト
@@ -355,10 +362,41 @@ void GameScene::Title_updata()
 		return;
 	}
 
-	if ((input->Mouse_LeftTriger() || input->Triger(DIK_SPACE)) && !isPushStart)
+	titleIconDrag.SpriteTransferVertexBuffer();
+	titleIconDrag.SpriteUpdate();
+	titleIconShoot.SpriteTransferVertexBuffer();
+	titleIconShoot.SpriteUpdate();
+
+	resultScreen[0].SpriteUpdate();
+
+	if (!titleDragEase.getIsActive() && !titleShootEase.getIsActive() && isTitleAnimation)
+	{
+		isTitleAnimation = false;
+	}
+
+	if (isTitleAnimation)
+	{
+		titleIconDrag.position.x = titleDragEase.easing();
+		titleIconShoot.position.x = titleShootEase.easing();
+
+		return;
+	}
+	else
+	{
+		titleIconDrag.position.x = dragEaseEnd;
+		titleIconShoot.position.x = shootEaseEnd;
+		titleWhiteBackAlpha -= 1.0f / 120.0f;
+		titleWhiteBack.color = { 1,1,1,titleWhiteBackAlpha };
+	}
+
+	titleWhiteBack.SpriteUpdate();
+	titlePlayer.SpriteUpdate();
+
+	if ((input->Mouse_LeftTriger() || input->Triger(DIK_SPACE)) && !isPushStart && !isTitleAnimation)
 	{
 		startButtonEase_y.set(easingType::easeOut, easingPattern::Quadratic, 30, startButton.size.y, 0);
 		startButtonEase_x.set(easingType::easeOut, easingPattern::Quadratic, 30, startButton.size.x, startButton.size.x + 30);
+		titleWhiteBackAlpha = 0.0f;
 		isPushStart = true;
 	}
 
@@ -373,7 +411,6 @@ void GameScene::Title_updata()
 
 	startButton.SpriteUpdate();
 	resultScreen[0].SpriteUpdate();
-	gameTitle.SpriteUpdate();
 
 	if (isPushStart && !startButtonEase_y.getIsActive())
 	{
@@ -482,6 +519,18 @@ void GameScene::Select_updata()
 		{
 			startButton.size = { 340,50 };
 			startButton.SpriteTransferVertexBuffer();
+
+			//タイトルアニメーション準備
+			titleDragEase.set(easingType::easeOut, easingPattern::Quadratic, titleEaseTime, dragEaseStart, dragEaseEnd);
+			titleShootEase.set(easingType::easeOut, easingPattern::Quadratic, titleEaseTime, shootEaseStart, shootEaseEnd);
+			isTitleAnimation = true;
+			titleWhiteBackAlpha = 1.0f;
+			titleIconDrag.position.x = dragEaseStart;
+			titleIconShoot.position.x = shootEaseStart;
+			titleIconDrag.SpriteTransferVertexBuffer();
+			titleIconDrag.SpriteUpdate();
+			titleIconShoot.SpriteTransferVertexBuffer();
+			titleIconShoot.SpriteUpdate();
 			scene = sceneType::title;
 			return;
 		}
@@ -1026,6 +1075,19 @@ void GameScene::Result_updata()
 			selects[2].position = { 640,420,0 };
 			stageNum = 0;
 			stage[0].position.x = 640 - 300;
+
+			//タイトルアニメーション準備
+			titleDragEase.set(easingType::easeOut, easingPattern::Quadratic, titleEaseTime, dragEaseStart, dragEaseEnd);
+			titleShootEase.set(easingType::easeOut, easingPattern::Quadratic, titleEaseTime, shootEaseStart, shootEaseEnd);
+			isTitleAnimation = true;
+			titleWhiteBackAlpha = 1.0f;
+			titleIconDrag.position.x = dragEaseStart;
+			titleIconShoot.position.x = shootEaseStart;
+			titleIconDrag.SpriteTransferVertexBuffer();
+			titleIconDrag.SpriteUpdate();
+			titleIconShoot.SpriteTransferVertexBuffer();
+			titleIconShoot.SpriteUpdate();
+
 			scene = sceneType::title;
 		}
 	}
@@ -1051,8 +1113,16 @@ void GameScene::TitleDraw2d()
 	}
 
 	resultScreen[0].DrawSprite(directx->cmdList.Get());
-	gameTitle.DrawSprite(directx->cmdList.Get());
-	startButton.DrawSprite(directx->cmdList.Get());
+
+	if (!isTitleAnimation)
+	{
+		titleWhiteBack.DrawSprite(directx->cmdList.Get());
+		titlePlayer.DrawSprite(directx->cmdList.Get());
+		startButton.DrawSprite(directx->cmdList.Get());
+	}
+
+	titleIconDrag.DrawSprite(directx->cmdList.Get());
+	titleIconShoot.DrawSprite(directx->cmdList.Get());
 }
 
 //セレクト画面描画
