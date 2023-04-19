@@ -33,7 +33,7 @@ void uniteParts::partsInit(int ID)
 	outScreenIcon[1]->size = { 100,100 };
 	outScreenIcon[1]->GenerateSprite("!.png");
 
-	enemyObject = new Object3d_FBX;
+	enemyObject = new object3dFBX;
 	enemyObject->Initialize();
 	enemyObject->SetModel(partsModel.get());
 	enemyObject->SetScale({ 0.7f,0.7f,0.7f });
@@ -493,7 +493,7 @@ void uniteBoss::uniteBossInit()
 	miniMapEnemy.size = { 8,8 };
 	miniMapEnemy.GenerateSprite("bossHPGauge.png");
 
-	enemyObject = new Object3d_FBX;
+	enemyObject = new object3dFBX;
 	enemyObject->Initialize();
 	enemyObject->SetModel(uniteBossModel.get());
 	enemyObject->SetScale({ 1.0f,1.0f,1.0f });
@@ -711,7 +711,7 @@ void uniteBoss::uniteBossArrival()
 			parts->angleSpeed = 0.01f;
 		}
 
-		Object3d_FBX::SetCamera(playerPointer->followCamera);
+		object3dFBX::SetCamera(playerPointer->followCamera);
 	}
 }
 
@@ -807,7 +807,7 @@ void uniteBoss::uniteBossDeathMove()
 	uniteBossCamera->SetTarget(position);
 	uniteBossCamera->Update();
 
-	Object3d_FBX::SetCamera(uniteBossCamera);
+	object3dFBX::SetCamera(uniteBossCamera);
 	SingleParticle::setCamera(uniteBossCamera);
 
 	//撃墜演出のカウント
@@ -917,7 +917,7 @@ void uniteBoss::uniteBossSet()
 	uniteBossCamera = new Camera;
 	uniteBossCamera->SetEye({ 0,0,position.z - 35 });
 	uniteBossCamera->SetTarget(position);
-	Object3d_FBX::SetCamera(uniteBossCamera);
+	object3dFBX::SetCamera(uniteBossCamera);
 
 	partsList.clear();
 

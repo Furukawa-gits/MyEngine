@@ -46,7 +46,7 @@ void Boss::bossInit()
 	miniMapEnemy.size = { 6,6 };
 	miniMapEnemy.GenerateSprite("bossHPGauge.png");
 
-	enemyObject = new Object3d_FBX;
+	enemyObject = new object3dFBX;
 	enemyObject->Initialize();
 	enemyObject->SetModel(bossModel.get());
 	enemyObject->SetScale({ 1.0f,1.0f,1.0f });
@@ -249,7 +249,7 @@ void Boss::bossSet(XMFLOAT3 pos)
 	bossCamera = new Camera;
 	bossCamera->SetEye({ pos.x - 10,pos.y - 10,pos.z + 10 });
 	bossCamera->SetTarget({ pos.x + 5,pos.y + 5,pos.z - 5 });
-	Object3d_FBX::SetCamera(bossCamera);
+	object3dFBX::SetCamera(bossCamera);
 
 	isAppear = true;
 }
@@ -298,7 +298,7 @@ void Boss::bossArrival(Player* player)
 		isAppear = false;
 		player->isStop = false;
 		player->isInvisible = -1;
-		Object3d_FBX::SetCamera(player->followCamera);
+		object3dFBX::SetCamera(player->followCamera);
 	}
 }
 
@@ -360,7 +360,7 @@ void Boss::bossDeathMove()
 	bossCamera->SetTarget(enemyObject->getPosition());
 	bossCamera->Update();
 
-	Object3d_FBX::SetCamera(bossCamera);
+	object3dFBX::SetCamera(bossCamera);
 	SingleParticle::setCamera(bossCamera);
 
 	//撃墜演出のカウント

@@ -3,7 +3,7 @@
 
 FollowCamera::FollowCamera()
 {
-	aspectRatio = (float)win_width / win_hight;
+	aspectRatio = (float)windowWidth / windowHight;
 
 	//ビュー行列の計算
 	UpdateViewMatrix();

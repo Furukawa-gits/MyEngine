@@ -131,10 +131,10 @@ private:
 	Model* model = nullptr;
 	Model* SkyModel = nullptr;
 	Model* groundModel = nullptr;
-	Object3d_FBX* object = nullptr;
-	Object3d_FBX* skySphere = nullptr;
-	Object3d_FBX* ground = nullptr;
-	Object3d_FBX* cameraobj = nullptr;
+	object3dFBX* object = nullptr;
+	object3dFBX* skySphere = nullptr;
+	object3dFBX* ground = nullptr;
+	object3dFBX* cameraobj = nullptr;
 
 	//スカイドームの回転
 	float skyShpereRotY = 0.0002f;
@@ -145,7 +145,7 @@ private:
 	Camera* stagingCamera = nullptr;
 
 	//プレイヤー
-	std::unique_ptr<Player> player_p;
+	std::unique_ptr<Player> playerPointer;
 
 	int targetnum = 0;
 
@@ -219,11 +219,11 @@ private:
 
 	easingManager titleDragEase;
 	const float dragEaseStart = -130;
-	const float dragEaseEnd = (win_width / 2) - 70;
+	const float dragEaseEnd = (windowWidth / 2) - 70;
 
 	easingManager titleShootEase;
 	const float shootEaseStart = 1450;
-	const float shootEaseEnd = (win_width / 2) + 70;
+	const float shootEaseEnd = (windowWidth / 2) + 70;
 
 	const int titleEaseTime = 80;
 

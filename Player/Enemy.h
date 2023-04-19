@@ -190,7 +190,7 @@ private:
 
 public:
 	//オブジェクト
-	Object3d_FBX* enemyObject = nullptr;
+	object3dFBX* enemyObject = nullptr;
 
 	//ミニマップの基準座標
 	static const XMFLOAT3 miniMapPosition;

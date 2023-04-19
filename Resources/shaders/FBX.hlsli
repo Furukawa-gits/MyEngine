@@ -1,4 +1,4 @@
-static const int MAX_BONES = 36;
+static const int maxBones = 36;
 
 cbuffer cbuff0 : register(b0)
 {
@@ -16,7 +16,7 @@ cbuffer cbuff1 : register(b1)
 
 cbuffer skinning:register(b3)
 {
-	matrix matSkinning[MAX_BONES];
+	matrix matSkinning[maxBones];
 };
 
 struct VSInput

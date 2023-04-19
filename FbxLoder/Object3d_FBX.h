@@ -21,7 +21,7 @@ enum graphicType
 	Simple = 1
 };
 
-class Object3d_FBX
+class object3dFBX
 {
 protected:
 	template<class T> using ComPtr =
@@ -33,7 +33,7 @@ protected:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
-	static const int MAX_BONES = 32;
+	static const int maxBones = 32;
 
 	struct ConstBufferDataTransform
 	{
@@ -46,16 +46,16 @@ public:
 
 	struct ConstBufferDataSkin
 	{
-		XMMATRIX bones[MAX_BONES];
+		XMMATRIX bones[maxBones];
 	};
 
 public:
-	Object3d_FBX();
-	~Object3d_FBX();
+	object3dFBX();
+	~object3dFBX();
 
-	static void SetDevice(ID3D12Device* device) { Object3d_FBX::device = device; }
-	static void SetCamera(Camera* camera) { Object3d_FBX::camera = camera; }
-	static void setLight(Light* light) { Object3d_FBX::light = light; }
+	static void SetDevice(ID3D12Device* device) { object3dFBX::device = device; }
+	static void SetCamera(Camera* camera) { object3dFBX::camera = camera; }
+	static void setLight(Light* light) { object3dFBX::light = light; }
 
 	void Initialize();
 
@@ -81,7 +81,7 @@ public:
 
 	void setColor(XMFLOAT4 col) { this->color = col; }
 
-	void setParent(Object3d_FBX* parent) { this->parent = parent; }
+	void setParent(object3dFBX* parent) { this->parent = parent; }
 
 	XMFLOAT2 worldToScleen();
 
@@ -203,5 +203,5 @@ private:
 
 	bool isSetOtherPipeline = false;
 
-	Object3d_FBX* parent = nullptr;
+	object3dFBX* parent = nullptr;
 };

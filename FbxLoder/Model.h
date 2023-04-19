@@ -43,7 +43,7 @@ private:
 	template<class T> using vector = std::vector<T>;
 
 public:
-	static const int MAX_BONE_INDICES = 4;
+	static const int maxBoneIndices = 4;
 
 	friend class FbxLoader;
 
@@ -52,8 +52,8 @@ public:
 		DirectX::XMFLOAT3 pos;
 		DirectX::XMFLOAT3 normal;
 		DirectX::XMFLOAT2 uv;
-		UINT boneIndex[MAX_BONE_INDICES];
-		float boneWeight[MAX_BONE_INDICES];
+		UINT boneIndex[maxBoneIndices];
+		float boneWeight[maxBoneIndices];
 	};
 
 	struct Bone

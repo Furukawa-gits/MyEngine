@@ -130,8 +130,8 @@ void directX::Initializedepth()
 	//深度バッファのリソース設定
 	depthResDesc = CD3DX12_RESOURCE_DESC::Tex2D(
 		DXGI_FORMAT_D32_FLOAT,
-		win_width,
-		win_hight,
+		windowWidth,
+		windowHight,
 		1, 0,
 		1, 0,
 		D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
@@ -186,8 +186,8 @@ void directX::preDraw()
 
 
 	//ビューポート設定
-	cmdList->RSSetViewports(1, &CD3DX12_VIEWPORT(0.0f, 0.0f, win_width, win_hight));
-	cmdList->RSSetScissorRects(1, &CD3DX12_RECT(0, 0, win_width, win_hight));
+	cmdList->RSSetViewports(1, &CD3DX12_VIEWPORT(0.0f, 0.0f, windowWidth, windowHight));
+	cmdList->RSSetScissorRects(1, &CD3DX12_RECT(0, 0, windowWidth, windowHight));
 }
 
 //描画処理後

@@ -125,7 +125,7 @@ public:
 
 	UINT descriptorHandleIncrementSize;
 
-	ComPtr<ID3D12DescriptorHeap> Material_descHeap;
+	ComPtr<ID3D12DescriptorHeap> materialDescHeap;
 
 	ComPtr<ID3D12Resource> texbuff[512];
 };

@@ -66,7 +66,7 @@ void Enemy::init(enemyPattern pattern)
 	miniMapEnemy.size = { 4,4 };
 	miniMapEnemy.GenerateSprite("bossHPGauge.png");
 
-	enemyObject = new Object3d_FBX;
+	enemyObject = new object3dFBX;
 	enemyObject->Initialize();
 	enemyObject->SetModel(enemyModelS.get());
 	enemyObject->SetScale({ 1.0f,1.0f,1.0f });

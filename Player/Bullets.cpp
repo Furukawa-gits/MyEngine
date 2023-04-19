@@ -45,7 +45,7 @@ void bullet::set(XMFLOAT3 start_pos, XMFLOAT3 Target)
 
 	float length = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
 
-	bullet_vec = { (dis.x / length) * bulletSpeed,(dis.y / length) * bulletSpeed ,(dis.z / length) * bulletSpeed };
+	bulletVec = { (dis.x / length) * bulletSpeed,(dis.y / length) * bulletSpeed ,(dis.z / length) * bulletSpeed };
 
 	isAlive = true;
 }

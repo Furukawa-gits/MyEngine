@@ -95,7 +95,7 @@ void Player::init(dxinput* input, directX* directx)
 
 	playerModel.reset(FbxLoader::GetInstance()->LoadmodelFromFile("player"));
 
-	playerObject = new Object3d_FBX;
+	playerObject = new object3dFBX;
 	playerObject->Initialize();
 	playerObject->SetModel(playerModel.get());
 	playerObject->SetPosition({ 0,5,0 });
@@ -113,14 +113,14 @@ void Player::init(dxinput* input, directX* directx)
 
 	followCamera->setTargets(playerObject->getPosition(), playerObject->getRotation());
 
-	Object3d_FBX::SetCamera(followCamera);
+	object3dFBX::SetCamera(followCamera);
 
 	bullet::staticInit();
 	Missile::staticInit();
 
 	playerCollision.radius = 2.0f;
 
-	playerHP = 10;
+	playerHP = maxHP;
 	isAlive = true;
 }
 
@@ -862,7 +862,7 @@ void Player::reset()
 	targetFirst.position = { (float)mouseOffsetX,(float)mouseOffsetY ,0 };
 	SetCursorPos(mouseOffsetX, mouseOffsetY);
 	cameraMoveCount = 0;
-	Object3d_FBX::SetCamera(followCamera);
+	object3dFBX::SetCamera(followCamera);
 
 	smokeParticles.clear();
 }

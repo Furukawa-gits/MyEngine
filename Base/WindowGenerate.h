@@ -3,8 +3,8 @@
 
 
 
-const int win_width = 1280;
-const int win_hight = 720;
+const int windowWidth = 1280;
+const int windowHight = 720;
 
 class Window_Generate
 {
@@ -13,7 +13,7 @@ public:
 
 	WNDCLASSEX w{};//ウィンドウクラス
 
-	RECT wrc = { 0,0,win_width,win_hight };//ウィンドウサイズ
+	RECT wrc = { 0,0,windowWidth,windowHight };//ウィンドウサイズ
 
 	HWND hwnd{};
 

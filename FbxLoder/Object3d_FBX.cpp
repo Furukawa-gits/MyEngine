@@ -3,23 +3,23 @@
 #include <d3dcompiler.h>
 #pragma comment(lib,"d3dcompiler.lib")
 
-ID3D12Device* Object3d_FBX::device = nullptr;
-Camera* Object3d_FBX::camera = nullptr;
-Light* Object3d_FBX::light = nullptr;
-ComPtr<ID3D12RootSignature> Object3d_FBX::rootsignature;
-ComPtr<ID3D12PipelineState> Object3d_FBX::pipelinestate;
-ComPtr<ID3D12RootSignature> Object3d_FBX::rootsignatureSimple;
-ComPtr<ID3D12PipelineState> Object3d_FBX::pipelinestateSimple;
+ID3D12Device* object3dFBX::device = nullptr;
+Camera* object3dFBX::camera = nullptr;
+Light* object3dFBX::light = nullptr;
+ComPtr<ID3D12RootSignature> object3dFBX::rootsignature;
+ComPtr<ID3D12PipelineState> object3dFBX::pipelinestate;
+ComPtr<ID3D12RootSignature> object3dFBX::rootsignatureSimple;
+ComPtr<ID3D12PipelineState> object3dFBX::pipelinestateSimple;
 
-Object3d_FBX::Object3d_FBX()
+object3dFBX::object3dFBX()
 {
 }
 
-Object3d_FBX::~Object3d_FBX()
+object3dFBX::~object3dFBX()
 {
 }
 
-void Object3d_FBX::Initialize()
+void object3dFBX::Initialize()
 {
 	HRESULT result;
 
@@ -42,7 +42,7 @@ void Object3d_FBX::Initialize()
 
 	ConstBufferDataSkin* constMapSkin = nullptr;
 	result = constBufferSkin->Map(0, nullptr, (void**)&constMapSkin);
-	for (int i = 0; i < MAX_BONES; i++)
+	for (int i = 0; i < maxBones; i++)
 	{
 		constMapSkin->bones[i] = XMMatrixIdentity();
 	}
@@ -51,7 +51,7 @@ void Object3d_FBX::Initialize()
 	frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
 }
 
-void Object3d_FBX::CreateGraphicsPipeline()
+void object3dFBX::CreateGraphicsPipeline()
 {
 	HRESULT result = S_FALSE;
 	ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
@@ -215,7 +215,7 @@ void Object3d_FBX::CreateGraphicsPipeline()
 	if (FAILED(result)) { assert(0); }
 }
 
-void Object3d_FBX::CreateGraphicsPipelineSimple()
+void object3dFBX::CreateGraphicsPipelineSimple()
 {
 	HRESULT result = S_FALSE;
 	ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
@@ -378,7 +378,7 @@ void Object3d_FBX::CreateGraphicsPipelineSimple()
 	if (FAILED(result)) { assert(0); }
 }
 
-void Object3d_FBX::Update()
+void object3dFBX::Update()
 {
 	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
 	matRot = XMMatrixIdentity();
@@ -446,10 +446,10 @@ void Object3d_FBX::Update()
 	constBufferSkin->Unmap(0, nullptr);
 }
 
-XMFLOAT2 Object3d_FBX::worldToScleen()
+XMFLOAT2 object3dFBX::worldToScleen()
 {
-	float w = (float)win_width / 2.0f;
-	float h = (float)win_hight / 2.0f;
+	float w = (float)windowWidth / 2.0f;
+	float h = (float)windowHight / 2.0f;
 	XMMATRIX viewport = {
 		w, 0, 0, 0,
 		0,-h, 0, 0,
@@ -467,10 +467,10 @@ XMFLOAT2 Object3d_FBX::worldToScleen()
 	return XMFLOAT2(screenPos.x, screenPos.y);
 }
 
-XMFLOAT2 Object3d_FBX::worldToScleenSpecifyPosition(XMFLOAT3 pos)
+XMFLOAT2 object3dFBX::worldToScleenSpecifyPosition(XMFLOAT3 pos)
 {
-	float w = (float)win_width / 2.0f;
-	float h = (float)win_hight / 2.0f;
+	float w = (float)windowWidth / 2.0f;
+	float h = (float)windowHight / 2.0f;
 	XMMATRIX viewport = {
 		w, 0, 0, 0,
 		0,-h, 0, 0,
@@ -488,10 +488,10 @@ XMFLOAT2 Object3d_FBX::worldToScleenSpecifyPosition(XMFLOAT3 pos)
 	return XMFLOAT2(screenPos.x, screenPos.y);
 }
 
-XMFLOAT3 Object3d_FBX::screenToWorld(XMFLOAT2 screenPos)
+XMFLOAT3 object3dFBX::screenToWorld(XMFLOAT2 screenPos)
 {
-	float w = (float)win_width / 2.0f;
-	float h = (float)win_hight / 2.0f;
+	float w = (float)windowWidth / 2.0f;
+	float h = (float)windowHight / 2.0f;
 	XMMATRIX viewport = {
 		w, 0, 0, 0,
 		0,-h, 0, 0,
@@ -540,7 +540,7 @@ XMFLOAT3 Object3d_FBX::screenToWorld(XMFLOAT2 screenPos)
 	return worldPos;
 }
 
-void Object3d_FBX::SetPipelineSimple(ID3D12GraphicsCommandList* cmdList)
+void object3dFBX::SetPipelineSimple(ID3D12GraphicsCommandList* cmdList)
 {
 	cmdList->SetPipelineState(pipelinestateSimple.Get());
 
@@ -549,7 +549,7 @@ void Object3d_FBX::SetPipelineSimple(ID3D12GraphicsCommandList* cmdList)
 	isSetOtherPipeline = true;
 }
 
-void Object3d_FBX::Draw(ID3D12GraphicsCommandList* cmdList)
+void object3dFBX::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	if (model == nullptr)
 	{
@@ -574,7 +574,7 @@ void Object3d_FBX::Draw(ID3D12GraphicsCommandList* cmdList)
 	model->Draw(cmdList);
 }
 
-void Object3d_FBX::PlayAnimation()
+void object3dFBX::PlayAnimation()
 {
 	FbxScene* fbxScene = model->GetFbxScene();
 
@@ -593,7 +593,7 @@ void Object3d_FBX::PlayAnimation()
 	isPlay = true;
 }
 
-void Object3d_FBX::reSetPipeline()
+void object3dFBX::reSetPipeline()
 {
 	isSetOtherPipeline = false;
 }

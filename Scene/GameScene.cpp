@@ -260,34 +260,34 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	light->SetLightDir({ 0,-1,0,0 });
 
 	//3dオブジェクト生成
-	Object3d_FBX::setLight(light);
+	object3dFBX::setLight(light);
 
-	Object3d_FBX::SetDevice(directx->dev.Get());
+	object3dFBX::SetDevice(directx->dev.Get());
 
-	Object3d_FBX::CreateGraphicsPipeline();
+	object3dFBX::CreateGraphicsPipeline();
 
-	Object3d_FBX::CreateGraphicsPipelineSimple();
+	object3dFBX::CreateGraphicsPipelineSimple();
 
 	model = FbxLoader::GetInstance()->LoadmodelFromFile("boneTest");
 	SkyModel = FbxLoader::GetInstance()->LoadmodelFromFile("skySphere");
 	groundModel = FbxLoader::GetInstance()->LoadmodelFromFile("floar");
 
 	//プレイヤー初期化
-	player_p = std::make_unique<Player>();
-	player_p->init(input, directx);
+	playerPointer = std::make_unique<Player>();
+	playerPointer->init(input, directx);
 
-	skySphere = new Object3d_FBX;
+	skySphere = new object3dFBX;
 	skySphere->Initialize();
 	skySphere->SetModel(SkyModel);
 	skySphere->SetScale({ 8.0f,8.0f,8.0f });
 
-	ground = new Object3d_FBX;
+	ground = new object3dFBX;
 	ground->Initialize();
 	ground->SetModel(groundModel);
-	ground->SetPosition(player_p->groundPosition);
+	ground->SetPosition(playerPointer->groundPosition);
 	ground->SetScale({ 0.5f,0.5f,0.5f });
 
-	cameraobj = new Object3d_FBX;
+	cameraobj = new object3dFBX;
 	cameraobj->Initialize();
 	cameraobj->SetModel(model);
 
@@ -297,7 +297,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	Enemy::staticInit();
 
 	//パーティクルの共通カメラを設定
-	SingleParticle::setCamera(player_p->followCamera);
+	SingleParticle::setCamera(playerPointer->followCamera);
 
 	//ボスの初期化
 	Boss::staticInitBoss();
@@ -305,7 +305,7 @@ void GameScene::Init(directX* directx, dxinput* input, Audio* audio)
 	testBoss->bossInit();
 
 	//ボス(ユニット)
-	uniteBoss::uniteBossStaticInit(player_p.get());
+	uniteBoss::uniteBossStaticInit(playerPointer.get());
 	testUniteBoss = std::make_unique<uniteBoss>();
 	testUniteBoss->uniteBossInit();
 
@@ -538,14 +538,14 @@ void GameScene::Select_updata()
 		else if (stageNum == 0)
 		{
 			//プレイヤーのリセット
-			player_p->reset();
-			player_p->cameraMoveCount = 0;
-			player_p->boostCount = 0;
-			player_p->normalShotCount = 0;
-			player_p->missileCount = 0;
-			player_p->isBoostTutorial = false;
-			player_p->isNormalShot = false;
-			player_p->isHomingMissile = false;
+			playerPointer->reset();
+			playerPointer->cameraMoveCount = 0;
+			playerPointer->boostCount = 0;
+			playerPointer->normalShotCount = 0;
+			playerPointer->missileCount = 0;
+			playerPointer->isBoostTutorial = false;
+			playerPointer->isNormalShot = false;
+			playerPointer->isHomingMissile = false;
 			isMoveText = true;
 			isBoostText = false;
 			isShotText = false;
@@ -566,8 +566,8 @@ void GameScene::Select_updata()
 			isTextEase = false;
 			isPushTitle = false;
 			nowStageLevel = 1;
-			player_p->update();
-			Object3d_FBX::SetCamera(player_p->followCamera);
+			playerPointer->update();
+			object3dFBX::SetCamera(playerPointer->followCamera);
 
 			isTutorial = true;
 			scene = sceneType::play;
@@ -597,8 +597,8 @@ void GameScene::Select_updata()
 
 			nowStageLevel = 1;
 
-			player_p->update();
-			Object3d_FBX::SetCamera(player_p->followCamera);
+			playerPointer->update();
+			object3dFBX::SetCamera(playerPointer->followCamera);
 
 			scene = sceneType::play;
 		}
@@ -622,7 +622,7 @@ void GameScene::Play_updata()
 	countDown();
 
 	//敵に共通して必要なプレイヤーの情報を渡す
-	Enemy::staticUpdata(player_p->getPlayerPos(), player_p->getPlayerFront(), player_p->isAlive);
+	Enemy::staticUpdata(playerPointer->getPlayerPos(), playerPointer->getPlayerFront(), playerPointer->isAlive);
 
 	if (!isCountDown && !isStartIcon)
 	{
@@ -631,7 +631,7 @@ void GameScene::Play_updata()
 	}
 
 	//パーティクルの共通カメラを設定
-	SingleParticle::setCamera(player_p->followCamera);
+	SingleParticle::setCamera(playerPointer->followCamera);
 
 	//スカイドーム更新
 	skySphere->setRotMatrix(0, 0, skyShpereRotY);
@@ -645,7 +645,7 @@ void GameScene::Play_updata()
 
 	//高度メーター更新
 	//プレイヤーのy座標に補正をかけてpositionに代入
-	float playerH = player_p->getPlayerPos().y - player_p->groundPosition.y;
+	float playerH = playerPointer->getPlayerPos().y - playerPointer->groundPosition.y;
 
 	//スプライトの座標系に変更＆メーターの上がり具合を調整
 	playerH = -(playerH * 0.3333f);
@@ -681,12 +681,12 @@ void GameScene::Play_updata()
 
 	if (input->Triger(DIK_LSHIFT))
 	{
-		player_p->playerHP = 0;
+		playerPointer->playerHP = 0;
 	}
 
 	//プレイヤー更新
-	player_p->update();
-	checkHitManager::checkMissilesEnemy(&player_p->missilesList);
+	playerPointer->update();
+	checkHitManager::checkMissilesEnemy(&playerPointer->missilesList);
 
 	//エネミー更新
 	enemyList.remove_if([](std::unique_ptr<Enemy>& newenemy)
@@ -697,9 +697,9 @@ void GameScene::Play_updata()
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
 		newenemy->updata();
-		checkHitManager::checkPlayerEnemy(player_p.get(), newenemy.get());
-		checkHitManager::checkPlayerEnemyRampages(player_p.get(), newenemy.get());
-		checkHitManager::checkBulletsEnemyRampage(&player_p->bulletsList, newenemy.get());
+		checkHitManager::checkPlayerEnemy(playerPointer.get(), newenemy.get());
+		checkHitManager::checkPlayerEnemyRampages(playerPointer.get(), newenemy.get());
+		checkHitManager::checkBulletsEnemyRampage(&playerPointer->bulletsList, newenemy.get());
 	}
 
 	//ホーミング弾発射
@@ -711,7 +711,7 @@ void GameScene::Play_updata()
 			{
 				if (newenemy->isTargetSet && !newenemy->isSetMissile)
 				{
-					player_p->addMissile(newenemy.get());
+					playerPointer->addMissile(newenemy.get());
 
 					newenemy->isSetMissile = true;
 
@@ -722,14 +722,14 @@ void GameScene::Play_updata()
 
 		if (testBoss->isTargetSet && !testBoss->isSetMissile)
 		{
-			player_p->addMissile(testBoss.get());
+			playerPointer->addMissile(testBoss.get());
 
 			testBoss->isSetMissile = true;
 		}
 
 		if (testUniteBoss->isTargetSet && !testUniteBoss->isSetMissile)
 		{
-			player_p->addMissile(testUniteBoss.get());
+			playerPointer->addMissile(testUniteBoss.get());
 
 			testUniteBoss->isSetMissile = true;
 		}
@@ -740,7 +740,7 @@ void GameScene::Play_updata()
 			{
 				if (newparts->isTargetSet && !newparts->isSetMissile)
 				{
-					player_p->addMissile(newparts.get());
+					playerPointer->addMissile(newparts.get());
 
 					newparts->isSetMissile = true;
 
@@ -756,36 +756,36 @@ void GameScene::Play_updata()
 	checkHitPlayerTarget();
 
 	//プレイヤーの通常弾当たり判定
-	checkHitManager::checkBulletsEnemys(&player_p->bulletsList, &enemyList);
+	checkHitManager::checkBulletsEnemys(&playerPointer->bulletsList, &enemyList);
 
 	//通常弾とボスの当たり判定
-	checkHitManager::checkBulletsEnemy(&player_p->bulletsList, testBoss.get());
+	checkHitManager::checkBulletsEnemy(&playerPointer->bulletsList, testBoss.get());
 
 	//通常弾とユニットボス本体の当たり判定
-	checkHitManager::checkBulletsEnemy(&player_p->bulletsList, testUniteBoss.get());
+	checkHitManager::checkBulletsEnemy(&playerPointer->bulletsList, testUniteBoss.get());
 
 	//パーツ
 	for (std::unique_ptr<uniteParts>& newparts : testUniteBoss->partsList)
 	{
-		checkHitManager::checkBulletsEnemy(&player_p->bulletsList, newparts.get());
+		checkHitManager::checkBulletsEnemy(&playerPointer->bulletsList, newparts.get());
 	}
 
 	//プレイヤーとボスの当たり判定
 	if (!testBoss->getIsAppear() && stageNum < 3)
 	{
-		checkHitManager::checkPlayerEnemy(player_p.get(), testBoss.get());
-		checkHitManager::checkPlayerEnemyRampages(player_p.get(), testBoss.get());
-		checkHitManager::checkBulletsEnemyRampage(&player_p->bulletsList, testBoss.get());
+		checkHitManager::checkPlayerEnemy(playerPointer.get(), testBoss.get());
+		checkHitManager::checkPlayerEnemyRampages(playerPointer.get(), testBoss.get());
+		checkHitManager::checkBulletsEnemyRampage(&playerPointer->bulletsList, testBoss.get());
 	}
 
 	if (!testUniteBoss->getIsAppear() && stageNum == 3)
 	{
-		checkHitManager::checkPlayerEnemy(player_p.get(), testUniteBoss.get());
+		checkHitManager::checkPlayerEnemy(playerPointer.get(), testUniteBoss.get());
 
 		for (std::unique_ptr<uniteParts>& newparts : testUniteBoss->partsList)
 		{
-			checkHitManager::checkPlayerEnemyRampages(player_p.get(), newparts.get());
-			checkHitManager::checkBulletsEnemyRampage(&player_p->bulletsList, newparts.get());
+			checkHitManager::checkPlayerEnemyRampages(playerPointer.get(), newparts.get());
+			checkHitManager::checkBulletsEnemyRampage(&playerPointer->bulletsList, newparts.get());
 		}
 	}
 
@@ -851,7 +851,7 @@ void GameScene::Play_updata()
 		if (stageNum < 3)
 		{
 			//ボス更新
-			testBoss->bossUpdate(player_p.get());
+			testBoss->bossUpdate(playerPointer.get());
 		}
 		else
 		{
@@ -891,7 +891,7 @@ void GameScene::Play_updata()
 		scene = sceneType::clear;
 	}
 
-	if (!player_p->isAlive && !player_p->isOverStaging && player_p->playerHP <= 0)
+	if (!playerPointer->isAlive && !playerPointer->isOverStaging && playerPointer->playerHP <= 0)
 	{
 		isMoveScreen = true;
 		isScreenEase = true;
@@ -1169,7 +1169,7 @@ void GameScene::PlayDraw3d()
 	skySphere->Draw(directx->cmdList.Get());
 
 	//プレイヤー描画
-	player_p->draw3D(directx);
+	playerPointer->draw3D(directx);
 
 	//敵
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
@@ -1191,7 +1191,7 @@ void GameScene::PlayDraw2d()
 
 	if (stageNum > 0)
 	{
-		player_p->draw2D(directx, targetnum);
+		playerPointer->draw2D(directx, targetnum);
 	}
 
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
@@ -1231,7 +1231,7 @@ void GameScene::PlayDraw2d()
 		{
 			boostText.DrawSprite(directx->cmdList.Get());
 		}
-		else if (isShotText && !player_p->isStop)
+		else if (isShotText && !playerPointer->isStop)
 		{
 			shotText.DrawSprite(directx->cmdList.Get());
 		}
@@ -1244,7 +1244,7 @@ void GameScene::PlayDraw2d()
 			shootingText.DrawSprite(directx->cmdList.Get());
 		}
 
-		player_p->draw2D(directx, targetnum);
+		playerPointer->draw2D(directx, targetnum);
 	}
 }
 
@@ -1260,7 +1260,7 @@ void GameScene::ResultDraw3d()
 	skySphere->Draw(directx->cmdList.Get());
 
 	//プレイヤー描画
-	player_p->draw3D(directx);
+	playerPointer->draw3D(directx);
 
 	//ボス描画
 	testBoss->bossDraw3D(directx);
@@ -1298,7 +1298,7 @@ void GameScene::ResultDraw2d()
 void GameScene::Updata()
 {
 	//マウス座標更新
-	MOUSE_POS = { (float)input->mouse_p.x,(float)input->mouse_p.y,0.0f };
+	MOUSE_POS = { (float)input->mousePoint.x,(float)input->mousePoint.y,0.0f };
 
 	//ライト更新
 	light->Update();
@@ -1366,7 +1366,7 @@ void GameScene::drawNowWave()
 		return;
 	}
 
-	if (player_p->isStop)
+	if (playerPointer->isStop)
 	{
 		return;
 	}
@@ -1384,7 +1384,7 @@ void GameScene::drawNowWave()
 
 void GameScene::drawPositionUI()
 {
-	if (player_p->isStop)
+	if (playerPointer->isStop)
 	{
 		return;
 	}
@@ -1406,22 +1406,22 @@ void GameScene::drawPositionUI()
 
 	testUniteBoss->drawMiniMapIcon(directx);
 
-	player_p->drawMiniMapIcon(directx);
+	playerPointer->drawMiniMapIcon(directx);
 }
 
 void GameScene::checkHitPlayerTarget()
 {
 	//通常の敵
-	checkHitManager::checkRockonEnemys(player_p.get(), &enemyList, targetnum);
+	checkHitManager::checkRockonEnemys(playerPointer.get(), &enemyList, targetnum);
 
 	//ボス
-	checkHitManager::checkRockonEnemy(player_p.get(), testBoss.get(), targetnum);
+	checkHitManager::checkRockonEnemy(playerPointer.get(), testBoss.get(), targetnum);
 
-	checkHitManager::checkRockonEnemy(player_p.get(), testUniteBoss.get(), targetnum);
+	checkHitManager::checkRockonEnemy(playerPointer.get(), testUniteBoss.get(), targetnum);
 
 	for (std::unique_ptr<uniteParts>& newparts : testUniteBoss->partsList)
 	{
-		checkHitManager::checkRockonEnemy(player_p.get(), newparts.get(), targetnum);
+		checkHitManager::checkRockonEnemy(playerPointer.get(), newparts.get(), targetnum);
 	}
 }
 
@@ -1471,7 +1471,7 @@ void GameScene::countDown()
 	//スタートのカウントダウン演出が終わったら動ける
 	if (isCountDown || isStartIcon)
 	{
-		player_p->isStop = true;
+		playerPointer->isStop = true;
 
 		//敵
 		for (std::unique_ptr<Enemy>& newenemy : enemyList)
@@ -1487,7 +1487,7 @@ void GameScene::countDown()
 	}
 	else
 	{
-		player_p->isStop = false;
+		playerPointer->isStop = false;
 
 		//敵
 		for (std::unique_ptr<Enemy>& newenemy : enemyList)
@@ -1505,20 +1505,20 @@ void GameScene::countDown()
 
 void GameScene::tutorial()
 {
-	player_p->update();
-	checkHitManager::checkMissilesEnemy(&player_p->missilesList);
+	playerPointer->update();
+	checkHitManager::checkMissilesEnemy(&playerPointer->missilesList);
 
 	//一定量カメラを動かしたら敵出現
-	if (player_p->cameraMoveCount >= 250 && isMoveText)
+	if (playerPointer->cameraMoveCount >= 250 && isMoveText)
 	{
 		isMoveText = false;
 		isBoostText = true;
 
-		player_p->isBoostTutorial = true;
+		playerPointer->isBoostTutorial = true;
 	}
 
 	//3回ブーストしたら敵出現
-	if (!player_p->isBoost && player_p->boostCount > 2 && isBoostText)
+	if (!playerPointer->isBoost && playerPointer->boostCount > 2 && isBoostText)
 	{
 		for (int i = 0; i < 20; i++)
 		{
@@ -1536,7 +1536,7 @@ void GameScene::tutorial()
 		isBoostText = false;
 		isShotText = true;
 
-		player_p->isNormalShot = true;
+		playerPointer->isNormalShot = true;
 	}
 
 	//敵が出現演出途中ならカメラをセットする
@@ -1550,38 +1550,38 @@ void GameScene::tutorial()
 	}
 	if (count > 0)
 	{
-		player_p->isStop = true;
-		player_p->isInvisible = 1;
+		playerPointer->isStop = true;
+		playerPointer->isInvisible = 1;
 		stagingCamera = new Camera;
 		stagingCamera->SetEye({ 0,0,-30 });
 		stagingCamera->SetTarget({ 0,30,0 });
 		stagingCamera->Update();
-		Object3d_FBX::SetCamera(stagingCamera);
+		object3dFBX::SetCamera(stagingCamera);
 	}
 	else
 	{
-		player_p->isStop = false;
-		player_p->isInvisible = -1;
-		Object3d_FBX::SetCamera(player_p->followCamera);
+		playerPointer->isStop = false;
+		playerPointer->isInvisible = -1;
+		object3dFBX::SetCamera(playerPointer->followCamera);
 	}
 
 	//通常弾 -> ミサイル
-	if (player_p->normalShotCount > 3)
+	if (playerPointer->normalShotCount > 3)
 	{
 		isShotText = false;
 		isMissileText = true;
 
-		player_p->isHomingMissile = true;
+		playerPointer->isHomingMissile = true;
 	}
 
 	//ミサイル -> Lets Shooting!!!
-	if (player_p->missileCount > 1)
+	if (playerPointer->missileCount > 1)
 	{
 		isMissileText = false;
 		isShootingText = true;
 	}
 
-	XMFLOAT3 playerTargetPos = player_p->getTargetPosition();
+	XMFLOAT3 playerTargetPos = playerPointer->getTargetPosition();
 
 	if (playerTargetPos.y < 100)
 	{
@@ -1611,7 +1611,7 @@ void GameScene::tutorial()
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
 		newenemy->updata();
-		checkHitManager::checkPlayerEnemy(player_p.get(), newenemy.get());
+		checkHitManager::checkPlayerEnemy(playerPointer.get(), newenemy.get());
 	}
 
 	//ホーミング弾発射
@@ -1623,7 +1623,7 @@ void GameScene::tutorial()
 			{
 				if (newenemy->isTargetSet && !newenemy->isSetMissile)
 				{
-					player_p->addMissile(newenemy.get());
+					playerPointer->addMissile(newenemy.get());
 
 					newenemy->isSetMissile = true;
 
@@ -1634,7 +1634,7 @@ void GameScene::tutorial()
 
 		if (testBoss->isTargetSet && !testBoss->isSetMissile)
 		{
-			player_p->addMissile(testBoss.get());
+			playerPointer->addMissile(testBoss.get());
 
 			testBoss->isSetMissile = true;
 		}
@@ -1646,7 +1646,7 @@ void GameScene::tutorial()
 	checkHitPlayerTarget();
 
 	//プレイヤーの通常弾当たり判定
-	checkHitManager::checkBulletsEnemys(&player_p->bulletsList, &enemyList);
+	checkHitManager::checkBulletsEnemys(&playerPointer->bulletsList, &enemyList);
 
 	//敵をすべて倒したorプレイヤーが死んだらリザルト
 	if (enemyList.size() <= 0 && !isMoveText && isShootingText)
@@ -1655,9 +1655,9 @@ void GameScene::tutorial()
 		isScreenEase = true;
 		isTextEase = false;
 		isShootingText = false;
-		player_p->isBoostTutorial = true;
-		player_p->isNormalShot = true;
-		player_p->isHomingMissile = true;
+		playerPointer->isBoostTutorial = true;
+		playerPointer->isNormalShot = true;
+		playerPointer->isHomingMissile = true;
 		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 40, 720, 0);
 		titleButton.SpriteTransferVertexBuffer();
 		selects[2].position = { 640 - 150,540,0 };
@@ -1667,15 +1667,15 @@ void GameScene::tutorial()
 		ButtonEase_x.reSet();
 		scene = sceneType::clear;
 	}
-	if (!player_p->isAlive && !player_p->isOverStaging && player_p->playerHP <= 0)
+	if (!playerPointer->isAlive && !playerPointer->isOverStaging && playerPointer->playerHP <= 0)
 	{
 		isMoveScreen = true;
 		isScreenEase = true;
 		isTextEase = false;
 		isShootingText = false;
-		player_p->isBoostTutorial = true;
-		player_p->isNormalShot = true;
-		player_p->isHomingMissile = true;
+		playerPointer->isBoostTutorial = true;
+		playerPointer->isNormalShot = true;
+		playerPointer->isHomingMissile = true;
 		resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 40, 720, 0);
 		titleButton.SpriteTransferVertexBuffer();
 		selects[2].position = { 640 - 150,540,0 };
@@ -1697,9 +1697,9 @@ bool GameScene::loadStage()
 	if (isTutorial == false)
 	{
 #ifdef _DEBUG
-		player_p->isBoostTutorial = true;
-		player_p->isNormalShot = true;
-		player_p->isHomingMissile = true;
+		playerPointer->isBoostTutorial = true;
+		playerPointer->isNormalShot = true;
+		playerPointer->isHomingMissile = true;
 #else
 		return false;
 #endif
@@ -1727,7 +1727,7 @@ bool GameScene::loadStage()
 	}
 
 	//プレイヤーのリセット
-	player_p->reset();
+	playerPointer->reset();
 
 	isBoss = false;
 

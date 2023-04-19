@@ -25,7 +25,7 @@ public:
 	int count = 0;
 	const int maxBulletCount = 100;
 	XMFLOAT3 position = { 0,0,0 };
-	XMFLOAT3 bullet_vec = { 0.0f,0.0f,0.0f };
+	XMFLOAT3 bulletVec = { 0.0f,0.0f,0.0f };
 	float bulletSpeed = 3.0f;
 
 	bool isAlive = false;
@@ -42,9 +42,9 @@ public:
 	void update();
 	void addBulletVec()
 	{
-		position.x += bullet_vec.x;
-		position.y += bullet_vec.y;
-		position.z += bullet_vec.z;
+		position.x += bulletVec.x;
+		position.y += bulletVec.y;
+		position.z += bulletVec.z;
 	}
 	void draw(directX* directx);
 };

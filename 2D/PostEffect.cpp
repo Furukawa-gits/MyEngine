@@ -62,8 +62,8 @@ void PostEffect::Init(ID3D12Device* dev)
 	//テクスチャのリソースデスク生成
 	D3D12_RESOURCE_DESC texturedesc = CD3DX12_RESOURCE_DESC::Tex2D(
 		DXGI_FORMAT_R8G8B8A8_UNORM,
-		win_width,
-		(UINT)win_hight,
+		windowWidth,
+		(UINT)windowHight,
 		1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET
 	);
 
@@ -80,11 +80,11 @@ void PostEffect::Init(ID3D12Device* dev)
 			IID_PPV_ARGS(&texbuff[i]));
 		assert(SUCCEEDED(result));
 
-		const UINT pixelcount = win_width * win_hight;
+		const UINT pixelcount = windowWidth * windowHight;
 
-		const UINT rowPitch = sizeof(UINT) * win_width;
+		const UINT rowPitch = sizeof(UINT) * windowWidth;
 
-		const UINT depthPitch = rowPitch * win_hight;
+		const UINT depthPitch = rowPitch * windowHight;
 
 		UINT* img = new UINT[pixelcount];
 		for (int j = 0; j < pixelcount; j++) { img[j] = 0xff0000ff; }
@@ -145,8 +145,8 @@ void PostEffect::Init(ID3D12Device* dev)
 	CD3DX12_RESOURCE_DESC depthResDesc =
 		CD3DX12_RESOURCE_DESC::Tex2D(
 			DXGI_FORMAT_D32_FLOAT,
-			win_width,
-			win_hight,
+			windowWidth,
+			windowHight,
 			1, 0,
 			1, 0,
 			D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL
@@ -290,8 +290,8 @@ void PostEffect::PreDrawScene(ID3D12GraphicsCommandList* cmdlist, ID3D12Device* 
 	for (int i = 0; i < 2; i++)
 	{
 		//ビューポート・シザー矩形生成
-		viewports[i] = CD3DX12_VIEWPORT(0.0f, 0.0f, win_width, win_hight);
-		scissorRects[i] = CD3DX12_RECT(0, 0, win_width, win_hight);
+		viewports[i] = CD3DX12_VIEWPORT(0.0f, 0.0f, windowWidth, windowHight);
+		scissorRects[i] = CD3DX12_RECT(0, 0, windowWidth, windowHight);
 	}
 	//ビューポート・シザー矩形セット
 	cmdlist->RSSetViewports(2, viewports);

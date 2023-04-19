@@ -46,13 +46,13 @@ void dxinput::Update(HWND hwnd)
 
 	mouseMoveVecrocity = { (float)mouse.lX,(float)mouse.lY };
 
-	oldmouse_p = mouse_p;
+	oldMousePoint = mousePoint;
 
-	GetCursorPos(&mouse_p);
-	ScreenToClient(hwnd, &mouse_p);
+	GetCursorPos(&mousePoint);
+	ScreenToClient(hwnd, &mousePoint);
 
-	mouse_position = { (float)mouse_p.x,(float)mouse_p.y,0.0f };
-	old_mouse_position = { (float)oldmouse_p.x,(float)oldmouse_p.y,0.0f };
+	mousePosition = { (float)mousePoint.x,(float)mousePoint.y,0.0f };
+	oldMousePosition = { (float)oldMousePoint.x,(float)oldMousePoint.y,0.0f };
 }
 
 bool dxinput::Triger(BYTE keyCode)

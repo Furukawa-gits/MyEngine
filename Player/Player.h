@@ -106,7 +106,7 @@ private:
 
 public:
 	//3dオブジェクト
-	Object3d_FBX* playerObject = nullptr;
+	object3dFBX* playerObject = nullptr;
 
 	//追従カメラ
 	FollowCamera* followCamera = nullptr;
@@ -164,7 +164,7 @@ public:
 	bool isAlive = false;
 
 	//HP
-	int playerHP = 10;
+	int playerHP;
 	const int maxHP = 10;
 
 	//HPが危険になった時の警告

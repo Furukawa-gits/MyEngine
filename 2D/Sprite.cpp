@@ -16,7 +16,7 @@ void SingleSprite::SetStaticData(ID3D12Device* dev, dxinput* dxinput)
 	SetPipelineStateSprite();
 
 	matprojection = XMMatrixOrthographicOffCenterLH(
-		0.0f, (float)win_width, (float)win_hight, 0.0f, 0.0f, 1.0f);
+		0.0f, (float)windowWidth, (float)windowHight, 0.0f, 0.0f, 1.0f);
 }
 
 //グラフィックスパイプライン生成
@@ -352,7 +352,7 @@ void SingleSprite::GenerateSprite(
 	result = this->spriteConstBuff->Map(0, nullptr, (void**)&constMap);
 	constMap->color = XMFLOAT4(1, 1, 1, 1);
 	constMap->mat = XMMatrixOrthographicOffCenterLH(
-		0.0f, win_width, win_hight, 0.0f, 0.0f, 1.0f);
+		0.0f, windowWidth, windowHight, 0.0f, 0.0f, 1.0f);
 	this->spriteConstBuff->Unmap(0, nullptr);
 
 	//入力用のサイズを設定
@@ -430,9 +430,9 @@ bool SingleSprite::isSpriteMouseInput()
 
 	isMouseSelect = false;
 
-	if (left < input->mouse_position.x && input->mouse_position.x < right)
+	if (left < input->mousePosition.x && input->mousePosition.x < right)
 	{
-		if (top < input->mouse_position.y && input->mouse_position.y < bottom)
+		if (top < input->mousePosition.y && input->mousePosition.y < bottom)
 		{
 			this->size = this->choosingSize;
 
