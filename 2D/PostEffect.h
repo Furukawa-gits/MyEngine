@@ -20,10 +20,10 @@ public:
 	void reSetPipeline();
 
 	//描画前処理
-	void PreDrawScene(ID3D12GraphicsCommandList* cmdlist, ID3D12Device* dev);
+	void preDrawScene(ID3D12GraphicsCommandList* cmdlist, ID3D12Device* dev);
 
 	//描画後処理
-	void PostDrawScene(ID3D12GraphicsCommandList* cmdlist, directX* directx);
+	void postDrawScene(ID3D12GraphicsCommandList* cmdlist, directX* directx);
 
 	//深度バッファクリア
 	void depthClear(ID3D12GraphicsCommandList* cmdlist);
@@ -31,19 +31,19 @@ public:
 private:
 
 	//パイプライン生成
-	void CreateGraphicsPipelineState(ID3D12Device* dev);//通常
-	void CreateGraphicsPipelineStateGray(ID3D12Device* dev);//グレースケール
-	void CreateGraphicsPipelineStateGaussian(ID3D12Device* dev);//ガウシアンブラー
+	void createGraphicsPipelineState(ID3D12Device* dev);//通常
+	void createGraphicsPipelineStateGray(ID3D12Device* dev);//グレースケール
+	void createGraphicsPipelineStateGaussian(ID3D12Device* dev);//ガウシアンブラー
 
 	//通常
-	ComPtr<ID3D12PipelineState> PostPipelinestateBace;//パイプラインステート
-	ComPtr<ID3D12RootSignature> PostRootsignatureBace;//ルートシグネチャ
+	ComPtr<ID3D12PipelineState> postPipelinestateBace;//パイプラインステート
+	ComPtr<ID3D12RootSignature> postRootsignatureBace;//ルートシグネチャ
 
-	ComPtr<ID3D12PipelineState> PostPipelinestateGray;//パイプラインステート
-	ComPtr<ID3D12RootSignature> PostRootsignatureGray;//ルートシグネチャ
+	ComPtr<ID3D12PipelineState> postPipelinestateGray;//パイプラインステート
+	ComPtr<ID3D12RootSignature> postRootsignatureGray;//ルートシグネチャ
 
-	ComPtr<ID3D12PipelineState> PostPipelinestateGaussian;//パイプラインステート
-	ComPtr<ID3D12RootSignature> PostRootsignatureGaussian;//ルートシグネチャ
+	ComPtr<ID3D12PipelineState> postPipelinestateGaussian;//パイプラインステート
+	ComPtr<ID3D12RootSignature> postRootsignatureGaussian;//ルートシグネチャ
 
 	ComPtr<ID3D12Resource> texbuff[2];
 
@@ -58,13 +58,13 @@ private:
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvH;
 
 	//頂点バッファ
-	ComPtr<ID3D12Resource> PostVertBuff;
+	ComPtr<ID3D12Resource> postVertBuff;
 
 	//頂点バッフビュー
-	D3D12_VERTEX_BUFFER_VIEW PostVBView{};
+	D3D12_VERTEX_BUFFER_VIEW postVBView{};
 
 	//定数バッファ
-	ComPtr<ID3D12Resource> PostConstBuff;
+	ComPtr<ID3D12Resource> postConstBuff;
 
 	//クリアカラー
 	static const float clearColor[4];

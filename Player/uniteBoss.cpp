@@ -21,20 +21,20 @@ void uniteParts::partsInit(int ID)
 	rockTarget = std::make_unique<SingleSprite>();
 	rockTarget->anchorpoint = { 0.5f,0.5f };
 	rockTarget->size = { 70,70 };
-	rockTarget->GenerateSprite("Rock_on.png");
+	rockTarget->generateSprite("Rock_on.png");
 
 	outScreenIcon[0] = std::make_unique<SingleSprite>();
 	outScreenIcon[0]->anchorpoint = { 0.5f,0.5f };
 	outScreenIcon[0]->size = { 100,100 };
-	outScreenIcon[0]->GenerateSprite("enemyPos.png");
+	outScreenIcon[0]->generateSprite("enemyPos.png");
 
 	outScreenIcon[1] = std::make_unique<SingleSprite>();
 	outScreenIcon[1]->anchorpoint = { 0.5f,0.5f };
 	outScreenIcon[1]->size = { 100,100 };
-	outScreenIcon[1]->GenerateSprite("!.png");
+	outScreenIcon[1]->generateSprite("!.png");
 
 	enemyObject = new object3dFBX;
-	enemyObject->Initialize();
+	enemyObject->initialize();
 	enemyObject->SetModel(partsModel.get());
 	enemyObject->SetScale({ 0.7f,0.7f,0.7f });
 	enemyObject->setColor({ 0.3f,0.9f,0.3f,1 });
@@ -70,12 +70,12 @@ void uniteParts::partsUpdata()
 
 	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
 	{
-		bullet->update();
+		bullet->updata();
 	}
 
 	position = enemyObject->getPosition();
 	enemyObject->SetPosition(position);
-	enemyObject->Update();
+	enemyObject->updata();
 
 	if (isStop)
 	{
@@ -180,13 +180,13 @@ void uniteParts::partsSpriteUpdata()
 	outScreenIcon[0]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
 	outScreenIcon[1]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
 
-	rockTarget->SpriteTransferVertexBuffer();
-	rockTarget->SpriteUpdate();
+	rockTarget->spriteTransferVertexBuffer();
+	rockTarget->spriteUpdata();
 
-	outScreenIcon[0]->SpriteTransferVertexBuffer();
-	outScreenIcon[0]->SpriteUpdate();
-	outScreenIcon[1]->SpriteTransferVertexBuffer();
-	outScreenIcon[1]->SpriteUpdate();
+	outScreenIcon[0]->spriteTransferVertexBuffer();
+	outScreenIcon[0]->spriteUpdata();
+	outScreenIcon[1]->spriteTransferVertexBuffer();
+	outScreenIcon[1]->spriteUpdata();
 }
 
 void uniteParts::partsArrival()
@@ -223,7 +223,7 @@ void uniteParts::partsArrival()
 	};
 
 	enemyObject->SetPosition(position);
-	enemyObject->Update();
+	enemyObject->updata();
 }
 
 void uniteParts::partsAriveMove()
@@ -260,7 +260,7 @@ void uniteParts::partsAriveMove()
 	};
 
 	enemyObject->SetPosition(position);
-	enemyObject->Update();
+	enemyObject->updata();
 
 	//HPが0になったら消滅
 	if (HP <= 0)
@@ -404,7 +404,7 @@ void uniteParts::partsSet(XMFLOAT3 position, float theta, float phi)
 	};
 
 	enemyObject->SetPosition(this->position);
-	enemyObject->Update();
+	enemyObject->updata();
 
 	changePattern(enemyPattern::rampage);
 }
@@ -428,13 +428,13 @@ void uniteParts::partsDraw2D(directX* directx)
 
 	if (isOutScreen)
 	{
-		outScreenIcon[0]->DrawSprite(directx->cmdList.Get());
-		outScreenIcon[1]->DrawSprite(directx->cmdList.Get());
+		outScreenIcon[0]->drawSprite(directx->cmdList.Get());
+		outScreenIcon[1]->drawSprite(directx->cmdList.Get());
 	}
 
 	if (isTargetSet)
 	{
-		rockTarget->DrawSprite(directx->cmdList.Get());
+		rockTarget->drawSprite(directx->cmdList.Get());
 	}
 }
 #pragma endregion パーツ
@@ -467,34 +467,34 @@ void uniteBoss::uniteBossInit()
 	rockTarget = std::make_unique<SingleSprite>();
 	rockTarget->anchorpoint = { 0.5f,0.5f };
 	rockTarget->size = { 70,70 };
-	rockTarget->GenerateSprite("Rock_on.png");
+	rockTarget->generateSprite("Rock_on.png");
 
 	outScreenIcon[0] = std::make_unique<SingleSprite>();
 	outScreenIcon[0]->anchorpoint = { 0.5f,0.5f };
 	outScreenIcon[0]->size = { 100,100 };
-	outScreenIcon[0]->GenerateSprite("enemyPos.png");
+	outScreenIcon[0]->generateSprite("enemyPos.png");
 
 	outScreenIcon[1] = std::make_unique<SingleSprite>();
 	outScreenIcon[1]->anchorpoint = { 0.5f,0.5f };
 	outScreenIcon[1]->size = { 100,100 };
-	outScreenIcon[1]->GenerateSprite("!.png");
+	outScreenIcon[1]->generateSprite("!.png");
 
 	motherHitPointGauge.anchorpoint = { 0.5f,0.5f };
 	motherHitPointGauge.size = { 50,20 };
 	motherHitPointGauge.position = { 640,40,0 };
-	motherHitPointGauge.GenerateSprite("bossHPGauge.png");
+	motherHitPointGauge.generateSprite("bossHPGauge.png");
 
 	allPartsHitPointGauge.anchorpoint = { 0.5f,0.5f };
 	allPartsHitPointGauge.size = { 50,20 };
 	allPartsHitPointGauge.position = { 640,40,0 };
-	allPartsHitPointGauge.GenerateSprite("partsHPGauge.png");
+	allPartsHitPointGauge.generateSprite("partsHPGauge.png");
 
 	miniMapEnemy.anchorpoint = { 0.5f,0.5f };
 	miniMapEnemy.size = { 8,8 };
-	miniMapEnemy.GenerateSprite("bossHPGauge.png");
+	miniMapEnemy.generateSprite("bossHPGauge.png");
 
 	enemyObject = new object3dFBX;
-	enemyObject->Initialize();
+	enemyObject->initialize();
 	enemyObject->SetModel(uniteBossModel.get());
 	enemyObject->SetScale({ 1.0f,1.0f,1.0f });
 	enemyObject->setColor({ 0.8f,0.8f,0.8f,1 });
@@ -512,7 +512,7 @@ void uniteBoss::uniteBossInit()
 //更新
 void uniteBoss::uniteBossUpdata()
 {
-	enemyObject->Update();
+	enemyObject->updata();
 
 	uniteBossArrival();
 
@@ -572,8 +572,8 @@ void uniteBoss::uniteBossUpdata()
 	};
 
 	miniMapEnemy.position = minimapPosition;
-	miniMapEnemy.SpriteTransferVertexBuffer();
-	miniMapEnemy.SpriteUpdate();
+	miniMapEnemy.spriteTransferVertexBuffer();
+	miniMapEnemy.spriteUpdata();
 
 	uniteBossAriveMove();
 
@@ -635,17 +635,17 @@ void uniteBoss::uniteBossSpriteUpdata()
 	outScreenIcon[0]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
 	outScreenIcon[1]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
 
-	rockTarget->SpriteTransferVertexBuffer();
-	rockTarget->SpriteUpdate();
+	rockTarget->spriteTransferVertexBuffer();
+	rockTarget->spriteUpdata();
 
-	outScreenIcon[0]->SpriteTransferVertexBuffer();
-	outScreenIcon[0]->SpriteUpdate();
-	outScreenIcon[1]->SpriteTransferVertexBuffer();
-	outScreenIcon[1]->SpriteUpdate();
+	outScreenIcon[0]->spriteTransferVertexBuffer();
+	outScreenIcon[0]->spriteUpdata();
+	outScreenIcon[1]->spriteTransferVertexBuffer();
+	outScreenIcon[1]->spriteUpdata();
 
 	motherHitPointGauge.size.x = (float)HP * 70;
-	motherHitPointGauge.SpriteTransferVertexBuffer();
-	motherHitPointGauge.SpriteUpdate();
+	motherHitPointGauge.spriteTransferVertexBuffer();
+	motherHitPointGauge.spriteUpdata();
 
 	int allPartsHP = 0;
 
@@ -655,8 +655,8 @@ void uniteBoss::uniteBossSpriteUpdata()
 	}
 
 	allPartsHitPointGauge.size.x = (float)allPartsHP * 14;
-	allPartsHitPointGauge.SpriteTransferVertexBuffer();
-	allPartsHitPointGauge.SpriteUpdate();
+	allPartsHitPointGauge.spriteTransferVertexBuffer();
+	allPartsHitPointGauge.spriteUpdata();
 
 	for (std::unique_ptr<uniteParts>& parts : partsList)
 	{
@@ -679,7 +679,7 @@ void uniteBoss::uniteBossArrival()
 
 	position.y -= 0.2f;
 	enemyObject->SetPosition(position);
-	enemyObject->Update();
+	enemyObject->updata();
 
 	uniteBossCamera->SetTarget(position);
 	uniteBossCamera->Update();
@@ -693,7 +693,7 @@ void uniteBoss::uniteBossArrival()
 	{
 		enemyObject->SetRotation({ 0,0,0 });
 		enemyObject->SetPosition(arrivalEndPos);
-		enemyObject->Update();
+		enemyObject->updata();
 		isStop = false;
 		isAlive = true;
 		isAppear = false;
@@ -911,7 +911,7 @@ void uniteBoss::uniteBossSet()
 	arrivalTime = 300;
 	enemyObject->SetScale(uniteBossScale);
 	enemyObject->SetPosition({ 0,0,0 });
-	enemyObject->Update();
+	enemyObject->updata();
 
 	//演出用カメラをセット
 	uniteBossCamera = new Camera;
@@ -1204,17 +1204,17 @@ void uniteBoss::uniteBossDraw2d(directX* directx)
 
 	if (isOutScreen)
 	{
-		outScreenIcon[0]->DrawSprite(directx->cmdList.Get());
-		outScreenIcon[1]->DrawSprite(directx->cmdList.Get());
+		outScreenIcon[0]->drawSprite(directx->cmdList.Get());
+		outScreenIcon[1]->drawSprite(directx->cmdList.Get());
 	}
 
 	if (isTargetSet)
 	{
-		rockTarget->DrawSprite(directx->cmdList.Get());
+		rockTarget->drawSprite(directx->cmdList.Get());
 	}
 
-	motherHitPointGauge.DrawSprite(directx->cmdList.Get());
-	allPartsHitPointGauge.DrawSprite(directx->cmdList.Get());
+	motherHitPointGauge.drawSprite(directx->cmdList.Get());
+	allPartsHitPointGauge.drawSprite(directx->cmdList.Get());
 
 	//パーツの描画
 	for (std::unique_ptr<uniteParts>& parts : partsList)

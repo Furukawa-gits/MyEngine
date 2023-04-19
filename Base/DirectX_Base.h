@@ -57,7 +57,7 @@ public:
 	void Init(Window_Generate* Win);
 
 	//深度バッファ初期化
-	void Initializedepth();
+	void initializeDepth();
 
 	//描画処理前
 	void preDraw();

@@ -55,25 +55,25 @@ public:
 	~GameScene();
 
 	//初期化
-	void Init(directX* directx, dxinput* input, Audio* audio);
+	void init(directX* directx, dxinput* input, Audio* audio);
 
 	//更新
-	void Updata();
+	void updata();
 
 	//描画
-	void DrawBack();
-	void Draw3D();
-	void Draw2D();
+	void drawBack();
+	void draw3D();
+	void draw2D();
 
 	bool Isclose = false;
 
 private:
 
 	//シーンごとの更新
-	void Title_updata();
-	void Select_updata();
-	void Play_updata();
-	void Result_updata();
+	void titleUpdata();
+	void selectUpdata();
+	void playUpdata();
+	void resultUpdata();
 
 	//チュートリアル
 	void tutorial();
@@ -82,17 +82,17 @@ private:
 	bool loadStage();
 
 	//シーンごとの描画
-	void TitleDraw3d();
-	void TitleDraw2d();
+	void titleDraw3d();
+	void titleDraw2d();
 
-	void SelectDraw3d();
-	void SelectDraw2d();
+	void selectDraw3d();
+	void selectDraw2d();
 
-	void PlayDraw3d();
-	void PlayDraw2d();
+	void playDraw3d();
+	void playDraw2d();
 
-	void ResultDraw3d();
-	void ResultDraw2d();
+	void resultDraw3d();
+	void resultDraw2d();
 
 	//ウェーブバー描画
 	void drawNowWave();
@@ -107,13 +107,13 @@ private:
 	void countDown();
 
 	//音読み込みだけ関数
-	void Load_sounds();
+	void loadSounds();
 
 	//スプライト(各クラスに依存しないやつ)初期化
-	void Load_Sprites();
+	void loadSprites();
 
 	//デバッグテキスト更新
-	void debugs_print();
+	void debugsPrint();
 
 	//-------------ゲームに使う変数等はここより↓-------------
 	static const int debugTextnum = 0;

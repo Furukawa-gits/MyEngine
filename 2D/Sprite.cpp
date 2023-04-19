@@ -2,27 +2,27 @@
 
 ID3D12Device* SingleSprite::device = nullptr;
 dxinput* SingleSprite::input = nullptr;
-ComPtr<ID3D12RootSignature> SingleSprite::SpriteRootsignature;
-ComPtr<ID3D12PipelineState> SingleSprite::SpritePipelinestate;
+ComPtr<ID3D12RootSignature> SingleSprite::spriteRootsignature;
+ComPtr<ID3D12PipelineState> SingleSprite::spritePipelinestate;
 XMMATRIX SingleSprite::matprojection;
 
-void SingleSprite::SetStaticData(ID3D12Device* dev, dxinput* dxinput)
+void SingleSprite::setStaticData(ID3D12Device* dev, dxinput* dxinput)
 {
 	device = dev;
 
 	input = dxinput;
 
 	//パイプライン生成
-	SetPipelineStateSprite();
+	setPipelineStateSprite();
 
 	matprojection = XMMatrixOrthographicOffCenterLH(
 		0.0f, (float)windowWidth, (float)windowHight, 0.0f, 0.0f, 1.0f);
 }
 
 //グラフィックスパイプライン生成
-void SingleSprite::SetPipelineStateSprite()
+void SingleSprite::setPipelineStateSprite()
 {
-	if (SpritePipelinestate != NULL && SpriteRootsignature != NULL)
+	if (spritePipelinestate != NULL && spriteRootsignature != NULL)
 	{
 		return;
 	}
@@ -151,17 +151,17 @@ void SingleSprite::SetPipelineStateSprite()
 	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc,
 		D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
 	result = device->CreateRootSignature(0, rootSigBlob->GetBufferPointer(),
-		rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&SpriteRootsignature));
+		rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&spriteRootsignature));
 
 	//パイプラインにルートシグネチャをセット
-	gpipeline.pRootSignature = SpriteRootsignature.Get();
+	gpipeline.pRootSignature = spriteRootsignature.Get();
 
 	//パイプラインステートの生成
-	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&SpritePipelinestate));
+	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&spritePipelinestate));
 }
 
 //スプライト単体頂点バッファの転送
-void SingleSprite::SpriteTransferVertexBuffer(bool isCutout)
+void SingleSprite::spriteTransferVertexBuffer(bool isCutout)
 {
 	HRESULT result = S_FALSE;
 
@@ -222,7 +222,7 @@ void SingleSprite::SpriteTransferVertexBuffer(bool isCutout)
 }
 
 //テクスチャ読み込み
-void SingleSprite::LoadTexture(const std::string& filename)
+void SingleSprite::loadTexture(const std::string& filename)
 {
 	HRESULT result;
 
@@ -292,14 +292,14 @@ void SingleSprite::LoadTexture(const std::string& filename)
 }
 
 //スプライト生成
-void SingleSprite::GenerateSprite(
+void SingleSprite::generateSprite(
 	const std::string& filename,
 	bool sizeFlag,
 	bool isFlipX,
 	bool isFlipY,
 	bool iscutout)
 {
-	LoadTexture(filename);
+	loadTexture(filename);
 
 	HRESULT result = S_FALSE;
 
@@ -332,7 +332,7 @@ void SingleSprite::GenerateSprite(
 	this->isFlipY = isFlipY;
 
 	//バッファへのデータ転送
-	SpriteTransferVertexBuffer(iscutout);
+	spriteTransferVertexBuffer(iscutout);
 
 	//頂点バッファビューの作成
 	this->spriteVBView.BufferLocation = this->spriteVertBuff->GetGPUVirtualAddress();
@@ -360,7 +360,7 @@ void SingleSprite::GenerateSprite(
 }
 
 //スプライト更新処理
-void SingleSprite::SpriteUpdate()
+void SingleSprite::spriteUpdata()
 {
 	matWorld = XMMatrixIdentity();
 
@@ -378,11 +378,11 @@ void SingleSprite::SpriteUpdate()
 }
 
 //スプライト描画コマンド
-void SingleSprite::DrawSprite(ID3D12GraphicsCommandList* cmdList)
+void SingleSprite::drawSprite(ID3D12GraphicsCommandList* cmdList)
 {
-	cmdList->SetPipelineState(SpritePipelinestate.Get());
+	cmdList->SetPipelineState(spritePipelinestate.Get());
 
-	cmdList->SetGraphicsRootSignature(SpriteRootsignature.Get());
+	cmdList->SetGraphicsRootSignature(spriteRootsignature.Get());
 
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 

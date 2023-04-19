@@ -12,7 +12,7 @@ void DebugText::Init()
 {
 	for (int i = 0; i < _countof(sprites); i++)
 	{
-		sprites[i].GenerateSprite("Debug_Text.png");
+		sprites[i].generateSprite("Debug_Text.png");
 	}
 }
 
@@ -42,9 +42,9 @@ void DebugText::Print(const std::string& text, float x, float y, float scale)
 		sprites[spriteIndex].texSize = { FontWid,FontHei };
 		sprites[spriteIndex].size = { FontWid * scale,FontHei * scale };
 
-		sprites[spriteIndex].SpriteTransferVertexBuffer(true);
+		sprites[spriteIndex].spriteTransferVertexBuffer(true);
 
-		sprites[spriteIndex].SpriteUpdate();
+		sprites[spriteIndex].spriteUpdata();
 
 		spriteIndex++;
 	}
@@ -54,7 +54,7 @@ void DebugText::DrawAll(ID3D12GraphicsCommandList* cmdlist)
 {
 	for (int i = 0; i < spriteIndex; i++)
 	{
-		sprites[i].DrawSprite(cmdlist);
+		sprites[i].drawSprite(cmdlist);
 	}
 
 	spriteIndex = 0;

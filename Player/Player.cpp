@@ -26,61 +26,61 @@ void Player::init(dxinput* input, directX* directx)
 	//ターゲットアイコン
 	targetFirst.anchorpoint = { 0.5f,0.5f };
 	targetFirst.size = { 40,40 };
-	targetFirst.GenerateSprite("Target.png");
+	targetFirst.generateSprite("Target.png");
 
 	targetSecond.anchorpoint = { 0.5f,0.5f };
 	targetSecond.size = { 60,60 };
-	targetSecond.GenerateSprite("Target.png");
+	targetSecond.generateSprite("Target.png");
 
 	targetThird.anchorpoint = { 0.5f,0.5f };
 	targetThird.size = { 80,80 };
-	targetThird.GenerateSprite("Target.png");
+	targetThird.generateSprite("Target.png");
 
 	//ロックオンモードのゲージ
 	rockonGauge[0].anchorpoint = { 0.5f,0.5f };
 	rockonGauge[0].size = { 0,20 };
 	rockonGauge[0].position = { 640,420,0 };
-	rockonGauge[0].GenerateSprite("playerHPGauge.png");
+	rockonGauge[0].generateSprite("playerHPGauge.png");
 
 	rockonGauge[1].anchorpoint = { 0.5f,0.5f };
 	rockonGauge[1].size = { 0,10 };
 	rockonGauge[1].position = { 640,420,0 };
-	rockonGauge[1].GenerateSprite("boostGauge.png");
+	rockonGauge[1].generateSprite("boostGauge.png");
 
 	//ダメージエフェクト
 	damage.size = { 1280,720 };
-	damage.GenerateSprite("damage.png");
+	damage.generateSprite("damage.png");
 
 	//HPゲージ
 	HPGaugeBar.size = { 50,20 };
 	HPGaugeBar.position = { 20,640,0 };
-	HPGaugeBar.GenerateSprite("playerHPGauge.png");
+	HPGaugeBar.generateSprite("playerHPGauge.png");
 
 	//HPバーの警告
 	dangarHPGaugeBar.size = { (float)maxHP * 40,20 };
 	dangarHPGaugeBar.position = { 20,640,0 };
-	dangarHPGaugeBar.GenerateSprite("bossHPGauge.png");
+	dangarHPGaugeBar.generateSprite("bossHPGauge.png");
 
 	//ブーストゲージ
 	boostGaugeBar.size = { 50,20 };
 	boostGaugeBar.position = { 20,590,0 };
-	boostGaugeBar.GenerateSprite("boostGauge.png");
+	boostGaugeBar.generateSprite("boostGauge.png");
 
 	//上記ゲージのフレーム
 	gaugeFrame.size = { 500,120 };
 	gaugeFrame.position = { 0,550,0 };
-	gaugeFrame.GenerateSprite("gaugeFrame.png");
+	gaugeFrame.generateSprite("gaugeFrame.png");
 
 	//エリア外警告
 	outAreaCaution.anchorpoint = { 0.5f,0.5f };
 	outAreaCaution.size = { 645,150 };
 	outAreaCaution.position = { 640,360,0 };
-	outAreaCaution.GenerateSprite("outAreaCaution.png");
+	outAreaCaution.generateSprite("outAreaCaution.png");
 
 	//ミニマップアイコン
 	miniMapPlayer.anchorpoint = { 0.5f,0.5f };
 	miniMapPlayer.size = { 4,4 };
-	miniMapPlayer.GenerateSprite("playerHPGauge.png");
+	miniMapPlayer.generateSprite("playerHPGauge.png");
 
 	//ミサイルの残り弾数
 	for (int i = 0; i < 8; i++)
@@ -88,15 +88,15 @@ void Player::init(dxinput* input, directX* directx)
 		remainingMissileNum[i].anchorpoint = { 0.5f,0.5f };
 		remainingMissileNum[i].size = { 200,200 };
 		remainingMissileNum[i].rotation = (float)i * 45;
-		remainingMissileNum[i].GenerateSprite("homingGauge.png");
+		remainingMissileNum[i].generateSprite("homingGauge.png");
 	}
 
-	remainingMissileNum[8].GenerateSprite("remainingMissileNum.png");
+	remainingMissileNum[8].generateSprite("remainingMissileNum.png");
 
 	playerModel.reset(FbxLoader::GetInstance()->LoadmodelFromFile("player"));
 
 	playerObject = new object3dFBX;
-	playerObject->Initialize();
+	playerObject->initialize();
 	playerObject->SetModel(playerModel.get());
 	playerObject->SetPosition({ 0,5,0 });
 	playerObject->SetScale({ 1,1,1 });
@@ -125,7 +125,7 @@ void Player::init(dxinput* input, directX* directx)
 }
 
 //移動*
-void Player::Move()
+void Player::move()
 {
 	if (isClearStaging || isOverStaging)
 	{
@@ -209,7 +209,7 @@ void Player::Move()
 	//XMMATRIXに変換したクォータニオンをプレイヤーの回転行列にセット
 	playerObject->setRotMatrix(rotate(qLocal));
 
-	playerObject->Update();
+	playerObject->updata();
 
 	//前への移動量を計算
 	followCamera->setFrontVec(moveSpeed);
@@ -254,7 +254,7 @@ void Player::outArea()
 	}
 
 	//警告スプライトの更新
-	outAreaCaution.SpriteUpdate();
+	outAreaCaution.spriteUpdata();
 }
 
 void Player::boostMove()
@@ -485,7 +485,7 @@ void Player::playerDeathMove()
 	fallScale.z -= 0.0000555f;
 	playerObject->SetScale(fallScale);
 
-	playerObject->Update();
+	playerObject->updata();
 
 	//カメラ処理
 	followCamera->SetTarget(playerObject->getPosition());
@@ -523,7 +523,7 @@ void Player::setStaging(bool isclear)
 }
 
 //更新
-void Player::update()
+void Player::updata()
 {
 	//死んだ弾は削除
 	bulletsList.remove_if([](std::unique_ptr<bullet>& newbullet)
@@ -542,13 +542,13 @@ void Player::update()
 		});
 
 	//移動
-	Move();
+	move();
 
 	//エリア外判定
 	outArea();
 
 	//ターゲットカーソルの処理
-	targetUpdate();
+	targetUpdata();
 
 	//クリア＆ゲームオーバー演出
 	playerClearMove();
@@ -582,22 +582,22 @@ void Player::update()
 	}
 
 	//ダメージ表現スプライト
-	damage.SpriteTransferVertexBuffer();
-	damage.SpriteUpdate();
+	damage.spriteTransferVertexBuffer();
+	damage.spriteUpdata();
 
 	//HPゲージの更新
 	HPGaugeBar.size = { (float)playerHP * 40,20 };
-	HPGaugeBar.SpriteTransferVertexBuffer();
-	HPGaugeBar.SpriteUpdate();
+	HPGaugeBar.spriteTransferVertexBuffer();
+	HPGaugeBar.spriteUpdata();
 
 	boostGaugeBar.size = { (float)boostGauge / 1.5f,20 };
-	boostGaugeBar.SpriteTransferVertexBuffer();
-	boostGaugeBar.SpriteUpdate();
+	boostGaugeBar.spriteTransferVertexBuffer();
+	boostGaugeBar.spriteUpdata();
 
-	dangarHPGaugeBar.SpriteTransferVertexBuffer();
-	dangarHPGaugeBar.SpriteUpdate();
+	dangarHPGaugeBar.spriteTransferVertexBuffer();
+	dangarHPGaugeBar.spriteUpdata();
 
-	gaugeFrame.SpriteUpdate();
+	gaugeFrame.spriteUpdata();
 
 	//HPが4未満ならHPバー点滅
 	if (playerHP < 4)
@@ -627,8 +627,8 @@ void Player::update()
 	};
 
 	miniMapPlayer.position = minimapPosition;
-	miniMapPlayer.SpriteTransferVertexBuffer();
-	miniMapPlayer.SpriteUpdate();
+	miniMapPlayer.spriteTransferVertexBuffer();
+	miniMapPlayer.spriteUpdata();
 
 	if (playerHP <= 0)
 	{
@@ -649,7 +649,7 @@ void Player::update()
 	}
 }
 
-void Player::targetUpdate()
+void Player::targetUpdata()
 {
 	if (isStop)
 	{
@@ -724,12 +724,12 @@ void Player::targetUpdate()
 		0.0f
 	};
 
-	targetFirst.SpriteTransferVertexBuffer();
-	targetFirst.SpriteUpdate();
-	targetSecond.SpriteTransferVertexBuffer();
-	targetSecond.SpriteUpdate();
-	targetThird.SpriteTransferVertexBuffer();
-	targetThird.SpriteUpdate();
+	targetFirst.spriteTransferVertexBuffer();
+	targetFirst.spriteUpdata();
+	targetSecond.spriteTransferVertexBuffer();
+	targetSecond.spriteUpdata();
+	targetThird.spriteTransferVertexBuffer();
+	targetThird.spriteUpdata();
 
 	//左クリックで通常弾
 	if (input->Mouse_LeftTriger() && isNormalShot)
@@ -757,10 +757,10 @@ void Player::targetUpdate()
 	rockonGauge[0].size.x = (targetCount - 5) * 3.5f;
 	rockonGauge[1].size.x = (targetCount - 5) * 3.5f;
 
-	rockonGauge[0].SpriteTransferVertexBuffer();
-	rockonGauge[0].SpriteUpdate();
-	rockonGauge[1].SpriteTransferVertexBuffer();
-	rockonGauge[1].SpriteUpdate();
+	rockonGauge[0].spriteTransferVertexBuffer();
+	rockonGauge[0].spriteUpdata();
+	rockonGauge[1].spriteTransferVertexBuffer();
+	rockonGauge[1].spriteUpdata();
 
 	if (targetCount > 70)
 	{
@@ -781,8 +781,8 @@ void Player::targetUpdate()
 	for (int i = 0; i < 8; i++)
 	{
 		remainingMissileNum[i].position = { 640,360,0 };
-		remainingMissileNum[i].SpriteTransferVertexBuffer();
-		remainingMissileNum[i].SpriteUpdate();
+		remainingMissileNum[i].spriteTransferVertexBuffer();
+		remainingMissileNum[i].spriteUpdata();
 	}
 
 	remainingMissileNum[8].anchorpoint = { 0,0 };
@@ -791,8 +791,8 @@ void Player::targetUpdate()
 	remainingMissileNum[8].texSize = { 100,100 };
 	remainingMissileNum[8].size = { 70,70 };
 
-	remainingMissileNum[8].SpriteTransferVertexBuffer(true);
-	remainingMissileNum[8].SpriteUpdate();
+	remainingMissileNum[8].spriteTransferVertexBuffer(true);
+	remainingMissileNum[8].spriteUpdata();
 }
 
 void Player::addMissile(Enemy* enemy)
@@ -923,45 +923,45 @@ void Player::draw2D(directX* directx, int targetnum)
 		return;
 	}
 
-	targetThird.DrawSprite(directx->cmdList.Get());
-	targetSecond.DrawSprite(directx->cmdList.Get());
-	targetFirst.DrawSprite(directx->cmdList.Get());
+	targetThird.drawSprite(directx->cmdList.Get());
+	targetSecond.drawSprite(directx->cmdList.Get());
+	targetFirst.drawSprite(directx->cmdList.Get());
 
 	if (isArmor && armorTime < 5)
 	{
-		damage.DrawSprite(directx->cmdList.Get());
+		damage.drawSprite(directx->cmdList.Get());
 	}
 
 	if (targetCount > 5 && targetCount <= 70)
 	{
-		rockonGauge[0].DrawSprite(directx->cmdList.Get());
-		rockonGauge[1].DrawSprite(directx->cmdList.Get());
+		rockonGauge[0].drawSprite(directx->cmdList.Get());
+		rockonGauge[1].drawSprite(directx->cmdList.Get());
 	}
 
 	if (isRockOn)
 	{
 		for (int i = 0; i < MaxPlayerMissileNum - targetnum; i++)
 		{
-			remainingMissileNum[i].DrawSprite(directx->cmdList.Get());
+			remainingMissileNum[i].drawSprite(directx->cmdList.Get());
 		}
 
 		if (targetnum >= MaxPlayerMissileNum)
 		{
-			remainingMissileNum[8].DrawSprite(directx->cmdList.Get());
+			remainingMissileNum[8].drawSprite(directx->cmdList.Get());
 		}
 	}
 
-	gaugeFrame.DrawSprite(directx->cmdList.Get());
-	boostGaugeBar.DrawSprite(directx->cmdList.Get());
+	gaugeFrame.drawSprite(directx->cmdList.Get());
+	boostGaugeBar.drawSprite(directx->cmdList.Get());
 	if (isDangerHP)
 	{
-		dangarHPGaugeBar.DrawSprite(directx->cmdList.Get());
+		dangarHPGaugeBar.drawSprite(directx->cmdList.Get());
 	}
-	HPGaugeBar.DrawSprite(directx->cmdList.Get());
+	HPGaugeBar.drawSprite(directx->cmdList.Get());
 
 	if (isCautionDraw)
 	{
-		outAreaCaution.DrawSprite(directx->cmdList.Get());
+		outAreaCaution.drawSprite(directx->cmdList.Get());
 	}
 }
 
@@ -977,5 +977,5 @@ void Player::drawMiniMapIcon(directX* directx)
 		return;
 	}
 
-	miniMapPlayer.DrawSprite(directx->cmdList.Get());
+	miniMapPlayer.drawSprite(directx->cmdList.Get());
 }

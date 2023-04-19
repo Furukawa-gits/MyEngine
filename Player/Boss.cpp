@@ -25,29 +25,29 @@ void Boss::bossInit()
 	rockTarget = std::make_unique<SingleSprite>();
 	rockTarget->anchorpoint = { 0.5f,0.5f };
 	rockTarget->size = { 70,70 };
-	rockTarget->GenerateSprite("Rock_on.png");
+	rockTarget->generateSprite("Rock_on.png");
 
 	outScreenIcon[0] = std::make_unique<SingleSprite>();
 	outScreenIcon[0]->anchorpoint = { 0.5f,0.5f };
 	outScreenIcon[0]->size = { 100,100 };
-	outScreenIcon[0]->GenerateSprite("enemyPos.png");
+	outScreenIcon[0]->generateSprite("enemyPos.png");
 
 	outScreenIcon[1] = std::make_unique<SingleSprite>();
 	outScreenIcon[1]->anchorpoint = { 0.5f,0.5f };
 	outScreenIcon[1]->size = { 100,100 };
-	outScreenIcon[1]->GenerateSprite("!.png");
+	outScreenIcon[1]->generateSprite("!.png");
 
 	bossHitPointGauge.anchorpoint = { 0.5f,0.5f };
 	bossHitPointGauge.size = { 50,20 };
 	bossHitPointGauge.position = { 640,40,0 };
-	bossHitPointGauge.GenerateSprite("bossHPGauge.png");
+	bossHitPointGauge.generateSprite("bossHPGauge.png");
 
 	miniMapEnemy.anchorpoint = { 0.5f,0.5f };
 	miniMapEnemy.size = { 6,6 };
-	miniMapEnemy.GenerateSprite("bossHPGauge.png");
+	miniMapEnemy.generateSprite("bossHPGauge.png");
 
 	enemyObject = new object3dFBX;
-	enemyObject->Initialize();
+	enemyObject->initialize();
 	enemyObject->SetModel(bossModel.get());
 	enemyObject->SetScale({ 1.0f,1.0f,1.0f });
 	enemyObject->setColor({ 0.8f,0.8f,0.8f,1 });
@@ -64,7 +64,7 @@ void Boss::bossInit()
 
 void Boss::bossUpdate(Player* player)
 {
-	enemyObject->Update();
+	enemyObject->updata();
 
 	bossArrival(player);
 
@@ -126,8 +126,8 @@ void Boss::bossUpdate(Player* player)
 	};
 
 	miniMapEnemy.position = minimapPosition;
-	miniMapEnemy.SpriteTransferVertexBuffer();
-	miniMapEnemy.SpriteUpdate();
+	miniMapEnemy.spriteTransferVertexBuffer();
+	miniMapEnemy.spriteUpdata();
 
 	bossAriveMove();
 
@@ -200,17 +200,17 @@ void Boss::bossSpriteUpdata()
 	outScreenIcon[0]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
 	outScreenIcon[1]->position = { targetPosOutScreen.x,targetPosOutScreen.y,0 };
 
-	rockTarget->SpriteTransferVertexBuffer();
-	rockTarget->SpriteUpdate();
+	rockTarget->spriteTransferVertexBuffer();
+	rockTarget->spriteUpdata();
 
-	outScreenIcon[0]->SpriteTransferVertexBuffer();
-	outScreenIcon[0]->SpriteUpdate();
-	outScreenIcon[1]->SpriteTransferVertexBuffer();
-	outScreenIcon[1]->SpriteUpdate();
+	outScreenIcon[0]->spriteTransferVertexBuffer();
+	outScreenIcon[0]->spriteUpdata();
+	outScreenIcon[1]->spriteTransferVertexBuffer();
+	outScreenIcon[1]->spriteUpdata();
 
 	bossHitPointGauge.size.x = (float)HP * 50;
-	bossHitPointGauge.SpriteTransferVertexBuffer();
-	bossHitPointGauge.SpriteUpdate();
+	bossHitPointGauge.spriteTransferVertexBuffer();
+	bossHitPointGauge.spriteUpdata();
 }
 
 void Boss::bossSet(XMFLOAT3 pos)
@@ -243,7 +243,7 @@ void Boss::bossSet(XMFLOAT3 pos)
 	bossScale = { 0,0,0 };
 	enemyObject->SetScale(bossScale);
 	enemyObject->SetPosition(pos);
-	enemyObject->Update();
+	enemyObject->updata();
 
 	//演出用カメラをセット
 	bossCamera = new Camera;
@@ -286,13 +286,13 @@ void Boss::bossArrival(Player* player)
 
 	enemyObject->setRotMatrix(matrot);
 	enemyObject->SetScale(bossScale);
-	enemyObject->Update();
+	enemyObject->updata();
 
 	if (!bossRotEase.getIsActive())
 	{
 		enemyObject->SetRotation({ 0,0,0 });
 		enemyObject->SetPosition(position);
-		enemyObject->Update();
+		enemyObject->updata();
 		isStop = false;
 		isAlive = true;
 		isAppear = false;
@@ -529,7 +529,7 @@ void Boss::bossShot()
 
 	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
 	{
-		bullet->update();
+		bullet->updata();
 	}
 
 	XMFLOAT3 pPos = playerPointer->playerObject->getPosition();
@@ -607,7 +607,7 @@ void Boss::bossHoming()
 
 	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
 	{
-		bullet->update();
+		bullet->updata();
 	}
 
 	XMFLOAT3 pPos = playerPointer->playerObject->getPosition();
@@ -730,7 +730,7 @@ void Boss::bossRampage()
 
 	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
 	{
-		bullet->update();
+		bullet->updata();
 	}
 
 	if (isRampageWait)
@@ -792,14 +792,14 @@ void Boss::bossDraw2D(directX* directx)
 
 	if (isOutScreen)
 	{
-		outScreenIcon[0]->DrawSprite(directx->cmdList.Get());
-		outScreenIcon[1]->DrawSprite(directx->cmdList.Get());
+		outScreenIcon[0]->drawSprite(directx->cmdList.Get());
+		outScreenIcon[1]->drawSprite(directx->cmdList.Get());
 	}
 
 	if (isTargetSet)
 	{
-		rockTarget->DrawSprite(directx->cmdList.Get());
+		rockTarget->drawSprite(directx->cmdList.Get());
 	}
 
-	bossHitPointGauge.DrawSprite(directx->cmdList.Get());
+	bossHitPointGauge.drawSprite(directx->cmdList.Get());
 }

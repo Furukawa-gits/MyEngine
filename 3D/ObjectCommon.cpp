@@ -4,7 +4,7 @@
 
 #pragma region 3dオブジェクト共通
 //バッファビュー取得_立方体
-Viewes ObjectCommon::ReturnCubeViewes()
+Viewes ObjectCommon::returnCubeViewes()
 {
 	Viewes views;
 
@@ -156,7 +156,7 @@ Viewes ObjectCommon::ReturnCubeViewes()
 }
 
 //バッファビュー取得_三角錐
-Viewes ObjectCommon::ReturnTripyramidViewes()
+Viewes ObjectCommon::returnTripyramidViewes()
 {
 	Viewes views;
 
@@ -311,7 +311,7 @@ Viewes ObjectCommon::ReturnTripyramidViewes()
 }
 
 //バッファビュー取得_面
-Viewes ObjectCommon::ReturnPlaneViewes()
+Viewes ObjectCommon::returnPlaneViewes()
 {
 	Viewes views;
 
@@ -403,7 +403,7 @@ Viewes ObjectCommon::ReturnPlaneViewes()
 }
 
 //マテリアルテクスチャ読み込み
-void ObjectCommon::Material_Loadtexture(Material* material, const std::string& filename)
+void ObjectCommon::materialLoadTexture(Material* material, const std::string& filename)
 {
 	HRESULT result = S_FALSE;
 
@@ -459,14 +459,14 @@ void ObjectCommon::Material_Loadtexture(Material* material, const std::string& f
 	//シェーダーリソースビュー作成
 	directx->dev->CreateShaderResourceView(this->texbuff[material->material_texnumber].Get(),
 		&srvDesc,
-		CD3DX12_CPU_DESCRIPTOR_HANDLE(this->Material_descHeap->GetCPUDescriptorHandleForHeapStart(), material->material_texnumber,
+		CD3DX12_CPU_DESCRIPTOR_HANDLE(this->materialDescHeap->GetCPUDescriptorHandleForHeapStart(), material->material_texnumber,
 			directx->dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)
 		)
 	);
 }
 
 //マテリアル読み込み
-void ObjectCommon::LoadMaterial(Material* material, const std::string& filename)
+void ObjectCommon::loadMaterial(Material* material, const std::string& filename)
 {
 	//ファイルストリーム
 	std::ifstream file;
@@ -528,7 +528,7 @@ void ObjectCommon::LoadMaterial(Material* material, const std::string& filename)
 		{
 			line_stream >> material->textureFilename;
 
-			Material_Loadtexture(material, directoryPath + material->textureFilename);
+			materialLoadTexture(material, directoryPath + material->textureFilename);
 		}
 
 	}
@@ -536,7 +536,7 @@ void ObjectCommon::LoadMaterial(Material* material, const std::string& filename)
 }
 
 //バッファビュー取得_モデル
-Viewes ObjectCommon::ReturnModelViewes(const char* Filename, int material_texnum)
+Viewes ObjectCommon::returnModelViewes(const char* Filename, int material_texnum)
 {
 	Viewes modelView;
 
@@ -571,7 +571,7 @@ Viewes ObjectCommon::ReturnModelViewes(const char* Filename, int material_texnum
 		{
 			string filename;
 			line_stream >> filename;
-			LoadMaterial(&modelView.material, directoryPath + filename);
+			loadMaterial(&modelView.material, directoryPath + filename);
 		}
 
 		if (key == "v")
@@ -699,7 +699,7 @@ Viewes ObjectCommon::ReturnModelViewes(const char* Filename, int material_texnum
 }
 
 //パイプライン設定
-PipelineSet3D ObjectCommon::GeneratePipeLineState(ID3D12Device* dev)
+PipelineSet3D ObjectCommon::generatePipeLineState(ID3D12Device* dev)
 {
 	HRESULT result;
 
@@ -864,7 +864,7 @@ void ObjectCommon::init(directX* directx)
 {
 	this->directx = directx;
 
-	this->pipelineset = GeneratePipeLineState(this->directx->dev.Get());
+	this->pipelineSet = generatePipeLineState(this->directx->dev.Get());
 
 	HRESULT result;
 
@@ -882,7 +882,7 @@ void ObjectCommon::init(directX* directx)
 	material_descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	material_descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;//シェーダから見えるように
 	material_descHeapDesc.NumDescriptors = 512; // シェーダーリソースビュー1つ
-	result = this->directx->dev.Get()->CreateDescriptorHeap(&material_descHeapDesc, IID_PPV_ARGS(&Material_descHeap));//生成
+	result = this->directx->dev.Get()->CreateDescriptorHeap(&material_descHeapDesc, IID_PPV_ARGS(&materialDescHeap));//生成
 	if (FAILED(result)) {
 		assert(0);
 		return;
@@ -896,8 +896,8 @@ void ObjectCommon::init(directX* directx)
 void ObjectCommon::object3DcommonBeginDraw()
 {
 	//3Dオブジェクトパイプライン・ルートシグネチャをセット
-	this->directx->cmdList.Get()->SetPipelineState(this->pipelineset.pipelinestate.Get());
-	this->directx->cmdList.Get()->SetGraphicsRootSignature(this->pipelineset.rootsignature.Get());
+	this->directx->cmdList.Get()->SetPipelineState(this->pipelineSet.pipelinestate.Get());
+	this->directx->cmdList.Get()->SetGraphicsRootSignature(this->pipelineSet.rootsignature.Get());
 
 	//図形描画リスト・ストリップ
 	this->directx->cmdList.Get()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

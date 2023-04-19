@@ -19,7 +19,7 @@ public:
 
 	void init(dxinput* input, directX* directx);
 
-	void Move();
+	void move();
 
 	void outArea();
 
@@ -33,9 +33,9 @@ public:
 
 	void setStaging(bool isclear);
 
-	void update();
+	void updata();
 
-	void targetUpdate();
+	void targetUpdata();
 
 	void addMissile(Enemy* enemy);
 

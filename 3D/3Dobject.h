@@ -32,7 +32,7 @@ float returnScaler(XMFLOAT3 vec);
 
 XMFLOAT3 normalized(XMFLOAT3 vec);
 
-class object3D_obj
+class object3Dobj
 {
 public:
 
@@ -55,37 +55,37 @@ public:
 	XMMATRIX matWorld;
 
 	//親オブジェクトへのポインタ
-	object3D_obj* parent = nullptr;
+	object3Dobj* parent = nullptr;
 
 	//フラグ
 	bool flag;
 
 	//コンストラクタ
-	object3D_obj();
+	object3Dobj();
 
 	//静的初期化
-	static void StaticInit(Camera* camera = nullptr, directX* directx = nullptr);
+	static void staticInit(Camera* camera = nullptr, directX* directx = nullptr);
 
 	//静的データセット
-	static void SetStaticData(Camera* camera, directX* directx, ObjectCommon* common);
+	static void setStaticData(Camera* camera, directX* directx, ObjectCommon* common);
 
 	//3Dオブジェクト初期化
-	void Init3d(int index);
+	void init3d(int index);
 
 	//3Dオブジェクト更新処理
-	void Update3d(Viewes& view, XMFLOAT4 color = { 1,1,1,1 });
+	void update3d(Viewes& view, XMFLOAT4 color = { 1,1,1,1 });
 
 	//3Dオブジェクト描画処理
-	void Draw3d(ID3D12DescriptorHeap* TexdescHeap, Viewes& view, D3D12_GPU_DESCRIPTOR_HANDLE gpuDeschandleSRV, indices_num num);
+	void Draw(ID3D12DescriptorHeap* TexdescHeap, Viewes& view, D3D12_GPU_DESCRIPTOR_HANDLE gpuDeschandleSRV, indices_num num);
 
 	//モデル専用描画処理(マテリアル無し)
-	void DrawModel(ID3D12DescriptorHeap* TexdescHeap, Viewes& view, D3D12_GPU_DESCRIPTOR_HANDLE gpuDeschandleSRV);
+	void drawModel(ID3D12DescriptorHeap* TexdescHeap, Viewes& view, D3D12_GPU_DESCRIPTOR_HANDLE gpuDeschandleSRV);
 
 	//モデル描画(マテリアルあり)
-	void DrawModel_OnMaterial(Viewes& view);
+	void drawModelOnMaterial(Viewes& view);
 
 	//ワールド座標からスクリーン座標
-	XMVECTOR WorldToScreenPos(XMVECTOR World_pos);
+	XMVECTOR worldToScreenPos(XMVECTOR World_pos);
 
 public:
 	//カメラ

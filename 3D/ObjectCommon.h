@@ -91,28 +91,28 @@ public:
 	ComPtr<ID3D12DescriptorHeap> basicDescHeap;
 
 	//バッファビュー取得_立方体
-	Viewes ReturnCubeViewes();
+	Viewes returnCubeViewes();
 
 	//バッファビュー取得_三角錐
-	Viewes ReturnTripyramidViewes();
+	Viewes returnTripyramidViewes();
 
 	//バッファビュー取得_面
-	Viewes ReturnPlaneViewes();
+	Viewes returnPlaneViewes();
 
 	//マテリアル用のテクスチャ読み込み
-	void Material_Loadtexture(Material* material, const std::string& filename);
+	void materialLoadTexture(Material* material, const std::string& filename);
 
 	//マテリアル読み込み
-	void LoadMaterial(Material* material, const std::string& filename);
+	void loadMaterial(Material* material, const std::string& filename);
 
 	//バッファビュー取得_モデル
-	Viewes ReturnModelViewes(const char* Filename,int material_texnum);
+	Viewes returnModelViewes(const char* Filename,int material_texnum);
 
 	//パイプライン
-	PipelineSet3D pipelineset;
+	PipelineSet3D pipelineSet;
 
 	//パイプライン設定
-	PipelineSet3D  GeneratePipeLineState(ID3D12Device* dev);
+	PipelineSet3D  generatePipeLineState(ID3D12Device* dev);
 
 	//初期化
 	void init(directX* directx);

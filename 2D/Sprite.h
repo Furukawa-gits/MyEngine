@@ -32,28 +32,28 @@ private:
 	/// <summary>
 	/// パイプライン生成
 	/// </summary>
-	static void SetPipelineStateSprite();
+	static void setPipelineStateSprite();
 
 	/// <summary>
 	/// テクスチャ読み込み
 	/// xxxxx.pngのみ
 	/// </summary>
 	/// <param name="filename">ファイル名</param>
-	void LoadTexture(const std::string& filename);
+	void loadTexture(const std::string& filename);
 
 public:
 	/// <summary>
 	/// 静的データセット
 	/// </summary>
 	/// <param name="dev">デバイス情報</param>
-	static void SetStaticData(ID3D12Device* dev, dxinput* dxinput);
+	static void setStaticData(ID3D12Device* dev, dxinput* dxinput);
 
 	/// <summary>
 	/// 頂点バッファへのデータ転送
 	/// </summary>
 	/// <param name="tex">テクスチャマネージャー</param>
 	/// <param name="isCutout">切り取るかどうか</param>
-	void SpriteTransferVertexBuffer(bool isCutout = false);
+	void spriteTransferVertexBuffer(bool isCutout = false);
 
 	/// <summary>
 	/// スプライト生成
@@ -63,7 +63,7 @@ public:
 	/// <param name="isFlipX">左右反転</param>
 	/// <param name="isFlipY">上下反転</param>
 	/// <param name="iscutout">切り抜くかどうか</param>
-	void GenerateSprite(
+	void generateSprite(
 		const std::string& filename,
 		bool sizeFlag = false,
 		bool isFlipX = false,
@@ -74,14 +74,14 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="spritecommon">スプライト共通データ</param>
-	void SpriteUpdate();
+	void spriteUpdata();
 
 	/// <summary>
 	/// 描画
 	/// </summary>
 	/// <param name="cmdList">コマンドリスト</param>
 	/// <param name="texture">テクスチャマネージャー</param>
-	void DrawSprite(ID3D12GraphicsCommandList* cmdList);
+	void drawSprite(ID3D12GraphicsCommandList* cmdList);
 
 	/// <summary>
 	/// スプライトのマウス入力
@@ -147,9 +147,9 @@ private:
 
 	static dxinput* input;
 
-	static ComPtr<ID3D12RootSignature> SpriteRootsignature;//ルートシグネチャ
+	static ComPtr<ID3D12RootSignature> spriteRootsignature;//ルートシグネチャ
 
-	static ComPtr<ID3D12PipelineState> SpritePipelinestate;//パイプラインステート
+	static ComPtr<ID3D12PipelineState> spritePipelinestate;//パイプラインステート
 
 	static XMMATRIX matprojection;
 

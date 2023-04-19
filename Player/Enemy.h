@@ -23,7 +23,7 @@ public:
 
 	void set(XMFLOAT3 playerpos, XMFLOAT3 shotpos);
 
-	void update();
+	void updata();
 
 	void draw(directX* directx);
 

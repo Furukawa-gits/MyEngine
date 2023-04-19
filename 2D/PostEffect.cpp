@@ -23,7 +23,7 @@ void PostEffect::Init(ID3D12Device* dev)
 		&CD3DX12_RESOURCE_DESC::Buffer(sizeof(VertexPosUv) * 4),
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&PostVertBuff));
+		IID_PPV_ARGS(&postVertBuff));
 
 	//頂点データ
 	VertexPosUv vertices[4] =
@@ -36,16 +36,16 @@ void PostEffect::Init(ID3D12Device* dev)
 
 	//頂点バッファへのデータ転送
 	VertexPosUv* vertMap = nullptr;
-	result = this->PostVertBuff->Map(0, nullptr, (void**)&vertMap);
+	result = this->postVertBuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result)) {
 		memcpy(vertMap, vertices, sizeof(vertices));
-		this->PostVertBuff->Unmap(0, nullptr);
+		this->postVertBuff->Unmap(0, nullptr);
 	}
 
 	//頂点バッファビューの作成
-	this->PostVBView.BufferLocation = this->PostVertBuff->GetGPUVirtualAddress();
-	this->PostVBView.SizeInBytes = sizeof(VertexPosUv) * 4;
-	this->PostVBView.StrideInBytes = sizeof(VertexPosUv);
+	this->postVBView.BufferLocation = this->postVertBuff->GetGPUVirtualAddress();
+	this->postVBView.SizeInBytes = sizeof(VertexPosUv) * 4;
+	this->postVBView.StrideInBytes = sizeof(VertexPosUv);
 
 	//定数バッファの生成
 	result = dev->CreateCommittedResource(
@@ -55,7 +55,7 @@ void PostEffect::Init(ID3D12Device* dev)
 			0xff) & ~0xff),
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&this->PostConstBuff));
+		IID_PPV_ARGS(&this->postConstBuff));
 
 	assert(SUCCEEDED(result));
 
@@ -177,8 +177,8 @@ void PostEffect::Init(ID3D12Device* dev)
 		&dsvDesc,
 		descheapDSV->GetCPUDescriptorHandleForHeapStart());
 
-	CreateGraphicsPipelineState(dev);
-	CreateGraphicsPipelineStateGray(dev);
+	createGraphicsPipelineState(dev);
+	createGraphicsPipelineStateGray(dev);
 	//CreateGraphicsPipelineStateGaussian(dev);
 }
 
@@ -186,18 +186,18 @@ void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList, ID3D12Device* dev)
 {
 	//定数バッファにデータ転送
 	ConstBufferDataSP* constMap = nullptr;
-	HRESULT result = this->PostConstBuff->Map(0, nullptr, (void**)&constMap);
+	HRESULT result = this->postConstBuff->Map(0, nullptr, (void**)&constMap);
 	if (SUCCEEDED(result)) {
 		constMap->color = XMFLOAT4(1, 1, 1, 1);
 		constMap->mat = XMMatrixIdentity();
-		this->PostConstBuff->Unmap(0, nullptr);
+		this->postConstBuff->Unmap(0, nullptr);
 	}
 
 	if (!isSetOtherPipeline)
 	{
-		cmdList->SetPipelineState(PostPipelinestateBace.Get());
+		cmdList->SetPipelineState(postPipelinestateBace.Get());
 
-		cmdList->SetGraphicsRootSignature(PostRootsignatureBace.Get());
+		cmdList->SetGraphicsRootSignature(postRootsignatureBace.Get());
 	}
 
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
@@ -207,10 +207,10 @@ void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList, ID3D12Device* dev)
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	//頂点バッファをセット
-	cmdList->IASetVertexBuffers(0, 1, &PostVBView);
+	cmdList->IASetVertexBuffers(0, 1, &postVBView);
 
 	//定数バッファをセット
-	cmdList->SetGraphicsRootConstantBufferView(0, PostConstBuff->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(0, postConstBuff->GetGPUVirtualAddress());
 
 	//シェーダーリソースビューをセット
 	cmdList->SetGraphicsRootDescriptorTable(1,
@@ -233,18 +233,18 @@ void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList, ID3D12Device* dev)
 
 void PostEffect::setPipelineGray(ID3D12GraphicsCommandList* cmdList)
 {
-	cmdList->SetPipelineState(PostPipelinestateGray.Get());
+	cmdList->SetPipelineState(postPipelinestateGray.Get());
 
-	cmdList->SetGraphicsRootSignature(PostRootsignatureGray.Get());
+	cmdList->SetGraphicsRootSignature(postRootsignatureGray.Get());
 
 	isSetOtherPipeline = true;
 }
 
 void PostEffect::setPipelineGaussian(ID3D12GraphicsCommandList* cmdList)
 {
-	cmdList->SetPipelineState(PostPipelinestateGaussian.Get());
+	cmdList->SetPipelineState(postPipelinestateGaussian.Get());
 
-	cmdList->SetGraphicsRootSignature(PostRootsignatureGaussian.Get());
+	cmdList->SetGraphicsRootSignature(postRootsignatureGaussian.Get());
 
 	isSetOtherPipeline = true;
 }
@@ -254,7 +254,7 @@ void PostEffect::reSetPipeline()
 	isSetOtherPipeline = false;
 }
 
-void PostEffect::PreDrawScene(ID3D12GraphicsCommandList* cmdlist, ID3D12Device* dev)
+void PostEffect::preDrawScene(ID3D12GraphicsCommandList* cmdlist, ID3D12Device* dev)
 {
 	for (int i = 0; i < 2; i++)
 	{
@@ -307,7 +307,7 @@ void PostEffect::PreDrawScene(ID3D12GraphicsCommandList* cmdlist, ID3D12Device* 
 	cmdlist->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
-void PostEffect::PostDrawScene(ID3D12GraphicsCommandList* cmdlist, directX* directx)
+void PostEffect::postDrawScene(ID3D12GraphicsCommandList* cmdlist, directX* directx)
 {
 	for (int i = 0; i < 2; i++)
 	{
@@ -322,7 +322,7 @@ void PostEffect::depthClear(ID3D12GraphicsCommandList* cmdlist)
 	cmdlist->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
-void PostEffect::CreateGraphicsPipelineState(ID3D12Device* dev)
+void PostEffect::createGraphicsPipelineState(ID3D12Device* dev)
 {
 	HRESULT result;
 
@@ -456,18 +456,18 @@ void PostEffect::CreateGraphicsPipelineState(ID3D12Device* dev)
 	assert(SUCCEEDED(result));
 
 	result = dev->CreateRootSignature(0, rootSigBlob->GetBufferPointer(),
-		rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&PostRootsignatureBace));
+		rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&postRootsignatureBace));
 	assert(SUCCEEDED(result));
 
 	//パイプラインにルートシグネチャをセット
-	gpipeline.pRootSignature = PostRootsignatureBace.Get();
+	gpipeline.pRootSignature = postRootsignatureBace.Get();
 
 	//パイプラインステートの生成
-	result = dev->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&PostPipelinestateBace));
+	result = dev->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&postPipelinestateBace));
 	assert(SUCCEEDED(result));
 }
 
-void PostEffect::CreateGraphicsPipelineStateGray(ID3D12Device* dev)
+void PostEffect::createGraphicsPipelineStateGray(ID3D12Device* dev)
 {
 	HRESULT result;
 
@@ -601,18 +601,18 @@ void PostEffect::CreateGraphicsPipelineStateGray(ID3D12Device* dev)
 	assert(SUCCEEDED(result));
 
 	result = dev->CreateRootSignature(0, rootSigBlob->GetBufferPointer(),
-		rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&PostRootsignatureGray));
+		rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&postRootsignatureGray));
 	assert(SUCCEEDED(result));
 
 	//パイプラインにルートシグネチャをセット
-	gpipeline.pRootSignature = PostRootsignatureGray.Get();
+	gpipeline.pRootSignature = postRootsignatureGray.Get();
 
 	//パイプラインステートの生成
-	result = dev->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&PostPipelinestateGray));
+	result = dev->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&postPipelinestateGray));
 	assert(SUCCEEDED(result));
 }
 
-void PostEffect::CreateGraphicsPipelineStateGaussian(ID3D12Device* dev)
+void PostEffect::createGraphicsPipelineStateGaussian(ID3D12Device* dev)
 {
 	HRESULT result;
 
@@ -746,13 +746,13 @@ void PostEffect::CreateGraphicsPipelineStateGaussian(ID3D12Device* dev)
 	assert(SUCCEEDED(result));
 
 	result = dev->CreateRootSignature(0, rootSigBlob->GetBufferPointer(),
-		rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&PostRootsignatureGaussian));
+		rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&postRootsignatureGaussian));
 	assert(SUCCEEDED(result));
 
 	//パイプラインにルートシグネチャをセット
-	gpipeline.pRootSignature = PostRootsignatureGaussian.Get();
+	gpipeline.pRootSignature = postRootsignatureGaussian.Get();
 
 	//パイプラインステートの生成
-	result = dev->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&PostPipelinestateGaussian));
+	result = dev->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&postPipelinestateGaussian));
 	assert(SUCCEEDED(result));
 }

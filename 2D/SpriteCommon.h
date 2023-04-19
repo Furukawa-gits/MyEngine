@@ -23,11 +23,11 @@ public:
 	XMMATRIX matProjection{};
 
 	//パイプライン設定
-	PipelineSet GeneratePipeLineStateSP(ID3D12Device* dev);
+	PipelineSet generatePipeLineStateSP(ID3D12Device* dev);
 
 	//共通データ生成
-	void SpriteCommonCreate(ID3D12Device* dev , int window_width, int window_height);
+	void spriteCommonCreate(ID3D12Device* dev , int window_width, int window_height);
 
 	//スプライト共通グラフィックスコマンドのセット
-	void SpriteCommonBeginDraw(ID3D12GraphicsCommandList* cmdlist, TexManager* tex);
+	void spriteCommonBeginDraw(ID3D12GraphicsCommandList* cmdlist, TexManager* tex);
 };

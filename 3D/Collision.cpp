@@ -2,7 +2,7 @@
 
 using namespace DirectX;
 
-bool Collision::CheckSphere2Sphere(const Sphere& sphere, const Sphere& sphere2)
+bool Collision::checkSphere2Sphere(const Sphere& sphere, const Sphere& sphere2)
 {
 	float x_dis = sphere2.center.m128_f32[0] - sphere.center.m128_f32[0];
 	float y_dis = sphere2.center.m128_f32[1] - sphere.center.m128_f32[1];
@@ -12,7 +12,7 @@ bool Collision::CheckSphere2Sphere(const Sphere& sphere, const Sphere& sphere2)
 	return (x_dis * x_dis) + (y_dis * y_dis) + (z_dis * z_dis) <= radius_total * radius_total;
 }
 
-bool Collision::CheckSphere2Plane(const Sphere& sphere, const Plane& plane, DirectX::XMVECTOR* inter)
+bool Collision::checkSphere2Plane(const Sphere& sphere, const Plane& plane, DirectX::XMVECTOR* inter)
 {
 	XMVECTOR distV = XMVector3Dot(sphere.center, plane.normal);
 
@@ -28,7 +28,7 @@ bool Collision::CheckSphere2Plane(const Sphere& sphere, const Plane& plane, Dire
 	return true;
 }
 
-void Collision::ClosestPtPoint2Triangle(const DirectX::XMVECTOR& point, const Triangle& triangle, DirectX::XMVECTOR* closest)
+void Collision::closestPtPoint2Triangle(const DirectX::XMVECTOR& point, const Triangle& triangle, DirectX::XMVECTOR* closest)
 {
 	// pointがp0の外側の頂点領域の中にあるかどうかチェック
 	XMVECTOR p0_p1 = triangle.p1 - triangle.p0;
@@ -102,11 +102,11 @@ void Collision::ClosestPtPoint2Triangle(const DirectX::XMVECTOR& point, const Tr
 	*closest = triangle.p0 + p0_p1 * v + p0_p2 * w;
 }
 
-bool Collision::CheckSphere2Triangle(const Sphere& sphere, const Triangle& triangle, DirectX::XMVECTOR* inter)
+bool Collision::checkSphere2Triangle(const Sphere& sphere, const Triangle& triangle, DirectX::XMVECTOR* inter)
 {
 	XMVECTOR p;
 
-	ClosestPtPoint2Triangle(sphere.center, triangle, &p);
+	closestPtPoint2Triangle(sphere.center, triangle, &p);
 
 	XMVECTOR v = p - sphere.center;
 
@@ -121,7 +121,7 @@ bool Collision::CheckSphere2Triangle(const Sphere& sphere, const Triangle& trian
 	return true;
 }
 
-bool Collision::CheckRay2Plane(const Ray& ray, const Plane& plane, float* distance, DirectX::XMVECTOR* inter)
+bool Collision::checkRay2Plane(const Ray& ray, const Plane& plane, float* distance, DirectX::XMVECTOR* inter)
 {
 	const float epsilon = 1.0e-5f;
 
@@ -144,14 +144,14 @@ bool Collision::CheckRay2Plane(const Ray& ray, const Plane& plane, float* distan
 	return true;
 }
 
-bool Collision::CheckRay2Triangle(const Ray& ray, const Triangle& triangle, float* distance, DirectX::XMVECTOR* inter)
+bool Collision::checkRay2Triangle(const Ray& ray, const Triangle& triangle, float* distance, DirectX::XMVECTOR* inter)
 {
 	Plane plane;
 	XMVECTOR interPlane;
 	plane.normal = triangle.normal;
 	plane.distance = XMVector3Dot(triangle.normal, triangle.p0).m128_f32[0];
 
-	if (!CheckRay2Plane(ray, plane, distance, &interPlane)) { return false; }
+	if (!checkRay2Plane(ray, plane, distance, &interPlane)) { return false; }
 
 	const float epsilon = (float)1.0e-5;
 	XMVECTOR m;
@@ -182,7 +182,7 @@ bool Collision::CheckRay2Triangle(const Ray& ray, const Triangle& triangle, floa
 	return true;
 }
 
-bool Collision::CheckRay2Sphere(const Ray& ray, const Sphere& sphere, float* distance, DirectX::XMVECTOR* inter)
+bool Collision::checkRay2Sphere(const Ray& ray, const Sphere& sphere, float* distance, DirectX::XMVECTOR* inter)
 {
 	XMVECTOR m = ray.start - sphere.center;
 	float b = XMVector3Dot(m, ray.dir).m128_f32[0];

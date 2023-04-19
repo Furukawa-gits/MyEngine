@@ -19,7 +19,7 @@ object3dFBX::~object3dFBX()
 {
 }
 
-void object3dFBX::Initialize()
+void object3dFBX::initialize()
 {
 	HRESULT result;
 
@@ -378,7 +378,7 @@ void object3dFBX::CreateGraphicsPipelineSimple()
 	if (FAILED(result)) { assert(0); }
 }
 
-void object3dFBX::Update()
+void object3dFBX::updata()
 {
 	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
 	matRot = XMMatrixIdentity();

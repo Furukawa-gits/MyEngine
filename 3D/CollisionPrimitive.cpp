@@ -2,7 +2,7 @@
 
 using namespace DirectX;
 
-void Triangle::ComputeNormal()
+void Triangle::computeNormal()
 {
 	XMVECTOR p0_p1 = p1 - p0;
 	XMVECTOR p0_p2 = p2 - p0;

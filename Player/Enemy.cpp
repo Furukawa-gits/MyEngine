@@ -50,24 +50,24 @@ void Enemy::init(enemyPattern pattern)
 	rockTarget = std::make_unique<SingleSprite>();
 	rockTarget->anchorpoint = { 0.5f,0.5f };
 	rockTarget->size = { 70,70 };
-	rockTarget->GenerateSprite("Rock_on.png");
+	rockTarget->generateSprite("Rock_on.png");
 
 	outScreenIcon[0] = std::make_unique<SingleSprite>();
 	outScreenIcon[0]->anchorpoint = { 0.5f,0.5f };
 	outScreenIcon[0]->size = { 100,100 };
-	outScreenIcon[0]->GenerateSprite("enemyPos.png");
+	outScreenIcon[0]->generateSprite("enemyPos.png");
 
 	outScreenIcon[1] = std::make_unique<SingleSprite>();
 	outScreenIcon[1]->anchorpoint = { 0.5f,0.5f };
 	outScreenIcon[1]->size = { 100,100 };
-	outScreenIcon[1]->GenerateSprite("!.png");
+	outScreenIcon[1]->generateSprite("!.png");
 
 	miniMapEnemy.anchorpoint = { 0.5f,0.5f };
 	miniMapEnemy.size = { 4,4 };
-	miniMapEnemy.GenerateSprite("bossHPGauge.png");
+	miniMapEnemy.generateSprite("bossHPGauge.png");
 
 	enemyObject = new object3dFBX;
-	enemyObject->Initialize();
+	enemyObject->initialize();
 	enemyObject->SetModel(enemyModelS.get());
 	enemyObject->SetScale({ 1.0f,1.0f,1.0f });
 
@@ -155,7 +155,7 @@ void Enemy::tutorial()
 		return;
 	}
 
-	enemyObject->Update();
+	enemyObject->updata();
 }
 
 void Enemy::chase()
@@ -239,7 +239,7 @@ void Enemy::shot()
 
 	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
 	{
-		bullet->update();
+		bullet->updata();
 	}
 
 	//ŽË’ö”ÍˆÍ‚©‚Ç‚¤‚©‚ðŒvŽZ
@@ -316,7 +316,7 @@ void Enemy::homing()
 
 	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
 	{
-		bullet->update();
+		bullet->updata();
 	}
 
 	XMFLOAT3 startToTarget =
@@ -435,7 +435,7 @@ void Enemy::rampage()
 
 	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
 	{
-		bullet->update();
+		bullet->updata();
 	}
 
 	if (isRampageWait)
@@ -487,7 +487,7 @@ void Enemy::updata()
 
 	arrival();
 
-	enemyObject->Update();
+	enemyObject->updata();
 
 	if (isStop)
 	{
@@ -543,8 +543,8 @@ void Enemy::updata()
 	};
 
 	miniMapEnemy.position = minimapPosition;
-	miniMapEnemy.SpriteTransferVertexBuffer();
-	miniMapEnemy.SpriteUpdate();
+	miniMapEnemy.spriteTransferVertexBuffer();
+	miniMapEnemy.spriteUpdata();
 
 	//“G‚ª¶‘¶
 	ariveMove();
@@ -603,13 +603,13 @@ void Enemy::updataSprite()
 	outScreenIcon[0]->position = { targetPos.x,targetPos.y,0 };
 	outScreenIcon[1]->position = { targetPos.x,targetPos.y,0 };
 
-	rockTarget->SpriteTransferVertexBuffer();
-	rockTarget->SpriteUpdate();
+	rockTarget->spriteTransferVertexBuffer();
+	rockTarget->spriteUpdata();
 
-	outScreenIcon[0]->SpriteTransferVertexBuffer();
-	outScreenIcon[0]->SpriteUpdate();
-	outScreenIcon[1]->SpriteTransferVertexBuffer();
-	outScreenIcon[1]->SpriteUpdate();
+	outScreenIcon[0]->spriteTransferVertexBuffer();
+	outScreenIcon[0]->spriteUpdata();
+	outScreenIcon[1]->spriteTransferVertexBuffer();
+	outScreenIcon[1]->spriteUpdata();
 }
 
 void Enemy::arrival()
@@ -637,14 +637,14 @@ void Enemy::arrival()
 	enemyObject->setRotMatrix(matrot);
 	enemyObject->SetPosition(position);
 	enemyObject->SetScale(arrivalScale);
-	enemyObject->Update();
+	enemyObject->updata();
 
 	if (!arrivalEase.getIsActive())
 	{
 		enemyObject->SetRotation({ 0,0,0 });
 		enemyObject->SetPosition(position);
 		enemyObject->SetScale({ 1,1,1 });
-		enemyObject->Update();
+		enemyObject->updata();
 		enemyArrivaCount = 0;
 		isStop = false;
 		isAlive = true;
@@ -803,13 +803,13 @@ void Enemy::draw2D(directX* directx)
 
 	if (isOutScreen)
 	{
-		outScreenIcon[0]->DrawSprite(directx->cmdList.Get());
-		outScreenIcon[1]->DrawSprite(directx->cmdList.Get());
+		outScreenIcon[0]->drawSprite(directx->cmdList.Get());
+		outScreenIcon[1]->drawSprite(directx->cmdList.Get());
 	}
 
 	if (isTargetSet)
 	{
-		rockTarget->DrawSprite(directx->cmdList.Get());
+		rockTarget->drawSprite(directx->cmdList.Get());
 	}
 }
 
@@ -825,7 +825,7 @@ void Enemy::drawMiniMapIcon(directX* directx)
 		return;
 	}
 
-	miniMapEnemy.DrawSprite(directx->cmdList.Get());
+	miniMapEnemy.drawSprite(directx->cmdList.Get());
 }
 #pragma endregion
 
@@ -881,7 +881,7 @@ void enemyBullet::set(XMFLOAT3 playerpos, XMFLOAT3 shotpos)
 	isAlive = true;
 }
 
-void enemyBullet::update()
+void enemyBullet::updata()
 {
 	if (!isAlive)
 	{

@@ -125,7 +125,7 @@ void directX::Init(Window_Generate* Win)
 }
 
 //深度バッファ初期化
-void directX::Initializedepth()
+void directX::initializeDepth()
 {
 	//深度バッファのリソース設定
 	depthResDesc = CD3DX12_RESOURCE_DESC::Tex2D(

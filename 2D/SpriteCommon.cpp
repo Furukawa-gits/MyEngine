@@ -1,7 +1,7 @@
 #include"SpriteCommon.h"
 
 //パイプライン設定
-PipelineSet SpriteCommon::GeneratePipeLineStateSP(ID3D12Device* dev)
+PipelineSet SpriteCommon::generatePipeLineStateSP(ID3D12Device* dev)
 {
 	HRESULT result;
 
@@ -141,18 +141,18 @@ PipelineSet SpriteCommon::GeneratePipeLineStateSP(ID3D12Device* dev)
 }
 
 //共通データ生成
-void SpriteCommon::SpriteCommonCreate(ID3D12Device* dev , int window_width, int window_height)
+void SpriteCommon::spriteCommonCreate(ID3D12Device* dev , int window_width, int window_height)
 {
 	HRESULT result = S_FALSE;
 
-	pipelineset = GeneratePipeLineStateSP(dev);
+	pipelineset = generatePipeLineStateSP(dev);
 
 	matProjection = XMMatrixOrthographicOffCenterLH(
 		0.0f, (float)window_width, (float)window_height, 0.0f, 0.0f, 1.0f);
 }
 
 //スプライト共通グラフィックスコマンドのセット
-void SpriteCommon::SpriteCommonBeginDraw(ID3D12GraphicsCommandList* cmdlist, TexManager* tex)
+void SpriteCommon::spriteCommonBeginDraw(ID3D12GraphicsCommandList* cmdlist, TexManager* tex)
 {
 	cmdlist->SetPipelineState(pipelineset.pipelinestate.Get());
 

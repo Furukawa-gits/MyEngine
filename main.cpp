@@ -28,7 +28,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	directX directx;
 
 	directx.Init(Win);
-	directx.Initializedepth();
+	directx.initializeDepth();
 
 	FbxLoader::GetInstance()->Initilize(directx.dev.Get());
 
@@ -43,11 +43,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	input.init(Win->w, Win->hwnd);
 
 	//3dオブジェクト静的初期化
-	//object3D_obj::StaticInit();
+	//object3Dobj::staticInit();
 
 	//ゲームシーン初期化
 	GameScene gamescene;
-	gamescene.Init(&directx, &input, &audio);
+	gamescene.init(&directx, &input, &audio);
 
 	PostEffect* posteffect = new PostEffect();
 	posteffect->Init(directx.dev.Get());
@@ -82,7 +82,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		input.Update(Win->hwnd);
 
 		//ゲームシーン更新
-		gamescene.Updata();
+		gamescene.updata();
 
 		//グレースケール切り替え
 		if (input.Triger(DIK_2) && isSetGray == false)
@@ -101,14 +101,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		}
 
 		// 描画処理
-		posteffect->PreDrawScene(directx.cmdList.Get(), directx.dev.Get());
+		posteffect->preDrawScene(directx.cmdList.Get(), directx.dev.Get());
 		//背景スプライト、
-		gamescene.DrawBack();
+		gamescene.drawBack();
 		//深度バッファクリア
 		posteffect->depthClear(directx.cmdList.Get());
 		//3Dオブジェクト
-		gamescene.Draw3D();
-		posteffect->PostDrawScene(directx.cmdList.Get(), &directx);
+		gamescene.draw3D();
+		posteffect->postDrawScene(directx.cmdList.Get(), &directx);
 		directx.preDraw();
 		//ポストエフェクト
 		if (isSetGray)
@@ -121,13 +121,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		}
 		posteffect->Draw(directx.cmdList.Get(), directx.dev.Get());
 		//前景スプライト
-		gamescene.Draw2D();
+		gamescene.draw2D();
 		directx.postDraw();
 
 		directx.finishDraw();
 	}
 
-	//audio.UnLoadSoundWave(&gamescene.Title_bgm);
+	//audio.unLoadSoundWave(&gamescene.Title_bgm);
 	FbxLoader::GetInstance()->Finalize();
 
 	delete posteffect;

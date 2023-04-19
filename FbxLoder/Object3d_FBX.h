@@ -57,12 +57,12 @@ public:
 	static void SetCamera(Camera* camera) { object3dFBX::camera = camera; }
 	static void setLight(Light* light) { object3dFBX::light = light; }
 
-	void Initialize();
+	void initialize();
 
 	static void CreateGraphicsPipeline();
 	static void CreateGraphicsPipelineSimple();
 
-	void Update();
+	void updata();
 
 	void SetModel(Model* model) { this->model = model; }
 

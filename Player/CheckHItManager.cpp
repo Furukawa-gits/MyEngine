@@ -13,7 +13,7 @@ void checkHitManager::checkPlayerEnemy(Player* player, Enemy* enemy)
 		return;
 	}
 
-	if (Collision::CheckSphere2Sphere(player->playerCollision, enemy->enemyCollision))
+	if (Collision::checkSphere2Sphere(player->playerCollision, enemy->enemyCollision))
 	{
 		player->playerHP--;
 		player->isArmor = true;
@@ -47,7 +47,7 @@ void checkHitManager::checkBulletEnemy(bullet* bullet, Enemy* enemy)
 		return;
 	}
 
-	if (Collision::CheckSphere2Sphere(bullet->bulletCollision, enemy->enemyCollision))
+	if (Collision::checkSphere2Sphere(bullet->bulletCollision, enemy->enemyCollision))
 	{
 		bullet->count = 0;
 		bullet->isAlive = false;
@@ -99,7 +99,7 @@ void checkHitManager::checkMissilesEnemy(list<unique_ptr<Missile>>* missilesList
 
 		if (newmissile->enemyPointer->isAlive == true && newmissile->isAlive == true)
 		{
-			if (Collision::CheckSphere2Sphere(newmissile->missileCollision, newmissile->enemyPointer->enemyCollision))
+			if (Collision::checkSphere2Sphere(newmissile->missileCollision, newmissile->enemyPointer->enemyCollision))
 			{
 				if (newmissile->enemyPointer->isThisBoss)
 				{
@@ -143,7 +143,7 @@ void checkHitManager::checkBulletEnemyRampage(bullet* playerbullet, enemyBullet*
 		return;
 	}
 
-	if (Collision::CheckSphere2Sphere(playerbullet->bulletCollision, rampagebullet->bulletCollision))
+	if (Collision::checkSphere2Sphere(playerbullet->bulletCollision, rampagebullet->bulletCollision))
 	{
 		playerbullet->count = 0;
 		playerbullet->isAlive = false;
@@ -183,7 +183,7 @@ void checkHitManager::checkPlayerEnemyRampage(Player* player, enemyBullet* rampa
 		return;
 	}
 
-	if (Collision::CheckSphere2Sphere(player->playerCollision, rampagebullet->getCollision()))
+	if (Collision::checkSphere2Sphere(player->playerCollision, rampagebullet->getCollision()))
 	{
 		player->playerHP--;
 		player->isArmor = true;

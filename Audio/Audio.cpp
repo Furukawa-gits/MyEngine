@@ -21,7 +21,7 @@ void Audio::Initialize()
 }
 
 //サウンド読み込み
-SoundData Audio::LoadSoundWave(const char* filename, SoundData& sound)
+SoundData Audio::loadSoundWave(const char* filename, SoundData& sound)
 {
 	HRESULT result;
 
@@ -134,7 +134,7 @@ SoundData Audio::LoadSoundWave(const char* filename, SoundData& sound)
 }
 
 //サウンド再生
-void Audio::PlaySoundWave(SoundData& soundData, bool IsLoop)
+void Audio::playSoundWave(SoundData& soundData, bool IsLoop)
 {
 	HRESULT result;
 
@@ -152,7 +152,7 @@ void Audio::PlaySoundWave(SoundData& soundData, bool IsLoop)
 }
 
 //サウンド再生(音量指定)
-void Audio::PlaySoundWave_Val(SoundData& soundData, bool IsLoop, float val)
+void Audio::playSoundWave_Val(SoundData& soundData, bool IsLoop, float val)
 {
 	HRESULT result;
 
@@ -170,7 +170,7 @@ void Audio::PlaySoundWave_Val(SoundData& soundData, bool IsLoop, float val)
 }
 
 //停止
-void Audio::StopSoundWave(SoundData& soundData)
+void Audio::stopSoundWave(SoundData& soundData)
 {
 	soundData.pSourceVoice->Stop(0);
 	soundData.pSourceVoice->FlushSourceBuffers();
@@ -178,13 +178,13 @@ void Audio::StopSoundWave(SoundData& soundData)
 }
 
 //一時停止
-void Audio::StopOnlySoundWave(SoundData& soundData)
+void Audio::stopOnlySoundWave(SoundData& soundData)
 {
 	soundData.pSourceVoice->Stop(0);
 }
 
 //音声データ解放
-void Audio::UnLoadSoundWave(SoundData* soundData)
+void Audio::unLoadSoundWave(SoundData* soundData)
 {
 	//バッファのメモリを解放
 	delete[] soundData->pBuffer;
