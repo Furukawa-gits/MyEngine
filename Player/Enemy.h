@@ -284,4 +284,5 @@ public:
 	/// ミニマップ上のアイコン
 	/// </summary>
 	SingleSprite miniMapEnemy;
+	SingleSprite enemyHeight;
 };

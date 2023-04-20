@@ -92,13 +92,19 @@ void GameScene::loadSprites()
 	//セレクト画面矢印
 	selects[0].anchorpoint = { 0.5f,0.5f };
 	selects[0].size = { 100,100 };
-	selects[0].position = { 640 - 400,360,0 };
+	selects[0].position = { 640 - 400,380,0 };
 	selects[0].generateSprite("selectL.png");
 
 	selects[1].anchorpoint = { 0.5f,0.5f };
 	selects[1].size = { 100,100 };
-	selects[1].position = { 640 + 400,360,0 };
+	selects[1].position = { 640 + 400,380,0 };
 	selects[1].generateSprite("selectR.png");
+
+	//プレイスタートテキスト
+	spaceStart.anchorpoint = { 0.5f,0.5f };
+	spaceStart.size = { 350,50 };
+	spaceStart.position = { 640,530,0 };
+	spaceStart.generateSprite("spacestart.png");
 
 	//決定ボタン
 	selects[2].anchorpoint = { 0.5f,0.5f };
@@ -511,6 +517,9 @@ void GameScene::selectUpdata()
 	{
 		selects[i].spriteUpdata();
 	}
+
+	spaceStart.spriteUpdata();
+
 	toTutorial.spriteUpdata();
 
 	if (isPushStart && !startButtonEase_y.getIsActive())
@@ -1026,7 +1035,7 @@ void GameScene::resultUpdata()
 
 	selects[2].spriteUpdata();
 
-	if ((isTitleButton || isSelectButton) && !isPushTitle && !isMoveSelectIcon)
+	if ((input->Triger(DIK_SPACE) || isTitleButton || isSelectButton) && !isPushTitle && !isMoveSelectIcon)
 	{
 		ButtonEase_y.set(easingType::easeOut, easingPattern::Quadratic, 30, 7, 0);
 		ButtonEase_x.set(easingType::easeOut, easingPattern::Quadratic, 30, 200, 300);
@@ -1144,6 +1153,8 @@ void GameScene::selectDraw2d()
 	{
 		toTutorial.drawSprite(directx->cmdList.Get());
 	}
+
+	spaceStart.drawSprite(directx->cmdList.Get());
 
 	mouseCursurSub.drawSprite(directx->cmdList.Get());
 	mouseCursur.drawSprite(directx->cmdList.Get());
@@ -1394,11 +1405,6 @@ void GameScene::drawPositionUI()
 
 	//高度メーター
 	heightGauge.drawSprite(directx->cmdList.Get());
-	playerHeight.drawSprite(directx->cmdList.Get());
-	playerHeightIcon.drawSprite(directx->cmdList.Get());
-
-	//ミニマップ
-	miniMap.drawSprite(directx->cmdList.Get());
 
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
@@ -1409,7 +1415,8 @@ void GameScene::drawPositionUI()
 
 	testUniteBoss->drawMiniMapIcon(directx);
 
-	playerPointer->drawMiniMapIcon(directx);
+	playerHeight.drawSprite(directx->cmdList.Get());
+	playerHeightIcon.drawSprite(directx->cmdList.Get());
 }
 
 void GameScene::checkHitPlayerTarget()
@@ -1803,4 +1810,4 @@ bool GameScene::loadStage()
 	enemyWaveIcons.push_back(std::move(newicon));
 
 	return true;
-}
+	}

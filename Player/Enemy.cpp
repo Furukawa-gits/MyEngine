@@ -9,7 +9,7 @@ const float Enemy::forPlayer = 400.0f;
 const XMFLOAT2 Enemy::defaultRockIconSize = { 70.0f,70.0f };
 const XMFLOAT2 Enemy::setRockIconSize = { 180.0f,180.0f };
 const float Enemy::decreaseSize = 9.0f;
-const XMFLOAT3 Enemy::miniMapPosition = { 120,120,0 };
+const XMFLOAT3 Enemy::miniMapPosition = { -90,120,0 };
 
 #pragma region 敵本体
 Enemy::Enemy()
@@ -63,8 +63,12 @@ void Enemy::init(enemyPattern pattern)
 	outScreenIcon[1]->generateSprite("!.png");
 
 	miniMapEnemy.anchorpoint = { 0.5f,0.5f };
-	miniMapEnemy.size = { 4,4 };
-	miniMapEnemy.generateSprite("bossHPGauge.png");
+	miniMapEnemy.size = { 15,15 };
+	miniMapEnemy.generateSprite("enemyIcon.png");
+
+	enemyHeight.anchorpoint = { 0.5f,0.5f };
+	enemyHeight.size = { 32,3 };
+	enemyHeight.generateSprite("bossHPGauge.png");
 
 	enemyObject = new object3dFBX;
 	enemyObject->initialize();
@@ -531,20 +535,6 @@ void Enemy::updata()
 		isOutScreen = false;
 	}
 
-	//ミニマップアイコン更新
-	XMFLOAT3 enemyPosition = position;
-
-	//上から見た位置なので X・Z座標
-	XMFLOAT3 minimapPosition =
-	{
-		(enemyPosition.x * 0.21f) + Enemy::miniMapPosition.x,
-		(enemyPosition.z * 0.21f) + Enemy::miniMapPosition.x,
-		0
-	};
-
-	miniMapEnemy.position = minimapPosition;
-	miniMapEnemy.spriteUpdata();
-
 	//敵が生存
 	ariveMove();
 
@@ -606,6 +596,35 @@ void Enemy::updataSprite()
 
 	outScreenIcon[0]->spriteUpdata();
 	outScreenIcon[1]->spriteUpdata();
+
+	//高度メーター更新
+	//y座標に補正をかけてpositionに代入
+	XMFLOAT3 position = enemyObject->getPosition();
+	float enemyH = position.y - -180;
+
+	//スプライトの座標系に変更＆メーターの上がり具合を調整
+	enemyH = -(enemyH * 0.3333f);
+
+	//実際に表示する座標に変更
+	enemyH = enemyH + miniMapPosition.y + 100;
+
+	float underLimit = miniMapPosition.y + 100 - 5;
+	float upperLimit = miniMapPosition.y - 100 + 5;
+
+	if (enemyH < upperLimit)
+	{
+		enemyH = upperLimit;
+	}
+	else if (enemyH > underLimit)
+	{
+		enemyH = underLimit;
+	}
+
+	enemyHeight.position = { miniMapPosition.x + 120,enemyH,0 };
+	miniMapEnemy.position = { miniMapPosition.x + 140,enemyH - 2,0 };
+
+	miniMapEnemy.spriteUpdata();
+	enemyHeight.spriteUpdata();
 }
 
 void Enemy::arrival()
@@ -822,6 +841,8 @@ void Enemy::drawMiniMapIcon(directX* directx)
 	}
 
 	miniMapEnemy.drawSprite(directx->cmdList.Get());
+
+	enemyHeight.drawSprite(directx->cmdList.Get());
 }
 #pragma endregion
 

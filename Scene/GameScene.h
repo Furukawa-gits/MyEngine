@@ -186,6 +186,8 @@ private:
 	//セレクトアイコン
 	SingleSprite selects[3];
 	float selectIconSizeX = 150;
+	//プレイスタートボタン
+	SingleSprite spaceStart;
 	//カウントダウン・スタートアイコン
 	SingleSprite countDownSprite[3];
 	SingleSprite playStart;

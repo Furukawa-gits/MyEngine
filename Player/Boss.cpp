@@ -43,8 +43,12 @@ void Boss::bossInit()
 	bossHitPointGauge.generateSprite("bossHPGauge.png");
 
 	miniMapEnemy.anchorpoint = { 0.5f,0.5f };
-	miniMapEnemy.size = { 6,6 };
-	miniMapEnemy.generateSprite("bossHPGauge.png");
+	miniMapEnemy.size = { 15,15 };
+	miniMapEnemy.generateSprite("enemyIcon.png");
+
+	enemyHeight.anchorpoint = { 0.5f,0.5f };
+	enemyHeight.size = { 32,3 };
+	enemyHeight.generateSprite("bossHPGauge.png");
 
 	enemyObject = new object3dFBX;
 	enemyObject->initialize();
@@ -206,6 +210,35 @@ void Boss::bossSpriteUpdata()
 
 	bossHitPointGauge.size.x = (float)HP * 50;
 	bossHitPointGauge.spriteUpdata();
+
+	//高度メーター更新
+	//y座標に補正をかけてpositionに代入
+	XMFLOAT3 position = enemyObject->getPosition();
+	float enemyH = position.y - -180;
+
+	//スプライトの座標系に変更＆メーターの上がり具合を調整
+	enemyH = -(enemyH * 0.3333f);
+
+	//実際に表示する座標に変更
+	enemyH = enemyH + miniMapPosition.y + 100;
+
+	float underLimit = miniMapPosition.y + 100 - 5;
+	float upperLimit = miniMapPosition.y - 100 + 5;
+
+	if (enemyH < upperLimit)
+	{
+		enemyH = upperLimit;
+	}
+	else if (enemyH > underLimit)
+	{
+		enemyH = underLimit;
+	}
+
+	enemyHeight.position = { miniMapPosition.x + 120,enemyH,0 };
+	miniMapEnemy.position = { miniMapPosition.x + 140,enemyH - 2,0 };
+
+	miniMapEnemy.spriteUpdata();
+	enemyHeight.spriteUpdata();
 }
 
 void Boss::bossSet(XMFLOAT3 pos)
