@@ -119,22 +119,20 @@ private:
 	static const int debugTextnum = 0;
 
 #pragma region 基幹部分
-	directX* directx = nullptr;
-	dxinput* input = nullptr;
-	Audio* audio = nullptr;
+	std::unique_ptr<directX> directx = nullptr;
+	std::unique_ptr<dxinput> input = nullptr;
+	std::unique_ptr<Audio> audio = nullptr;
 	DebugText debugtext;
 	XMFLOAT3 MOUSE_POS = { 0,0,0 };
 #pragma endregion
 	//音
 
 	//3dオブジェクト
-	Model* model = nullptr;
-	Model* SkyModel = nullptr;
-	Model* groundModel = nullptr;
-	object3dFBX* object = nullptr;
-	object3dFBX* skySphere = nullptr;
-	object3dFBX* ground = nullptr;
-	object3dFBX* cameraobj = nullptr;
+	std::unique_ptr<Model> model;
+	std::unique_ptr<Model> SkyModel;
+	std::unique_ptr<Model> groundModel;
+	std::unique_ptr<object3dFBX> skySphere;
+	std::unique_ptr<object3dFBX> groundPlane;
 
 	//スカイドームの回転
 	float skyShpereRotY = 0.0002f;

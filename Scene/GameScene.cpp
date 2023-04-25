@@ -9,18 +9,14 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
-	delete(object);
-	delete(skySphere);
-	delete(ground);
-	delete(cameraobj);
-	delete(model);
-	delete(SkyModel);
-	delete(groundModel);
-
 	enemyList.clear();
 
 	Enemy::staticDestroy();
 	enemyBullet::staticDestroy();
+
+	directx.release();
+	input.release();
+	audio.release();
 }
 
 //サウンドだけ読み込み関数
@@ -250,9 +246,12 @@ void GameScene::init(directX* directx, dxinput* input, Audio* audio)
 	assert(audio);
 
 	//基幹部分をリンク
-	this->directx = directx;
-	this->input = input;
-	this->audio = audio;
+	this->directx = std::make_unique<directX>();
+	this->directx.reset(directx);
+	this->input = std::make_unique<dxinput>();
+	this->input.reset(input);
+	this->audio = std::make_unique<Audio>();
+	this->audio.reset(audio);
 
 	//音読み込み
 	loadSounds();
@@ -283,28 +282,28 @@ void GameScene::init(directX* directx, dxinput* input, Audio* audio)
 
 	object3dFBX::CreateGraphicsPipelineSimple();
 
-	model = FbxLoader::GetInstance()->LoadmodelFromFile("boneTest");
-	SkyModel = FbxLoader::GetInstance()->LoadmodelFromFile("skySphere");
-	groundModel = FbxLoader::GetInstance()->LoadmodelFromFile("floar");
+	Model* sky = FbxLoader::GetInstance()->LoadmodelFromFile("skySphere");
+	Model* ground = FbxLoader::GetInstance()->LoadmodelFromFile("floar");
+
+	SkyModel = std::make_unique<Model>();
+	SkyModel.reset(sky);
+	groundModel = std::make_unique<Model>();
+	groundModel.reset(ground);
 
 	//プレイヤー初期化
 	playerPointer = std::make_unique<Player>();
 	playerPointer->init(input, directx);
 
-	skySphere = new object3dFBX;
+	skySphere = std::make_unique<object3dFBX>();
 	skySphere->initialize();
-	skySphere->SetModel(SkyModel);
+	skySphere->SetModel(SkyModel.get());
 	skySphere->SetScale({ 8.0f,8.0f,8.0f });
 
-	ground = new object3dFBX;
-	ground->initialize();
-	ground->SetModel(groundModel);
-	ground->SetPosition(playerPointer->groundPosition);
-	ground->SetScale({ 0.5f,0.5f,0.5f });
-
-	cameraobj = new object3dFBX;
-	cameraobj->initialize();
-	cameraobj->SetModel(model);
+	groundPlane = std::make_unique<object3dFBX>();
+	groundPlane->initialize();
+	groundPlane->SetModel(groundModel.get());
+	groundPlane->SetPosition(playerPointer->groundPosition);
+	groundPlane->SetScale({ 0.5f,0.5f,0.5f });
 
 	srand(time(NULL));
 
@@ -647,7 +646,7 @@ void GameScene::playUpdata()
 	skySphere->updata();
 
 	//地面更新
-	ground->updata();
+	groundPlane->updata();
 
 	//ミニマップ
 	miniMap.spriteUpdata();
@@ -1168,22 +1167,22 @@ void GameScene::playDraw3d()
 		return;
 	}
 
-	ground->Draw(directx->cmdList.Get());
+	groundPlane->Draw(directx->cmdList.Get());
 	skySphere->Draw(directx->cmdList.Get());
 
 	//プレイヤー描画
-	playerPointer->draw3D(directx);
+	playerPointer->draw3D(directx.get());
 
 	//敵
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
-		newenemy->draw3D(directx);
+		newenemy->draw3D(directx.get());
 	}
 
 	//ボス描画
-	testBoss->bossDraw3D(directx);
+	testBoss->bossDraw3D(directx.get());
 
-	testUniteBoss->uniteBossDraw3d(directx);
+	testUniteBoss->uniteBossDraw3d(directx.get());
 }
 void GameScene::playDraw2d()
 {
@@ -1194,18 +1193,18 @@ void GameScene::playDraw2d()
 
 	if (stageNum > 0)
 	{
-		playerPointer->draw2D(directx, targetnum);
+		playerPointer->draw2D(directx.get(), targetnum);
 	}
 
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
-		newenemy->draw2D(directx);
+		newenemy->draw2D(directx.get());
 	}
 
 	//ボス描画(2d)
-	testBoss->bossDraw2D(directx);
+	testBoss->bossDraw2D(directx.get());
 
-	testUniteBoss->uniteBossDraw2d(directx);
+	testUniteBoss->uniteBossDraw2d(directx.get());
 
 	if (isCountDown)
 	{
@@ -1247,7 +1246,7 @@ void GameScene::playDraw2d()
 			shootingText.drawSprite(directx->cmdList.Get());
 		}
 
-		playerPointer->draw2D(directx, targetnum);
+		playerPointer->draw2D(directx.get(), targetnum);
 	}
 }
 
@@ -1259,14 +1258,14 @@ void GameScene::resultDraw3d()
 		return;
 	}
 
-	ground->Draw(directx->cmdList.Get());
+	groundPlane->Draw(directx->cmdList.Get());
 	skySphere->Draw(directx->cmdList.Get());
 
 	//プレイヤー描画
-	playerPointer->draw3D(directx);
+	playerPointer->draw3D(directx.get());
 
 	//ボス描画
-	testBoss->bossDraw3D(directx);
+	testBoss->bossDraw3D(directx.get());
 }
 void GameScene::resultDraw2d()
 {
@@ -1408,12 +1407,12 @@ void GameScene::drawPositionUI()
 
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
-		newenemy->drawMiniMapIcon(directx);
+		newenemy->drawMiniMapIcon(directx.get());
 	}
 
-	testBoss->drawMiniMapIcon(directx);
+	testBoss->drawMiniMapIcon(directx.get());
 
-	testUniteBoss->drawMiniMapIcon(directx);
+	testUniteBoss->drawMiniMapIcon(directx.get());
 
 	playerHeight.drawSprite(directx->cmdList.Get());
 	playerHeightIcon.drawSprite(directx->cmdList.Get());
