@@ -694,7 +694,6 @@ void GameScene::playUpdata()
 
 	//プレイヤー更新
 	playerPointer->updata();
-	checkHitManager::checkMissilesEnemy(&playerPointer->missilesList);
 
 	//エネミー更新
 	enemyList.remove_if([](std::unique_ptr<Enemy>& newenemy)
@@ -705,9 +704,6 @@ void GameScene::playUpdata()
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
 		newenemy->updata();
-		checkHitManager::checkPlayerEnemy(playerPointer.get(), newenemy.get());
-		checkHitManager::checkPlayerEnemyRampages(playerPointer.get(), newenemy.get());
-		checkHitManager::checkBulletsEnemyRampage(&playerPointer->bulletsList, newenemy.get());
 	}
 
 	//ホーミング弾発射
@@ -760,42 +756,8 @@ void GameScene::playUpdata()
 		targetnum = 0;
 	}
 
-	//敵がロックオンされているかどうか
-	checkHitPlayerTarget();
-
-	//プレイヤーの通常弾当たり判定
-	checkHitManager::checkBulletsEnemys(&playerPointer->bulletsList, &enemyList);
-
-	//通常弾とボスの当たり判定
-	checkHitManager::checkBulletsEnemy(&playerPointer->bulletsList, testBoss.get());
-
-	//通常弾とユニットボス本体の当たり判定
-	checkHitManager::checkBulletsEnemy(&playerPointer->bulletsList, testUniteBoss.get());
-
-	//パーツ
-	for (std::unique_ptr<uniteParts>& newparts : testUniteBoss->partsList)
-	{
-		checkHitManager::checkBulletsEnemy(&playerPointer->bulletsList, newparts.get());
-	}
-
-	//プレイヤーとボスの当たり判定
-	if (!testBoss->getIsAppear() && stageNum < 3)
-	{
-		checkHitManager::checkPlayerEnemy(playerPointer.get(), testBoss.get());
-		checkHitManager::checkPlayerEnemyRampages(playerPointer.get(), testBoss.get());
-		checkHitManager::checkBulletsEnemyRampage(&playerPointer->bulletsList, testBoss.get());
-	}
-
-	if (!testUniteBoss->getIsAppear() && stageNum == 3)
-	{
-		checkHitManager::checkPlayerEnemy(playerPointer.get(), testUniteBoss.get());
-
-		for (std::unique_ptr<uniteParts>& newparts : testUniteBoss->partsList)
-		{
-			checkHitManager::checkPlayerEnemyRampages(playerPointer.get(), newparts.get());
-			checkHitManager::checkBulletsEnemyRampage(&playerPointer->bulletsList, newparts.get());
-		}
-	}
+	//当たり判定
+	checkHitEverything();
 
 	//死んでいる雑魚敵をカウント
 	int count = 0;
@@ -1514,7 +1476,6 @@ void GameScene::countDown()
 void GameScene::tutorial()
 {
 	playerPointer->updata();
-	checkHitManager::checkMissilesEnemy(&playerPointer->missilesList);
 
 	//一定量カメラを動かしたら敵出現
 	if (playerPointer->cameraMoveCount >= 250 && isMoveText)
@@ -1619,8 +1580,10 @@ void GameScene::tutorial()
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
 		newenemy->updata();
-		checkHitManager::checkPlayerEnemy(playerPointer.get(), newenemy.get());
 	}
+
+	//当たり判定
+	checkHitEverything();
 
 	//ホーミング弾発射
 	if (input->Mouse_LeftRelease() && !isCountDown)
@@ -1649,12 +1612,6 @@ void GameScene::tutorial()
 
 		targetnum = 0;
 	}
-
-	//敵がロックオンされているかどうか
-	checkHitPlayerTarget();
-
-	//プレイヤーの通常弾当たり判定
-	checkHitManager::checkBulletsEnemys(&playerPointer->bulletsList, &enemyList);
 
 	//敵をすべて倒したorプレイヤーが死んだらリザルト
 	if (enemyList.size() <= 0 && !isMoveText && isShootingText)
@@ -1809,4 +1766,54 @@ bool GameScene::loadStage()
 	enemyWaveIcons.push_back(std::move(newicon));
 
 	return true;
+}
+
+void GameScene::checkHitEverything()
+{
+	checkHitManager::checkMissilesEnemy(&playerPointer->missilesList);
+
+	for (std::unique_ptr<Enemy>& newenemy : enemyList)
+	{
+		checkHitManager::checkPlayerEnemy(playerPointer.get(), newenemy.get());
+		checkHitManager::checkPlayerEnemyRampages(playerPointer.get(), newenemy.get());
+		checkHitManager::checkBulletsEnemyRampage(&playerPointer->bulletsList, newenemy.get());
 	}
+
+	//敵がロックオンされているかどうか
+	checkHitPlayerTarget();
+
+	//プレイヤーの通常弾当たり判定
+	checkHitManager::checkBulletsEnemys(&playerPointer->bulletsList, &enemyList);
+
+	//通常弾とボスの当たり判定
+	checkHitManager::checkBulletsEnemy(&playerPointer->bulletsList, testBoss.get());
+
+	//通常弾とユニットボス本体の当たり判定
+	checkHitManager::checkBulletsEnemy(&playerPointer->bulletsList, testUniteBoss.get());
+
+	//パーツの当たり判定
+	for (std::unique_ptr<uniteParts>& newparts : testUniteBoss->partsList)
+	{
+		checkHitManager::checkBulletsEnemy(&playerPointer->bulletsList, newparts.get());
+	}
+
+	//プレイヤーとボスの当たり判定
+	if (!testBoss->getIsAppear() && stageNum < 3)
+	{
+		checkHitManager::checkPlayerEnemy(playerPointer.get(), testBoss.get());
+		checkHitManager::checkPlayerEnemyRampages(playerPointer.get(), testBoss.get());
+		checkHitManager::checkBulletsEnemyRampage(&playerPointer->bulletsList, testBoss.get());
+	}
+
+	//ユニットボス本体との当たり判定
+	if (!testUniteBoss->getIsAppear() && stageNum == 3)
+	{
+		checkHitManager::checkPlayerEnemy(playerPointer.get(), testUniteBoss.get());
+
+		for (std::unique_ptr<uniteParts>& newparts : testUniteBoss->partsList)
+		{
+			checkHitManager::checkPlayerEnemyRampages(playerPointer.get(), newparts.get());
+			checkHitManager::checkBulletsEnemyRampage(&playerPointer->bulletsList, newparts.get());
+		}
+	}
+}

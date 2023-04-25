@@ -11,6 +11,8 @@
 
 class primitiveScene
 {
+	static void setStaticData();
+
 	virtual void loadResources();
 
 	virtual void initialize();
@@ -20,4 +22,8 @@ class primitiveScene
 	virtual void draw3D();
 
 	virtual void draw2D();
+
+	static std::unique_ptr<directX> directx;
+	static std::unique_ptr<dxinput> input;
+	static std::unique_ptr<Audio> audio;
 };

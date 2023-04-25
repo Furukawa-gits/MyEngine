@@ -115,6 +115,9 @@ private:
 	//デバッグテキスト更新
 	void debugsPrint();
 
+	//当たり判定関数
+	void checkHitEverything();
+
 	//-------------ゲームに使う変数等はここより↓-------------
 	static const int debugTextnum = 0;
 
