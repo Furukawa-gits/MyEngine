@@ -151,7 +151,6 @@ private:
 	int targetnum = 0;
 
 	//“G
-	static const int maxEnemyNum = 10;
 	std::list<std::unique_ptr<Enemy>> enemyList;
 
 	/// <summary>

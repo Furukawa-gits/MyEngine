@@ -12,7 +12,7 @@ public:
 	void initialize();
 
 	//パラメータのリセット
-	void reSetScene();
+	void setParameter();
 
 	//更新
 	void updata();
@@ -24,7 +24,6 @@ public:
 	void draw2D();
 
 private:
-	//----------タイトルシーン----------
 	//背景
 	SingleSprite titleBack;
 	//タイトル

@@ -37,15 +37,11 @@ void titleScene::initialize()
 	//リソース読み込み
 	loadResources();
 
-	//初期化
-	//タイトルアニメーション準備
-	titleDragEase.set(easingType::easeOut, easingPattern::Quadratic, titleEaseTime, dragEaseStart, dragEaseEnd);
-	titleShootEase.set(easingType::easeOut, easingPattern::Quadratic, titleEaseTime, shootEaseStart, shootEaseEnd);
-	isTitleAnimation = true;
-	titleWhiteBackAlpha = 1.0f;
+	//パラメータのセット
+	setParameter();
 }
 
-void titleScene::reSetScene()
+void titleScene::setParameter()
 {
 	//タイトルアニメーション準備
 	titleDragEase.set(easingType::easeOut, easingPattern::Quadratic, titleEaseTime, dragEaseStart, dragEaseEnd);

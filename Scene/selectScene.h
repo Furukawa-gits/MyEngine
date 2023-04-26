@@ -12,7 +12,7 @@ public:
 	void initialize();
 
 	//パラメータのリセット
-	void reSetScene();
+	void setParameter();
 
 	//更新
 	void updata();
@@ -24,6 +24,10 @@ public:
 	void draw2D();
 
 private:
+	//ステージ読み込み
+	bool loadStage();
+
+private:
 	//ステージアイコン
 	SingleSprite stage[5];
 	//セレクトアイコン
@@ -31,13 +35,17 @@ private:
 	float selectIconSizeX = 150;
 	//プレイスタートボタン
 	SingleSprite spaceStart;
+	//チュートリアル誘導
+	SingleSprite toTutorial;
 	//ステージアイコンのイージング
 	easingManager stageIconEase;
 	//ステージアイコンを動かしているかどうか
 	bool isMoveStageIcon = false;
 	//スタートボタンのイージング
-	easingManager startButtonEase_y;
-	easingManager startButtonEase_x;
+	easingManager playStartButtonEaseY;
+	easingManager playStartButtonEaseX;
 	//入力フラグ
 	bool isPushStart = false;
+	//ステージ読み込みフラグ
+	bool isLoadStage = false;
 };

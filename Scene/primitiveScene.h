@@ -34,7 +34,7 @@ public:
 	virtual void initialize();
 
 	//パラメータのリセット
-	virtual void reSetScene();
+	virtual void setParameter();
 
 	//更新
 	virtual void updata();
