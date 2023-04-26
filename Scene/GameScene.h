@@ -204,8 +204,6 @@ private:
 	SingleSprite toTutorial;
 	//プレイシーンの時間
 	int totalPlayFlameCount = 0;
-	//ミニマップ
-	SingleSprite miniMap;
 	//高度メーター
 	SingleSprite heightGauge;
 	//プレイヤーの高度
@@ -255,6 +253,7 @@ private:
 	//現在のステージレベル(敵を全滅させると1つ上がる)
 	int nowStageLevel = 1;
 
+	//ウェーブ表示スプライト
 	SingleSprite enemyWaveBar;
 	SingleSprite playerWaveIcon;
 	std::list<std::unique_ptr<SingleSprite>> enemyWaveIcons;

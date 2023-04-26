@@ -5,6 +5,9 @@ class titleScene
 	:public primitiveScene
 {
 public:
+	//コンストラクタ
+	titleScene();
+
 	//リソースの読み込み
 	void loadResources();
 
@@ -24,6 +27,8 @@ public:
 	void draw2D();
 
 private:
+	//マウス座標
+	XMFLOAT3 MOUSE_POS = { 0,0,0 };
 	//背景
 	SingleSprite titleBack;
 	//タイトル

@@ -5,6 +5,8 @@ class selectScene
 	:public primitiveScene
 {
 public:
+	selectScene();
+
 	//リソースの読み込み
 	void loadResources();
 
@@ -28,6 +30,13 @@ private:
 	bool loadStage();
 
 private:
+	//マウス座標
+	XMFLOAT3 MOUSE_POS = { 0,0,0 };
+	//マウスカーソル
+	SingleSprite mouseCursur;
+	SingleSprite mouseCursurSub;
+	//背景
+	SingleSprite selectBack;
 	//ステージアイコン
 	SingleSprite stage[5];
 	//セレクトアイコン

@@ -206,12 +206,6 @@ void GameScene::loadSprites()
 	playerWaveIcon.generateSprite("playerWaveIcon.png");
 #pragma endregion //ウェーブの表示
 
-	//ミニマップ
-	miniMap.anchorpoint = { 0.5f,0.5f };
-	miniMap.size = { 200,200 };
-	miniMap.position = Enemy::miniMapPosition;
-	miniMap.generateSprite("minimap.png");
-
 	//高度メーター
 	heightGauge.anchorpoint = { 0.5f,0.5f };
 	heightGauge.size = { 40,200 };
@@ -647,9 +641,6 @@ void GameScene::playUpdata()
 
 	//地面更新
 	groundPlane->updata();
-
-	//ミニマップ
-	miniMap.spriteUpdata();
 
 	//高度メーター更新
 	//プレイヤーのy座標に補正をかけてpositionに代入

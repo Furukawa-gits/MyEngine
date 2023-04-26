@@ -1,7 +1,20 @@
 #include "selectScene.h"
 
+selectScene::selectScene()
+{
+	//リソース読み込み
+	loadResources();
+
+	//パラメータのセット
+	setParameter();
+}
+
 void selectScene::loadResources()
 {
+	//背景
+	selectBack.size = { 1280,720 };
+	selectBack.generateSprite("black_color.png");
+
 #pragma region //ステージアイコン
 	stage[0].anchorpoint = { 0.5f,0.5f };
 	stage[0].size = { 500,100 };
@@ -188,9 +201,131 @@ void selectScene::draw3D()
 
 void selectScene::draw2D()
 {
+	selectBack.drawSprite(directx->cmdList.Get());
+	stage[0].drawSprite(directx->cmdList.Get());
+	stage[1].drawSprite(directx->cmdList.Get());
+	stage[2].drawSprite(directx->cmdList.Get());
+	stage[3].drawSprite(directx->cmdList.Get());
+	stage[4].drawSprite(directx->cmdList.Get());
+
+	selects[0].drawSprite(directx->cmdList.Get());
+	selects[1].drawSprite(directx->cmdList.Get());
+	selects[2].drawSprite(directx->cmdList.Get());
+
+	if (!isTutorial && stageNum > 0)
+	{
+		toTutorial.drawSprite(directx->cmdList.Get());
+	}
+
+	spaceStart.drawSprite(directx->cmdList.Get());
+
+	mouseCursurSub.drawSprite(directx->cmdList.Get());
+	mouseCursur.drawSprite(directx->cmdList.Get());
 }
 
 bool selectScene::loadStage()
 {
+	if (stageNum < 1)
+	{
+		return false;
+	}
 
+	if (isTutorial == false)
+	{
+#ifdef _DEBUG
+		playerPointer->isBoostTutorial = true;
+		playerPointer->isNormalShot = true;
+		playerPointer->isHomingMissile = true;
+#else
+		return false;
+#endif
+
+	}
+
+	for (int i = 0; i < stageNum + 4; i++)
+	{
+		//敵　リスト
+		std::unique_ptr<Enemy> newenemy = std::make_unique<Enemy>();
+		newenemy->init(enemyPattern::shot);
+		newenemy->set({
+		(float)(rand() % 50 - 25),
+		(float)(rand() % 30 + 15),
+		(float)(rand() % 50 - 25) });
+
+		enemyList.push_back(std::move(newenemy));
+	}
+
+	//プレイヤーのリセット
+	playerPointer->reset();
+
+	if (stageNum == 1)
+	{
+		maxStageLevel = stageNum + 2;
+
+		//敵
+		normalBoss->changePattern(enemyPattern::chase);
+
+		//敵　リスト
+		for (std::unique_ptr<Enemy>& newenemy : enemyList)
+		{
+			newenemy->changePattern(enemyPattern::shot);
+		}
+
+		//ボスの設定
+		normalBoss->setHitPoint(maxStageLevel + 5);
+	}
+	else if (stageNum == 2)
+	{
+		maxStageLevel = stageNum + 2;
+
+		//敵
+		normalBoss->changePattern(enemyPattern::rampage);
+
+		//敵　リスト
+		for (std::unique_ptr<Enemy>& newenemy : enemyList)
+		{
+			newenemy->changePattern(enemyPattern::shot);
+		}
+
+		//ボスの設定
+		normalBoss->setHitPoint(maxStageLevel + 5);
+	}
+	else if (stageNum == 3)
+	{
+		maxStageLevel = stageNum + 2;
+
+		//敵　リスト
+		for (std::unique_ptr<Enemy>& newenemy : enemyList)
+		{
+			newenemy->changePattern(enemyPattern::rampage);
+		}
+	}
+
+	//アイコン同士の距離を計算
+	float nextWaveDis = totalWaveBarLength / (maxStageLevel - 1);
+
+	enemyWaveIcons.clear();
+
+	playerWaveIcon->position.y = 360 - totalWaveBarLength / 2;
+
+	for (int i = 0; i < maxStageLevel - 1; i++)
+	{
+		std::unique_ptr<SingleSprite> newicon = std::make_unique<SingleSprite>();
+		newicon->anchorpoint = { 0.5f,0.5f };
+		newicon->size = { 50,50 };
+		newicon->position = { waveBarPosX,(360 - totalWaveBarLength / 2) + i * nextWaveDis,0 };
+		newicon->generateSprite("enemyWaveIcon.png");
+		newicon->spriteUpdata();
+		enemyWaveIcons.push_back(std::move(newicon));
+	}
+
+	std::unique_ptr<SingleSprite> newicon = std::make_unique<SingleSprite>();
+	newicon->anchorpoint = { 0.5f,0.5f };
+	newicon->size = { 100,100 };
+	newicon->position = { waveBarPosX,(360 - totalWaveBarLength / 2) + totalWaveBarLength,0 };
+	newicon->generateSprite("bossWaveIcon.png");
+	newicon->spriteUpdata();
+	enemyWaveIcons.push_back(std::move(newicon));
+
+	return true;
 }

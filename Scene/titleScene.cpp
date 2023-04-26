@@ -1,5 +1,14 @@
 #include "titleScene.h"
 
+titleScene::titleScene()
+{
+	//リソース読み込み
+	loadResources();
+
+	//パラメータのセット
+	setParameter();
+}
+
 void titleScene::loadResources()
 {
 	//背景
@@ -56,6 +65,17 @@ void titleScene::setParameter()
 
 void titleScene::updata()
 {
+	//マウス座標更新
+	MOUSE_POS = { (float)input->mousePoint.x,(float)input->mousePoint.y,0.0f };
+
+	//マウスカーソル更新
+	mouseCursur.position = MOUSE_POS;
+	mouseCursur.rotation += 2.0f;
+	mouseCursur.spriteUpdata();
+	mouseCursurSub.position = MOUSE_POS;
+	mouseCursurSub.rotation -= 4.0f;
+	mouseCursurSub.spriteUpdata();
+
 	titleIconDrag.spriteUpdata();
 	titleIconShoot.spriteUpdata();
 

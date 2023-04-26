@@ -9,6 +9,11 @@
 #include"../FbxLoder/Object3d_FBX.h"
 #include"../camera/FollowCamera.h"
 #include"../staging/Easing.h"
+#include"../Player/Player.h"
+#include"../Player/Enemy.h"
+#include"../Player/Boss.h"
+#include"../Player/uniteBoss.h"
+#include"../Player/CheckHItManager.h"
 #include<random>
 #include<time.h>
 #include<memory>
@@ -57,7 +62,21 @@ public:
 	//次のシーンに移行するフラグ
 	bool isNextScene = false;
 
-	//複数のシーンをまたいで使う物はここに書く
+	//-------複数のシーンをまたいで使う物はここに書く-------
+	//敵リスト
+	static std::list<std::unique_ptr<Enemy>> enemyList;
+	//通常ボス
+	static std::unique_ptr<Boss> normalBoss;
+	//ユニットボス
+	static std::unique_ptr<uniteBoss> UniteBoss;
+	//プレイヤー
+	static std::unique_ptr<Player> playerPointer;
+	//ウェーブ表示スプライト
+	static std::unique_ptr<SingleSprite> enemyWaveBar;
+	static std::unique_ptr<SingleSprite> playerWaveIcon;
+	static std::list<std::unique_ptr<SingleSprite>> enemyWaveIcons;
+	const float totalWaveBarLength = 500;
+	const float waveBarPosX = 1180;
 	//ステージ番号
 	static int stageNum;
 	//最大ステージ番号
