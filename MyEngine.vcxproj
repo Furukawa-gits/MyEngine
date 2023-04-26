@@ -127,6 +127,8 @@
     <ClInclude Include="Player\uniteBoss.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\primitiveScene.h" />
+    <ClInclude Include="Scene\selectScene.h" />
+    <ClInclude Include="Scene\titleScene.h" />
     <ClInclude Include="staging\Easing.h" />
     <ClInclude Include="staging\Shake.h" />
   </ItemGroup>
@@ -161,6 +163,9 @@
     <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="Player\uniteBoss.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
+    <ClCompile Include="Scene\primitiveScene.cpp" />
+    <ClCompile Include="Scene\selectScene.cpp" />
+    <ClCompile Include="Scene\titleScene.cpp" />
     <ClCompile Include="staging\Easing.cpp" />
     <ClCompile Include="staging\Shake.cpp" />
   </ItemGroup>
