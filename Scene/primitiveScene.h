@@ -33,22 +33,22 @@ public:
 	static void setStaticData(directX* Directx, dxinput* Input, Audio* Audio);
 
 	//リソースの読み込み
-	virtual void loadResources();
+	virtual void loadResources() = 0;
 
 	//初期化
-	virtual void initialize();
+	virtual void initialize() = 0;
 
 	//パラメータのリセット
-	virtual void setParameter();
+	virtual void setParameter() = 0;
 
 	//更新
-	virtual void updata();
+	virtual void updata() = 0;
 
 	//描画(3D)
-	virtual void draw3D();
+	virtual void draw3D() = 0;
 
 	//描画(2D)
-	virtual void draw2D();
+	virtual void draw2D() = 0;
 
 	//次のシーンに移るかどうか
 	bool getIsNextScene() { return isNextScene; }
@@ -63,6 +63,8 @@ public:
 	bool isNextScene = false;
 
 	//-------複数のシーンをまたいで使う物はここに書く-------
+	//ライト
+	static Light* light;
 	//敵リスト
 	static std::list<std::unique_ptr<Enemy>> enemyList;
 	//通常ボス

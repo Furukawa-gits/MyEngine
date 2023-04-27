@@ -9,22 +9,22 @@ public:
 	titleScene();
 
 	//リソースの読み込み
-	void loadResources();
+	void loadResources() override;
 
 	//初期化
-	void initialize();
+	void initialize() override;
 
 	//パラメータのリセット
-	void setParameter();
+	void setParameter() override;
 
 	//更新
-	void updata();
+	void updata() override;
 
 	//描画(3D)
-	void draw3D();
+	void draw3D() override;
 
 	//描画(2D)
-	void draw2D();
+	void draw2D() override;
 
 private:
 	//マウス座標

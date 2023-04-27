@@ -171,6 +171,7 @@ void selectScene::updata()
 	if (isPushStart && !playStartButtonEaseY.getIsActive())
 	{
 		isPushStart = false;
+		isNextScene = true;
 
 		//ƒ^ƒCƒgƒ‹‚É–ß‚é
 		if (stageNum == -1)

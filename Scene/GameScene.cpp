@@ -312,7 +312,7 @@ void GameScene::init(directX* directx, dxinput* input, Audio* audio)
 	testBoss = std::make_unique<Boss>();
 	testBoss->bossInit();
 
-	//ボス(ユニット)
+	//ボス(ユニット)の初期化
 	uniteBoss::uniteBossStaticInit(playerPointer.get());
 	testUniteBoss = std::make_unique<uniteBoss>();
 	testUniteBoss->uniteBossInit();
