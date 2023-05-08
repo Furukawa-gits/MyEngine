@@ -39,6 +39,15 @@ void titleScene::loadResources()
 	startButton.size = { 430,50 };
 	startButton.position = { 640,500,0 };
 	startButton.generateSprite("startButton.png");
+
+	//マウスカーソル
+	mouseCursur.anchorpoint = { 0.5f,0.5f };
+	mouseCursur.size = { 20,20 };
+	mouseCursur.generateSprite("Target.png");
+
+	mouseCursurSub.anchorpoint = { 0.5f,0.5f };
+	mouseCursurSub.size = { 20,20 };
+	mouseCursurSub.generateSprite("Target.png");
 }
 
 void titleScene::initialize()

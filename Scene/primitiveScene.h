@@ -89,4 +89,8 @@ public:
 	static int maxStageLevel;
 	//チュートリアル
 	static bool isTutorial;
+	//クリアかオーバーか(true:クリア/false:オーバー)
+	static bool isClearOrOver;
+	//アイコン同士の距離
+	static float nextWaveDis;
 };

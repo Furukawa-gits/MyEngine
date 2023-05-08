@@ -15,6 +15,8 @@ int primitiveScene::stageNum = 1;
 int primitiveScene::nowStageLevel = 1;
 int primitiveScene::maxStageLevel = 1;
 bool primitiveScene::isTutorial = false;
+bool primitiveScene::isClearOrOver = false;
+float primitiveScene::nextWaveDis = 0.0f;
 
 void primitiveScene::setStaticData(directX* Directx, dxinput* Input, Audio* Audio)
 {

@@ -592,6 +592,7 @@ void GameScene::selectUpdata()
 			isCountDown = true;
 			isStartIcon = false;
 
+			//ƒŠƒUƒ‹ƒg‰æ–Ê‚Ì€”õ
 			isMoveScreen = false;
 			isScreenEase = false;
 			isTextEase = false;

@@ -69,6 +69,15 @@ void selectScene::loadResources()
 	toTutorial.size = { 220,50 };
 	toTutorial.position = { 640,470,0 };
 	toTutorial.generateSprite("toTutorial.png");
+
+	//マウスカーソル
+	mouseCursur.anchorpoint = { 0.5f,0.5f };
+	mouseCursur.size = { 20,20 };
+	mouseCursur.generateSprite("Target.png");
+
+	mouseCursurSub.anchorpoint = { 0.5f,0.5f };
+	mouseCursurSub.size = { 20,20 };
+	mouseCursurSub.generateSprite("Target.png");
 }
 
 void selectScene::initialize()
@@ -91,6 +100,17 @@ void selectScene::setParameter()
 
 void selectScene::updata()
 {
+	//マウス座標更新
+	MOUSE_POS = { (float)input->mousePoint.x,(float)input->mousePoint.y,0.0f };
+
+	//マウスカーソル更新
+	mouseCursur.position = MOUSE_POS;
+	mouseCursur.rotation += 2.0f;
+	mouseCursur.spriteUpdata();
+	mouseCursurSub.position = MOUSE_POS;
+	mouseCursurSub.rotation -= 4.0f;
+	mouseCursurSub.spriteUpdata();
+
 	//ステージアイコンが動いていなければセレクトボタン受付
 	if (!isMoveStageIcon)
 	{
@@ -181,6 +201,7 @@ void selectScene::updata()
 		//チュートリアル開始
 		else if (stageNum == 0)
 		{
+			isTutorial = true;
 			return;
 		}
 		else
@@ -303,7 +324,7 @@ bool selectScene::loadStage()
 	}
 
 	//アイコン同士の距離を計算
-	float nextWaveDis = totalWaveBarLength / (maxStageLevel - 1);
+	nextWaveDis = totalWaveBarLength / (maxStageLevel - 1);
 
 	enemyWaveIcons.clear();
 

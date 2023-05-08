@@ -128,6 +128,7 @@
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\playScene.h" />
     <ClInclude Include="Scene\primitiveScene.h" />
+    <ClInclude Include="Scene\resultScene.h" />
     <ClInclude Include="Scene\selectScene.h" />
     <ClInclude Include="Scene\titleScene.h" />
     <ClInclude Include="staging\Easing.h" />
@@ -166,6 +167,7 @@
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\playScene.cpp" />
     <ClCompile Include="Scene\primitiveScene.cpp" />
+    <ClCompile Include="Scene\resultScene.cpp" />
     <ClCompile Include="Scene\selectScene.cpp" />
     <ClCompile Include="Scene\titleScene.cpp" />
     <ClCompile Include="staging\Easing.cpp" />
