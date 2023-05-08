@@ -63,6 +63,11 @@ public:
 	bool isNextScene = false;
 
 	//-------複数のシーンをまたいで使う物はここに書く-------
+	//天球と地面
+	static std::unique_ptr<Model> SkyModel;
+	static std::unique_ptr<Model> groundModel;
+	static std::unique_ptr<object3dFBX> skySphere;
+	static std::unique_ptr<object3dFBX> groundPlane;
 	//ライト
 	static Light* light;
 	//敵リスト
@@ -91,6 +96,8 @@ public:
 	static bool isTutorial;
 	//クリアかオーバーか(true:クリア/false:オーバー)
 	static bool isClearOrOver;
+	//タイトルかセレクトか(true:タイトル/false:セレクト)
+	static bool isSelectOrTitle;
 	//アイコン同士の距離
 	static float nextWaveDis;
 };

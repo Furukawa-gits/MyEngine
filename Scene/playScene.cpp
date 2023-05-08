@@ -655,3 +655,156 @@ void playScene::countDown()
 
 	return;
 }
+
+void playScene::tutorial()
+{
+	playerPointer->updata();
+
+	//一定量カメラを動かしたら敵出現
+	if (playerPointer->cameraMoveCount >= 250 && isMoveText)
+	{
+		isMoveText = false;
+		isBoostText = true;
+
+		playerPointer->isBoostTutorial = true;
+	}
+
+	//3回ブーストしたら敵出現
+	if (!playerPointer->isBoost && playerPointer->boostCount > 2 && isBoostText)
+	{
+		for (int i = 0; i < 20; i++)
+		{
+			//敵　リスト
+			std::unique_ptr<Enemy> newenemy = std::make_unique<Enemy>();
+			newenemy->init(enemyPattern::tutorial);
+			newenemy->set({
+			(float)(rand() % 100 - 50),
+			(float)(rand() % 60 + 30),
+			(float)(rand() % 100 - 50) });
+
+			enemyList.push_back(std::move(newenemy));
+		}
+
+		isBoostText = false;
+		isShotText = true;
+
+		playerPointer->isNormalShot = true;
+	}
+
+	//敵が出現演出途中ならカメラをセットする
+	int count = 0;
+	for (std::unique_ptr<Enemy>& newenemy : enemyList)
+	{
+		if (newenemy->isAppear == true)
+		{
+			count++;
+		}
+	}
+	if (count > 0)
+	{
+		playerPointer->isStop = true;
+		playerPointer->isInvisible = 1;
+		stagingCamera = new Camera;
+		stagingCamera->SetEye({ 0,0,-30 });
+		stagingCamera->SetTarget({ 0,30,0 });
+		stagingCamera->Update();
+		object3dFBX::SetCamera(stagingCamera);
+	}
+	else
+	{
+		playerPointer->isStop = false;
+		playerPointer->isInvisible = -1;
+		object3dFBX::SetCamera(playerPointer->followCamera);
+	}
+
+	//通常弾 -> ミサイル
+	if (playerPointer->normalShotCount > 3)
+	{
+		isShotText = false;
+		isMissileText = true;
+
+		playerPointer->isHomingMissile = true;
+	}
+
+	//ミサイル -> Lets Shooting!!!
+	if (playerPointer->missileCount > 1)
+	{
+		isMissileText = false;
+		isShootingText = true;
+	}
+
+	XMFLOAT3 playerTargetPos = playerPointer->getTargetPosition();
+
+	if (playerTargetPos.y < 100)
+	{
+		playerTargetPos.y = playerTargetPos.y + 40;
+	}
+	else
+	{
+		playerTargetPos.y = playerTargetPos.y - 40;
+	}
+
+	moveText.position = playerTargetPos;
+
+	shotText.position = playerTargetPos;
+
+	moveText.spriteUpdata();
+	boostText.spriteUpdata();
+	shotText.spriteUpdata();
+	missileText.spriteUpdata();
+	shootingText.spriteUpdata();
+
+	//エネミー更新
+	enemyList.remove_if([](std::unique_ptr<Enemy>& newenemy)
+		{
+			return newenemy->isDraw == false;
+		});
+
+	for (std::unique_ptr<Enemy>& newenemy : enemyList)
+	{
+		newenemy->updata();
+	}
+
+	//当たり判定
+	checkHitEverything();
+
+	//ホーミング弾発射
+	if (input->Mouse_LeftRelease() && !isCountDown)
+	{
+		for (int i = 0; i < targetnum; i++)
+		{
+			for (std::unique_ptr<Enemy>& newenemy : enemyList)
+			{
+				if (newenemy->isTargetSet && !newenemy->isSetMissile)
+				{
+					playerPointer->addMissile(newenemy.get());
+
+					newenemy->isSetMissile = true;
+
+					break;
+				}
+			}
+		}
+
+		if (normalBoss->isTargetSet && !normalBoss->isSetMissile)
+		{
+			playerPointer->addMissile(normalBoss.get());
+
+			normalBoss->isSetMissile = true;
+		}
+
+		targetnum = 0;
+	}
+
+	//敵をすべて倒したorプレイヤーが死んだらリザルト
+	if (enemyList.size() <= 0 && !isMoveText && isShootingText)
+	{
+		isClearOrOver = true;
+		isNextScene = true;
+	}
+	if (!playerPointer->isAlive && !playerPointer->isOverStaging && playerPointer->playerHP <= 0)
+	{
+		isClearOrOver = false;
+		isNextScene = true;
+	}
+}

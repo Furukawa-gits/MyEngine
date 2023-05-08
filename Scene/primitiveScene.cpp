@@ -4,6 +4,10 @@ directX* primitiveScene::directx = nullptr;
 dxinput* primitiveScene::input = nullptr;
 Audio* primitiveScene::audio = nullptr;
 Light* primitiveScene::light = nullptr;
+std::unique_ptr<Model> primitiveScene::SkyModel = std::make_unique<Model>();
+std::unique_ptr<Model> primitiveScene::groundModel = std::make_unique<Model>();
+std::unique_ptr<object3dFBX> primitiveScene::skySphere = std::make_unique<object3dFBX>();
+std::unique_ptr<object3dFBX> primitiveScene::groundPlane = std::make_unique<object3dFBX>();
 std::list<std::unique_ptr<Enemy>> primitiveScene::enemyList = {};
 std::unique_ptr<Boss> primitiveScene::normalBoss = std::make_unique<Boss>();
 std::unique_ptr<uniteBoss> primitiveScene::UniteBoss = std::make_unique<uniteBoss>();
@@ -16,6 +20,7 @@ int primitiveScene::nowStageLevel = 1;
 int primitiveScene::maxStageLevel = 1;
 bool primitiveScene::isTutorial = false;
 bool primitiveScene::isClearOrOver = false;
+bool primitiveScene::isSelectOrTitle = false;
 float primitiveScene::nextWaveDis = 0.0f;
 
 void primitiveScene::setStaticData(directX* Directx, dxinput* Input, Audio* Audio)

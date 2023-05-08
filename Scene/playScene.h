@@ -55,6 +55,9 @@ private:
 	//スカイドームの回転
 	float skyShpereRotY = 0.0002f;
 
+	//演出用カメラ
+	Camera* stagingCamera = nullptr;
+
 	//カウントダウン・スタートアイコン
 	SingleSprite countDownSprite[3];
 	SingleSprite playStart;

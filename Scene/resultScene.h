@@ -43,6 +43,9 @@ private:
 	//タイトル・セレクトボタン
 	SingleSprite titleButton;
 	SingleSprite selectButton;
+	//決定ボタン
+	SingleSprite decisionButton;
+	float resultIconSizeX = 150;
 
 	//マウスカーソル
 	SingleSprite mouseCursur;
@@ -65,9 +68,6 @@ private:
 	easingManager ButtonEase_x;
 	easingManager selectEase;
 
-	//今どっちのボタンを選んでいるのか
-	//-1：select , 1：title
-	int isSelectOrTitle = -1;
 	bool isMoveSelectIcon = false;
 
 	bool isPushTitle = false;
