@@ -129,6 +129,7 @@
     <ClInclude Include="Scene\playScene.h" />
     <ClInclude Include="Scene\primitiveScene.h" />
     <ClInclude Include="Scene\resultScene.h" />
+    <ClInclude Include="Scene\sceneManager.h" />
     <ClInclude Include="Scene\selectScene.h" />
     <ClInclude Include="Scene\titleScene.h" />
     <ClInclude Include="staging\Easing.h" />
