@@ -8,7 +8,12 @@ playScene::playScene()
 	//パラメータのセット
 	setParameter();
 
-	thisType = sceneType::play;
+	thisType = gameSceneType::play;
+}
+
+playScene::~playScene()
+{
+
 }
 
 void playScene::loadResources()
@@ -79,25 +84,6 @@ void playScene::loadResources()
 	playerHeightIcon.anchorpoint = { 0.0f,0.5f };
 	playerHeightIcon.size = { 44,17 };
 	playerHeightIcon.generateSprite("playerHeightIcon.png");
-
-	//天球と地面のモデル
-	Model* sky = FbxLoader::GetInstance()->LoadmodelFromFile("skySphere");
-	Model* ground = FbxLoader::GetInstance()->LoadmodelFromFile("floar");
-	SkyModel = std::make_unique<Model>();
-	SkyModel.reset(sky);
-	groundModel = std::make_unique<Model>();
-	groundModel.reset(ground);
-
-	//天球と地面のオブジェクト初期化
-	skySphere = std::make_unique<object3dFBX>();
-	skySphere->initialize();
-	skySphere->SetModel(SkyModel.get());
-	skySphere->SetScale({ 8.0f,8.0f,8.0f });
-	groundPlane = std::make_unique<object3dFBX>();
-	groundPlane->initialize();
-	groundPlane->SetModel(groundModel.get());
-	groundPlane->SetPosition(playerPointer->groundPosition);
-	groundPlane->SetScale({ 0.5f,0.5f,0.5f });
 }
 
 void playScene::initialize()
@@ -164,6 +150,9 @@ void playScene::updata()
 	{
 		int test = 0;
 	}
+
+	//ライト更新
+	light->Update();
 
 	//カウントダウン
 	countDown();
@@ -388,6 +377,11 @@ void playScene::updata()
 		isClearOrOver = false;
 		isNextScene = true;
 	}
+}
+
+void playScene::drawBack()
+{
+	sample_back->drawSprite(directx->cmdList.Get());
 }
 
 void playScene::draw3D()

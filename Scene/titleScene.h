@@ -7,6 +7,7 @@ class titleScene
 public:
 	//コンストラクタ
 	titleScene();
+	~titleScene();
 
 	//リソースの読み込み
 	void loadResources() override;
@@ -19,6 +20,9 @@ public:
 
 	//更新
 	void updata() override;
+
+	//背景描画
+	void drawBack() override;
 
 	//描画(3D)
 	void draw3D() override;

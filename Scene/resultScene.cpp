@@ -8,7 +8,12 @@ resultScene::resultScene()
 	//パラメータのセット
 	setParameter();
 
-	thisType = sceneType::result;
+	thisType = gameSceneType::result;
+}
+
+resultScene::~resultScene()
+{
+
 }
 
 void resultScene::loadResources()
@@ -46,10 +51,22 @@ void resultScene::loadResources()
 	decisionButton.size = { 150,5 };
 	decisionButton.position = { 640,420,0 };
 	decisionButton.generateSprite("selectIcon.png");
+
+	//マウスカーソル
+	mouseCursur.anchorpoint = { 0.5f,0.5f };
+	mouseCursur.size = { 20,20 };
+	mouseCursur.generateSprite("Target.png");
+
+	mouseCursurSub.anchorpoint = { 0.5f,0.5f };
+	mouseCursurSub.size = { 20,20 };
+	mouseCursurSub.generateSprite("Target.png");
 }
 
 void resultScene::initialize()
 {
+	//ライト更新
+	light->Update();
+
 	//リソース読み込み
 	loadResources();
 
@@ -74,6 +91,17 @@ void resultScene::setParameter()
 
 void resultScene::updata()
 {
+	//マウス座標更新
+	MOUSE_POS = { (float)input->mousePoint.x,(float)input->mousePoint.y,0.0f };
+
+	//マウスカーソル更新
+	mouseCursur.position = MOUSE_POS;
+	mouseCursur.rotation += 2.0f;
+	mouseCursur.spriteUpdata();
+	mouseCursurSub.position = MOUSE_POS;
+	mouseCursurSub.rotation -= 4.0f;
+	mouseCursurSub.spriteUpdata();
+
 	if (isClearOrOver)
 	{
 		clearScene();
@@ -82,6 +110,11 @@ void resultScene::updata()
 	{
 		overScene();
 	}
+}
+
+void resultScene::drawBack()
+{
+	sample_back->drawSprite(directx->cmdList.Get());
 }
 
 void resultScene::draw3D()

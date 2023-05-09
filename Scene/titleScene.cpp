@@ -8,7 +8,12 @@ titleScene::titleScene()
 	//パラメータのセット
 	setParameter();
 
-	thisType = sceneType::title;
+	thisType = gameSceneType::title;
+}
+
+titleScene::~titleScene()
+{
+
 }
 
 void titleScene::loadResources()
@@ -72,6 +77,7 @@ void titleScene::setParameter()
 	titleIconShoot.position.x = shootEaseStart;
 	titleIconDrag.spriteUpdata();
 	titleIconShoot.spriteUpdata();
+	isNextScene = false;
 }
 
 void titleScene::updata()
@@ -136,6 +142,11 @@ void titleScene::updata()
 	{
 		isNextScene = true;
 	}
+}
+
+void titleScene::drawBack()
+{
+	sample_back->drawSprite(directx->cmdList.Get());
 }
 
 void titleScene::draw3D()

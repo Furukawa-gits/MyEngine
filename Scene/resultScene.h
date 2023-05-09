@@ -7,6 +7,7 @@ class resultScene
 public:
 	//コンストラクタ
 	resultScene();
+	~resultScene();
 
 	//リソースの読み込み
 	void loadResources() override;
@@ -19,6 +20,9 @@ public:
 
 	//更新
 	void updata() override;
+
+	//背景描画
+	void drawBack() override;
 
 	//描画(3D)
 	void draw3D() override;
@@ -47,6 +51,8 @@ private:
 	SingleSprite decisionButton;
 	float resultIconSizeX = 150;
 
+	//マウス座標
+	XMFLOAT3 MOUSE_POS = { 0,0,0 };
 	//マウスカーソル
 	SingleSprite mouseCursur;
 	SingleSprite mouseCursurSub;

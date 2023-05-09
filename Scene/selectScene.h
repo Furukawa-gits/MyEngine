@@ -6,6 +6,7 @@ class selectScene
 {
 public:
 	selectScene();
+	~selectScene();
 
 	//ƒŠƒ\[ƒX‚Ì“Ç‚İ‚İ
 	void loadResources() override;
@@ -18,6 +19,9 @@ public:
 
 	//XV
 	void updata() override;
+
+	//”wŒi•`‰æ
+	void drawBack() override;
 
 	//•`‰æ(3D)
 	void draw3D() override;

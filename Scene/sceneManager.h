@@ -8,6 +8,7 @@ class sceneManager
 {
 public:
 	sceneManager();
+	~sceneManager();
 
 	//ƒV[ƒ“‚Ì•t‚¯‘Ö‚¦
 	void replacementScene();

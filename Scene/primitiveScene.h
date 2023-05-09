@@ -19,7 +19,7 @@
 #include<memory>
 #include<list>
 
-enum class sceneType
+enum class gameSceneType
 {
 	title = 0,
 	select = 1,
@@ -30,7 +30,12 @@ enum class sceneType
 class primitiveScene
 {
 public:
+	primitiveScene();
+	~primitiveScene();
+
 	static void setStaticData(directX* Directx, dxinput* Input, Audio* Audio);
+
+	static void finalize();
 
 	//リソースの読み込み
 	virtual void loadResources() = 0;
@@ -43,6 +48,9 @@ public:
 
 	//更新
 	virtual void updata() = 0;
+
+	//背景描画
+	virtual void drawBack() = 0;
 
 	//描画(3D)
 	virtual void draw3D() = 0;
@@ -60,12 +68,14 @@ public:
 	static Audio* audio;
 
 	//シーンの種類
-	sceneType thisType;
+	gameSceneType thisType;
 
 	//次のシーンに移行するフラグ
 	bool isNextScene = false;
 
 	//-------複数のシーンをまたいで使う物はここに書く-------
+	//背景
+	static std::unique_ptr<SingleSprite> sample_back;
 	//天球と地面
 	static std::unique_ptr<Model> SkyModel;
 	static std::unique_ptr<Model> groundModel;

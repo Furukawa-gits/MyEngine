@@ -9,6 +9,17 @@ sceneManager::sceneManager()
 	result = new resultScene();
 
 	nowscene = title;
+
+	nowscene->setParameter();
+}
+
+sceneManager::~sceneManager()
+{
+	delete(nowscene);
+	delete(title);
+	delete(select);
+	delete(play);
+	delete(result);
 }
 
 void sceneManager::replacementScene()
@@ -20,19 +31,27 @@ void sceneManager::replacementScene()
 
 	switch (nowscene->thisType)
 	{
-	case sceneType::title:
+	case gameSceneType::title:
 		nowscene = select;
 		nowscene->setParameter();
 		break;
-	case sceneType::select:
-		nowscene = play;
-		nowscene->setParameter();
+	case gameSceneType::select:
+		if (primitiveScene::stageNum == -1)
+		{
+			nowscene = title;
+			nowscene->setParameter();
+		}
+		else
+		{
+			nowscene = play;
+			nowscene->setParameter();
+		}
 		break;
-	case sceneType::play:
+	case gameSceneType::play:
 		nowscene = result;
 		nowscene->setParameter();
 		break;
-	case sceneType::result:
+	case gameSceneType::result:
 		if (primitiveScene::isSelectOrTitle)
 		{
 			nowscene = title;

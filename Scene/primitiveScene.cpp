@@ -4,6 +4,7 @@ directX* primitiveScene::directx = nullptr;
 dxinput* primitiveScene::input = nullptr;
 Audio* primitiveScene::audio = nullptr;
 Light* primitiveScene::light = nullptr;
+std::unique_ptr<SingleSprite> primitiveScene::sample_back = std::make_unique<SingleSprite>();
 std::unique_ptr<Model> primitiveScene::SkyModel = std::make_unique<Model>();
 std::unique_ptr<Model> primitiveScene::groundModel = std::make_unique<Model>();
 std::unique_ptr<object3dFBX> primitiveScene::skySphere = std::make_unique<object3dFBX>();
@@ -23,6 +24,16 @@ bool primitiveScene::isClearOrOver = false;
 bool primitiveScene::isSelectOrTitle = false;
 float primitiveScene::nextWaveDis = 0.0f;
 
+primitiveScene::primitiveScene()
+{
+
+}
+
+primitiveScene::~primitiveScene()
+{
+
+}
+
 void primitiveScene::setStaticData(directX* Directx, dxinput* Input, Audio* Audio)
 {
 	directx = Directx;
@@ -34,6 +45,10 @@ void primitiveScene::setStaticData(directX* Directx, dxinput* Input, Audio* Audi
 
 	//パーティクル初期化
 	SingleParticle::particleStaticInit(directx, nullptr);
+
+	//背景
+	sample_back->size = { 1280,720 };
+	sample_back->generateSprite("sample_back.jpg");
 
 	//ライト生成
 	Light::Staticinitialize(directx->dev.Get());
@@ -50,6 +65,28 @@ void primitiveScene::setStaticData(directX* Directx, dxinput* Input, Audio* Audi
 	//プレイヤー初期化
 	playerPointer->init(input, directx);
 
+	Model* sky = FbxLoader::GetInstance()->LoadmodelFromFile("skySphere");
+	Model* ground = FbxLoader::GetInstance()->LoadmodelFromFile("floar");
+
+	SkyModel = std::make_unique<Model>();
+	SkyModel.reset(sky);
+	groundModel = std::make_unique<Model>();
+	groundModel.reset(ground);
+
+	skySphere = std::make_unique<object3dFBX>();
+	skySphere->initialize();
+	skySphere->SetModel(SkyModel.get());
+	skySphere->SetScale({ 8.0f,8.0f,8.0f });
+
+	groundPlane = std::make_unique<object3dFBX>();
+	groundPlane->initialize();
+	groundPlane->SetModel(groundModel.get());
+	groundPlane->SetPosition(playerPointer->groundPosition);
+	groundPlane->SetScale({ 0.5f,0.5f,0.5f });
+
+	//パーティクルの共通カメラを設定
+	SingleParticle::setCamera(playerPointer->followCamera);
+
 	//敵モデルの初期化
 	Enemy::staticInit();
 
@@ -60,4 +97,15 @@ void primitiveScene::setStaticData(directX* Directx, dxinput* Input, Audio* Audi
 	//ボス(ユニット)の初期化
 	uniteBoss::uniteBossStaticInit(playerPointer.get());
 	UniteBoss->uniteBossInit();
+
+	//マウスカーソル非表示
+	ShowCursor(false);
+}
+
+void primitiveScene::finalize()
+{
+	enemyList.clear();
+
+	Enemy::staticDestroy();
+	enemyBullet::staticDestroy();
 }

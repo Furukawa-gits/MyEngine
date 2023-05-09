@@ -7,6 +7,7 @@ class playScene
 public:
 	//コンストラクタ
 	playScene();
+	~playScene();
 
 	//リソースの読み込み
 	void loadResources() override;
@@ -19,6 +20,9 @@ public:
 
 	//更新
 	void updata() override;
+
+	//背景描画
+	void drawBack() override;
 
 	//描画(3D)
 	void draw3D() override;
@@ -46,12 +50,6 @@ private:
 	void tutorial();
 
 private:
-	//天球と地面
-	std::unique_ptr<Model> SkyModel;
-	std::unique_ptr<Model> groundModel;
-	std::unique_ptr<object3dFBX> skySphere;
-	std::unique_ptr<object3dFBX> groundPlane;
-
 	//スカイドームの回転
 	float skyShpereRotY = 0.0002f;
 

@@ -8,7 +8,12 @@ selectScene::selectScene()
 	//パラメータのセット
 	setParameter();
 
-	thisType = sceneType::select;
+	thisType = gameSceneType::select;
+}
+
+selectScene::~selectScene()
+{
+
 }
 
 void selectScene::loadResources()
@@ -99,6 +104,7 @@ void selectScene::setParameter()
 	stageNum = 0;
 	selectIconSizeX = 350;
 	isTutorial = false;
+	isNextScene = false;
 }
 
 void selectScene::updata()
@@ -218,6 +224,11 @@ void selectScene::updata()
 			return;
 		}
 	}
+}
+
+void selectScene::drawBack()
+{
+	sample_back->drawSprite(directx->cmdList.Get());
 }
 
 void selectScene::draw3D()
