@@ -7,6 +7,8 @@ selectScene::selectScene()
 
 	//パラメータのセット
 	setParameter();
+
+	thisType = sceneType::select;
 }
 
 void selectScene::loadResources()
@@ -96,6 +98,7 @@ void selectScene::setParameter()
 	isPushStart = false;
 	stageNum = 0;
 	selectIconSizeX = 350;
+	isTutorial = false;
 }
 
 void selectScene::updata()

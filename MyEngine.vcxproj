@@ -169,6 +169,7 @@
     <ClCompile Include="Scene\playScene.cpp" />
     <ClCompile Include="Scene\primitiveScene.cpp" />
     <ClCompile Include="Scene\resultScene.cpp" />
+    <ClCompile Include="Scene\sceneManager.cpp" />
     <ClCompile Include="Scene\selectScene.cpp" />
     <ClCompile Include="Scene\titleScene.cpp" />
     <ClCompile Include="staging\Easing.cpp" />

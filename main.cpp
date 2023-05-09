@@ -2,6 +2,7 @@
 #include"2D/PostEffect.h"
 #include"Base/Fps_Manager.h"
 #include"FbxLoder/FbxLoader.h"
+#include"Scene/sceneManager.h"
 
 
 // Windowsアプリでのエントリーポイント(main関数)

@@ -16,8 +16,8 @@ public:
 	primitiveScene* nowscene;
 
 private:
-	titleScene title;
-	selectScene select;
-	playScene play;
-	resultScene result;
+	titleScene* title;
+	selectScene* select;
+	playScene* play;
+	resultScene* result;
 };

@@ -7,6 +7,8 @@ playScene::playScene()
 
 	//パラメータのセット
 	setParameter();
+
+	thisType = sceneType::play;
 }
 
 void playScene::loadResources()
@@ -149,10 +151,11 @@ void playScene::setParameter()
 		isStartIcon = false;
 
 		nowStageLevel = 1;
-
 		playerPointer->updata();
 		object3dFBX::SetCamera(playerPointer->followCamera);
 	}
+
+	isNextScene = false;
 }
 
 void playScene::updata()
@@ -658,6 +661,11 @@ void playScene::countDown()
 
 void playScene::tutorial()
 {
+	if (!isTutorial)
+	{
+		return;
+	}
+
 	playerPointer->updata();
 
 	//一定量カメラを動かしたら敵出現

@@ -59,6 +59,9 @@ public:
 	static dxinput* input;
 	static Audio* audio;
 
+	//シーンの種類
+	sceneType thisType;
+
 	//次のシーンに移行するフラグ
 	bool isNextScene = false;
 

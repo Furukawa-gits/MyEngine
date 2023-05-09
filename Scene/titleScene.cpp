@@ -7,6 +7,8 @@ titleScene::titleScene()
 
 	//パラメータのセット
 	setParameter();
+
+	thisType = sceneType::title;
 }
 
 void titleScene::loadResources()

@@ -7,6 +7,8 @@ resultScene::resultScene()
 
 	//パラメータのセット
 	setParameter();
+
+	thisType = sceneType::result;
 }
 
 void resultScene::loadResources()
@@ -62,9 +64,12 @@ void resultScene::setParameter()
 	isTextEase = false;
 	resultScreenEase.set(easingType::easeOut, easingPattern::Quadratic, 40, 720, 0);
 	titleButton.spriteUpdata();
-	isSelectOrTitle = -1;
+	decisionButton.position = { 640 - 150,540,0 };
+	resultIconSizeX = 200;
+	isSelectOrTitle = false;
 	ButtonEase_y.reSet();
 	ButtonEase_x.reSet();
+	isNextScene = false;
 }
 
 void resultScene::updata()
@@ -183,18 +188,18 @@ void resultScene::clearScene()
 	if (!isMoveSelectIcon)
 	{
 		//select画面
-		if (titleButton.isMouseSelect && isSelectOrTitle == -1)
+		if (titleButton.isMouseSelect && isSelectOrTitle)
 		{
 			selectEase.set(easingType::easeOut, easingPattern::Cubic, 20, 640 - 150, 640 + 150);
 			isMoveSelectIcon = true;
-			isSelectOrTitle *= -1;
+			isSelectOrTitle = !isSelectOrTitle;
 		}
 		//title画面
-		else if (selectButton.isMouseSelect && isSelectOrTitle == 1)
+		else if (selectButton.isMouseSelect && !isSelectOrTitle)
 		{
 			selectEase.set(easingType::easeOut, easingPattern::Cubic, 20, 640 + 150, 640 - 150);
 			isMoveSelectIcon = true;
-			isSelectOrTitle *= -1;
+			isSelectOrTitle = !isSelectOrTitle;
 		}
 	}
 	else
