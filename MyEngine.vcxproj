@@ -119,6 +119,7 @@
     <ClInclude Include="Input\dxInput.h" />
     <ClInclude Include="Light\Light.h" />
     <ClInclude Include="Particle\Particle.h" />
+    <ClInclude Include="Particle\particleManagerOnTime.h" />
     <ClInclude Include="Player\Boss.h" />
     <ClInclude Include="Player\Bullets.h" />
     <ClInclude Include="Player\CheckHItManager.h" />
