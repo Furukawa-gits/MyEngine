@@ -15,12 +15,6 @@ private:
 	/// </summary>
 	std::unique_ptr<SingleParticle> motherParticle;
 
-	/// <summary>
-	/// 残像パーティクル
-	/// <para>こいつらは弾の生存時間に関係ないので時間経過で消える</para>
-	/// </summary>
-	std::list<std::unique_ptr<SingleParticle>> childParticles;
-
 public:
 	int count = 0;
 	const int maxBulletCount = 100;
@@ -60,12 +54,6 @@ private:
 	/// <para>弾の生存に依存するのでこいつは時間経過で消えない</para>
 	/// </summary>
 	std::unique_ptr<SingleParticle> motherParticle;
-
-	/// <summary>
-	/// 残像パーティクル
-	/// <para>こいつらは弾の生存時間に関係ないので時間経過で消える</para>
-	/// </summary>
-	std::list<std::unique_ptr<SingleParticle>> childParticles;
 
 	//パーティクル生成の為のカウント
 	int particleCount = 0;

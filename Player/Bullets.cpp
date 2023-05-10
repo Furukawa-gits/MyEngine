@@ -64,21 +64,12 @@ void bullet::update()
 	//一定フレームごとにパーティクルを生成
 	if (count % 5 == 0)
 	{
-		std::unique_ptr<SingleParticle> newParticle = std::make_unique<SingleParticle>();
-		newParticle->generate();
-		newParticle->set(30, position, { 0,0,0 }, { 0,0,0 }, 2.0f, 0.0f);
-		newParticle->color = { 0,1,0,1 };
-		childParticles.push_back(std::move(newParticle));
-	}
-
-	//サブパーティクル更新
-	childParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
-		{
-			return newparticle->getIsActive() == false;
-		});
-	for (std::unique_ptr<SingleParticle>& newparticle : childParticles)
-	{
-		newparticle->updata();
+		SingleParticle newParticle;
+		newParticle.generate();
+		newParticle.set(30, position, { 0,0,0 }, { 0,0,0 }, 2.0f, 0.0f);
+		newParticle.color = { 0,1,0,1 };
+		newParticle.isAddBlend = true;
+		particleManagerOnTime::addParticle(newParticle, "effect1.png");
 	}
 
 	//弾の寿命が来たら消滅
@@ -101,12 +92,6 @@ void bullet::draw(directX* directx)
 	if (!isAlive)
 	{
 		return;
-	}
-
-	for (std::unique_ptr<SingleParticle>& newparticle : childParticles)
-	{
-		newparticle->setPiplineAddBlend();
-		newparticle->drawSpecifyTex("effect1.png");
 	}
 
 	motherParticle->setPiplineAddBlend();
@@ -259,21 +244,12 @@ void Missile::particleUpdata()
 	//一定フレームごとにパーティクルを生成
 	if (particleCount % 2 == 0)
 	{
-		std::unique_ptr<SingleParticle> newParticle = std::make_unique<SingleParticle>();
-		newParticle->generate();
-		newParticle->set(20, position, { 0,0,0 }, { 0,0,0 }, 2.0f, 0.0f);
-		newParticle->color = { 1,1,0,1 };
-		childParticles.push_back(std::move(newParticle));
-	}
-
-	//サブパーティクル更新
-	childParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
-		{
-			return newparticle->getIsActive() == false;
-		});
-	for (std::unique_ptr<SingleParticle>& newparticle : childParticles)
-	{
-		newparticle->updata();
+		SingleParticle newParticle;
+		newParticle.generate();
+		newParticle.set(20, position, { 0,0,0 }, { 0,0,0 }, 2.0f, 0.0f);
+		newParticle.color = { 1,1,0,1 };
+		newParticle.isAddBlend = true;
+		particleManagerOnTime::addParticle(newParticle, "effect1.png");
 	}
 
 	//本体パーティクル更新
@@ -286,12 +262,6 @@ void Missile::draw(directX* directx)
 	if (!isAlive)
 	{
 		return;
-	}
-
-	for (std::unique_ptr<SingleParticle>& newparticle : childParticles)
-	{
-		newparticle->setPiplineAddBlend();
-		newparticle->drawSpecifyTex("effect1.png");
 	}
 
 	motherParticle->setPiplineAddBlend();
