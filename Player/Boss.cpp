@@ -424,44 +424,22 @@ void Boss::bossDeathMove()
 		};
 
 		//爆発パーティクル
-		std::unique_ptr<SingleParticle> newBomparticle = std::make_unique<SingleParticle>();
-		newBomparticle->generate();
-		newBomparticle->set(50, startPos, { 0,0,0 }, { 0,0,0 }, 0.2, 9.0);
-		bomParticles.push_back(std::move(newBomparticle));
+		SingleParticle newbp;
+		newbp.generate();
+		newbp.set(50, startPos, { 0,0,0 }, { 0,0,0 }, 0.2, 9.0);
+		particleManagerOnTime::addParticle(newbp, "bomb.png");
 
 		//黒煙パーティクル
-		std::unique_ptr<SingleParticle> newSmokeparticle = std::make_unique<SingleParticle>();
-		newSmokeparticle->generate();
-		newSmokeparticle->set(50, startPos, { 0,0,0 }, { 0,0,0 }, 0.2, 5.0);
-		smokeParticles.push_back(std::move(newSmokeparticle));
+		SingleParticle newsp;
+		newsp.generate();
+		newsp.set(50, startPos, { 0,0,0 }, { 0,0,0 }, 0.2, 5.0);
+		particleManagerOnTime::addParticle(newsp, "smoke.png");
 #pragma endregion パーティクル生成
-	}
-
-	//爆発パーティクル更新
-	bomParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
-		{
-			return newparticle->getIsActive() == false;
-		});
-	for (std::unique_ptr<SingleParticle>& newparticle : bomParticles)
-	{
-		newparticle->updata();
-	}
-
-	//煙パーティクル更新
-	smokeParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
-		{
-			return newparticle->getIsActive() == false;
-		});
-	for (std::unique_ptr<SingleParticle>& newparticle : smokeParticles)
-	{
-		newparticle->updata();
 	}
 
 	//落ちきったら
 	if (fallDownCount >= maxFallCount * 3)
 	{
-		bomParticles.clear();
-		smokeParticles.clear();
 		isDraw = false;
 		fallDownCount = 0;
 	}

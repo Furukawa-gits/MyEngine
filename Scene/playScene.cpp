@@ -204,6 +204,8 @@ void playScene::updata()
 	playerHeight.spriteUpdata();
 	playerHeightIcon.spriteUpdata();
 
+	particleManagerOnTime::particlesUpdata();
+
 	//チュートリアル
 	if (stageNum == 0)
 	{
@@ -408,6 +410,9 @@ void playScene::draw3D()
 	normalBoss->bossDraw3D(directx);
 
 	UniteBoss->uniteBossDraw3d(directx);
+
+	//パーティクル描画
+	particleManagerOnTime::particlesDrawTex();
 }
 
 void playScene::draw2D()

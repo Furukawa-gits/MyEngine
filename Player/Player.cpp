@@ -142,26 +142,17 @@ void Player::move()
 		return;
 	}
 
-	//煙パーティクル更新
-	moveParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
-		{
-			return newparticle->getIsActive() == false;
-		});
-	for (std::unique_ptr<SingleParticle>& newparticle : moveParticles)
-	{
-		newparticle->updata();
-	}
-
 	moveParticlesCount++;
 
 	if (moveParticlesCount % 10 == 0)
 	{
-		std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
-		newparticle->generate();
-		newparticle->set(10, playerObject->getPosition(), { 0,0,0 }, { 0,0,0 }, 2.0, 0.0);
-		newparticle->color = { 0.5f,0.5f,0.5f,0.2f };
+		SingleParticle newparticle;
+		newparticle.generate();
+		newparticle.set(10, playerObject->getPosition(), { 0,0,0 }, { 0,0,0 }, 2.0, 0.0);
+		newparticle.color = { 0.5f,0.5f,0.5f,0.2f };
+		newparticle.isAddBlend = true;
 
-		moveParticles.push_back(std::move(newparticle));
+		particleManagerOnTime::addParticle(newparticle, "effect1.png");
 	}
 
 	//ブースト(仮)
@@ -438,15 +429,14 @@ void Player::playerDeathMove()
 	if (fallCount == maxFallCount)
 	{
 		isOverStaging = false;
-		smokeParticles.clear();
 		return;
 	}
 
 #pragma region 黒煙パーティクル
 	if (fallCount % 30 == 0)
 	{
-		std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
-		newparticle->generate();
+		SingleParticle newparticle;
+		newparticle.generate();
 
 		XMFLOAT3 smokePos = playerObject->getPosition();
 
@@ -456,21 +446,11 @@ void Player::playerDeathMove()
 			smokePos.y + (float)(rand() % 6 - 3),
 			smokePos.z + (float)(rand() % 6 - 3)
 		};
-		newparticle->set(100, smokePos, { 0,0,0 }, { 0,0,0 }, 5.0, 2.0);
+		newparticle.set(100, smokePos, { 0,0,0 }, { 0,0,0 }, 5.0, 2.0);
 
-		smokeParticles.push_back(std::move(newparticle));
+		particleManagerOnTime::addParticle(newparticle, "smoke.png");
 	}
 #pragma endregion 黒煙パーティクル
-
-	//煙パーティクル更新
-	smokeParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
-		{
-			return newparticle->getIsActive() == false;
-		});
-	for (std::unique_ptr<SingleParticle>& newparticle : smokeParticles)
-	{
-		newparticle->updata();
-	}
 
 	//回転しながら落ちて行く
 	fallRot.x = 0.05;
@@ -851,8 +831,6 @@ void Player::reset()
 	SetCursorPos(mouseOffsetX, mouseOffsetY);
 	cameraMoveCount = 0;
 	object3dFBX::SetCamera(followCamera);
-
-	smokeParticles.clear();
 }
 
 //描画
@@ -869,22 +847,9 @@ void Player::draw3D(directX* directx)
 		return;
 	}
 
-	//撃墜エフェクト
-	for (std::unique_ptr<SingleParticle>& newparticle : smokeParticles)
-	{
-		newparticle->drawSpecifyTex("smoke.png");
-	}
-
 	if (!isAlive)
 	{
 		return;
-	}
-
-	//移動エフェクト
-	for (std::unique_ptr<SingleParticle>& newparticle : moveParticles)
-	{
-		newparticle->setPiplineAddBlend();
-		newparticle->drawSpecifyTex("effect1.png");
 	}
 
 	//通常弾の描画(ユニークリスト)

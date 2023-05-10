@@ -140,15 +140,10 @@ public:
 	SingleSprite miniMapPlayer;
 
 	//ジェットエンジンエフェクト
-	std::list<std::unique_ptr<SingleParticle>> moveParticles;
 	int moveParticlesCount = 0;
 
 	//ダメージ表現
 	SingleSprite damage;
-
-	//撃墜エフェクト
-	std::list<std::unique_ptr<SingleParticle>> bomParticles;	//爆発
-	std::list<std::unique_ptr<SingleParticle>> smokeParticles;	//煙
 
 	//弾
 	std::list<std::unique_ptr<bullet>> bulletsList;

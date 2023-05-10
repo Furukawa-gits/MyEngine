@@ -160,6 +160,7 @@
     <ClCompile Include="Light\Light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Particle\Particle.cpp" />
+    <ClCompile Include="Particle\particleManagerOnTime.cpp" />
     <ClCompile Include="Player\Boss.cpp" />
     <ClCompile Include="Player\Bullets.cpp" />
     <ClCompile Include="Player\CheckHItManager.cpp" />

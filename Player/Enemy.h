@@ -3,7 +3,7 @@
 #include"../3D/Collision.h"
 #include"../FbxLoder/Object3d_FBX.h"
 #include"../Base/DirectX_Base.h"
-#include"../Particle/Particle.h"
+#include"../Particle/particleManagerOnTime.h"
 
 #include<memory>
 #include<list>
@@ -54,12 +54,6 @@ public:
 	/// <para>弾の生存に依存するのでこいつは時間経過で消えない</para>
 	/// </summary>
 	std::unique_ptr<SingleParticle> motherParticle;
-
-	/// <summary>
-	/// 残像パーティクル
-	/// <para>こいつらは弾の生存時間に関係ないので時間経過で消える</para>
-	/// </summary>
-	std::list<std::unique_ptr<SingleParticle>> childParticles;
 
 private:
 	//座標・方向・弾速

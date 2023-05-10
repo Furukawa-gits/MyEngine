@@ -95,8 +95,6 @@ void Enemy::set(XMFLOAT3 pos)
 	enemyArrivalTime = 100;
 	enemyArrivaCount = 0;
 	arrivalEase.set(easingType::easeOut, easingPattern::Quadratic, enemyArrivalTime, 500, 0);
-	bomParticles.clear();
-	smokeParticles.clear();
 	nextBulletTime = 0;
 	bulletCount = 0;
 	isRampageWait = true;
@@ -691,10 +689,10 @@ void Enemy::ariveMove()
 		fallDownCount = 0;
 
 #pragma region 爆発パーティクル生成
-		std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
-		newparticle->generate();
-		newparticle->set(maxFallCount - 20, enemyObject->getPosition(), { 0,0,0 }, { 0,0,0 }, 0.2f, 10.0f);
-		bomParticles.push_back(std::move(newparticle));
+		SingleParticle newp;
+		newp.generate();
+		newp.set(maxFallCount - 20, enemyObject->getPosition(), { 0,0,0 }, { 0,0,0 }, 0.2f, 10.0f);
+		particleManagerOnTime::addParticle(newp, "bomb.png");
 #pragma endregion 爆発パーティクル生成
 
 		//弾も消す
@@ -719,16 +717,6 @@ void Enemy::deathMove()
 		return;
 	}
 
-	//爆発パーティクル更新
-	bomParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
-		{
-			return newparticle->getIsActive() == false;
-		});
-	for (std::unique_ptr<SingleParticle>& newparticle : bomParticles)
-	{
-		newparticle->updata();
-	}
-
 	fallDownCount++;
 
 	position.y -= 0.2f;
@@ -740,29 +728,16 @@ void Enemy::deathMove()
 #pragma region 黒煙パーティクル
 	if (fallDownCount % 15 == 0)
 	{
-		std::unique_ptr<SingleParticle> newparticle = std::make_unique<SingleParticle>();
-		newparticle->generate();
-		newparticle->set((maxFallCount - fallDownCount) + 10, enemyObject->getPosition(), { 0,0,0 }, { 0,0,0 }, 3.5, 0.5);
-
-		smokeParticles.push_back(std::move(newparticle));
+		SingleParticle newp;
+		newp.generate();
+		newp.set((maxFallCount - fallDownCount) + 10, enemyObject->getPosition(), { 0,0,0 }, { 0,0,0 }, 3.5, 0.5);
+		particleManagerOnTime::addParticle(newp, "smoke.png");
 	}
 #pragma endregion 黒煙パーティクル
-
-	//煙パーティクル更新
-	smokeParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
-		{
-			return newparticle->getIsActive() == false;
-		});
-	for (std::unique_ptr<SingleParticle>& newparticle : smokeParticles)
-	{
-		newparticle->updata();
-	}
 
 	//落ちきったら
 	if (fallDownCount >= maxFallCount)
 	{
-		bomParticles.clear();
-		smokeParticles.clear();
 		isDraw = false;
 		fallDownCount = 0;
 	}
@@ -790,17 +765,6 @@ void Enemy::draw3D(directX* directx)
 	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
 	{
 		bullet->draw(directx);
-	}
-
-	//爆発パーティクル描画
-	for (std::unique_ptr<SingleParticle>& newparticle : bomParticles)
-	{
-		newparticle->drawSpecifyTex("bomb.png");
-	}
-
-	for (std::unique_ptr<SingleParticle>& newparticle : smokeParticles)
-	{
-		newparticle->drawSpecifyTex("smoke.png");
 	}
 }
 
@@ -902,10 +866,6 @@ void enemyBullet::updata()
 {
 	if (!isAlive)
 	{
-		for (std::unique_ptr<SingleParticle>& newparticle : childParticles)
-		{
-			newparticle->setIsActive(false);
-		}
 		return;
 	}
 
@@ -918,21 +878,12 @@ void enemyBullet::updata()
 	//一定フレームごとにパーティクルを生成
 	if (ariveTime % 10 == 0)
 	{
-		std::unique_ptr<SingleParticle> newParticle = std::make_unique<SingleParticle>();
-		newParticle->generate();
-		newParticle->set(20, position, { 0,0,0 }, { 0,0,0 }, 2.0f, 0.0f);
-		newParticle->color = motherParticle->color;
-		childParticles.push_back(std::move(newParticle));
-	}
-
-	//サブパーティクル更新
-	childParticles.remove_if([](std::unique_ptr<SingleParticle>& newparticle)
-		{
-			return newparticle->getIsActive() == false;
-		});
-	for (std::unique_ptr<SingleParticle>& newparticle : childParticles)
-	{
-		newparticle->updata();
+		SingleParticle newParticle;
+		newParticle.generate();
+		newParticle.set(20, position, { 0,0,0 }, { 0,0,0 }, 2.0f, 0.0f);
+		newParticle.color = motherParticle->color;
+		newParticle.isAddBlend = true;
+		particleManagerOnTime::addParticle(newParticle, "effect1.png");
 	}
 
 	//本体パーティクル更新
@@ -954,12 +905,6 @@ void enemyBullet::draw(directX* directx)
 	if (!isAlive)
 	{
 		return;
-	}
-
-	for (std::unique_ptr<SingleParticle>& newparticle : childParticles)
-	{
-		newparticle->setPiplineAddBlend();
-		newparticle->drawSpecifyTex("effect1.png");
 	}
 
 	motherParticle->setPiplineAddBlend();

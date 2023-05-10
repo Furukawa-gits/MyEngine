@@ -13,13 +13,13 @@ public:
 	particleManagerOnTime();
 	~particleManagerOnTime();
 
-	static void addParticle(SingleParticle particle, std::string texname);
+	static void addParticle(SingleParticle particle, std::string texname, bool isaddblend = false);
 
 	static void particlesUpdata();
 
 	static void particlesDrawTex();
 
 public:
-	
+
 	static std::list<particleSet> particles;
 };

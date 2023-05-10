@@ -10,7 +10,7 @@ particleManagerOnTime::~particleManagerOnTime()
 {
 }
 
-void particleManagerOnTime::addParticle(SingleParticle particle, std::string texname)
+void particleManagerOnTime::addParticle(SingleParticle particle, std::string texname, bool isaddblend)
 {
 	particleSet set;
 	set.particle = particle;
@@ -35,6 +35,10 @@ void particleManagerOnTime::particlesDrawTex()
 {
 	for (particleSet& newparticle : particles)
 	{
+		if (newparticle.particle.isAddBlend)
+		{
+			newparticle.particle.setPiplineAddBlend();
+		}
 		newparticle.particle.drawSpecifyTex(newparticle.texName);
 	}
 }

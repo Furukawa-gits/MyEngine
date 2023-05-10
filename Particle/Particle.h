@@ -117,6 +117,8 @@ public:
 	bool isExtinctionFrame = true;
 	//インスタンス側でpositionをセットするかどうか
 	bool isSetPosition = false;
+	//加算合成するかどうか
+	bool isAddBlend = false;
 	// 定数バッファ
 	ComPtr<ID3D12Resource> constBuff;
 	// テクスチャバッファ
