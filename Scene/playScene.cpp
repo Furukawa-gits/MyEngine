@@ -146,11 +146,6 @@ void playScene::setParameter()
 
 void playScene::updata()
 {
-	if (input->Triger(DIK_SPACE))
-	{
-		int test = 0;
-	}
-
 	//ライト更新
 	light->Update();
 
@@ -172,6 +167,10 @@ void playScene::updata()
 	//スカイドーム更新
 	skySphere->setRotMatrix(0, 0, skyShpereRotY);
 	skySphere->updata();
+	skySphere2->setRotMatrix(0, 0, skyShpereRotY);
+	skySphere2->updata();
+	skySphere3->setRotMatrix(0, 0, skyShpereRotY);
+	skySphere3->updata();
 
 	//地面更新
 	groundPlane->updata();
@@ -210,11 +209,6 @@ void playScene::updata()
 	{
 		tutorial();
 		return;
-	}
-
-	if (input->Triger(DIK_LSHIFT))
-	{
-		playerPointer->playerHP = 0;
 	}
 
 	//プレイヤー更新
@@ -387,7 +381,19 @@ void playScene::drawBack()
 void playScene::draw3D()
 {
 	groundPlane->Draw(directx->cmdList.Get());
-	skySphere->Draw(directx->cmdList.Get());
+
+	if (stageNum < 2)
+	{
+		skySphere->Draw(directx->cmdList.Get());
+	}
+	else if (stageNum == 2)
+	{
+		skySphere2->Draw(directx->cmdList.Get());
+	}
+	else
+	{
+		skySphere3->Draw(directx->cmdList.Get());
+	}
 
 	//プレイヤー描画
 	playerPointer->draw3D(directx);

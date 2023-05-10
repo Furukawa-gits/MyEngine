@@ -6,8 +6,12 @@ Audio* primitiveScene::audio = nullptr;
 Light* primitiveScene::light = nullptr;
 std::unique_ptr<SingleSprite> primitiveScene::sample_back = std::make_unique<SingleSprite>();
 std::unique_ptr<Model> primitiveScene::SkyModel = std::make_unique<Model>();
+std::unique_ptr<Model> primitiveScene::SkyModel2 = std::make_unique<Model>();
+std::unique_ptr<Model> primitiveScene::SkyModel3 = std::make_unique<Model>();
 std::unique_ptr<Model> primitiveScene::groundModel = std::make_unique<Model>();
 std::unique_ptr<object3dFBX> primitiveScene::skySphere = std::make_unique<object3dFBX>();
+std::unique_ptr<object3dFBX> primitiveScene::skySphere2 = std::make_unique<object3dFBX>();
+std::unique_ptr<object3dFBX> primitiveScene::skySphere3 = std::make_unique<object3dFBX>();
 std::unique_ptr<object3dFBX> primitiveScene::groundPlane = std::make_unique<object3dFBX>();
 std::list<std::unique_ptr<Enemy>> primitiveScene::enemyList = {};
 std::unique_ptr<Boss> primitiveScene::normalBoss = std::make_unique<Boss>();
@@ -50,6 +54,16 @@ void primitiveScene::setStaticData(directX* Directx, dxinput* Input, Audio* Audi
 	sample_back->size = { 1280,720 };
 	sample_back->generateSprite("sample_back.jpg");
 
+	enemyWaveBar->anchorpoint = { 0.5f,0.0f };
+	enemyWaveBar->size = { 10,500 };
+	enemyWaveBar->position = { 1180,360 - 500 / 2,0 };
+	enemyWaveBar->generateSprite("enemyWaveBar.png");
+
+	playerWaveIcon->anchorpoint = { 0.5f,0.5f };
+	playerWaveIcon->size = { 120,75 };
+	playerWaveIcon->position = { 1180 + 20,360 - 500 / 2,0 };
+	playerWaveIcon->generateSprite("playerWaveIcon.png");
+
 	//ƒ‰ƒCƒg¶¬
 	Light::Staticinitialize(directx->dev.Get());
 	light = Light::Create();
@@ -66,19 +80,27 @@ void primitiveScene::setStaticData(directX* Directx, dxinput* Input, Audio* Audi
 	playerPointer->init(input, directx);
 
 	Model* sky = FbxLoader::GetInstance()->LoadmodelFromFile("skySphere");
+	Model* sky2 = FbxLoader::GetInstance()->LoadmodelFromFile("skySphere2");
+	Model* sky3 = FbxLoader::GetInstance()->LoadmodelFromFile("skySphere3");
 	Model* ground = FbxLoader::GetInstance()->LoadmodelFromFile("floar");
 
-	SkyModel = std::make_unique<Model>();
 	SkyModel.reset(sky);
-	groundModel = std::make_unique<Model>();
+	SkyModel2.reset(sky2);
+	SkyModel3.reset(sky3);
 	groundModel.reset(ground);
 
-	skySphere = std::make_unique<object3dFBX>();
 	skySphere->initialize();
 	skySphere->SetModel(SkyModel.get());
 	skySphere->SetScale({ 8.0f,8.0f,8.0f });
 
-	groundPlane = std::make_unique<object3dFBX>();
+	skySphere2->initialize();
+	skySphere2->SetModel(SkyModel2.get());
+	skySphere2->SetScale({ 8.0f,8.0f,8.0f });
+
+	skySphere3->initialize();
+	skySphere3->SetModel(SkyModel3.get());
+	skySphere3->SetScale({ 8.0f,8.0f,8.0f });
+
 	groundPlane->initialize();
 	groundPlane->SetModel(groundModel.get());
 	groundPlane->SetPosition(playerPointer->groundPosition);

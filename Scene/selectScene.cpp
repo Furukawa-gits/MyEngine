@@ -99,6 +99,21 @@ void selectScene::initialize()
 void selectScene::setParameter()
 {
 	stage[0].position.x = 640 - 300;
+	stage[1].position.x = stage[0].position.x + 300;
+	stage[2].position.x = stage[1].position.x + 300;
+	stage[3].position.x = stage[2].position.x + 300;
+	stage[4].position.x = stage[3].position.x + 300;
+	//各スプライト更新
+	for (int i = 0; i < 5; i++)
+	{
+		stage[i].spriteUpdata();
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		selects[i].spriteUpdata();
+	}
+	spaceStart.spriteUpdata();
+	toTutorial.spriteUpdata();
 	isMoveStageIcon = false;
 	isPushStart = false;
 	stageNum = 0;

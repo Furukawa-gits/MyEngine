@@ -78,8 +78,12 @@ public:
 	static std::unique_ptr<SingleSprite> sample_back;
 	//天球と地面
 	static std::unique_ptr<Model> SkyModel;
+	static std::unique_ptr<Model> SkyModel2;
+	static std::unique_ptr<Model> SkyModel3;
 	static std::unique_ptr<Model> groundModel;
 	static std::unique_ptr<object3dFBX> skySphere;
+	static std::unique_ptr<object3dFBX> skySphere2;
+	static std::unique_ptr<object3dFBX> skySphere3;
 	static std::unique_ptr<object3dFBX> groundPlane;
 	//ライト
 	static Light* light;
