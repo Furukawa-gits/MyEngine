@@ -120,7 +120,19 @@ void resultScene::drawBack()
 void resultScene::draw3D()
 {
 	groundPlane->Draw(directx->cmdList.Get());
-	skySphere->Draw(directx->cmdList.Get());
+
+	if (stageNum < 2)
+	{
+		skySphere->Draw(directx->cmdList.Get());
+	}
+	else if (stageNum == 2)
+	{
+		skySphere2->Draw(directx->cmdList.Get());
+	}
+	else
+	{
+		skySphere3->Draw(directx->cmdList.Get());
+	}
 
 	//ƒvƒŒƒCƒ„[•`‰æ
 	playerPointer->draw3D(directx);

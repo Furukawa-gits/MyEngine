@@ -77,6 +77,7 @@ void titleScene::setParameter()
 	titleIconShoot.position.x = shootEaseStart;
 	titleIconDrag.spriteUpdata();
 	titleIconShoot.spriteUpdata();
+	isPushStart = false;
 	isNextScene = false;
 }
 
