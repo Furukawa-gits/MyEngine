@@ -246,7 +246,7 @@ void Missile::particleUpdata()
 	{
 		SingleParticle newParticle;
 		newParticle.generate();
-		newParticle.set(20, position, { 0,0,0 }, { 0,0,0 }, 2.0f, 0.0f);
+		newParticle.set(30, position, { 0,0,0 }, { 0,0,0 }, 3.0f, 0.0f);
 		newParticle.color = { 1,1,0,1 };
 		newParticle.isAddBlend = true;
 		particleManagerOnTime::addParticle(newParticle, "effect1.png");
