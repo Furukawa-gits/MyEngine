@@ -209,7 +209,7 @@ void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& target
 		return;
 	}
 
-	if (enemy->isDraw == false)
+	if (enemy->isAlive == false)
 	{
 		return;
 	}

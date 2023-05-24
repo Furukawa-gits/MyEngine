@@ -770,6 +770,11 @@ void Player::addMissile(Enemy* enemy)
 		return;
 	}
 
+	if (!enemy->isTargetSet || enemy->isSetMissile)
+	{
+		return;
+	}
+
 	//ミサイル追加
 	std::unique_ptr<Missile> newMissile = std::make_unique<Missile>();
 	newMissile->init();
@@ -778,7 +783,9 @@ void Player::addMissile(Enemy* enemy)
 
 	missilesList.push_back(std::move(newMissile));
 
-	//ミサイルを撃った数をカウント
+	enemy->isSetMissile = true;
+
+	//ミサイルを撃った数をカウント(チュートリアル)
 	missileCount++;
 }
 

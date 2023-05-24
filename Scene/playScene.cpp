@@ -234,43 +234,19 @@ void playScene::updata()
 		{
 			for (std::unique_ptr<Enemy>& newenemy : enemyList)
 			{
-				if (newenemy->isTargetSet && !newenemy->isSetMissile)
-				{
-					playerPointer->addMissile(newenemy.get());
-
-					newenemy->isSetMissile = true;
-
-					break;
-				}
+				playerPointer->addMissile(newenemy.get());
 			}
 		}
 
-		if (normalBoss->isTargetSet && !normalBoss->isSetMissile)
-		{
-			playerPointer->addMissile(normalBoss.get());
+		playerPointer->addMissile(normalBoss.get());
 
-			normalBoss->isSetMissile = true;
-		}
-
-		if (UniteBoss->isTargetSet && !UniteBoss->isSetMissile)
-		{
-			playerPointer->addMissile(UniteBoss.get());
-
-			UniteBoss->isSetMissile = true;
-		}
+		playerPointer->addMissile(UniteBoss.get());
 
 		for (int i = 0; i < targetnum; i++)
 		{
 			for (std::unique_ptr<uniteParts>& newparts : UniteBoss->partsList)
 			{
-				if (newparts->isTargetSet && !newparts->isSetMissile)
-				{
-					playerPointer->addMissile(newparts.get());
-
-					newparts->isSetMissile = true;
-
-					break;
-				}
+				playerPointer->addMissile(newparts.get());
 			}
 		}
 
@@ -790,22 +766,8 @@ void playScene::tutorial()
 		{
 			for (std::unique_ptr<Enemy>& newenemy : enemyList)
 			{
-				if (newenemy->isTargetSet && !newenemy->isSetMissile)
-				{
-					playerPointer->addMissile(newenemy.get());
-
-					newenemy->isSetMissile = true;
-
-					break;
-				}
+				playerPointer->addMissile(newenemy.get());
 			}
-		}
-
-		if (normalBoss->isTargetSet && !normalBoss->isSetMissile)
-		{
-			playerPointer->addMissile(normalBoss.get());
-
-			normalBoss->isSetMissile = true;
 		}
 
 		targetnum = 0;

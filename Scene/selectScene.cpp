@@ -98,7 +98,7 @@ void selectScene::initialize()
 
 void selectScene::setParameter()
 {
-	stage[0].position.x = 640 - 300;
+	stage[0].position.x = stageIconOffset.x;
 	stage[1].position.x = stage[0].position.x + 300;
 	stage[2].position.x = stage[1].position.x + 300;
 	stage[3].position.x = stage[2].position.x + 300;
@@ -238,6 +238,8 @@ void selectScene::updata()
 		{
 			return;
 		}
+
+		stageIconOffset = stage[0].position;
 	}
 }
 

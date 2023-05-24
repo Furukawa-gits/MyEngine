@@ -105,6 +105,8 @@ public:
 	static int stageNum;
 	//最大ステージ番号
 	static const int maxStageNum = 3;
+	//ステージアイコンの基準座標
+	static XMFLOAT3 stageIconOffset;
 	//現在のステージレベル(敵を全滅させると1つ上がる)
 	static int nowStageLevel;
 	//ステージごとの最大レベル(ここまで到達するとボス出現)
