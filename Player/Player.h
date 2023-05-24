@@ -37,7 +37,7 @@ public:
 
 	void targetUpdata();
 
-	void addMissile(Enemy* enemy);
+	void addMissile(Enemy* enemy, int& targetnum);
 
 	void reset();
 
@@ -195,6 +195,11 @@ public:
 	const int maxFallCount = 360;
 	XMFLOAT3 fallRot = { 0,0,0 };
 	XMFLOAT3 fallScale = { 0,0,0 };
+
+	//ミサイルの発射レート
+	bool isShotMissile = false;
+	const int nextMissileTime = 15;
+	int waitMissileTime = nextMissileTime;
 
 	//チュートリアル用変数
 	//フラグ

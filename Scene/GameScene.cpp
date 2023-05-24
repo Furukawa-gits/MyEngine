@@ -707,7 +707,7 @@ void GameScene::playUpdata()
 			{
 				if (newenemy->isTargetSet && !newenemy->isSetMissile)
 				{
-					playerPointer->addMissile(newenemy.get());
+					playerPointer->addMissile(newenemy.get(), targetnum);
 
 					newenemy->isSetMissile = true;
 
@@ -718,14 +718,14 @@ void GameScene::playUpdata()
 
 		if (testBoss->isTargetSet && !testBoss->isSetMissile)
 		{
-			playerPointer->addMissile(testBoss.get());
+			playerPointer->addMissile(testBoss.get(), targetnum);
 
 			testBoss->isSetMissile = true;
 		}
 
 		if (testUniteBoss->isTargetSet && !testUniteBoss->isSetMissile)
 		{
-			playerPointer->addMissile(testUniteBoss.get());
+			playerPointer->addMissile(testUniteBoss.get(), targetnum);
 
 			testUniteBoss->isSetMissile = true;
 		}
@@ -736,7 +736,7 @@ void GameScene::playUpdata()
 			{
 				if (newparts->isTargetSet && !newparts->isSetMissile)
 				{
-					playerPointer->addMissile(newparts.get());
+					playerPointer->addMissile(newparts.get(), targetnum);
 
 					newparts->isSetMissile = true;
 
@@ -1586,7 +1586,7 @@ void GameScene::tutorial()
 			{
 				if (newenemy->isTargetSet && !newenemy->isSetMissile)
 				{
-					playerPointer->addMissile(newenemy.get());
+					playerPointer->addMissile(newenemy.get(), targetnum);
 
 					newenemy->isSetMissile = true;
 
@@ -1597,7 +1597,7 @@ void GameScene::tutorial()
 
 		if (testBoss->isTargetSet && !testBoss->isSetMissile)
 		{
-			playerPointer->addMissile(testBoss.get());
+			playerPointer->addMissile(testBoss.get(), targetnum);
 
 			testBoss->isSetMissile = true;
 		}

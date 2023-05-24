@@ -230,27 +230,30 @@ void playScene::updata()
 	//ホーミング弾発射
 	if (input->Mouse_LeftRelease() && !isCountDown)
 	{
+		playerPointer->isShotMissile = true;
+	}
+
+	if (playerPointer->isShotMissile)
+	{
 		for (int i = 0; i < targetnum; i++)
 		{
 			for (std::unique_ptr<Enemy>& newenemy : enemyList)
 			{
-				playerPointer->addMissile(newenemy.get());
+				playerPointer->addMissile(newenemy.get(), targetnum);
 			}
 		}
 
-		playerPointer->addMissile(normalBoss.get());
+		playerPointer->addMissile(normalBoss.get(), targetnum);
 
-		playerPointer->addMissile(UniteBoss.get());
+		playerPointer->addMissile(UniteBoss.get(), targetnum);
 
 		for (int i = 0; i < targetnum; i++)
 		{
 			for (std::unique_ptr<uniteParts>& newparts : UniteBoss->partsList)
 			{
-				playerPointer->addMissile(newparts.get());
+				playerPointer->addMissile(newparts.get(), targetnum);
 			}
 		}
-
-		targetnum = 0;
 	}
 
 	//当たり判定
@@ -360,7 +363,7 @@ void playScene::draw3D()
 {
 	groundPlane->Draw(directx->cmdList.Get());
 
-	/*if (stageNum < 2)
+	if (stageNum < 2)
 	{
 		skySphere->Draw(directx->cmdList.Get());
 	}
@@ -371,9 +374,9 @@ void playScene::draw3D()
 	else
 	{
 		skySphere3->Draw(directx->cmdList.Get());
-	}*/
+	}
 
-	skySphere->Draw(directx->cmdList.Get());
+	//skySphere->Draw(directx->cmdList.Get());
 
 	//プレイヤー描画
 	playerPointer->draw3D(directx);
@@ -762,15 +765,15 @@ void playScene::tutorial()
 	//ホーミング弾発射
 	if (input->Mouse_LeftRelease() && !isCountDown)
 	{
-		for (int i = 0; i < targetnum; i++)
-		{
-			for (std::unique_ptr<Enemy>& newenemy : enemyList)
-			{
-				playerPointer->addMissile(newenemy.get());
-			}
-		}
+		playerPointer->isShotMissile = true;
+	}
 
-		targetnum = 0;
+	if (playerPointer->isShotMissile)
+	{
+		for (std::unique_ptr<Enemy>& newenemy : enemyList)
+		{
+			playerPointer->addMissile(newenemy.get(), targetnum);
+		}
 	}
 
 	//敵をすべて倒したorプレイヤーが死んだらリザルト

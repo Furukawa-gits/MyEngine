@@ -83,7 +83,7 @@ void resultScene::setParameter()
 	titleButton.spriteUpdata();
 	decisionButton.position = { 640 - 150,540,0 };
 	resultIconSizeX = 200;
-	isSelectOrTitle = false;
+	isSelectOrTitle = true;
 	ButtonEase_y.reSet();
 	ButtonEase_x.reSet();
 	isNextScene = false;
@@ -361,18 +361,18 @@ void resultScene::overScene()
 	if (!isMoveSelectIcon)
 	{
 		//select‰æ–Ê
-		if (titleButton.isMouseSelect && isSelectOrTitle == -1)
+		if (titleButton.isMouseSelect && isSelectOrTitle)
 		{
 			selectEase.set(easingType::easeOut, easingPattern::Cubic, 20, 640 - 150, 640 + 150);
 			isMoveSelectIcon = true;
-			isSelectOrTitle *= -1;
+			isSelectOrTitle = !isSelectOrTitle;
 		}
 		//title‰æ–Ê
-		else if (selectButton.isMouseSelect && isSelectOrTitle == 1)
+		else if (selectButton.isMouseSelect && !isSelectOrTitle)
 		{
 			selectEase.set(easingType::easeOut, easingPattern::Cubic, 20, 640 + 150, 640 - 150);
 			isMoveSelectIcon = true;
-			isSelectOrTitle *= -1;
+			isSelectOrTitle = !isSelectOrTitle;
 		}
 	}
 	else

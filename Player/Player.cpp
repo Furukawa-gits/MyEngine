@@ -763,10 +763,17 @@ void Player::targetUpdata()
 	remainingMissileNum[8].spriteUpdata(true);
 }
 
-void Player::addMissile(Enemy* enemy)
+void Player::addMissile(Enemy* enemy, int& targetnum)
 {
 	if (isClearStaging || isOverStaging)
 	{
+		return;
+	}
+
+	if (targetnum <= 0)
+	{
+		isShotMissile = false;
+		waitMissileTime = nextMissileTime;
 		return;
 	}
 
@@ -775,18 +782,34 @@ void Player::addMissile(Enemy* enemy)
 		return;
 	}
 
-	//ミサイル追加
-	std::unique_ptr<Missile> newMissile = std::make_unique<Missile>();
-	newMissile->init();
-	newMissile->setPenemy(enemy);
-	newMissile->start(playerObject->getPosition());
+	waitMissileTime--;
 
-	missilesList.push_back(std::move(newMissile));
+	if (waitMissileTime <= 0)
+	{
+		//ミサイル追加
+		std::unique_ptr<Missile> newMissile = std::make_unique<Missile>();
+		newMissile->init();
+		newMissile->setPenemy(enemy);
+		newMissile->start(playerObject->getPosition());
+		missilesList.push_back(std::move(newMissile));
 
-	enemy->isSetMissile = true;
+		//発射パーティクル追加
+		SingleParticle newparticle;
+		newparticle.generate();
+		newparticle.set(5, playerObject->getPosition(), { 0,0,0 }, { 0,0,0 }, 6.0, 6.0);
+		newparticle.color = { 1,1,1,0.5f };
+		newparticle.isAddBlend = true;
+		particleManagerOnTime::addParticle(newparticle, "effect1.png");
 
-	//ミサイルを撃った数をカウント(チュートリアル)
-	missileCount++;
+		enemy->isSetMissile = true;
+
+		targetnum--;
+
+		waitMissileTime = nextMissileTime;
+
+		//ミサイルを撃った数をカウント(チュートリアル)
+		missileCount++;
+	}
 }
 
 //リセット

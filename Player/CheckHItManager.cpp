@@ -204,7 +204,7 @@ void checkHitManager::checkPlayerEnemyRampages(Player* player, Enemy* enemy)
 // プレイヤーカーソルと敵本体のロックオン判定(単体)
 void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& targetnum)
 {
-	if (player->isRockOn == false)
+	if (!player->isRockOn || player->isShotMissile)
 	{
 		return;
 	}
@@ -243,6 +243,15 @@ void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& target
 
 	if (enemy->toPlayerAngle > 85)
 	{
+		if (enemy->isTargetSet)
+		{
+			enemy->isTargetSet = false;
+
+			if (targetnum > 0)
+			{
+				targetnum--;
+			}
+		}
 		return;
 	}
 

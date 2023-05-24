@@ -115,7 +115,7 @@ public:
 	static bool isTutorial;
 	//クリアかオーバーか(true:クリア/false:オーバー)
 	static bool isClearOrOver;
-	//タイトルかセレクトか(true:タイトル/false:セレクト)
+	//タイトルかセレクトか(true:セレクト/false:タイトル)
 	static bool isSelectOrTitle;
 	//アイコン同士の距離
 	static float nextWaveDis;
