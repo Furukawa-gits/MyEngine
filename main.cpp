@@ -1,4 +1,3 @@
-#include"Scene/GameScene.h"
 #include"2D/PostEffect.h"
 #include"Base/Fps_Manager.h"
 #include"FbxLoder/FbxLoader.h"
@@ -46,10 +45,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//3dオブジェクト静的初期化
 	//object3Dobj::staticInit();
 
-	//ゲームシーン初期化
-	//GameScene gamescene;
-	//gamescene.init(&directx, &input, &audio);
-
 	//シーンマネージャー初期化
 	primitiveScene::setStaticData(&directx, &input, &audio);
 	sceneManager* scene = new sceneManager();
@@ -87,8 +82,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		input.Update(Win->hwnd);
 
 		//ゲームシーン更新
-		//gamescene.updata();
-
 		scene->nowscene->updata();
 		scene->replacementScene();
 
@@ -111,12 +104,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		// 描画処理
 		posteffect->preDrawScene(directx.cmdList.Get(), directx.dev.Get());
 		//背景スプライト、
-		//gamescene.drawBack();
 		scene->nowscene->drawBack();
 		//深度バッファクリア
 		posteffect->depthClear(directx.cmdList.Get());
 		//3Dオブジェクト
-		//gamescene.draw3D();
 		scene->nowscene->draw3D();
 		posteffect->postDrawScene(directx.cmdList.Get(), &directx);
 		directx.preDraw();
@@ -131,7 +122,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		}
 		posteffect->Draw(directx.cmdList.Get(), directx.dev.Get());
 		//前景スプライト
-		//gamescene.draw2D();
 		scene->nowscene->draw2D();
 		directx.postDraw();
 

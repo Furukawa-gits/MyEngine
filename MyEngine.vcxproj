@@ -127,7 +127,6 @@
     <ClInclude Include="Player\Player.h" />
     <ClInclude Include="Player\primitiveEnemy.h" />
     <ClInclude Include="Player\uniteBoss.h" />
-    <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\playScene.h" />
     <ClInclude Include="Scene\primitiveScene.h" />
     <ClInclude Include="Scene\resultScene.h" />
@@ -169,7 +168,6 @@
     <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="Player\primitiveEnemy.cpp" />
     <ClCompile Include="Player\uniteBoss.cpp" />
-    <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\playScene.cpp" />
     <ClCompile Include="Scene\primitiveScene.cpp" />
     <ClCompile Include="Scene\resultScene.cpp" />
