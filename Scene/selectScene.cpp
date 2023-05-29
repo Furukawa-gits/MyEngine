@@ -187,6 +187,7 @@ void selectScene::updata()
 		playStartButtonEaseY.set(easingType::easeOut, easingPattern::Quadratic, 30, 20, 0);
 		playStartButtonEaseX.set(easingType::easeOut, easingPattern::Quadratic, 30, 300, 350);
 		isPushStart = true;
+		stageIconOffset = stage[0].position;
 	}
 
 	//スタートボタン拡縮
@@ -214,17 +215,17 @@ void selectScene::updata()
 	if (isPushStart && !playStartButtonEaseY.getIsActive())
 	{
 		isPushStart = false;
-		isNextScene = true;
 
 		//タイトルに戻る
 		if (stageNum == -1)
 		{
+			isNextScene = true;
 			return;
 		}
 		//チュートリアル開始
 		else if (stageNum == 0)
 		{
-			isTutorial = true;
+			isNextScene = true;
 			return;
 		}
 		else
@@ -235,6 +236,7 @@ void selectScene::updata()
 
 		if (isLoadStage)
 		{
+			isNextScene = true;
 			return;
 		}
 
@@ -285,9 +287,10 @@ bool selectScene::loadStage()
 	if (isTutorial == false)
 	{
 #ifdef _DEBUG
-		playerPointer->isBoostTutorial = true;
+		return false;
+		/*playerPointer->isBoostTutorial = true;
 		playerPointer->isNormalShot = true;
-		playerPointer->isHomingMissile = true;
+		playerPointer->isHomingMissile = true;*/
 #else
 		return false;
 #endif

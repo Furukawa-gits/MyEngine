@@ -95,7 +95,7 @@ void playScene::initialize()
 
 void playScene::setParameter()
 {
-	if (isTutorial)
+	if (stageNum == 0)
 	{
 		//プレイヤーのリセット
 		playerPointer->reset();
@@ -430,7 +430,7 @@ void playScene::draw2D()
 	drawPositionUI();
 
 	//チュートリアルテキストの都合上、プレイヤーの描画順は分けている
-	if (isTutorial)
+	if (stageNum == 0)
 	{
 		if (isMoveText)
 		{
@@ -647,11 +647,6 @@ void playScene::countDown()
 
 void playScene::tutorial()
 {
-	if (!isTutorial)
-	{
-		return;
-	}
-
 	playerPointer->updata();
 
 	//一定量カメラを動かしたら敵出現

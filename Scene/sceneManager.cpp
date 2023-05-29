@@ -9,7 +9,7 @@ sceneManager::sceneManager()
 
 sceneManager::~sceneManager()
 {
-	
+	delete(nowscene);
 }
 
 void sceneManager::replacementScene()

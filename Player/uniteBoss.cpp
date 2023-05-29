@@ -866,7 +866,7 @@ void uniteBoss::uniteBossDeathMove()
 	}
 
 	//‰‰o‚ªI‚í‚Á‚½‚ç
-	if (fallDownCount >= maxFallCount * 6)
+	if (fallDownCount >= maxFallCount * 5)
 	{
 		isDraw = false;
 		fallDownCount = 0;

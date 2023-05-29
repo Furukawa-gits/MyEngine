@@ -177,7 +177,7 @@ private:
 	};
 
 	//現在の攻撃パターン
-	uniteBossPattern uniteBossNowPattern;
+	uniteBossPattern uniteBossNowPattern = uniteBossPattern::chargeAttack;
 
 	/// <summary>
 	/// 攻撃目標
@@ -185,9 +185,9 @@ private:
 	/// <para>射撃(自機狙い)：プレイヤーの位置</para>
 	/// <para>乱射：ベクトル [ 本体->パーツ ] の延長線上</para>
 	/// </summary>
-	XMFLOAT3 targetPos;
+	XMFLOAT3 targetPos = { 0,0,0 };
 
-	XMFLOAT3 uniteBossScale;
+	XMFLOAT3 uniteBossScale = { 0,0,0 };
 
 	//全てのパーツが壊れたかどうか
 	bool isAllPartsBreak = false;
@@ -213,12 +213,12 @@ private:
 	const int maxRanpageCount = 3;
 
 	//演出用座標
-	XMFLOAT3 arrivalStartPos;
-	XMFLOAT3 arrivalEndPos;
+	XMFLOAT3 arrivalStartPos = { 0,0,0 };
+	XMFLOAT3 arrivalEndPos = { 0,0,0 };
 
 	//撃墜演出用カメラの回転角速度
 	float CameraAngleSpeed = 0.0f;
 
 	//ボス演出用のカメラ
-	Camera* uniteBossCamera;
+	Camera* uniteBossCamera = nullptr;
 };

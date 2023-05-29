@@ -68,7 +68,7 @@ public:
 	static Audio* audio;
 
 	//シーンの種類
-	gameSceneType thisType;
+	gameSceneType thisType = gameSceneType::title;
 
 	//次のシーンに移行するフラグ
 	bool isNextScene = false;
