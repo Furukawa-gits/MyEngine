@@ -781,6 +781,7 @@ void playScene::tutorial()
 	{
 		isClearOrOver = true;
 		isNextScene = true;
+		isTutorial = true;
 	}
 	if (!playerPointer->isAlive && !playerPointer->isOverStaging && playerPointer->playerHP <= 0)
 	{

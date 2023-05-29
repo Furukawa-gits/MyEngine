@@ -118,7 +118,6 @@ void selectScene::setParameter()
 	isPushStart = false;
 	stageNum = 0;
 	selectIconSizeX = 350;
-	isTutorial = false;
 	isNextScene = false;
 }
 
