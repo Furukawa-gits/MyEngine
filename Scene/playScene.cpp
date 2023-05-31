@@ -376,7 +376,7 @@ void playScene::draw3D()
 		skySphere3->Draw(directx->cmdList.Get());
 	}*/
 
-	skySphere->Draw(directx->cmdList.Get());
+	skySphere2->Draw(directx->cmdList.Get());
 
 	//ƒvƒŒƒCƒ„[•`‰æ
 	playerPointer->draw3D(directx);
