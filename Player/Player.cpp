@@ -807,7 +807,7 @@ void Player::addMissile(Enemy* enemy, int& targetnum)
 
 		waitMissileTime = nextMissileTime;
 
-		//ミサイルを撃った数をカウント(チュートリアル)
+		//ミサイルを撃った数をカウント(チュートリアル用)
 		missileCount++;
 	}
 }

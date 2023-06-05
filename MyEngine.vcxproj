@@ -121,6 +121,7 @@
     <ClInclude Include="Particle\Particle.h" />
     <ClInclude Include="Particle\particleManagerOnTime.h" />
     <ClInclude Include="Player\Boss.h" />
+    <ClInclude Include="Player\BulletManager.h" />
     <ClInclude Include="Player\Bullets.h" />
     <ClInclude Include="Player\CheckHItManager.h" />
     <ClInclude Include="Player\Enemy.h" />
@@ -162,6 +163,7 @@
     <ClCompile Include="Particle\Particle.cpp" />
     <ClCompile Include="Particle\particleManagerOnTime.cpp" />
     <ClCompile Include="Player\Boss.cpp" />
+    <ClCompile Include="Player\BulletManager.cpp" />
     <ClCompile Include="Player\Bullets.cpp" />
     <ClCompile Include="Player\CheckHItManager.cpp" />
     <ClCompile Include="Player\Enemy.cpp" />
