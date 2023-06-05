@@ -96,11 +96,11 @@ void primitiveScene::setStaticData(directX* Directx, dxinput* Input, Audio* Audi
 
 	skySphere2->initialize();
 	skySphere2->SetModel(SkyModel2.get());
-	skySphere2->SetScale({ 0.1f,0.1f,0.1f });
+	skySphere2->SetScale({ 0.4f,0.4f,0.4f });
 
 	skySphere3->initialize();
 	skySphere3->SetModel(SkyModel3.get());
-	skySphere3->SetScale({ 8.0f,8.0f,8.0f });
+	skySphere3->SetScale({ 0.4f,0.4f,0.4f });
 
 	groundPlane->initialize();
 	groundPlane->SetModel(groundModel.get());

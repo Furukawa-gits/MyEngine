@@ -363,7 +363,7 @@ void playScene::draw3D()
 {
 	groundPlane->Draw(directx->cmdList.Get());
 
-	/*if (stageNum < 2)
+	if (stageNum < 2)
 	{
 		skySphere->Draw(directx->cmdList.Get());
 	}
@@ -374,9 +374,7 @@ void playScene::draw3D()
 	else
 	{
 		skySphere3->Draw(directx->cmdList.Get());
-	}*/
-
-	skySphere2->Draw(directx->cmdList.Get());
+	}
 
 	//ƒvƒŒƒCƒ„[•`‰æ
 	playerPointer->draw3D(directx);
