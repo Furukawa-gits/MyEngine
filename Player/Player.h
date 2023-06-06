@@ -25,7 +25,7 @@ public:
 
 	void boostMove();
 
-	void cameraMove();
+	void quaternionMove();
 
 	void playerClearMove();
 

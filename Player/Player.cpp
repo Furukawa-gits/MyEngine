@@ -172,7 +172,7 @@ void Player::move()
 	playerObject->addMoveFront(followCamera->getFrontVec());
 
 	//マウスでのカメラ操作
-	cameraMove();
+	quaternionMove();
 
 	//「プレイヤーから見て」右・上・前方向のベクトル
 	XMFLOAT3 vSideAxis = getAxis(quaternion(unitX, qLocal));
@@ -291,7 +291,7 @@ void Player::boostMove()
 }
 
 //カメラ移動
-void Player::cameraMove()
+void Player::quaternionMove()
 {
 	if (isClearStaging || isOverStaging)
 	{

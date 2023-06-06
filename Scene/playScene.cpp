@@ -691,11 +691,11 @@ void playScene::tutorial()
 	{
 		playerPointer->isStop = true;
 		playerPointer->isInvisible = 1;
-		stagingCamera = new Camera;
+		stagingCamera = std::make_unique<Camera>();
 		stagingCamera->SetEye({ 0,0,-30 });
 		stagingCamera->SetTarget({ 0,30,0 });
 		stagingCamera->Update();
-		object3dFBX::SetCamera(stagingCamera);
+		object3dFBX::SetCamera(stagingCamera.get());
 	}
 	else
 	{

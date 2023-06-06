@@ -54,7 +54,7 @@ private:
 	float skyShpereRotY = 0.0002f;
 
 	//演出用カメラ
-	Camera* stagingCamera = nullptr;
+	std::unique_ptr<Camera> stagingCamera;
 
 	//カウントダウン・スタートアイコン
 	SingleSprite countDownSprite[3];
