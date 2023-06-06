@@ -163,57 +163,57 @@ void Missile::update()
 	}
 
 	//ターゲットへのベクトル
-	XMFLOAT3 to_enemy = {
+	XMFLOAT3 toEnemy = {
 		enemyPointer->position.x - position.x,
 		enemyPointer->position.y - position.y,
 		enemyPointer->position.z - position.z
 	};
 
 	//ベクトルを正規化
-	XMFLOAT3 bullet_vec_nml = normalized(bulletVec);
+	XMFLOAT3 missileVecNml = normalized(bulletVec);
 
 	//現在の進行方向との内積
-	float dot_ene_bullet =
-		to_enemy.x * bulletVec.x +
-		to_enemy.y * bulletVec.y +
-		to_enemy.z * bulletVec.z;
+	float dotEneBullet =
+		toEnemy.x * bulletVec.x +
+		toEnemy.y * bulletVec.y +
+		toEnemy.z * bulletVec.z;
 
 	//ベクトルの外積を計算
-	XMFLOAT3 closs_bullet_vec = {
-		bullet_vec_nml.x * dot_ene_bullet,
-		bullet_vec_nml.y * dot_ene_bullet,
-		bullet_vec_nml.z * dot_ene_bullet
+	XMFLOAT3 clossBulletVec = {
+		missileVecNml.x * dotEneBullet,
+		missileVecNml.y * dotEneBullet,
+		missileVecNml.z * dotEneBullet
 	};
 
 	//ミサイルの進行ベクトルをターゲットの方に曲げるベクトルを計算
 	XMFLOAT3 centripetalAccel = {
-		position.x - closs_bullet_vec.x,
-		position.y - closs_bullet_vec.y,
-		position.z - closs_bullet_vec.z
+		position.x - clossBulletVec.x,
+		position.y - clossBulletVec.y,
+		position.z - clossBulletVec.z
 	};
 
-	XMFLOAT3 centri_to_enemy = {
+	XMFLOAT3 centriToEnemy = {
 		enemyPointer->position.x - centripetalAccel.x,
 		enemyPointer->position.y - centripetalAccel.y,
 		enemyPointer->position.z - centripetalAccel.z
 	};
 
-	float centri_to_enemyMagnitude = returnScaler(centri_to_enemy);
-	if (centri_to_enemyMagnitude > 1.0f)
+	float centriToEnemyMagnitude = returnScaler(centriToEnemy);
+	if (centriToEnemyMagnitude > 1.0f)
 	{
-		centri_to_enemy = normalized(centri_to_enemy);
+		centriToEnemy = normalized(centriToEnemy);
 	}
 
 	//曲げる力に補正を入れる
 	XMFLOAT3 Force = {
-		centri_to_enemy.x * 2.3f,
-		centri_to_enemy.y * 2.3f,
-		centri_to_enemy.z * 2.3f
+		centriToEnemy.x * 2.3f,
+		centriToEnemy.y * 2.3f,
+		centriToEnemy.z * 2.3f
 	};
 
-	Force.x += bullet_vec_nml.x * 0.7f;
-	Force.y += bullet_vec_nml.y * 0.7f;
-	Force.z += bullet_vec_nml.z * 0.7f;
+	Force.x += missileVecNml.x * 0.7f;
+	Force.y += missileVecNml.y * 0.7f;
+	Force.z += missileVecNml.z * 0.7f;
 
 	Force.x -= bulletVec.x * 1.2f;
 	Force.y -= bulletVec.y * 1.2f;
