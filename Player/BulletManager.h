@@ -19,8 +19,8 @@ public:
 
 	void draw(directX* directx);
 
-	std::list<std::unique_ptr<bullet>>* getBullet() { return &bulletsList; }
-	std::list<std::unique_ptr<Missile>>* getMissile() { return &missilesList; }
+	std::list<std::unique_ptr<bullet>> getBullet() { return bulletsList; }
+	std::list<std::unique_ptr<Missile>> getMissile() { return missilesList; }
 
 public:
 	std::list<std::unique_ptr<bullet>> bulletsList;

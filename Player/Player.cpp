@@ -53,6 +53,7 @@ void Player::init(dxinput* input, directX* directx)
 	bullet::staticInit();
 	Missile::staticInit();
 
+	bulletManager = std::make_unique<BulletManager>();
 	bulletManager->init(input);
 
 	playerCollision.radius = 2.0f;

@@ -15,16 +15,12 @@ BulletManager::~BulletManager()
 void BulletManager::init(dxinput* input)
 {
 	this->input = input;
-	
+	bulletsList.clear();
+	missilesList.clear();
 }
 
 void BulletManager::updata()
 {
-	if (bulletsList.empty() || missilesList.empty())
-	{
-		return;
-	}
-
 	//€‚ñ‚¾’e‚Ííœ
 	bulletsList.remove_if([](std::unique_ptr<bullet>& newbullet)
 		{
