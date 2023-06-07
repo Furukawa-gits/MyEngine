@@ -518,31 +518,31 @@ void playScene::checkHitPlayerTarget()
 
 void playScene::checkHitEverything()
 {
-	checkHitManager::checkMissilesEnemy(&playerPointer->missilesList);
+	checkHitManager::checkMissilesEnemy(playerPointer->bulletManager->getMissile());
 
 	for (std::unique_ptr<Enemy>& newenemy : enemyList)
 	{
 		checkHitManager::checkPlayerEnemy(playerPointer.get(), newenemy.get());
 		checkHitManager::checkPlayerEnemyRampages(playerPointer.get(), newenemy.get());
-		checkHitManager::checkBulletsEnemyRampage(&playerPointer->bulletsList, newenemy.get());
+		checkHitManager::checkBulletsEnemyRampage(playerPointer->bulletManager->getBullet(), newenemy.get());
 	}
 
 	//敵がロックオンされているかどうか
 	checkHitPlayerTarget();
 
 	//プレイヤーの通常弾当たり判定
-	checkHitManager::checkBulletsEnemys(&playerPointer->bulletsList, &enemyList);
+	checkHitManager::checkBulletsEnemys(playerPointer->bulletManager->getBullet(), &enemyList);
 
 	//通常弾とボスの当たり判定
-	checkHitManager::checkBulletsEnemy(&playerPointer->bulletsList, normalBoss.get());
+	checkHitManager::checkBulletsEnemy(playerPointer->bulletManager->getBullet(), normalBoss.get());
 
 	//通常弾とユニットボス本体の当たり判定
-	checkHitManager::checkBulletsEnemy(&playerPointer->bulletsList, UniteBoss.get());
+	checkHitManager::checkBulletsEnemy(playerPointer->bulletManager->getBullet(), UniteBoss.get());
 
 	//パーツの当たり判定
 	for (std::unique_ptr<uniteParts>& newparts : UniteBoss->partsList)
 	{
-		checkHitManager::checkBulletsEnemy(&playerPointer->bulletsList, newparts.get());
+		checkHitManager::checkBulletsEnemy(playerPointer->bulletManager->getBullet(), newparts.get());
 	}
 
 	//プレイヤーとボスの当たり判定
@@ -550,7 +550,7 @@ void playScene::checkHitEverything()
 	{
 		checkHitManager::checkPlayerEnemy(playerPointer.get(), normalBoss.get());
 		checkHitManager::checkPlayerEnemyRampages(playerPointer.get(), normalBoss.get());
-		checkHitManager::checkBulletsEnemyRampage(&playerPointer->bulletsList, normalBoss.get());
+		checkHitManager::checkBulletsEnemyRampage(playerPointer->bulletManager->getBullet(), normalBoss.get());
 	}
 
 	//ユニットボス本体との当たり判定
@@ -561,7 +561,7 @@ void playScene::checkHitEverything()
 		for (std::unique_ptr<uniteParts>& newparts : UniteBoss->partsList)
 		{
 			checkHitManager::checkPlayerEnemyRampages(playerPointer.get(), newparts.get());
-			checkHitManager::checkBulletsEnemyRampage(&playerPointer->bulletsList, newparts.get());
+			checkHitManager::checkBulletsEnemyRampage(playerPointer->bulletManager->getBullet(), newparts.get());
 		}
 	}
 }

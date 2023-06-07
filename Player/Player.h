@@ -6,7 +6,7 @@
 #include"../Input/dxInput.h"
 #include"../FbxLoder/Object3d_FBX.h"
 #include"../camera/FollowCamera.h"
-#include"Bullets.h"
+#include"BulletManager.h"
 
 
 const int MaxPlayerMissileNum = 8;
@@ -18,6 +18,8 @@ public:
 	~Player();
 
 	void init(dxinput* input, directX* directx);
+
+	void loadUISprite();
 
 	void move();
 
@@ -148,6 +150,8 @@ public:
 	//’e
 	std::list<std::unique_ptr<bullet>> bulletsList;
 	std::list<std::unique_ptr<Missile>> missilesList;
+
+	std::unique_ptr<BulletManager> bulletManager;
 
 	//“ü—Í
 	static dxinput* input;

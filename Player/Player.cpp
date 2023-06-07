@@ -15,6 +15,8 @@ Player::~Player()
 	bulletsList.clear();
 	missilesList.clear();
 
+	bulletManager.release();
+
 	bullet::staticDestroy();
 	Missile::staticDestroy();
 }
@@ -23,6 +25,44 @@ void Player::init(dxinput* input, directX* directx)
 {
 	this->input = input;
 
+	//UIリソース読み込み
+	loadUISprite();
+
+	playerModel.reset(FbxLoader::GetInstance()->LoadmodelFromFile("player"));
+
+	playerObject = new object3dFBX;
+	playerObject->initialize();
+	playerObject->SetModel(playerModel.get());
+	playerObject->SetPosition({ 0,5,0 });
+	playerObject->SetScale({ 1,1,1 });
+	playerObject->SetScale({ 0.02f,0.02f,0.02f });
+	playerObject->setSpeed(2.0f);
+	playerObject->setColor({ 1,1,1,1 });
+
+	followCamera = new FollowCamera();
+
+	followCamera->setFollowTarget(playerObject->getPosition(), playerObject->getRotation(), -30);
+
+	followCamera->SetEye({ 0,5,-10 });
+	followCamera->SetTarget({ 0,5,0 });
+
+	followCamera->setTargets(playerObject->getPosition(), playerObject->getRotation());
+
+	object3dFBX::SetCamera(followCamera);
+
+	bullet::staticInit();
+	Missile::staticInit();
+
+	bulletManager->init(input);
+
+	playerCollision.radius = 2.0f;
+
+	playerHP = maxHP;
+	isAlive = true;
+}
+
+void Player::loadUISprite()
+{
 	//ターゲットアイコン
 	targetFirst.anchorpoint = { 0.5f,0.5f };
 	targetFirst.size = { 40,40 };
@@ -92,36 +132,6 @@ void Player::init(dxinput* input, directX* directx)
 	}
 
 	remainingMissileNum[8].generateSprite("remainingMissileNum.png");
-
-	playerModel.reset(FbxLoader::GetInstance()->LoadmodelFromFile("player"));
-
-	playerObject = new object3dFBX;
-	playerObject->initialize();
-	playerObject->SetModel(playerModel.get());
-	playerObject->SetPosition({ 0,5,0 });
-	playerObject->SetScale({ 1,1,1 });
-	playerObject->SetScale({ 0.02f,0.02f,0.02f });
-	playerObject->setSpeed(2.0f);
-	playerObject->setColor({ 1,1,1,1 });
-
-	followCamera = new FollowCamera();
-
-	followCamera->setFollowTarget(playerObject->getPosition(), playerObject->getRotation(), -30);
-
-	followCamera->SetEye({ 0,5,-10 });
-	followCamera->SetTarget({ 0,5,0 });
-
-	followCamera->setTargets(playerObject->getPosition(), playerObject->getRotation());
-
-	object3dFBX::SetCamera(followCamera);
-
-	bullet::staticInit();
-	Missile::staticInit();
-
-	playerCollision.radius = 2.0f;
-
-	playerHP = maxHP;
-	isAlive = true;
 }
 
 //移動*
@@ -505,21 +515,8 @@ void Player::setStaging(bool isclear)
 //更新
 void Player::updata()
 {
-	//死んだ弾は削除
-	bulletsList.remove_if([](std::unique_ptr<bullet>& newbullet)
-		{
-			return newbullet->isAlive == false;
-		});
-
-	missilesList.remove_if([](std::unique_ptr<Missile>& newmissile)
-		{
-			return newmissile->isAlive == false;
-		});
-
-	missilesList.remove_if([](std::unique_ptr<Missile>& newmissile)
-		{
-			return newmissile->enemyPointer == nullptr;
-		});
+	//弾の更新
+	bulletManager->updata();
 
 	//移動
 	move();
@@ -706,13 +703,8 @@ void Player::targetUpdata()
 	//左クリックで通常弾
 	if (input->Mouse_LeftTriger() && isNormalShot)
 	{
-		//リスト化
-		std::unique_ptr<bullet> newBullet = std::make_unique<bullet>();
-		newBullet->init();
-		newBullet->set(playerObject->getPosition(),
+		bulletManager->addBullet(playerObject->getPosition(),
 			playerObject->screenToWorld({ targetFirst.position.x,targetFirst.position.y }));
-
-		bulletsList.push_back(std::move(newBullet));
 		normalShotCount++;
 	}
 
@@ -787,11 +779,7 @@ void Player::addMissile(Enemy* enemy, int& targetnum)
 	if (waitMissileTime <= 0)
 	{
 		//ミサイル追加
-		std::unique_ptr<Missile> newMissile = std::make_unique<Missile>();
-		newMissile->init();
-		newMissile->setPenemy(enemy);
-		newMissile->start(playerObject->getPosition());
-		missilesList.push_back(std::move(newMissile));
+		bulletManager->addMissile(enemy, targetnum, playerObject->getPosition());
 
 		//発射パーティクル追加
 		SingleParticle newparticle;
@@ -882,16 +870,7 @@ void Player::draw3D(directX* directx)
 		return;
 	}
 
-	//通常弾の描画(ユニークリスト)
-	for (std::unique_ptr<bullet>& bullet : bulletsList)
-	{
-		bullet->draw(directx);
-	}
-	//ミサイルの描画(ユニークリスト)
-	for (std::unique_ptr<Missile>& missile : missilesList)
-	{
-		missile->draw(directx);
-	}
+	bulletManager->draw(directx);
 }
 
 void Player::draw2D(directX* directx, int targetnum)

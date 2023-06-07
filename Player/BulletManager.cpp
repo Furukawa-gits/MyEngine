@@ -8,17 +8,23 @@ BulletManager::BulletManager()
 
 BulletManager::~BulletManager()
 {
+	bulletsList.clear();
+	missilesList.clear();
 }
 
 void BulletManager::init(dxinput* input)
 {
 	this->input = input;
-	bulletsList.clear();
-	missilesList.clear();
+	
 }
 
 void BulletManager::updata()
 {
+	if (bulletsList.empty() || missilesList.empty())
+	{
+		return;
+	}
+
 	//€‚ñ‚¾’e‚Ííœ
 	bulletsList.remove_if([](std::unique_ptr<bullet>& newbullet)
 		{
@@ -60,11 +66,6 @@ void BulletManager::addBullet(XMFLOAT3 start, XMFLOAT3 target)
 
 void BulletManager::addMissile(Enemy* enemy, int& targetnum, XMFLOAT3 start)
 {
-	if (!enemy->isTargetSet || enemy->isSetMissile)
-	{
-		return;
-	}
-
 	//ƒ~ƒTƒCƒ‹’Ç‰Á
 	std::unique_ptr<Missile> newMissile = std::make_unique<Missile>();
 	newMissile->init();
