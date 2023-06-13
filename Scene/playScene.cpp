@@ -297,7 +297,7 @@ void playScene::updata()
 		{
 			//次ウェーブ
 			int enemySpawnNum = (rand() % 4) + 3 + stageNum;	//敵出現数
-			int nextType = (rand() % 4) + 1;				//敵の種類
+			int nextType = (rand() % 4) + 1;					//敵の種類
 
 			for (int i = 0; i < enemySpawnNum; i++)
 			{

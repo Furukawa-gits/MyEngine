@@ -116,7 +116,6 @@ void selectScene::setParameter()
 	toTutorial.spriteUpdata();
 	isMoveStageIcon = false;
 	isPushStart = false;
-	stageNum = 0;
 	selectIconSizeX = 350;
 	isNextScene = false;
 }
