@@ -7,6 +7,7 @@
 #include"../FbxLoder/Object3d_FBX.h"
 #include"../camera/FollowCamera.h"
 #include"BulletManager.h"
+#include"PlayerHitPointManager.h"
 
 
 const int MaxPlayerMissileNum = 8;
@@ -160,6 +161,9 @@ public:
 
 	//生存フラグ
 	bool isAlive = false;
+
+	//HPマネージャー
+	PlayerHitPointManager hitPointManager;
 
 	//HP
 	int playerHP;

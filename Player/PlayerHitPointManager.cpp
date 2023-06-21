@@ -1,4 +1,4 @@
-#include "PlayerFlagManager.h"
+#include "PlayerHitPointManager.h"
 
 PlayerHitPointManager::PlayerHitPointManager()
 {
@@ -36,6 +36,11 @@ void PlayerHitPointManager::loadSprites()
 
 void PlayerHitPointManager::Damage(int damage)
 {
+	if (!isAlive)
+	{
+		return;
+	}
+
 	playerHP -= damage;
 
 	if (playerHP <= 0)
