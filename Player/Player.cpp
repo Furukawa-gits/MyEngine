@@ -58,8 +58,7 @@ void Player::init(dxinput* input, directX* directx)
 
 	playerCollision.radius = 2.0f;
 
-	playerHP = maxHP;
-	isAlive = true;
+	hitPointManager.reSet();
 }
 
 void Player::loadUISprite()
@@ -87,20 +86,6 @@ void Player::loadUISprite()
 	rockonGauge[1].size = { 0,10 };
 	rockonGauge[1].position = { 640,420,0 };
 	rockonGauge[1].generateSprite("boostGauge.png");
-
-	//ダメージエフェクト
-	damage.size = { 1280,720 };
-	damage.generateSprite("damage.png");
-
-	//HPゲージ
-	HPGaugeBar.size = { 50,20 };
-	HPGaugeBar.position = { 20,640,0 };
-	HPGaugeBar.generateSprite("playerHPGauge.png");
-
-	//HPバーの警告
-	dangarHPGaugeBar.size = { (float)maxHP * 40,20 };
-	dangarHPGaugeBar.position = { 20,640,0 };
-	dangarHPGaugeBar.generateSprite("bossHPGauge.png");
 
 	//ブーストゲージ
 	boostGaugeBar.size = { 50,20 };
@@ -133,6 +118,8 @@ void Player::loadUISprite()
 	}
 
 	remainingMissileNum[8].generateSprite("remainingMissileNum.png");
+
+	hitPointManager.loadSprites();
 }
 
 //移動*
@@ -143,7 +130,7 @@ void Player::move()
 		return;
 	}
 
-	if (!isAlive)
+	if (!hitPointManager.getIsAlive())
 	{
 		return;
 	}
@@ -252,7 +239,7 @@ void Player::outArea()
 	//警告を無視し続ける場合は死亡
 	if (outAreaCount >= 700)
 	{
-		playerHP = 0;
+		hitPointManager.Damage(1);
 	}
 
 	//警告スプライトの更新
@@ -537,57 +524,12 @@ void Player::updata()
 		return;
 	}
 
-	//攻撃を連続したフレームで食らわないようにする
-	if (isArmor)
-	{
-		armorTime++;
-
-		if (armorTime % 10 == 0)
-		{
-			isInvisible *= -1;
-		}
-
-		if (armorTime >= maxArmorTime)
-		{
-			armorTime = 0;
-			isArmor = false;
-			isInvisible = -1;
-		}
-	}
-	else
-	{
-		armorTime = 0;
-	}
-
-	//ダメージ表現スプライト
-	damage.spriteUpdata();
-
-	//HPゲージの更新
-	HPGaugeBar.size = { (float)playerHP * 40,20 };
-	HPGaugeBar.spriteUpdata();
+	hitPointManager.updata(&isInvisible);
 
 	boostGaugeBar.size = { (float)boostGauge / 1.5f,20 };
 	boostGaugeBar.spriteUpdata();
 
-	dangarHPGaugeBar.spriteUpdata();
-
 	gaugeFrame.spriteUpdata();
-
-	//HPが4未満ならHPバー点滅
-	if (playerHP < 4)
-	{
-		cautionHPCount++;
-
-		if (cautionHPCount % 7 == 0)
-		{
-			isDangerHP = !isDangerHP;
-		}
-	}
-	else
-	{
-		cautionHPCount = 0;
-		isDangerHP = false;
-	}
 
 	//ミニマップアイコン更新
 	XMFLOAT3 playerPosition = playerObject->getPosition();
@@ -603,9 +545,8 @@ void Player::updata()
 	miniMapPlayer.position = minimapPosition;
 	miniMapPlayer.spriteUpdata();
 
-	if (playerHP <= 0)
+	if (hitPointManager.getPlayerHP() <= 0)
 	{
-		isAlive = false;
 		setStaging(false);
 	}
 
@@ -629,7 +570,7 @@ void Player::targetUpdata()
 		return;
 	}
 
-	if (!isAlive)
+	if (!hitPointManager.getIsAlive())
 	{
 		return;
 	}
@@ -801,17 +742,12 @@ void Player::addMissile(Enemy* enemy, int& targetnum)
 //リセット
 void Player::reset()
 {
-	isAlive = true;
+	hitPointManager.reSet();
 	isStagingSet = false;
-	playerHP = maxHP;
 	isBoost = false;
 	boostGauge = maxBoostGauge;
 	moveSpeed = defaultMoveSpeed;
-	armorTime = 0;
-	isArmor = false;
 	isInvisible = -1;
-	isDangerHP = false;
-	cautionHPCount = 0;
 	playerObject->SetPosition({ 0,5,0 });
 	playerObject->SetScale({ 0.02f,0.02f,0.02f });
 	playerObject->setRotMatrix(XMMatrixIdentity());
@@ -863,7 +799,7 @@ void Player::draw3D(directX* directx)
 		return;
 	}
 
-	if (!isAlive)
+	if (!hitPointManager.getIsAlive())
 	{
 		return;
 	}
@@ -873,7 +809,7 @@ void Player::draw3D(directX* directx)
 
 void Player::draw2D(directX* directx, int targetnum)
 {
-	if (!isAlive)
+	if (!hitPointManager.getIsAlive())
 	{
 		return;
 	}
@@ -886,11 +822,6 @@ void Player::draw2D(directX* directx, int targetnum)
 	targetThird.drawSprite(directx->cmdList.Get());
 	targetSecond.drawSprite(directx->cmdList.Get());
 	targetFirst.drawSprite(directx->cmdList.Get());
-
-	if (isArmor && armorTime < 5)
-	{
-		damage.drawSprite(directx->cmdList.Get());
-	}
 
 	if (targetCount > 5 && targetCount <= 70)
 	{
@@ -913,11 +844,8 @@ void Player::draw2D(directX* directx, int targetnum)
 
 	gaugeFrame.drawSprite(directx->cmdList.Get());
 	boostGaugeBar.drawSprite(directx->cmdList.Get());
-	if (isDangerHP)
-	{
-		dangarHPGaugeBar.drawSprite(directx->cmdList.Get());
-	}
-	HPGaugeBar.drawSprite(directx->cmdList.Get());
+
+	hitPointManager.drawHPUI(directx);
 
 	if (isCautionDraw)
 	{
@@ -927,7 +855,7 @@ void Player::draw2D(directX* directx, int targetnum)
 
 void Player::drawMiniMapIcon(directX* directx)
 {
-	if (!isAlive)
+	if (!hitPointManager.getIsAlive())
 	{
 		return;
 	}

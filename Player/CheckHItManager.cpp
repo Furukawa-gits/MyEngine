@@ -3,20 +3,19 @@
 // プレイヤー本体と敵本体の当たり判定(単体)
 void checkHitManager::checkPlayerEnemy(Player* player, Enemy* enemy)
 {
-	if (enemy->isAlive == false || player->isAlive == false)
+	if (enemy->isAlive == false || player->hitPointManager.getIsAlive() == false)
 	{
 		return;
 	}
 
-	if (player->isArmor)
+	if (player->hitPointManager.getisArmor())
 	{
 		return;
 	}
 
 	if (Collision::checkSphere2Sphere(player->playerCollision, enemy->enemyCollision))
 	{
-		player->playerHP--;
-		player->isArmor = true;
+		player->hitPointManager.Damage(1);
 
 		if (!enemy->isThisBoss)
 		{
@@ -178,15 +177,14 @@ void checkHitManager::checkPlayerEnemyRampage(Player* player, enemyBullet* rampa
 		return;
 	}
 
-	if (player->isArmor || player->isAlive == false)
+	if (player->hitPointManager.getisArmor() || player->hitPointManager.getIsAlive() == false)
 	{
 		return;
 	}
 
 	if (Collision::checkSphere2Sphere(player->playerCollision, rampagebullet->getCollision()))
 	{
-		player->playerHP--;
-		player->isArmor = true;
+		player->hitPointManager.Damage(1);
 		rampagebullet->isAlive = false;
 		rampagebullet->ariveTime = 0;
 	}
@@ -219,7 +217,7 @@ void checkHitManager::checkRockonEnemy(Player* player, Enemy* enemy, int& target
 		return;
 	}
 
-	if (player->isAlive == false)
+	if (player->hitPointManager.getIsAlive() == false)
 	{
 		return;
 	}

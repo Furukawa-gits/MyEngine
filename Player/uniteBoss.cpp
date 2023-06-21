@@ -948,7 +948,7 @@ void uniteBoss::uniteBossChargeAttack()
 		return;
 	}
 
-	if (!playerPointer->isAlive)
+	if (!Enemy::playerIsAlive)
 	{
 		return;
 	}
@@ -1030,7 +1030,7 @@ void uniteBoss::uniteBossRampage()
 		return;
 	}
 
-	if (!playerPointer->isAlive)
+	if (!Enemy::playerIsAlive)
 	{
 		return;
 	}
@@ -1101,7 +1101,7 @@ void uniteBoss::uniteBossShotPlayerTarget()
 		return;
 	}
 
-	if (!playerPointer->isAlive)
+	if (!Enemy::playerIsAlive)
 	{
 		return;
 	}

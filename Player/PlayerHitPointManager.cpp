@@ -8,15 +8,6 @@ PlayerHitPointManager::~PlayerHitPointManager()
 {
 }
 
-void PlayerHitPointManager::init()
-{
-	//リソース
-	loadSprites();
-
-	//パラメータ
-	reSet();
-}
-
 void PlayerHitPointManager::loadSprites()
 {
 	//HPゲージ
@@ -36,7 +27,7 @@ void PlayerHitPointManager::loadSprites()
 
 void PlayerHitPointManager::Damage(int damage)
 {
-	if (!isAlive)
+	if (!isAlive || isArmor)
 	{
 		return;
 	}
@@ -47,6 +38,9 @@ void PlayerHitPointManager::Damage(int damage)
 	{
 		isAlive = false;
 	}
+
+	isArmor = true;
+	armorTime = 0;
 }
 
 void PlayerHitPointManager::reSet()
@@ -55,10 +49,16 @@ void PlayerHitPointManager::reSet()
 	isArmor = false;
 	playerHP = maxHP;
 	armorTime = 0;
+	cautionHPCount = 0;
 }
 
 void PlayerHitPointManager::updata(int* isinvisible)
 {
+	if (!isAlive)
+	{
+		return;
+	}
+
 	//攻撃を連続したフレームで食らわないようにする
 	if (isArmor)
 	{
@@ -97,16 +97,27 @@ void PlayerHitPointManager::updata(int* isinvisible)
 		isDangerHP = false;
 	}
 
+	if (playerHP <= 0)
+	{
+		isAlive = false;
+	}
+
 	//ダメージ表現スプライト
 	damage.spriteUpdata();
 
 	//HPゲージの更新
 	HPGaugeBar.size = { (float)playerHP * 40,20 };
 	HPGaugeBar.spriteUpdata();
+	dangarHPGaugeBar.spriteUpdata();
 }
 
 void PlayerHitPointManager::drawHPUI(directX* directx)
 {
+	if (isArmor && armorTime < 5)
+	{
+		damage.drawSprite(directx->cmdList.Get());
+	}
+
 	if (isDangerHP)
 	{
 		dangarHPGaugeBar.drawSprite(directx->cmdList.Get());

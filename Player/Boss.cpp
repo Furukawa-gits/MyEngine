@@ -457,7 +457,7 @@ void Boss::bossChase()
 		return;
 	}
 
-	if (!playerPointer->isAlive)
+	if (!Enemy::playerIsAlive)
 	{
 		return;
 	}
@@ -523,7 +523,7 @@ void Boss::bossShot()
 		return;
 	}
 
-	if (!playerPointer->isAlive)
+	if (!Enemy::playerIsAlive)
 	{
 		return;
 	}
@@ -600,7 +600,7 @@ void Boss::bossHoming()
 		return;
 	}
 
-	if (!playerPointer->isAlive)
+	if (!Enemy::playerIsAlive)
 	{
 		return;
 	}
@@ -724,7 +724,7 @@ void Boss::bossRampage()
 		return;
 	}
 
-	if (!playerPointer->isAlive)
+	if (!Enemy::playerIsAlive)
 	{
 		return;
 	}

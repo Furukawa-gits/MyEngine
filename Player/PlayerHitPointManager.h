@@ -8,16 +8,13 @@ public:
 	PlayerHitPointManager();
 	~PlayerHitPointManager();
 
-	//初期化
-	void init();
-
 	//リソース読み込み
 	void loadSprites();
 
 	//ダメージを受ける
 	void Damage(int damage);
 
-	//リセット
+	//パラメータリセット
 	void reSet();
 
 	//更新
@@ -27,6 +24,10 @@ public:
 	void drawHPUI(directX* directx);
 
 	bool getIsAlive() { return isAlive; }
+
+	bool getisArmor() { return isArmor; }
+
+	int getPlayerHP() { return playerHP; }
 
 private:
 	//生存フラグ

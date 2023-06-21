@@ -102,8 +102,6 @@ private:
 	const XMFLOAT3 unitY = { 0,1,0 };
 	const XMFLOAT3 unitZ = { 0,0,1 };
 
-	const int maxArmorTime = 300;
-
 public:
 	//3dオブジェクト
 	object3dFBX* playerObject = nullptr;
@@ -130,9 +128,7 @@ public:
 	//ロックオンモードのゲージ
 	SingleSprite rockonGauge[2];
 
-	//HPゲージ
-	SingleSprite HPGaugeBar;
-	SingleSprite dangarHPGaugeBar;
+	//ゲージUI
 	SingleSprite boostGaugeBar;
 	SingleSprite gaugeFrame;
 
@@ -143,9 +139,6 @@ public:
 
 	//ジェットエンジンエフェクト
 	int moveParticlesCount = 0;
-
-	//ダメージ表現
-	SingleSprite damage;
 
 	//弾
 	std::list<std::unique_ptr<bullet>> bulletsList;
@@ -159,28 +152,13 @@ public:
 	//当たり判定
 	Sphere playerCollision;
 
-	//生存フラグ
-	bool isAlive = false;
-
 	//HPマネージャー
 	PlayerHitPointManager hitPointManager;
-
-	//HP
-	int playerHP;
-	const int maxHP = 10;
-
-	//HPが危険になった時の警告
-	bool isDangerHP = false;
-	int cautionHPCount = 0;
 
 	//ブースト
 	bool isBoost = false;
 	float boostGauge = 0;
 	const float maxBoostGauge = 300;
-
-	//無敵時間フラグ
-	bool isArmor = false;
-	int armorTime = 0;
 
 	//描画しないフラグ
 	int isInvisible = -1;

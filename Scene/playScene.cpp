@@ -153,7 +153,7 @@ void playScene::updata()
 	countDown();
 
 	//敵に共通して必要なプレイヤーの情報を渡す
-	Enemy::staticUpdata(playerPointer->getPlayerPos(), playerPointer->getPlayerFront(), playerPointer->isAlive);
+	Enemy::staticUpdata(playerPointer->getPlayerPos(), playerPointer->getPlayerFront(), playerPointer->hitPointManager.getIsAlive());
 
 	if (!isCountDown && !isStartIcon)
 	{
@@ -347,7 +347,9 @@ void playScene::updata()
 		isNextScene = true;
 	}
 
-	if (!playerPointer->isAlive && !playerPointer->isOverStaging && playerPointer->playerHP <= 0)
+	if (!playerPointer->hitPointManager.getIsAlive() && 
+		!playerPointer->isOverStaging && 
+		playerPointer->hitPointManager.getPlayerHP() <= 0)
 	{
 		isClearOrOver = false;
 		isNextScene = true;
@@ -776,7 +778,10 @@ void playScene::tutorial()
 		isNextScene = true;
 		isTutorial = true;
 	}
-	if (!playerPointer->isAlive && !playerPointer->isOverStaging && playerPointer->playerHP <= 0)
+
+	if (!playerPointer->hitPointManager.getIsAlive() &&
+		!playerPointer->isOverStaging &&
+		playerPointer->hitPointManager.getPlayerHP() <= 0)
 	{
 		isClearOrOver = false;
 		isNextScene = true;
