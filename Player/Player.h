@@ -82,9 +82,6 @@ private:
 	const float defaultMoveSpeed = 0.4f;
 	const float boostMoveSpeed = 2.5f;
 
-	SingleSprite targetSecond;
-	SingleSprite targetThird;
-
 	SingleSprite remainingMissileNum[9];
 
 	float yowRotateSpeedPositive = 0.0f;//ヨー回転(正方向)
@@ -126,6 +123,8 @@ public:
 	int targetCount = 0;
 	int rockOnCount = 0;
 	bool isRockOn = false;
+	SingleSprite targetSecond;
+	SingleSprite targetThird;
 
 	//ロックオンモードのゲージ
 	SingleSprite rockonGauge[2];
