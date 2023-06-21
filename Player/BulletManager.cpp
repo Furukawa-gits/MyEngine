@@ -50,14 +50,21 @@ void BulletManager::updata()
 	}
 }
 
-void BulletManager::addBullet(XMFLOAT3 start, XMFLOAT3 target)
+void BulletManager::addBullet(XMFLOAT3 start, XMFLOAT3 target, int* shotcount, bool& shotflag)
 {
+	if (!input->Mouse_LeftTriger() || !shotflag)
+	{
+		return;
+	}
+
 	//ƒŠƒXƒg‰»
 	std::unique_ptr<bullet> newBullet = std::make_unique<bullet>();
 	newBullet->init();
 	newBullet->set(start, target);
 
 	bulletsList.push_back(std::move(newBullet));
+
+	shotcount++;
 }
 
 void BulletManager::addMissile(Enemy* enemy, int& targetnum, XMFLOAT3 start)

@@ -11,7 +11,7 @@ public:
 
 	void updata();
 
-	void addBullet(XMFLOAT3 start, XMFLOAT3 target);
+	void addBullet(XMFLOAT3 start, XMFLOAT3 target, int* shotcount, bool& shotflag);
 
 	void addMissile(Enemy* enemy, int& targetnum, XMFLOAT3 start);
 

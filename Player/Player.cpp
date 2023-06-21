@@ -702,12 +702,9 @@ void Player::targetUpdata()
 	targetThird.spriteUpdata();
 
 	//左クリックで通常弾
-	if (input->Mouse_LeftTriger() && isNormalShot)
-	{
-		bulletManager->addBullet(playerObject->getPosition(),
-			playerObject->screenToWorld({ targetFirst.position.x,targetFirst.position.y }));
-		normalShotCount++;
-	}
+	bulletManager->addBullet(playerObject->getPosition(),
+		playerObject->screenToWorld({ targetFirst.position.x,targetFirst.position.y })
+		, &normalShotCount, isNormalShot);
 
 	//ロックオンモードに切り替え
 	if (input->Mouse_LeftPush() && isHomingMissile)
