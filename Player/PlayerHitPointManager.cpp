@@ -45,6 +45,7 @@ void PlayerHitPointManager::Damage(int damage)
 
 void PlayerHitPointManager::reSet()
 {
+	isAlive = true;
 	isDangerHP = false;
 	isArmor = false;
 	playerHP = maxHP;
