@@ -34,7 +34,7 @@ void checkHitManager::checkPlayerEnemys(Player* player, list<unique_ptr<Enemy>>*
 }
 
 // プレイヤーの通常弾と敵本体の当たり判定(単体)
-void checkHitManager::checkBulletEnemy(bullet* bullet, Enemy* enemy)
+void checkHitManager::checkBulletEnemy(NormalBullet* bullet, Enemy* enemy)
 {
 	if (enemy->isAlive == false || bullet->isAlive == false)
 	{
@@ -56,7 +56,7 @@ void checkHitManager::checkBulletEnemy(bullet* bullet, Enemy* enemy)
 }
 
 // プレイヤーの通常弾と敵本体の当たり判定(ボス)
-void checkHitManager::checkBulletsEnemy(list<unique_ptr<bullet>>* bulletsList, Enemy* enemy)
+void checkHitManager::checkBulletsEnemy(list<unique_ptr<NormalBullet>>* bulletsList, Enemy* enemy)
 {
 	if (enemy->isAlive == false)
 	{
@@ -68,16 +68,16 @@ void checkHitManager::checkBulletsEnemy(list<unique_ptr<bullet>>* bulletsList, E
 		return;
 	}
 
-	for (std::unique_ptr<bullet>& newbullet : *bulletsList)
+	for (std::unique_ptr<NormalBullet>& newbullet : *bulletsList)
 	{
 		checkBulletEnemy(newbullet.get(), enemy);
 	}
 }
 
 // プレイヤーの通常弾と敵本体の当たり判定(群れ)
-void checkHitManager::checkBulletsEnemys(list<unique_ptr<bullet>>* bulletsList, list<unique_ptr<Enemy>>* enemys)
+void checkHitManager::checkBulletsEnemys(list<unique_ptr<NormalBullet>>* bulletsList, list<unique_ptr<Enemy>>* enemys)
 {
-	for (std::unique_ptr<bullet>& newbullet : *bulletsList)
+	for (std::unique_ptr<NormalBullet>& newbullet : *bulletsList)
 	{
 		for (std::unique_ptr<Enemy>& newenemy : *enemys)
 		{
@@ -125,14 +125,14 @@ void checkHitManager::checkMissilesEnemy(list<unique_ptr<Missile>>* missilesList
 }
 
 // プレイヤーの通常弾と敵の乱射弾の当たり判定(単体同士)
-void checkHitManager::checkBulletEnemyRampage(bullet* playerbullet, enemyBullet* rampagebullet)
+void checkHitManager::checkBulletEnemyRampage(NormalBullet* playerbullet, NormalBullet* rampagebullet)
 {
 	if (rampagebullet == nullptr)
 	{
 		return;
 	}
 
-	if (rampagebullet->isBulletArive() == false)
+	if (rampagebullet->isAlive == false)
 	{
 		return;
 	}
@@ -148,16 +148,16 @@ void checkHitManager::checkBulletEnemyRampage(bullet* playerbullet, enemyBullet*
 		playerbullet->isAlive = false;
 
 		rampagebullet->isAlive = false;
-		rampagebullet->ariveTime = 0;
+		rampagebullet->count = 0;
 	}
 }
 
 // プレイヤーの通常弾と敵の乱射弾の当たり判定(list同士)
-void checkHitManager::checkBulletsEnemyRampage(list<unique_ptr<bullet>>* bulletsList, Enemy* enemy)
+void checkHitManager::checkBulletsEnemyRampage(list<unique_ptr<NormalBullet>>* bulletsList, Enemy* enemy)
 {
-	for (std::unique_ptr<bullet>& newbullet : *bulletsList)
+	for (std::unique_ptr<NormalBullet>& newbullet : *bulletsList)
 	{
-		for (std::unique_ptr<enemyBullet>& enemybullet : enemy->Bullets)
+		for (std::unique_ptr<NormalBullet>& enemybullet : enemy->normalBullets)
 		{
 			checkBulletEnemyRampage(newbullet.get(), enemybullet.get());
 		}
@@ -165,14 +165,14 @@ void checkHitManager::checkBulletsEnemyRampage(list<unique_ptr<bullet>>* bullets
 }
 
 // プレイヤー本体と敵の乱射弾の当たり判定(単体)
-void checkHitManager::checkPlayerEnemyRampage(Player* player, enemyBullet* rampagebullet)
+void checkHitManager::checkPlayerEnemyRampage(Player* player, NormalBullet* rampagebullet)
 {
 	if (rampagebullet == nullptr)
 	{
 		return;
 	}
 
-	if (rampagebullet->isBulletArive() == false)
+	if (rampagebullet->isAlive == false)
 	{
 		return;
 	}
@@ -182,18 +182,18 @@ void checkHitManager::checkPlayerEnemyRampage(Player* player, enemyBullet* rampa
 		return;
 	}
 
-	if (Collision::checkSphere2Sphere(player->playerCollision, rampagebullet->getCollision()))
+	if (Collision::checkSphere2Sphere(player->playerCollision, rampagebullet->bulletCollision))
 	{
 		player->hitPointManager.Damage(1);
 		rampagebullet->isAlive = false;
-		rampagebullet->ariveTime = 0;
+		rampagebullet->count = 0;
 	}
 }
 
 // プレイヤー本体と敵の乱射弾の当たり判定(リスト)
 void checkHitManager::checkPlayerEnemyRampages(Player* player, Enemy* enemy)
 {
-	for (std::unique_ptr<enemyBullet>& bullet : enemy->Bullets)
+	for (std::unique_ptr<NormalBullet>& bullet : enemy->normalBullets)
 	{
 		checkPlayerEnemyRampage(player, bullet.get());
 	}

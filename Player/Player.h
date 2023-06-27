@@ -141,9 +141,6 @@ public:
 	int moveParticlesCount = 0;
 
 	//’e
-	std::list<std::unique_ptr<bullet>> bulletsList;
-	std::list<std::unique_ptr<Missile>> missilesList;
-
 	std::unique_ptr<BulletManager> bulletManager;
 
 	//“ü—Í

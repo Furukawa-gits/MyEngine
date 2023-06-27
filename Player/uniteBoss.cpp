@@ -71,12 +71,12 @@ void uniteParts::partsUpdata()
 	partsArrival();
 
 	//弾の更新
-	Bullets.remove_if([](std::unique_ptr<enemyBullet>& bullet)
+	normalBullets.remove_if([](std::unique_ptr<NormalBullet>& bullet)
 		{
-			return bullet->isBulletArive() == false;
+			return bullet->isAlive == false;
 		});
 
-	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
+	for (std::unique_ptr<NormalBullet>& bullet : normalBullets)
 	{
 		bullet->updata();
 	}
@@ -285,7 +285,7 @@ void uniteParts::partsAriveMove()
 #pragma endregion 爆発パーティクル生成
 
 		//弾も消す
-		Bullets.clear();
+		normalBullets.clear();
 	}
 
 	//当たり判定更新
@@ -339,9 +339,7 @@ void uniteParts::partsDeathMove()
 void uniteParts::partsShotBullet(XMFLOAT3 targetposition)
 {
 	//弾の発射
-	std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
-	newBullet->init();
-	newBullet->set(targetposition, this->position);
+	std::unique_ptr<NormalBullet> newBullet = std::make_unique<NormalBullet>();
 
 	std::random_device seed;
 	std::mt19937 rnd(seed());
@@ -350,14 +348,15 @@ void uniteParts::partsShotBullet(XMFLOAT3 targetposition)
 	std::uint32_t greenResult = rnd();
 	std::uint32_t blueResult = rnd();
 
-	newBullet->motherParticle->color =
-	{
+	newBullet->init({
 		(float)(redResult % 10) / 10,
 		(float)(greenResult % 10) / 10,
 		(float)(blueResult % 10) / 10,
 		1
-	};
-	Bullets.push_back(std::move(newBullet));
+		});
+	newBullet->set(targetposition, this->position);
+
+	normalBullets.push_back(std::move(newBullet));
 }
 
 void uniteParts::partsSet(XMFLOAT3 position, float theta, float phi)
@@ -376,7 +375,7 @@ void uniteParts::partsSet(XMFLOAT3 position, float theta, float phi)
 	waitCount = 0;
 	rampageWaitCount = 0;
 	nextShotTime = 0;
-	Bullets.clear();
+	normalBullets.clear();
 
 	this->position =
 	{
@@ -755,7 +754,7 @@ void uniteBoss::uniteBossAriveMove()
 		parts->partsUpdata();
 		if (!parts->isAlive)
 		{
-			parts->Bullets.clear();
+			parts->normalBullets.clear();
 		}
 	}
 
@@ -775,7 +774,7 @@ void uniteBoss::uniteBossAriveMove()
 		CameraAngleSpeed = 0.0f;
 
 		//弾も消す
-		Bullets.clear();
+		normalBullets.clear();
 	}
 
 	uniteBossSpriteUpdata();
@@ -892,7 +891,7 @@ void uniteBoss::uniteBossSet()
 	maxBulletCount = 10;
 	isRampageWait = true;
 	rampageWaitCount = 0;
-	Bullets.clear();
+	normalBullets.clear();
 
 	HP = resetHitPoint;
 	arrivalTime = 300;

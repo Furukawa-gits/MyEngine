@@ -1,5 +1,6 @@
 #pragma once
-#include"Bullets.h"
+#include"HomingMissile.h"
+#include"NormalBullet.h"
 
 class BulletManager
 {
@@ -11,7 +12,7 @@ public:
 
 	void updata();
 
-	void addBullet(XMFLOAT3 start, XMFLOAT3 target, int* shotcount, bool& shotflag);
+	void addBullet(XMFLOAT3 start, XMFLOAT3 target, int& shotcount, bool& shotflag);
 
 	void addMissile(Enemy* enemy, int& targetnum, XMFLOAT3 start);
 
@@ -19,11 +20,11 @@ public:
 
 	void draw(directX* directx);
 
-	std::list<std::unique_ptr<bullet>>* getBullet() { return &bulletsList; }
+	std::list<std::unique_ptr<NormalBullet>>* getNormalBullet() { return &normalBulletsList; }
 	std::list<std::unique_ptr<Missile>>* getMissile() { return &missilesList; }
 
 public:
-	std::list<std::unique_ptr<bullet>> bulletsList;
+	std::list<std::unique_ptr<NormalBullet>> normalBulletsList;
 	std::list<std::unique_ptr<Missile>> missilesList;
 
 private:

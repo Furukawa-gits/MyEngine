@@ -8,21 +8,21 @@ BulletManager::BulletManager()
 
 BulletManager::~BulletManager()
 {
-	bulletsList.clear();
+	normalBulletsList.clear();
 	missilesList.clear();
 }
 
 void BulletManager::init(dxinput* input)
 {
 	this->input = input;
-	bulletsList.clear();
+	normalBulletsList.clear();
 	missilesList.clear();
 }
 
 void BulletManager::updata()
 {
 	//死んだ弾は削除
-	bulletsList.remove_if([](std::unique_ptr<bullet>& newbullet)
+	normalBulletsList.remove_if([](std::unique_ptr<NormalBullet>& newbullet)
 		{
 			return newbullet->isAlive == false;
 		});
@@ -38,9 +38,9 @@ void BulletManager::updata()
 		});
 
 	//通常弾の更新(ユニークリスト)
-	for (std::unique_ptr<bullet>& bullet : bulletsList)
+	for (std::unique_ptr<NormalBullet>& bullet : normalBulletsList)
 	{
-		bullet->update();
+		bullet->updata();
 	}
 
 	//ミサイルの更新(ユニークリスト)
@@ -50,7 +50,7 @@ void BulletManager::updata()
 	}
 }
 
-void BulletManager::addBullet(XMFLOAT3 start, XMFLOAT3 target, int* shotcount, bool& shotflag)
+void BulletManager::addBullet(XMFLOAT3 start, XMFLOAT3 target, int& shotcount, bool& shotflag)
 {
 	if (!input->Mouse_LeftTriger() || !shotflag)
 	{
@@ -58,11 +58,11 @@ void BulletManager::addBullet(XMFLOAT3 start, XMFLOAT3 target, int* shotcount, b
 	}
 
 	//リスト化
-	std::unique_ptr<bullet> newBullet = std::make_unique<bullet>();
-	newBullet->init();
+	std::unique_ptr<NormalBullet> newBullet = std::make_unique<NormalBullet>();
+	newBullet->init({ 0,1,0,1 });
 	newBullet->set(start, target);
 
-	bulletsList.push_back(std::move(newBullet));
+	normalBulletsList.push_back(std::move(newBullet));
 
 	shotcount++;
 }
@@ -85,7 +85,7 @@ void BulletManager::resetParam()
 void BulletManager::draw(directX* directx)
 {
 	//通常弾の描画(ユニークリスト)
-	for (std::unique_ptr<bullet>& bullet : bulletsList)
+	for (std::unique_ptr<NormalBullet>& bullet : normalBulletsList)
 	{
 		bullet->draw(directx);
 	}

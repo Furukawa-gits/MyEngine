@@ -122,9 +122,10 @@
     <ClInclude Include="Particle\particleManagerOnTime.h" />
     <ClInclude Include="Player\Boss.h" />
     <ClInclude Include="Player\BulletManager.h" />
-    <ClInclude Include="Player\Bullets.h" />
+    <ClInclude Include="Player\HomingMissile.h" />
     <ClInclude Include="Player\CheckHItManager.h" />
     <ClInclude Include="Player\Enemy.h" />
+    <ClInclude Include="Player\NormalBullet.h" />
     <ClInclude Include="Player\Player.h" />
     <ClInclude Include="Player\PlayerHitPointManager.h" />
     <ClInclude Include="Player\primitiveEnemy.h" />
@@ -165,9 +166,10 @@
     <ClCompile Include="Particle\particleManagerOnTime.cpp" />
     <ClCompile Include="Player\Boss.cpp" />
     <ClCompile Include="Player\BulletManager.cpp" />
-    <ClCompile Include="Player\Bullets.cpp" />
+    <ClCompile Include="Player\HomingMissile.cpp" />
     <ClCompile Include="Player\CheckHItManager.cpp" />
     <ClCompile Include="Player\Enemy.cpp" />
+    <ClCompile Include="Player\NormalBullet.cpp" />
     <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="Player\PlayerHitPointManager.cpp" />
     <ClCompile Include="Player\primitiveEnemy.cpp" />

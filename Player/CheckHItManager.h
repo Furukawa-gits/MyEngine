@@ -5,7 +5,7 @@
 #include<math.h>
 #include"Player.h"
 #include"Enemy.h"
-#include"Bullets.h"
+#include"HomingMissile.h"
 #include"uniteBoss.h"
 
 using namespace std;
@@ -43,21 +43,21 @@ public:
 	/// </summary>
 	/// <param name="bullet">プレイヤーの通常弾</param>
 	/// <param name="enemy">敵(単体)</param>
-	static void checkBulletEnemy(bullet* bullet, Enemy* enemy);
+	static void checkBulletEnemy(NormalBullet* bullet, Enemy* enemy);
 
 	/// <summary>
 	/// プレイヤーの通常弾と敵の当たり判定(ボス)
 	/// </summary>
 	/// <param name="bulletsList">プレイヤーの通常弾</param>
 	/// <param name="enemy">敵(単体)</param>
-	static void checkBulletsEnemy(list<unique_ptr<bullet>>* bulletsList, Enemy* enemy);
+	static void checkBulletsEnemy(list<unique_ptr<NormalBullet>>* bulletsList, Enemy* enemy);
 
 	/// <summary>
 	/// プレイヤーの通常弾と敵本体の当たり判定(群れ)
 	/// </summary>
 	/// <param name="bulletsList">プレイヤーの通常弾</param>
 	/// <param name="enemys">敵(群れ)</param>
-	static void checkBulletsEnemys(list<unique_ptr<bullet>>* bulletsList, list<unique_ptr<Enemy>>* enemys);
+	static void checkBulletsEnemys(list<unique_ptr<NormalBullet>>* bulletsList, list<unique_ptr<Enemy>>* enemys);
 #pragma endregion 
 
 #pragma region プレイヤーの追尾弾と敵本体の当たり判定
@@ -74,14 +74,14 @@ public:
 	/// </summary>
 	/// <param name="playerbullet">プレイヤーの通常弾(単体)</param>
 	/// <param name="rampagebullet">敵の乱射弾(単体)</param>
-	static void checkBulletEnemyRampage(bullet* playerbullet,enemyBullet* rampagebullet);
+	static void checkBulletEnemyRampage(NormalBullet* playerbullet,NormalBullet* rampagebullet);
 
 	/// <summary>
 	/// プレイヤーの通常弾と敵の乱射弾の当たり判定(list同士)
 	/// </summary>
 	/// <param name="bulletsList">プレイヤーの通常弾(list)</param>
 	/// <param name="rampagebullets">敵の乱射弾(list)</param>
-	static void checkBulletsEnemyRampage(list<unique_ptr<bullet>>* bulletsList, Enemy *enemy);
+	static void checkBulletsEnemyRampage(list<unique_ptr<NormalBullet>>* bulletsList, Enemy *enemy);
 #pragma endregion
 
 #pragma region プレイヤー本体と敵の乱射弾の当たり判定
@@ -90,7 +90,7 @@ public:
 	/// </summary>
 	/// <param name="player">プレイヤー本体</param>
 	/// <param name="rampagebullet">敵の乱射弾</param>
-	static void checkPlayerEnemyRampage(Player* player, enemyBullet* rampagebullet);
+	static void checkPlayerEnemyRampage(Player* player, NormalBullet* rampagebullet);
 
 	/// <summary>
 	/// プレイヤー本体と敵の乱射弾の当たり判定(リスト)

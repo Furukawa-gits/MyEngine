@@ -57,7 +57,7 @@
     <ClInclude Include="Player\Player.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Player\Bullets.h">
+    <ClInclude Include="Player\HomingMissile.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Player\Enemy.h">
@@ -138,6 +138,9 @@
     <ClInclude Include="Player\PlayerHitPointManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Player\NormalBullet.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base\DirectX_Base.cpp">
@@ -185,7 +188,7 @@
     <ClCompile Include="Player\Player.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Player\Bullets.cpp">
+    <ClCompile Include="Player\HomingMissile.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Player\Enemy.cpp">
@@ -261,6 +264,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Player\PlayerHitPointManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Player\NormalBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

@@ -27,8 +27,6 @@ void Enemy::staticInit()
 
 	SingleParticle::loadTexInMap("bomb.png");
 	SingleParticle::loadTexInMap("smoke.png");
-
-	enemyBullet::staticInit();
 }
 
 void Enemy::staticUpdata(XMFLOAT3 playerpos, XMFLOAT3 playerfront, bool playerisarive)
@@ -99,7 +97,7 @@ void Enemy::set(XMFLOAT3 pos)
 	bulletCount = 0;
 	isRampageWait = true;
 	rampageWaitCount = 0;
-	Bullets.clear();
+	normalBullets.clear();
 
 	isAppear = true;
 }
@@ -234,12 +232,12 @@ void Enemy::shot()
 		return;
 	}
 
-	Bullets.remove_if([](std::unique_ptr<enemyBullet>& bullet)
+	normalBullets.remove_if([](std::unique_ptr<NormalBullet>& bullet)
 		{
-			return bullet->isBulletArive() == false;
+			return bullet->isAlive == false;
 		});
 
-	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
+	for (std::unique_ptr<NormalBullet>& bullet : normalBullets)
 	{
 		bullet->updata();
 	}
@@ -280,8 +278,8 @@ void Enemy::shot()
 	//弾を撃つ
 	if (isShot)
 	{
-		std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
-		newBullet->init();
+		std::unique_ptr<NormalBullet> newBullet = std::make_unique<NormalBullet>();
+		newBullet->init({ 1,0,0,1 });
 
 		XMFLOAT3 rampageTargetPos =
 		{
@@ -291,7 +289,7 @@ void Enemy::shot()
 		};
 
 		newBullet->set(rampageTargetPos, this->position);
-		Bullets.push_back(std::move(newBullet));
+		normalBullets.push_back(std::move(newBullet));
 
 		nextShotTime = 0;
 		isShot = false;
@@ -311,12 +309,12 @@ void Enemy::homing()
 	}
 
 	//弾の更新
-	Bullets.remove_if([](std::unique_ptr<enemyBullet>& bullet)
+	normalBullets.remove_if([](std::unique_ptr<NormalBullet>& bullet)
 		{
-			return bullet->isBulletArive() == false;
+			return bullet->isAlive == false;
 		});
 
-	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
+	for (std::unique_ptr<NormalBullet>& bullet : normalBullets)
 	{
 		bullet->updata();
 	}
@@ -351,8 +349,8 @@ void Enemy::homing()
 
 	if (isShot)
 	{
-		std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
-		newBullet->init();
+		std::unique_ptr<NormalBullet> newBullet = std::make_unique<NormalBullet>();
+		newBullet->init({ 1,0,0,1 });
 
 		XMFLOAT3 rampageTargetPos =
 		{
@@ -362,7 +360,7 @@ void Enemy::homing()
 		};
 
 		newBullet->set(rampageTargetPos, this->position);
-		Bullets.push_back(std::move(newBullet));
+		normalBullets.push_back(std::move(newBullet));
 
 		nextShotTime = 0;
 		isShot = false;
@@ -430,12 +428,12 @@ void Enemy::rampage()
 		return;
 	}
 
-	Bullets.remove_if([](std::unique_ptr<enemyBullet>& bullet)
+	normalBullets.remove_if([](std::unique_ptr<NormalBullet>& bullet)
 		{
-			return bullet->isBulletArive() == false;
+			return bullet->isAlive == false;
 		});
 
-	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
+	for (std::unique_ptr<NormalBullet>& bullet : normalBullets)
 	{
 		bullet->updata();
 	}
@@ -455,8 +453,8 @@ void Enemy::rampage()
 
 	if (nextBulletTime % 10 == 0)
 	{
-		std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
-		newBullet->init();
+		std::unique_ptr<NormalBullet> newBullet = std::make_unique<NormalBullet>();
+		newBullet->init({ 1,0,0,1 });
 
 		XMFLOAT3 rampageTargetPos =
 		{
@@ -466,7 +464,7 @@ void Enemy::rampage()
 		};
 
 		newBullet->set(rampageTargetPos, this->position);
-		Bullets.push_back(std::move(newBullet));
+		normalBullets.push_back(std::move(newBullet));
 
 		bulletCount++;
 	}
@@ -696,7 +694,7 @@ void Enemy::ariveMove()
 #pragma endregion 爆発パーティクル生成
 
 		//弾も消す
-		Bullets.clear();
+		normalBullets.clear();
 	}
 
 	enemyObject->SetPosition(position);
@@ -762,7 +760,7 @@ void Enemy::draw3D(directX* directx)
 
 	enemyObject->Draw(directx->cmdList.Get());
 
-	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
+	for (std::unique_ptr<NormalBullet>& bullet : normalBullets)
 	{
 		bullet->draw(directx);
 	}
@@ -807,107 +805,5 @@ void Enemy::drawMiniMapIcon(directX* directx)
 	miniMapEnemy.drawSprite(directx->cmdList.Get());
 
 	enemyHeight.drawSprite(directx->cmdList.Get());
-}
-#pragma endregion
-
-#pragma region 敵の弾
-enemyBullet::enemyBullet()
-{
-}
-
-enemyBullet::~enemyBullet()
-{
-}
-
-void enemyBullet::staticInit()
-{
-}
-
-void enemyBullet::staticDestroy()
-{
-}
-
-void enemyBullet::init()
-{
-	//親パーティクル生成
-	motherParticle = std::make_unique<SingleParticle>();
-	motherParticle->generate();
-	motherParticle->set(0, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 3.0f, 0.0f, false, true);
-	motherParticle->color = { 1,0,0,1 };
-
-	bulletCollision.radius = 0.3f;
-}
-
-void enemyBullet::set(XMFLOAT3 playerpos, XMFLOAT3 shotpos)
-{
-	position = shotpos;
-
-	XMFLOAT3 startToTarget =
-	{
-		playerpos.x - shotpos.x,
-		playerpos.y - shotpos.y,
-		playerpos.z - shotpos.z
-	};
-
-	float length = sqrtf(powf(startToTarget.x, 2) + powf(startToTarget.y, 2) + powf(startToTarget.z, 2));
-
-	bulletVec =
-	{
-		startToTarget.x / length,
-		startToTarget.y / length,
-		startToTarget.z / length
-	};
-
-	ariveTime = 0;
-	isAlive = true;
-}
-
-void enemyBullet::updata()
-{
-	if (!isAlive)
-	{
-		return;
-	}
-
-	ariveTime++;
-
-	position.x += bulletVec.x * bulletSpeed;
-	position.y += bulletVec.y * bulletSpeed;
-	position.z += bulletVec.z * bulletSpeed;
-
-	//一定フレームごとにパーティクルを生成
-	if (ariveTime % 10 == 0)
-	{
-		SingleParticle newParticle;
-		newParticle.generate();
-		newParticle.set(20, position, { 0,0,0 }, { 0,0,0 }, 2.0f, 0.0f);
-		newParticle.color = motherParticle->color;
-		newParticle.isAddBlend = true;
-		particleManagerOnTime::addParticle(newParticle, "effect1.png");
-	}
-
-	//本体パーティクル更新
-	motherParticle->setPosition(position);
-	motherParticle->updata();
-
-	bulletCollision.center = XMLoadFloat3(&position);
-
-	if (ariveTime >= maxAriveTime)
-	{
-		motherParticle->setIsActive(false);
-		isAlive = false;
-		ariveTime = 0;
-	}
-}
-
-void enemyBullet::draw(directX* directx)
-{
-	if (!isAlive)
-	{
-		return;
-	}
-
-	motherParticle->setPiplineAddBlend();
-	motherParticle->drawSpecifyTex("effect1.png");
 }
 #pragma endregion

@@ -12,12 +12,10 @@ Player::~Player()
 {
 	delete(playerObject);
 	delete(followCamera);
-	bulletsList.clear();
-	missilesList.clear();
 
 	bulletManager.release();
 
-	bullet::staticDestroy();
+	NormalBullet::staticDestroy();
 	Missile::staticDestroy();
 }
 
@@ -50,7 +48,7 @@ void Player::init(dxinput* input, directX* directx)
 
 	object3dFBX::SetCamera(followCamera);
 
-	bullet::staticInit();
+	NormalBullet::staticInit();
 	Missile::staticInit();
 
 	bulletManager = std::make_unique<BulletManager>();
@@ -549,18 +547,6 @@ void Player::updata()
 	{
 		setStaging(false);
 	}
-
-	//通常弾の更新(ユニークリスト)
-	for (std::unique_ptr<bullet>& bullet : bulletsList)
-	{
-		bullet->update();
-	}
-
-	//ミサイルの更新(ユニークリスト)
-	for (std::unique_ptr<Missile>& missile : missilesList)
-	{
-		missile->update();
-	}
 }
 
 void Player::targetUpdata()
@@ -645,7 +631,7 @@ void Player::targetUpdata()
 	//左クリックで通常弾
 	bulletManager->addBullet(playerObject->getPosition(),
 		playerObject->screenToWorld({ targetFirst.position.x,targetFirst.position.y })
-		, &normalShotCount, isNormalShot);
+		, normalShotCount, isNormalShot);
 
 	//ロックオンモードに切り替え
 	if (input->Mouse_LeftPush() && isHomingMissile)

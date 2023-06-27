@@ -130,5 +130,4 @@ void primitiveScene::finalize()
 	enemyList.clear();
 
 	Enemy::staticDestroy();
-	enemyBullet::staticDestroy();
 }

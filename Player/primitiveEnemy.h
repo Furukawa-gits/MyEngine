@@ -4,60 +4,10 @@
 #include"../FbxLoder/Object3d_FBX.h"
 #include"../Base/DirectX_Base.h"
 #include"../Particle/particleManagerOnTime.h"
+#include"NormalBullet.h"
 
 #include<memory>
 #include<list>
-
-//敵の弾
-class enemyBullet
-{
-public:
-	enemyBullet();
-	~enemyBullet();
-
-	void init();
-
-	void set(XMFLOAT3 playerpos, XMFLOAT3 shotpos);
-
-	void updata();
-
-	void draw(directX* directx);
-
-	bool isBulletArive()
-	{
-		return isAlive;
-	}
-
-	Sphere getCollision()
-	{
-		return bulletCollision;
-	}
-
-	//生存フラグ
-	bool isAlive = false;
-
-	//生存時間
-	int ariveTime = 0;
-
-	const int maxAriveTime = 200;
-
-	//当たり判定
-	Sphere bulletCollision;
-
-
-	/// <summary>
-	/// 弾の本体となるパーティクル
-	/// <para>弾の生存に依存するのでこいつは時間経過で消えない</para>
-	/// </summary>
-	std::unique_ptr<SingleParticle> motherParticle;
-
-private:
-	//座標・方向・弾速
-	XMFLOAT3 position = {};
-	XMFLOAT3 bulletVec = {};
-	float bulletSpeed = 0.9f;
-	XMFLOAT3 rot = {};
-};
 
 enum class enemyType
 {
@@ -144,5 +94,5 @@ public:
 	//敵の行動パターン
 	enemyType enemyMovePattern = enemyType::tutorial;
 	//弾
-	std::list<std::unique_ptr<enemyBullet>> Bullets;
+	std::list<std::unique_ptr<NormalBullet>> Bullets;
 };

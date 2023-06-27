@@ -526,25 +526,25 @@ void playScene::checkHitEverything()
 	{
 		checkHitManager::checkPlayerEnemy(playerPointer.get(), newenemy.get());
 		checkHitManager::checkPlayerEnemyRampages(playerPointer.get(), newenemy.get());
-		checkHitManager::checkBulletsEnemyRampage(playerPointer->bulletManager->getBullet(), newenemy.get());
+		checkHitManager::checkBulletsEnemyRampage(playerPointer->bulletManager->getNormalBullet(), newenemy.get());
 	}
 
 	//敵がロックオンされているかどうか
 	checkHitPlayerTarget();
 
 	//プレイヤーの通常弾当たり判定
-	checkHitManager::checkBulletsEnemys(playerPointer->bulletManager->getBullet(), &enemyList);
+	checkHitManager::checkBulletsEnemys(playerPointer->bulletManager->getNormalBullet(), &enemyList);
 
 	//通常弾とボスの当たり判定
-	checkHitManager::checkBulletsEnemy(playerPointer->bulletManager->getBullet(), normalBoss.get());
+	checkHitManager::checkBulletsEnemy(playerPointer->bulletManager->getNormalBullet(), normalBoss.get());
 
 	//通常弾とユニットボス本体の当たり判定
-	checkHitManager::checkBulletsEnemy(playerPointer->bulletManager->getBullet(), UniteBoss.get());
+	checkHitManager::checkBulletsEnemy(playerPointer->bulletManager->getNormalBullet(), UniteBoss.get());
 
 	//パーツの当たり判定
 	for (std::unique_ptr<uniteParts>& newparts : UniteBoss->partsList)
 	{
-		checkHitManager::checkBulletsEnemy(playerPointer->bulletManager->getBullet(), newparts.get());
+		checkHitManager::checkBulletsEnemy(playerPointer->bulletManager->getNormalBullet(), newparts.get());
 	}
 
 	//プレイヤーとボスの当たり判定
@@ -552,7 +552,7 @@ void playScene::checkHitEverything()
 	{
 		checkHitManager::checkPlayerEnemy(playerPointer.get(), normalBoss.get());
 		checkHitManager::checkPlayerEnemyRampages(playerPointer.get(), normalBoss.get());
-		checkHitManager::checkBulletsEnemyRampage(playerPointer->bulletManager->getBullet(), normalBoss.get());
+		checkHitManager::checkBulletsEnemyRampage(playerPointer->bulletManager->getNormalBullet(), normalBoss.get());
 	}
 
 	//ユニットボス本体との当たり判定
@@ -563,7 +563,7 @@ void playScene::checkHitEverything()
 		for (std::unique_ptr<uniteParts>& newparts : UniteBoss->partsList)
 		{
 			checkHitManager::checkPlayerEnemyRampages(playerPointer.get(), newparts.get());
-			checkHitManager::checkBulletsEnemyRampage(playerPointer->bulletManager->getBullet(), newparts.get());
+			checkHitManager::checkBulletsEnemyRampage(playerPointer->bulletManager->getNormalBullet(), newparts.get());
 		}
 	}
 }

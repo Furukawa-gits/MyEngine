@@ -263,7 +263,7 @@ void Boss::bossSet(XMFLOAT3 pos)
 	maxBulletCount = 10;
 	isRampageWait = true;
 	rampageWaitCount = 0;
-	Bullets.clear();
+	normalBullets.clear();
 
 	HP = resetHitPoint;
 	arrivalTime = 300;
@@ -351,7 +351,7 @@ void Boss::bossAriveMove()
 		deathRotSpeed = 0.5f;
 
 		//íeÇ‡è¡Ç∑
-		Bullets.clear();
+		normalBullets.clear();
 	}
 
 	bossSpriteUpdata();
@@ -528,12 +528,12 @@ void Boss::bossShot()
 		return;
 	}
 
-	Bullets.remove_if([](std::unique_ptr<enemyBullet>& bullet)
+	normalBullets.remove_if([](std::unique_ptr<NormalBullet>& bullet)
 		{
-			return bullet->isBulletArive() == false;
+			return bullet->isAlive == false;
 		});
 
-	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
+	for (std::unique_ptr<NormalBullet>& bullet : normalBullets)
 	{
 		bullet->updata();
 	}
@@ -570,8 +570,8 @@ void Boss::bossShot()
 
 	if (isShot)
 	{
-		std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
-		newBullet->init();
+		std::unique_ptr<NormalBullet> newBullet = std::make_unique<NormalBullet>();
+		newBullet->init({ 1,0,0,1 });
 
 		XMFLOAT3 rampageTargetPos =
 		{
@@ -581,7 +581,7 @@ void Boss::bossShot()
 		};
 
 		newBullet->set(rampageTargetPos, this->position);
-		Bullets.push_back(std::move(newBullet));
+		normalBullets.push_back(std::move(newBullet));
 
 		nextShotTime = 0;
 		isShot = false;
@@ -606,12 +606,12 @@ void Boss::bossHoming()
 	}
 
 	//íeÇÃçXêV
-	Bullets.remove_if([](std::unique_ptr<enemyBullet>& bullet)
+	normalBullets.remove_if([](std::unique_ptr<NormalBullet>& bullet)
 		{
-			return bullet->isBulletArive() == false;
+			return bullet->isAlive == false;
 		});
 
-	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
+	for (std::unique_ptr<NormalBullet>& bullet : normalBullets)
 	{
 		bullet->updata();
 	}
@@ -648,8 +648,8 @@ void Boss::bossHoming()
 
 	if (isShot)
 	{
-		std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
-		newBullet->init();
+		std::unique_ptr<NormalBullet> newBullet = std::make_unique<NormalBullet>();
+		newBullet->init({ 1,0,0,1 });
 
 		XMFLOAT3 rampageTargetPos =
 		{
@@ -659,7 +659,7 @@ void Boss::bossHoming()
 		};
 
 		newBullet->set(rampageTargetPos, this->position);
-		Bullets.push_back(std::move(newBullet));
+		normalBullets.push_back(std::move(newBullet));
 
 		nextShotTime = 0;
 		isShot = false;
@@ -729,12 +729,12 @@ void Boss::bossRampage()
 		return;
 	}
 
-	Bullets.remove_if([](std::unique_ptr<enemyBullet>& bullet)
+	normalBullets.remove_if([](std::unique_ptr<NormalBullet>& bullet)
 		{
-			return bullet->isBulletArive() == false;
+			return bullet->isAlive == false;
 		});
 
-	for (std::unique_ptr<enemyBullet>& bullet : Bullets)
+	for (std::unique_ptr<NormalBullet>& bullet : normalBullets)
 	{
 		bullet->updata();
 	}
@@ -754,18 +754,18 @@ void Boss::bossRampage()
 
 	if (nextBulletTime % 15 == 0)
 	{
-		std::unique_ptr<enemyBullet> newBullet = std::make_unique<enemyBullet>();
-		newBullet->init();
+		std::unique_ptr<NormalBullet> newBullet = std::make_unique<NormalBullet>();
+		newBullet->init({ 1,0,0,1 });
 
 		XMFLOAT3 rampageTargetPos =
 		{
-			playerPointer->getPlayerPos().x - (float)(rand() % 8 - 4),
-			playerPointer->getPlayerPos().y - (float)(rand() % 8 - 4),
-			playerPointer->getPlayerPos().z - (float)(rand() % 8 - 4)
+			playerPosition.x - (float)(rand() % 8 - 4),
+			playerPosition.y - (float)(rand() % 8 - 4),
+			playerPosition.z - (float)(rand() % 8 - 4)
 		};
 
 		newBullet->set(rampageTargetPos, this->position);
-		Bullets.push_back(std::move(newBullet));
+		normalBullets.push_back(std::move(newBullet));
 
 		bulletCount++;
 	}
