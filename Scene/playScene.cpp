@@ -84,6 +84,44 @@ void playScene::loadResources()
 	playerHeightIcon.anchorpoint = { 0.0f,0.5f };
 	playerHeightIcon.size = { 44,17 };
 	playerHeightIcon.generateSprite("playerHeightIcon.png");
+
+	//瓦礫
+	rubble01 = std::make_unique<Model>();
+	rubble02 = std::make_unique<Model>();
+	rubble01.reset(FbxLoader::GetInstance()->LoadmodelFromFile("stone_1"));
+	rubble02.reset(FbxLoader::GetInstance()->LoadmodelFromFile("stone_2"));
+
+	for (int i = 0; i < maxRubbleNum; i++)
+	{
+		std::random_device seed;
+		std::mt19937 rnd(seed());
+
+		int pat = rnd() % 2;
+
+		std::unique_ptr<object3dFBX> newRubble = std::make_unique<object3dFBX>();
+		newRubble->initialize();
+
+		int xPosResult = (rnd() % 400) - 200;
+		int zPosResult = (rnd() % 400) - 200;
+		int xRotResult = rnd() % 90;
+		int yRotResult = rnd() % 90;
+		int zRotResult = rnd() % 90;
+
+		newRubble->SetPosition({ (float)xPosResult,-170,(float)zPosResult });
+		newRubble->setRotMatrix((float)xRotResult, (float)yRotResult, (float)zRotResult);
+		newRubble->SetScale({ 0.1f,0.1f,0.1f });
+
+		if (pat == 0)
+		{
+			newRubble->SetModel(rubble01.get());
+			rubbles_1.push_back(std::move(newRubble));
+		}
+		else
+		{
+			newRubble->SetModel(rubble02.get());
+			rubbles_2.push_back(std::move(newRubble));
+		}
+	}
 }
 
 void playScene::initialize()
@@ -171,6 +209,17 @@ void playScene::updata()
 	skySphere2->updata();
 	skySphere3->setRotMatrix(0, 0, skyShpereRotY);
 	skySphere3->updata();
+
+	//瓦礫オブジェクト更新
+	for (std::unique_ptr<object3dFBX>& newrubble : rubbles_1)
+	{
+		newrubble->updata();
+	}
+
+	for (std::unique_ptr<object3dFBX>& newrubble : rubbles_2)
+	{
+		newrubble->updata();
+	}
 
 	//地面更新
 	groundPlane->updata();
@@ -347,8 +396,8 @@ void playScene::updata()
 		isNextScene = true;
 	}
 
-	if (!playerPointer->hitPointManager.getIsAlive() && 
-		!playerPointer->isOverStaging && 
+	if (!playerPointer->hitPointManager.getIsAlive() &&
+		!playerPointer->isOverStaging &&
 		playerPointer->hitPointManager.getPlayerHP() <= 0)
 	{
 		isClearOrOver = false;
@@ -363,8 +412,10 @@ void playScene::drawBack()
 
 void playScene::draw3D()
 {
+	//地面
 	groundPlane->Draw(directx->cmdList.Get());
 
+	//スカイドーム
 	if (stageNum < 2)
 	{
 		skySphere->Draw(directx->cmdList.Get());
@@ -376,6 +427,17 @@ void playScene::draw3D()
 	else
 	{
 		skySphere3->Draw(directx->cmdList.Get());
+	}
+
+	//瓦礫
+	for (std::unique_ptr<object3dFBX>& newrubble : rubbles_1)
+	{
+		newrubble->Draw(directx->cmdList.Get());
+	}
+
+	for (std::unique_ptr<object3dFBX>& newrubble : rubbles_2)
+	{
+		newrubble->Draw(directx->cmdList.Get());
 	}
 
 	//プレイヤー描画

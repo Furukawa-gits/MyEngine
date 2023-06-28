@@ -53,6 +53,15 @@ private:
 	//スカイドームの回転
 	float skyShpereRotY = 0.0002f;
 
+	//瓦礫リソース
+	std::unique_ptr<Model> rubble01;
+	std::unique_ptr<Model> rubble02;
+
+	const int maxRubbleNum = 20;
+
+	std::list<std::unique_ptr<object3dFBX>> rubbles_1;
+	std::list<std::unique_ptr<object3dFBX>> rubbles_2;
+
 	//演出用カメラ
 	std::unique_ptr<Camera> stagingCamera;
 
