@@ -354,8 +354,8 @@ void uniteParts::partsShotBullet(XMFLOAT3 targetposition)
 		(float)(blueResult % 10) / 10,
 		1
 		});
-	newBullet->set(this->position, targetposition);
 	newBullet->bulletSpeed = 0.9f;
+	newBullet->set(this->position, targetposition);
 
 	normalBullets.push_back(std::move(newBullet));
 }
