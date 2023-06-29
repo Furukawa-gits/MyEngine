@@ -27,6 +27,7 @@ void Enemy::staticInit()
 
 	SingleParticle::loadTexInMap("bomb.png");
 	SingleParticle::loadTexInMap("smoke.png");
+	SingleParticle::loadTexInMap("enemy_chip.png");
 }
 
 void Enemy::staticUpdata(XMFLOAT3 playerpos, XMFLOAT3 playerfront, bool playerisarive)
@@ -109,28 +110,30 @@ void Enemy::changePattern(enemyPattern pattern)
 	switch (enemyMovePattern)
 	{
 	case enemyPattern::tutorial:
-		enemyObject->setColor({ 1,1,1,1 });
+		bodyColor = { 1,1,1,1 };
 		break;
 
 	case enemyPattern::chase:
-		enemyObject->setColor({ 0.3f,1,0.3f,1 });
+		bodyColor = { 0.3f,1,0.3f,1 };
 		break;
 
 	case enemyPattern::shot:
-		enemyObject->setColor({ 0.2f,0.2f,1,1 });
+		bodyColor = { 0.2f,0.2f,1,1 };
 		break;
 
 	case enemyPattern::homing:
-		enemyObject->setColor({ 0,1,1,1 });
+		bodyColor = { 0,1,1,1 };
 		break;
 
 	case enemyPattern::rampage:
-		enemyObject->setColor({ 1,0.2f,0.2f,1 });
+		bodyColor = { 1,0.2f,0.2f,1 };
 		break;
 
 	default:
 		break;
 	}
+
+	enemyObject->setColor(bodyColor);
 }
 
 void Enemy::reSet()
@@ -288,7 +291,8 @@ void Enemy::shot()
 			playerPosition.z - (float)(rand() % 8 - 4)
 		};
 
-		newBullet->set(rampageTargetPos, this->position);
+		newBullet->bulletSpeed = 0.9f;
+		newBullet->set(this->position, rampageTargetPos);
 		normalBullets.push_back(std::move(newBullet));
 
 		nextShotTime = 0;
@@ -359,7 +363,8 @@ void Enemy::homing()
 			playerPosition.z - (float)(rand() % 8 - 4)
 		};
 
-		newBullet->set(rampageTargetPos, this->position);
+		newBullet->bulletSpeed = 0.9f;
+		newBullet->set(this->position, rampageTargetPos);
 		normalBullets.push_back(std::move(newBullet));
 
 		nextShotTime = 0;
@@ -463,7 +468,8 @@ void Enemy::rampage()
 			playerPosition.z - (float)(rand() % 8 - 4)
 		};
 
-		newBullet->set(rampageTargetPos, this->position);
+		newBullet->bulletSpeed = 0.5f;
+		newBullet->set(this->position, rampageTargetPos);
 		normalBullets.push_back(std::move(newBullet));
 
 		bulletCount++;
@@ -692,6 +698,25 @@ void Enemy::ariveMove()
 		newp.set(maxFallCount - 20, enemyObject->getPosition(), { 0,0,0 }, { 0,0,0 }, 0.2f, 10.0f);
 		particleManagerOnTime::addParticle(newp, "bomb.png");
 #pragma endregion 爆発パーティクル生成
+
+#pragma region 破片パーティクル生成
+		for (int i = 0; i < 7; i++)
+		{
+			std::random_device seed;
+			std::mt19937 rnd(seed());
+
+			std::uint32_t xVecResult = (rnd() % 10) - 5;
+			std::uint32_t zVecResult = (rnd() % 10) - 5;
+
+			SingleParticle newp;
+			newp.generate();
+			newp.color = bodyColor;
+			newp.set(maxFallCount - 30, enemyObject->getPosition(),
+				{ (float)xVecResult / 5,0.5f,(float)zVecResult / 5 },
+				{ 0,-0.01,0 }, 1.5f, 1.5f);
+			particleManagerOnTime::addParticle(newp, "enemy_chip.png");
+		}
+#pragma endregion 破片パーティクル生成
 
 		//弾も消す
 		normalBullets.clear();

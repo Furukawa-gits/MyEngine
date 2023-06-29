@@ -580,7 +580,8 @@ void Boss::bossShot()
 			playerPosition.z - (float)(rand() % 8 - 4)
 		};
 
-		newBullet->set(rampageTargetPos, this->position);
+		newBullet->bulletSpeed = 0.9f;
+		newBullet->set(this->position, rampageTargetPos);
 		normalBullets.push_back(std::move(newBullet));
 
 		nextShotTime = 0;
@@ -658,7 +659,8 @@ void Boss::bossHoming()
 			playerPosition.z - (float)(rand() % 8 - 4)
 		};
 
-		newBullet->set(rampageTargetPos, this->position);
+		newBullet->bulletSpeed = 0.9f;
+		newBullet->set(this->position, rampageTargetPos);
 		normalBullets.push_back(std::move(newBullet));
 
 		nextShotTime = 0;
@@ -764,7 +766,8 @@ void Boss::bossRampage()
 			playerPosition.z - (float)(rand() % 8 - 4)
 		};
 
-		newBullet->set(rampageTargetPos, this->position);
+		newBullet->bulletSpeed = 0.9f;
+		newBullet->set(this->position, rampageTargetPos);
 		normalBullets.push_back(std::move(newBullet));
 
 		bulletCount++;

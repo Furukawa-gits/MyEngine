@@ -163,6 +163,9 @@ public:
 	//登場演出フラグ
 	bool isAppear = false;
 
+	//色
+	XMFLOAT4 bodyColor = { 1,1,1,1 };
+
 	//座標・初期位置・スケール・速度・回転
 	XMFLOAT3 position = {};
 	XMFLOAT3 startPosition = {};
