@@ -1,14 +1,14 @@
-#include"ChaseEnemy.h"
+#include "ShotEnemy.h"
 
-ChaseEnemy::ChaseEnemy()
+ShotEnemy::ShotEnemy()
 {
 }
 
-ChaseEnemy::~ChaseEnemy()
+ShotEnemy::~ShotEnemy()
 {
 }
 
-void ChaseEnemy::init()
+void ShotEnemy::init()
 {
 	rockTarget = std::make_unique<SingleSprite>();
 	rockTarget->anchorpoint = { 0.5f,0.5f };
@@ -40,31 +40,28 @@ void ChaseEnemy::init()
 	enemyObject->SetModel(staticEnemyModel.get());
 	enemyObject->SetScale({ 1.0f,1.0f,1.0f });
 
-	myEnemyType = enemyType::chase;
+	myEnemyType = enemyType::shot;
 
-	bodyColor = { 0.3f,1,0.3f,1 };
+	bodyColor = { 0.2f,0.2f,1,1 };
 }
 
-void ChaseEnemy::set(XMFLOAT3 pos)
+void ShotEnemy::set(XMFLOAT3 pos)
 {
 	position = pos;
 	startPosition = pos;
 	enemyObject->SetPosition(pos);
 	isAlive = false;
 	isTargetSet = false;
-	chaseCount = 0;
-	waitCount = 0;
-	isChase = false;
-	isWait = true;
 	isDraw = true;
 	enemyArrivalTime = 100;
 	enemyArrivaCount = 0;
 	arrivalEase.set(easingType::easeOut, easingPattern::Quadratic, enemyArrivalTime, 500, 0);
+	normalBullets.clear();
 
 	isAppear = true;
 }
 
-void ChaseEnemy::updata()
+void ShotEnemy::updata()
 {
 	if (!isDraw)
 	{
@@ -129,7 +126,7 @@ void ChaseEnemy::updata()
 	return;
 }
 
-void ChaseEnemy::arrival()
+void ShotEnemy::arrival()
 {
 	if (!isAppear)
 	{
@@ -169,14 +166,14 @@ void ChaseEnemy::arrival()
 	}
 }
 
-void ChaseEnemy::ariveMove()
+void ShotEnemy::ariveMove()
 {
 	if (!isAlive || isAppear)
 	{
 		return;
 	}
 
-	chase();
+	shot();
 
 	//HPが0になったら消滅
 	if (HP <= 0)
@@ -222,7 +219,7 @@ void ChaseEnemy::ariveMove()
 	updataSprite();
 }
 
-void ChaseEnemy::deathMove()
+void ShotEnemy::deathMove()
 {
 	if (isAlive || isAppear)
 	{
@@ -255,7 +252,7 @@ void ChaseEnemy::deathMove()
 	}
 }
 
-void ChaseEnemy::updataSprite()
+void ShotEnemy::updataSprite()
 {
 	XMFLOAT2 targetPos = enemyObject->worldToScleen();
 
@@ -335,7 +332,7 @@ void ChaseEnemy::updataSprite()
 	enemyHeight->spriteUpdata();
 }
 
-void ChaseEnemy::draw3D()
+void ShotEnemy::draw3D()
 {
 	if (!isDraw)
 	{
@@ -353,9 +350,14 @@ void ChaseEnemy::draw3D()
 	}
 
 	enemyObject->Draw(directx->cmdList.Get());
+
+	for (std::unique_ptr<NormalBullet>& bullet : normalBullets)
+	{
+		bullet->draw(directx);
+	}
 }
 
-void ChaseEnemy::draw2D()
+void ShotEnemy::draw2D()
 {
 	if (!isAlive)
 	{
@@ -379,7 +381,7 @@ void ChaseEnemy::draw2D()
 	}
 }
 
-void ChaseEnemy::drawMiniMapIcon()
+void ShotEnemy::drawMiniMapIcon()
 {
 	if (!isAlive)
 	{
@@ -396,59 +398,74 @@ void ChaseEnemy::drawMiniMapIcon()
 	enemyHeight->drawSprite(directx->cmdList.Get());
 }
 
-void ChaseEnemy::chase()
+void ShotEnemy::shot()
 {
 	if (!playerIsAlive)
 	{
 		return;
 	}
 
-	//追跡
-	if (isChase)
-	{
-		//追尾カウント加算
-		chaseCount++;
-		enemySpeed = 0.35f;
-		if (chaseCount >= 1)
+	normalBullets.remove_if([](std::unique_ptr<NormalBullet>& bullet)
 		{
-			isChase = false;
-			chaseCount = 0;
-			isWait = true;
-		}
+			return bullet->isAlive == false;
+		});
+
+	for (std::unique_ptr<NormalBullet>& bullet : normalBullets)
+	{
+		bullet->updata();
 	}
 
-	//待機
-	if (isWait)
+	//射程範囲かどうかを計算
+	XMFLOAT3 startToTarget =
 	{
-		//待機カウント加算
-		waitCount++;
-		if (enemySpeed > 0.0f)
-		{
-			enemySpeed -= 0.01f;
-		}
-		if (waitCount >= 40)
-		{
-			isWait = false;
-			waitCount = 0;
-			isChase = true;
-		}
-	}
-
-	position = enemyObject->getPosition();
-	XMFLOAT3 dis =
-	{
-		playerPosition.x - position.x,
-		playerPosition.y - position.y,
-		playerPosition.z - position.z
+		playerPosition.x - this->position.x,
+		playerPosition.y - this->position.y,
+		playerPosition.z - this->position.z
 	};
 
-	float lengthDis = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
+	float length = sqrtf(powf(startToTarget.x, 2) + powf(startToTarget.y, 2) + powf(startToTarget.z, 2));
 
-	dis.x /= lengthDis;
-	dis.y /= lengthDis;
-	dis.z /= lengthDis;
+	if (length <= forPlayer / 2)
+	{
+		isInRange = true;
+	}
+	else
+	{
+		isInRange = false;
+	}
 
-	position.x += dis.x * enemySpeed;
-	position.y += dis.y * enemySpeed;
-	position.z += dis.z * enemySpeed;
+	//弾を撃っていないかつ射程範囲内なら射撃までのカウントダウンを進める
+	if (isInRange)
+	{
+		nextShotTime++;
+		scale += 0.005f;
+	}
+
+	//一定カウントごとに射撃フラグを立てる
+	if (nextShotTime >= 120)
+	{
+		scale = 1.0f;
+		isShot = true;
+	}
+
+	//弾を撃つ
+	if (isShot)
+	{
+		std::unique_ptr<NormalBullet> newBullet = std::make_unique<NormalBullet>();
+		newBullet->init({ 1,0,0,1 });
+
+		XMFLOAT3 rampageTargetPos =
+		{
+			playerPosition.x - (float)(rand() % 8 - 4),
+			playerPosition.y - (float)(rand() % 8 - 4),
+			playerPosition.z - (float)(rand() % 8 - 4)
+		};
+
+		newBullet->bulletSpeed = 0.9f;
+		newBullet->set(this->position, rampageTargetPos);
+		normalBullets.push_back(std::move(newBullet));
+
+		nextShotTime = 0;
+		isShot = false;
+	}
 }

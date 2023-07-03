@@ -1,14 +1,14 @@
-#include"ChaseEnemy.h"
+#include "RampageEnemy.h"
 
-ChaseEnemy::ChaseEnemy()
+RampageEnemy::RampageEnemy()
 {
 }
 
-ChaseEnemy::~ChaseEnemy()
+RampageEnemy::~RampageEnemy()
 {
 }
 
-void ChaseEnemy::init()
+void RampageEnemy::init()
 {
 	rockTarget = std::make_unique<SingleSprite>();
 	rockTarget->anchorpoint = { 0.5f,0.5f };
@@ -40,31 +40,32 @@ void ChaseEnemy::init()
 	enemyObject->SetModel(staticEnemyModel.get());
 	enemyObject->SetScale({ 1.0f,1.0f,1.0f });
 
-	myEnemyType = enemyType::chase;
+	myEnemyType = enemyType::rampage;
 
-	bodyColor = { 0.3f,1,0.3f,1 };
+	bodyColor = { 1,0.2f,0.2f,1 };
 }
 
-void ChaseEnemy::set(XMFLOAT3 pos)
+void RampageEnemy::set(XMFLOAT3 pos)
 {
 	position = pos;
 	startPosition = pos;
 	enemyObject->SetPosition(pos);
 	isAlive = false;
 	isTargetSet = false;
-	chaseCount = 0;
-	waitCount = 0;
-	isChase = false;
-	isWait = true;
 	isDraw = true;
 	enemyArrivalTime = 100;
 	enemyArrivaCount = 0;
 	arrivalEase.set(easingType::easeOut, easingPattern::Quadratic, enemyArrivalTime, 500, 0);
+	nextBulletTime = 0;
+	bulletCount = 0;
+	isRampageWait = true;
+	rampageWaitCount = 0;
+	normalBullets.clear();
 
 	isAppear = true;
 }
 
-void ChaseEnemy::updata()
+void RampageEnemy::updata()
 {
 	if (!isDraw)
 	{
@@ -129,7 +130,7 @@ void ChaseEnemy::updata()
 	return;
 }
 
-void ChaseEnemy::arrival()
+void RampageEnemy::arrival()
 {
 	if (!isAppear)
 	{
@@ -169,14 +170,14 @@ void ChaseEnemy::arrival()
 	}
 }
 
-void ChaseEnemy::ariveMove()
+void RampageEnemy::ariveMove()
 {
 	if (!isAlive || isAppear)
 	{
 		return;
 	}
 
-	chase();
+	rampage();
 
 	//HPが0になったら消滅
 	if (HP <= 0)
@@ -222,7 +223,7 @@ void ChaseEnemy::ariveMove()
 	updataSprite();
 }
 
-void ChaseEnemy::deathMove()
+void RampageEnemy::deathMove()
 {
 	if (isAlive || isAppear)
 	{
@@ -255,7 +256,7 @@ void ChaseEnemy::deathMove()
 	}
 }
 
-void ChaseEnemy::updataSprite()
+void RampageEnemy::updataSprite()
 {
 	XMFLOAT2 targetPos = enemyObject->worldToScleen();
 
@@ -335,7 +336,7 @@ void ChaseEnemy::updataSprite()
 	enemyHeight->spriteUpdata();
 }
 
-void ChaseEnemy::draw3D()
+void RampageEnemy::draw3D()
 {
 	if (!isDraw)
 	{
@@ -353,9 +354,14 @@ void ChaseEnemy::draw3D()
 	}
 
 	enemyObject->Draw(directx->cmdList.Get());
+
+	for (std::unique_ptr<NormalBullet>& bullet : normalBullets)
+	{
+		bullet->draw(directx);
+	}
 }
 
-void ChaseEnemy::draw2D()
+void RampageEnemy::draw2D()
 {
 	if (!isAlive)
 	{
@@ -379,7 +385,7 @@ void ChaseEnemy::draw2D()
 	}
 }
 
-void ChaseEnemy::drawMiniMapIcon()
+void RampageEnemy::drawMiniMapIcon()
 {
 	if (!isAlive)
 	{
@@ -396,59 +402,60 @@ void ChaseEnemy::drawMiniMapIcon()
 	enemyHeight->drawSprite(directx->cmdList.Get());
 }
 
-void ChaseEnemy::chase()
+void RampageEnemy::rampage()
 {
 	if (!playerIsAlive)
 	{
 		return;
 	}
 
-	//追跡
-	if (isChase)
-	{
-		//追尾カウント加算
-		chaseCount++;
-		enemySpeed = 0.35f;
-		if (chaseCount >= 1)
+	normalBullets.remove_if([](std::unique_ptr<NormalBullet>& bullet)
 		{
-			isChase = false;
-			chaseCount = 0;
-			isWait = true;
-		}
+			return bullet->isAlive == false;
+		});
+
+	for (std::unique_ptr<NormalBullet>& bullet : normalBullets)
+	{
+		bullet->updata();
 	}
 
-	//待機
-	if (isWait)
+	if (isRampageWait)
 	{
-		//待機カウント加算
-		waitCount++;
-		if (enemySpeed > 0.0f)
+		rampageWaitCount++;
+
+		if (rampageWaitCount >= 100)
 		{
-			enemySpeed -= 0.01f;
+			isRampageWait = false;
 		}
-		if (waitCount >= 40)
-		{
-			isWait = false;
-			waitCount = 0;
-			isChase = true;
-		}
+		return;
 	}
 
-	position = enemyObject->getPosition();
-	XMFLOAT3 dis =
+	nextBulletTime++;
+
+	if (nextBulletTime % 10 == 0)
 	{
-		playerPosition.x - position.x,
-		playerPosition.y - position.y,
-		playerPosition.z - position.z
-	};
+		std::unique_ptr<NormalBullet> newBullet = std::make_unique<NormalBullet>();
+		newBullet->init({ 1,0,0,1 });
 
-	float lengthDis = sqrtf(powf(dis.x, 2) + powf(dis.y, 2) + powf(dis.z, 2));
+		XMFLOAT3 rampageTargetPos =
+		{
+			playerPosition.x - (float)(rand() % 8 - 4),
+			playerPosition.y - (float)(rand() % 8 - 4),
+			playerPosition.z - (float)(rand() % 8 - 4)
+		};
 
-	dis.x /= lengthDis;
-	dis.y /= lengthDis;
-	dis.z /= lengthDis;
+		newBullet->bulletSpeed = 0.5f;
+		newBullet->set(this->position, rampageTargetPos);
+		normalBullets.push_back(std::move(newBullet));
 
-	position.x += dis.x * enemySpeed;
-	position.y += dis.y * enemySpeed;
-	position.z += dis.z * enemySpeed;
+		bulletCount++;
+	}
+
+	if (bulletCount == maxBulletCount)
+	{
+		isRampageWait = true;
+		rampageWaitCount = 0;
+		nextBulletTime = 0;
+		bulletCount = 0;
+	}
 }

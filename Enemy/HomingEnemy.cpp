@@ -1,14 +1,14 @@
-#include"ChaseEnemy.h"
+#include "HomingEnemy.h"
 
-ChaseEnemy::ChaseEnemy()
+HomingEnemy::HomingEnemy()
 {
 }
 
-ChaseEnemy::~ChaseEnemy()
+HomingEnemy::~HomingEnemy()
 {
 }
 
-void ChaseEnemy::init()
+void HomingEnemy::init()
 {
 	rockTarget = std::make_unique<SingleSprite>();
 	rockTarget->anchorpoint = { 0.5f,0.5f };
@@ -40,12 +40,12 @@ void ChaseEnemy::init()
 	enemyObject->SetModel(staticEnemyModel.get());
 	enemyObject->SetScale({ 1.0f,1.0f,1.0f });
 
-	myEnemyType = enemyType::chase;
+	myEnemyType = enemyType::homing;
 
-	bodyColor = { 0.3f,1,0.3f,1 };
+	bodyColor = { 0,1,1,1 };
 }
 
-void ChaseEnemy::set(XMFLOAT3 pos)
+void HomingEnemy::set(XMFLOAT3 pos)
 {
 	position = pos;
 	startPosition = pos;
@@ -60,11 +60,12 @@ void ChaseEnemy::set(XMFLOAT3 pos)
 	enemyArrivalTime = 100;
 	enemyArrivaCount = 0;
 	arrivalEase.set(easingType::easeOut, easingPattern::Quadratic, enemyArrivalTime, 500, 0);
+	normalBullets.clear();
 
 	isAppear = true;
 }
 
-void ChaseEnemy::updata()
+void HomingEnemy::updata()
 {
 	if (!isDraw)
 	{
@@ -129,7 +130,7 @@ void ChaseEnemy::updata()
 	return;
 }
 
-void ChaseEnemy::arrival()
+void HomingEnemy::arrival()
 {
 	if (!isAppear)
 	{
@@ -169,14 +170,14 @@ void ChaseEnemy::arrival()
 	}
 }
 
-void ChaseEnemy::ariveMove()
+void HomingEnemy::ariveMove()
 {
 	if (!isAlive || isAppear)
 	{
 		return;
 	}
 
-	chase();
+	homing();
 
 	//HPが0になったら消滅
 	if (HP <= 0)
@@ -222,7 +223,7 @@ void ChaseEnemy::ariveMove()
 	updataSprite();
 }
 
-void ChaseEnemy::deathMove()
+void HomingEnemy::deathMove()
 {
 	if (isAlive || isAppear)
 	{
@@ -255,7 +256,7 @@ void ChaseEnemy::deathMove()
 	}
 }
 
-void ChaseEnemy::updataSprite()
+void HomingEnemy::updataSprite()
 {
 	XMFLOAT2 targetPos = enemyObject->worldToScleen();
 
@@ -335,7 +336,7 @@ void ChaseEnemy::updataSprite()
 	enemyHeight->spriteUpdata();
 }
 
-void ChaseEnemy::draw3D()
+void HomingEnemy::draw3D()
 {
 	if (!isDraw)
 	{
@@ -353,9 +354,14 @@ void ChaseEnemy::draw3D()
 	}
 
 	enemyObject->Draw(directx->cmdList.Get());
+
+	for (std::unique_ptr<NormalBullet>& bullet : normalBullets)
+	{
+		bullet->draw(directx);
+	}
 }
 
-void ChaseEnemy::draw2D()
+void HomingEnemy::draw2D()
 {
 	if (!isAlive)
 	{
@@ -379,7 +385,7 @@ void ChaseEnemy::draw2D()
 	}
 }
 
-void ChaseEnemy::drawMiniMapIcon()
+void HomingEnemy::drawMiniMapIcon()
 {
 	if (!isAlive)
 	{
@@ -396,11 +402,70 @@ void ChaseEnemy::drawMiniMapIcon()
 	enemyHeight->drawSprite(directx->cmdList.Get());
 }
 
-void ChaseEnemy::chase()
+void HomingEnemy::homing()
 {
 	if (!playerIsAlive)
 	{
 		return;
+	}
+
+	//弾の更新
+	normalBullets.remove_if([](std::unique_ptr<NormalBullet>& bullet)
+		{
+			return bullet->isAlive == false;
+		});
+
+	for (std::unique_ptr<NormalBullet>& bullet : normalBullets)
+	{
+		bullet->updata();
+	}
+
+	XMFLOAT3 startToTarget =
+	{
+		playerPosition.x - this->position.x,
+		playerPosition.y - this->position.y,
+		playerPosition.z - this->position.z
+	};
+
+	float length = sqrtf(powf(startToTarget.x, 2) + powf(startToTarget.y, 2) + powf(startToTarget.z, 2));
+
+	if (length <= forPlayer / 2)
+	{
+		isInRange = true;
+	}
+	else
+	{
+		isInRange = false;
+	}
+
+	if (isInRange)
+	{
+		nextShotTime++;
+	}
+
+	if (nextShotTime >= 120)
+	{
+		isShot = true;
+	}
+
+	if (isShot)
+	{
+		std::unique_ptr<NormalBullet> newBullet = std::make_unique<NormalBullet>();
+		newBullet->init({ 1,0,0,1 });
+
+		XMFLOAT3 rampageTargetPos =
+		{
+			playerPosition.x - (float)(rand() % 8 - 4),
+			playerPosition.y - (float)(rand() % 8 - 4),
+			playerPosition.z - (float)(rand() % 8 - 4)
+		};
+
+		newBullet->bulletSpeed = 0.9f;
+		newBullet->set(this->position, rampageTargetPos);
+		normalBullets.push_back(std::move(newBullet));
+
+		nextShotTime = 0;
+		isShot = false;
 	}
 
 	//追跡
@@ -408,7 +473,7 @@ void ChaseEnemy::chase()
 	{
 		//追尾カウント加算
 		chaseCount++;
-		enemySpeed = 0.35f;
+		enemySpeed = 0.25f;
 		if (chaseCount >= 1)
 		{
 			isChase = false;
