@@ -30,4 +30,10 @@ public:
 
 private:
 	void chase();
+
+	//追尾用
+	bool isChase = false;//追跡フラグ
+	bool isWait = false;//待機フラグ
+	int chaseCount = 0;//追尾カウント
+	int waitCount = 0;//待機カウント
 };

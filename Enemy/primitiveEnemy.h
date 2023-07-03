@@ -4,7 +4,7 @@
 #include"../FbxLoder/Object3d_FBX.h"
 #include"../Base/DirectX_Base.h"
 #include"../Particle/particleManagerOnTime.h"
-#include"NormalBullet.h"
+#include"../Player/NormalBullet.h"
 
 #include<memory>
 #include<list>
