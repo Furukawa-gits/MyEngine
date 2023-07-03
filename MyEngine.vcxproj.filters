@@ -129,7 +129,7 @@
     <ClInclude Include="Particle\particleManagerOnTime.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Player\primitiveEnemy.h">
+    <ClInclude Include="Enemy\primitiveEnemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Player\BulletManager.h">
@@ -141,10 +141,19 @@
     <ClInclude Include="Player\NormalBullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Player\TutorialEnemy.h">
+    <ClInclude Include="Enemy\TutorialEnemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Player\ChaseEnemy.h">
+    <ClInclude Include="Enemy\ChaseEnemy.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy\ShotEnemy.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy\HomingEnemy.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy\RampageEnemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -263,7 +272,7 @@
     <ClCompile Include="Particle\particleManagerOnTime.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Player\primitiveEnemy.cpp">
+    <ClCompile Include="Enemy\primitiveEnemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Player\BulletManager.cpp">
@@ -275,7 +284,10 @@
     <ClCompile Include="Player\NormalBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Player\TutorialEnemy.cpp">
+    <ClCompile Include="Enemy\TutorialEnemy.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy\ChaseEnemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

@@ -3,7 +3,7 @@
 directX* primitiveEnemy::directx = nullptr;
 std::unique_ptr<Model> primitiveEnemy::staticEnemyModel = std::make_unique<Model>();
 const XMFLOAT3 primitiveEnemy::miniMapPosition = { 0,0,0 };
-const float primitiveEnemy::forPlayer = 0;
+const float primitiveEnemy::forPlayer = 400.0f;
 XMFLOAT3 primitiveEnemy::playerPosition = { 0,0,0 };
 XMFLOAT3 primitiveEnemy::playerFront = { 0,0,0 };
 bool primitiveEnemy::playerIsAlive = false;

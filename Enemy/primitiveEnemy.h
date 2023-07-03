@@ -104,7 +104,14 @@ public:
 	std::unique_ptr<SingleSprite> miniMapEnemy;
 	std::unique_ptr<SingleSprite> enemyHeight;
 
-	Sphere enemyCollision;//“G‚Ì“–‚½‚è”»’è
+	//“G‚Ì“–‚½‚è”»’è
+	Sphere enemyCollision;
+
+	//‚±‚Ì“G‚ªƒ{ƒX‚©‚Ç‚¤‚©
+	bool isThisBoss = false;
+
+	//‚±‚Ì“G‚ÉUŒ‚‚ª’Ê‚é‚©‚Ç‚¤‚©
+	bool isArmor = false;
 
 	//‘Ì—Í
 	int HP = 1;
