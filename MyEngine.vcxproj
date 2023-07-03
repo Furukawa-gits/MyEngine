@@ -103,6 +103,7 @@
     <ClInclude Include="3D\3Dobject.h" />
     <ClInclude Include="3D\Collision.h" />
     <ClInclude Include="3D\CollisionPrimitive.h" />
+    <ClInclude Include="3D\Object3DSingleLine.h" />
     <ClInclude Include="3D\ObjectCommon.h" />
     <ClInclude Include="Audio\Audio.h" />
     <ClInclude Include="Base\DirectX_Base.h" />
@@ -152,6 +153,7 @@
     <ClCompile Include="3D\3Dobject.cpp" />
     <ClCompile Include="3D\Collision.cpp" />
     <ClCompile Include="3D\CollisionPrimitive.cpp" />
+    <ClCompile Include="3D\Object3DSingleLine.cpp" />
     <ClCompile Include="3D\ObjectCommon.cpp" />
     <ClCompile Include="Audio\Audio.cpp" />
     <ClCompile Include="Base\DirectX_Base.cpp" />
