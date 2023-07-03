@@ -160,6 +160,9 @@
     <ClCompile Include="Base\WindowGenerate.cpp" />
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="camera\FollowCamera.cpp" />
+    <ClCompile Include="Enemy\HomingEnemy.cpp" />
+    <ClCompile Include="Enemy\RampageEnemy.cpp" />
+    <ClCompile Include="Enemy\ShotEnemy.cpp" />
     <ClCompile Include="FbxLoder\FbxLoader.cpp" />
     <ClCompile Include="FbxLoder\Model.cpp" />
     <ClCompile Include="FbxLoder\Object3d_FBX.cpp" />
