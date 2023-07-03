@@ -122,6 +122,7 @@
     <ClInclude Include="Particle\particleManagerOnTime.h" />
     <ClInclude Include="Player\Boss.h" />
     <ClInclude Include="Player\BulletManager.h" />
+    <ClInclude Include="Player\ChaseEnemy.h" />
     <ClInclude Include="Player\HomingMissile.h" />
     <ClInclude Include="Player\CheckHItManager.h" />
     <ClInclude Include="Player\Enemy.h" />
@@ -129,6 +130,7 @@
     <ClInclude Include="Player\Player.h" />
     <ClInclude Include="Player\PlayerHitPointManager.h" />
     <ClInclude Include="Player\primitiveEnemy.h" />
+    <ClInclude Include="Player\TutorialEnemy.h" />
     <ClInclude Include="Player\uniteBoss.h" />
     <ClInclude Include="Scene\playScene.h" />
     <ClInclude Include="Scene\primitiveScene.h" />
@@ -173,6 +175,7 @@
     <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="Player\PlayerHitPointManager.cpp" />
     <ClCompile Include="Player\primitiveEnemy.cpp" />
+    <ClCompile Include="Player\TutorialEnemy.cpp" />
     <ClCompile Include="Player\uniteBoss.cpp" />
     <ClCompile Include="Scene\playScene.cpp" />
     <ClCompile Include="Scene\primitiveScene.cpp" />

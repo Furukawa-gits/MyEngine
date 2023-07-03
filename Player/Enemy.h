@@ -172,7 +172,6 @@ public:
 	float scale = 1.0f;
 	float enemySpeed = 0.0f;
 	XMFLOAT3 rot = {};
-	XMFLOAT3 outScreenPos = {};
 
 	bool isFar = false;
 

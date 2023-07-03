@@ -8,6 +8,7 @@
 
 #include<memory>
 #include<list>
+#include<random>
 
 enum class enemyType
 {
@@ -32,6 +33,8 @@ public:
 	virtual void set(XMFLOAT3 pos) = 0;
 
 	virtual void updata() = 0;
+
+	virtual void arrival() = 0;
 
 	virtual void ariveMove() = 0;
 
@@ -62,37 +65,63 @@ public:
 	//登場演出時間
 	int enemyArrivalTime;
 	int enemyArrivaCount;
+
 	//登場演出用変数
 	easingManager arrivalEase;
 	XMFLOAT3 arrivalScale = { 1,1,1 };
+
 	//オブジェクト
-	object3dFBX* enemyObject = nullptr;
-	bool isDraw = false;//描画フラグ
-	bool isAlive = false;//生存フラグ
-	bool isTargetSet = false;//狙われているかどうか
-	bool isSetMissile = false;//ミサイルが自分にセットされているか
-	bool isOutScreen = false;//画面外にいるかどうか
+	std::unique_ptr<object3dFBX> enemyObject;
+
+	bool isDraw = false;		//描画フラグ
+	bool isAlive = false;		//生存フラグ
+	bool isTargetSet = false;	//狙われているかどうか
+	bool isSetMissile = false;	//ミサイルが自分にセットされているか
+	bool isOutScreen = false;	//画面外にいるかどうか
+	bool isFar = false;			//描画限界フラグ
+	bool isStop = false;		//停止フラグ
+	bool isAppear = false;		//登場演出フラグ
+
+	//撃墜エフェクト
+	std::list<std::unique_ptr<SingleParticle>> bomParticles;	//爆発
+	std::list<std::unique_ptr<SingleParticle>> smokeParticles;	//煙
+
+	//パーティクルの数(なるべくこれを基準に考える)
+	const int PublicParticlenum = 10;
+	const int maxFallCount = 90;
+
+	//一定距離下に落ちて行くためのカウント
+	int fallDownCount = 0;
+
+	float deathRotSpeed = 1.0f;
+
 	std::unique_ptr<SingleSprite> rockTarget;//マーカー
 	std::unique_ptr<SingleSprite>outScreenIcon[2];//画面外アイコン
+
+	/// <summary>
+	/// ミニマップ上のアイコン
+	/// </summary>
+	std::unique_ptr<SingleSprite> miniMapEnemy;
+	std::unique_ptr<SingleSprite> enemyHeight;
+
 	Sphere enemyCollision;//敵の当たり判定
+
 	//体力
 	int HP = 1;
-	//停止フラグ
-	bool isStop = false;
-	//登場演出フラグ
-	bool isAppear = false;
+
 	//座標・初期位置・スケール・速度・回転
 	XMFLOAT3 position = {};
 	XMFLOAT3 startPosition = {};
 	float scale = 1.0f;
 	float enemySpeed = 0.0f;
 	XMFLOAT3 rot = {};
-	XMFLOAT3 outScreenPos = {};
-	bool isFar = false;
+
+	//体の色
+	XMFLOAT4 bodyColor = { 1,1,1,1 };
+	
 	//プレイヤーの向いている方向と自分の位置との角度
 	float toPlayerAngle = 0.0f;
+
 	//敵の行動パターン
-	enemyType enemyMovePattern = enemyType::tutorial;
-	//弾
-	std::list<std::unique_ptr<NormalBullet>> Bullets;
+	enemyType myEnemyType = enemyType::tutorial;
 };

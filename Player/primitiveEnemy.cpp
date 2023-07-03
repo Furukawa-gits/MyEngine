@@ -25,6 +25,7 @@ void primitiveEnemy::staticDataInit()
 
 	SingleParticle::loadTexInMap("bomb.png");
 	SingleParticle::loadTexInMap("smoke.png");
+	SingleParticle::loadTexInMap("enemy_chip.png");
 }
 
 void primitiveEnemy::staticDataUpdata(XMFLOAT3 playerpos, XMFLOAT3 playerfront, bool playerisarive)
