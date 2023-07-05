@@ -554,7 +554,7 @@ void Player::updata()
 		setStaging(false);
 	}
 
-	testline->setPoints(playerObject->getPosition(), { 0,0,0 });
+	testline->setPoints(playerObject->getPosition(), {0,0,0});
 	testline->updata();
 }
 
