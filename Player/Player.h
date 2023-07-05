@@ -8,6 +8,7 @@
 #include"../camera/FollowCamera.h"
 #include"BulletManager.h"
 #include"PlayerHitPointManager.h"
+#include"../3D/Object3DSingleLine.h"
 
 
 const int MaxPlayerMissileNum = 8;
@@ -193,4 +194,9 @@ public:
 	int normalShotCount = 0;//通常弾を撃った数
 	int missileCount = 0;	//ミサイルを撃った数
 	int boostCount = 0;		//加速した回数
+
+	//-------------------検証用------------------------------
+
+	//線
+	std::unique_ptr<Object3DSingleLine> testline;
 };

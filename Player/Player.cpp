@@ -57,6 +57,12 @@ void Player::init(dxinput* input, directX* directx)
 	playerCollision.radius = 2.0f;
 
 	hitPointManager.reSet();
+
+	//------------------------検証-------------------------
+	Object3DSingleLine::setStaticData(directx);
+	Object3DSingleLine::setCamera(followCamera);
+	testline = std::make_unique<Object3DSingleLine>();
+	testline->init();
 }
 
 void Player::loadUISprite()
@@ -547,6 +553,9 @@ void Player::updata()
 	{
 		setStaging(false);
 	}
+
+	testline->setPoints(playerObject->getPosition(), { 0,0,0 });
+	testline->updata();
 }
 
 void Player::targetUpdata()
@@ -572,7 +581,7 @@ void Player::targetUpdata()
 
 	//リリース時のみマウスカーソル固定
 #ifdef _DEBUG
-	SetCursorPos(mouseOffsetX, mouseOffsetY);
+	//SetCursorPos(mouseOffsetX, mouseOffsetY);
 #else
 	SetCursorPos(mouseOffsetX, mouseOffsetY);
 #endif // DEBUG
@@ -791,6 +800,8 @@ void Player::draw3D(directX* directx)
 	}
 
 	bulletManager->draw(directx);
+
+	testline->draw();
 }
 
 void Player::draw2D(directX* directx, int targetnum)

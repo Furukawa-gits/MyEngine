@@ -1,6 +1,6 @@
 #include "Object3DSingleLine.h"
-std::unique_ptr<directX> Object3DSingleLine::directx = std::make_unique<directX>();
-std::unique_ptr<Camera> Object3DSingleLine::camera = std::make_unique<Camera>();
+directX* Object3DSingleLine::directx = nullptr;
+Camera* Object3DSingleLine::camera = nullptr;
 ComPtr<ID3D12RootSignature> Object3DSingleLine::rootsignature;
 ComPtr<ID3D12PipelineState> Object3DSingleLine::pipelinestate;
 
@@ -12,10 +12,11 @@ Object3DSingleLine::~Object3DSingleLine()
 {
 }
 
-void Object3DSingleLine::setStaticData(directX* dx, Camera* cmr)
+void Object3DSingleLine::setStaticData(directX* dx)
 {
-	directx.reset(dx);
-	camera.reset(cmr);
+	directx = dx;
+
+	CreateGraphicsPipeline();
 }
 
 void Object3DSingleLine::CreateGraphicsPipeline()
@@ -183,7 +184,7 @@ void Object3DSingleLine::init()
 	//頂点バッファビューの作成
 	this->vbView.BufferLocation = this->vertBuff->GetGPUVirtualAddress();
 	this->vbView.SizeInBytes = sizeof(vertices);
-	this->vbView.StrideInBytes = sizeof(vertices);
+	this->vbView.StrideInBytes = sizeof(VertexPos);
 
 	//定数バッファの生成
 	result = directx->dev->CreateCommittedResource(
@@ -218,7 +219,10 @@ void Object3DSingleLine::lineTransferVertexBuffer()
 	//頂点バッファへのデータ転送
 	VertexPos* vertMap = nullptr;
 	result = this->vertBuff->Map(0, nullptr, (void**)&vertMap);
-	memcpy(vertMap, vertices, sizeof(vertices));
+	for (int i = 0; i < _countof(vertices); i++)
+	{
+		vertMap[i] = vertices[i];   // 座標をコピー
+	}
 	this->vertBuff->Unmap(0, nullptr);
 }
 
@@ -240,8 +244,8 @@ void Object3DSingleLine::updata()
 	ConstBufferDataTransform* constMap = nullptr;
 	result = this->constBuff->Map(0, nullptr, (void**)&constMap);
 	constMap->color = color;
-	constMap->startMat = matEnd * camera->GetProjectionMatrix();
-	constMap->endMat = matStart * camera->GetProjectionMatrix();
+	constMap->startMat = matStart * camera->GetProjectionMatrix();
+	constMap->endMat = matEnd * camera->GetProjectionMatrix();
 	this->constBuff->Unmap(0, nullptr);
 }
 

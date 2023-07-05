@@ -37,10 +37,10 @@ public:
 	~Object3DSingleLine();
 
 	//静的関数
-	static void setStaticData(directX* dx, Camera* cmr);
+	static void setStaticData(directX* dx);
 	static void CreateGraphicsPipeline();
 
-	static void setCamera(Camera* cmr) { camera.reset(cmr); }
+	static void setCamera(Camera* cmr) { camera = cmr; }
 
 	//メンバ関数
 	void init();
@@ -52,18 +52,22 @@ public:
 		startPoint = start;
 		endPoint = end;
 	}
+	void setColor(XMFLOAT4 c)
+	{
+		color = c;
+	}
 
 private:
 
 	//directxbase
-	static std::unique_ptr<directX> directx;
+	static directX* directx;
+
+	//camera
+	static Camera* camera;
 
 	//パイプラインステート
 	static ComPtr<ID3D12RootSignature> rootsignature;
 	static ComPtr<ID3D12PipelineState> pipelinestate;
-
-	//camera
-	static std::unique_ptr<Camera> camera;
 
 	//定数バッファ
 	ComPtr<ID3D12Resource> constBuff;

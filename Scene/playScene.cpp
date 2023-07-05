@@ -777,7 +777,7 @@ void playScene::tutorial()
 		playerPointer->isHomingMissile = true;
 	}
 
-	//ミサイル -> Lets Shooting!!!
+	//ミサイル -> Lets Shooting!!!		
 	if (playerPointer->missileCount > 1)
 	{
 		isMissileText = false;
