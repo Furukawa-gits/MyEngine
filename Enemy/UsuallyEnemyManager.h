@@ -24,9 +24,9 @@ public:
 
 	void drawUIs();
 
-	std::list<std::unique_ptr<primitiveEnemy>> getEnemyList() { return enemyList; }
+	std::list<primitiveEnemy*> getEnemyList() { return enemyList; }
 
 private:
-	std::list<std::unique_ptr<primitiveEnemy>> enemyList;
+	std::list<primitiveEnemy*> enemyList;
 
 };

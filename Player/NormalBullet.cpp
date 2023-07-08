@@ -32,6 +32,8 @@ void NormalBullet::set(XMFLOAT3 start_pos, XMFLOAT3 Target)
 {
 	position = start_pos;
 
+	bulletCollision.center = XMLoadFloat3(&position);
+
 	XMFLOAT3 dis = {
 		Target.x - start_pos.x,
 		Target.y - start_pos.y,

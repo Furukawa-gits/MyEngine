@@ -17,7 +17,8 @@ void UsuallyEnemymanager::init()
 
 void UsuallyEnemymanager::addEnemy(enemyType addtype)
 {
-	primitiveEnemy* enemy = nullptr;
+	//unique_ptr<primitiveEnemy> newEnemy = std::make_unique<primitiveEnemy>();
+	primitiveEnemy* newEnemy = nullptr;
 
 	//ÉâÉìÉ_ÉÄÇ≈èâä˙à íuÇåàÇﬂÇÈ
 	std::random_device seed;
@@ -32,7 +33,10 @@ void UsuallyEnemymanager::addEnemy(enemyType addtype)
 	switch (addtype)
 	{
 	case enemyType::tutorial:
-		enemy = new TutorialEnemy;
+
+		//newEnemy = std::move(std::make_unique<TutorialEnemy>());
+		newEnemy = new TutorialEnemy;
+
 		startPos =
 		{
 			(float)(xResult % 100 - 50),
@@ -42,7 +46,10 @@ void UsuallyEnemymanager::addEnemy(enemyType addtype)
 		break;
 
 	case enemyType::chase:
-		enemy = new ChaseEnemy;
+
+		//newEnemy = std::move(std::make_unique<ChaseEnemy>());
+		newEnemy = new TutorialEnemy;
+
 		startPos =
 		{
 			(float)(xResult % 50 - 25),
@@ -52,7 +59,10 @@ void UsuallyEnemymanager::addEnemy(enemyType addtype)
 		break;
 
 	case enemyType::shot:
-		enemy = new ShotEnemy;
+
+		//newEnemy = std::move(std::make_unique<ShotEnemy>());
+		newEnemy = new TutorialEnemy;
+
 		startPos =
 		{
 			(float)(xResult % 50 - 25),
@@ -62,7 +72,10 @@ void UsuallyEnemymanager::addEnemy(enemyType addtype)
 		break;
 
 	case enemyType::homing:
-		enemy = new HomingEnemy;
+
+		//newEnemy = std::move(std::make_unique<HomingEnemy>());
+		newEnemy = new TutorialEnemy;
+
 		startPos =
 		{
 			(float)(xResult % 50 - 25),
@@ -72,7 +85,10 @@ void UsuallyEnemymanager::addEnemy(enemyType addtype)
 		break;
 
 	case enemyType::rampage:
-		enemy = new RampageEnemy;
+
+		//newEnemy = std::move(std::make_unique<RampageEnemy>());
+		newEnemy = new TutorialEnemy;
+
 		startPos =
 		{
 			(float)(xResult % 50 - 25),
@@ -82,22 +98,20 @@ void UsuallyEnemymanager::addEnemy(enemyType addtype)
 		break;
 	}
 
-	unique_ptr<primitiveEnemy> newEnemy = std::make_unique<primitiveEnemy>();
-	newEnemy.reset(enemy);
 	newEnemy->init();
 	newEnemy->set(startPos);
 
-	enemyList.push_back(std::move(newEnemy));
+	enemyList.push_back(newEnemy);
 }
 
 void UsuallyEnemymanager::update()
 {
-	enemyList.remove_if([](std::unique_ptr<primitiveEnemy>& newenemy)
+	enemyList.remove_if([](primitiveEnemy*& newenemy)
 		{
 			return newenemy->isDraw == false;
 		});
 
-	for (std::unique_ptr<primitiveEnemy>& newenemy : enemyList)
+	for (primitiveEnemy*& newenemy : enemyList)
 	{
 		newenemy->updata();
 	}
@@ -105,7 +119,7 @@ void UsuallyEnemymanager::update()
 
 void UsuallyEnemymanager::draw3D()
 {
-	for (std::unique_ptr<primitiveEnemy>& newenemy : enemyList)
+	for (primitiveEnemy*& newenemy : enemyList)
 	{
 		newenemy->draw3D();
 	}
@@ -113,7 +127,7 @@ void UsuallyEnemymanager::draw3D()
 
 void UsuallyEnemymanager::draw2D()
 {
-	for (std::unique_ptr<primitiveEnemy>& newenemy : enemyList)
+	for (primitiveEnemy*& newenemy : enemyList)
 	{
 		newenemy->draw2D();
 	}
@@ -121,7 +135,7 @@ void UsuallyEnemymanager::draw2D()
 
 void UsuallyEnemymanager::drawUIs()
 {
-	for (std::unique_ptr<primitiveEnemy>& newenemy : enemyList)
+	for (primitiveEnemy*& newenemy : enemyList)
 	{
 		newenemy->drawMiniMapIcon();
 	}

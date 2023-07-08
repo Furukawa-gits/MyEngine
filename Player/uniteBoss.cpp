@@ -834,21 +834,15 @@ void uniteBoss::uniteBossDeathMove()
 	if (fallDownCount % 20 == 0)
 	{
 #pragma region パーティクル生成
-		//生成位置を球体表面上で指定
-		float radius = 10;
-		float theta = (float)(rand() % 180) - 90.0f;
-		float phi = (float)(rand() % 360);
-		XMFLOAT3 spherepos =
-		{
-			radius * sinf(phi) * cosf(theta),
-			radius * sinf(phi) * sinf(theta),
-			radius * sinf(phi),
-		};
+		//生成位置をランダムで指定
+		float randX = (float)(rand() % 40) - 20;
+		float randY = (float)(rand() % 40) - 20;
+		float randZ = (float)(rand() % 40) - 20;
 		XMFLOAT3 startPos =
 		{
-			enemyObject->getPosition().x + spherepos.x,
-			enemyObject->getPosition().y + spherepos.y,
-			enemyObject->getPosition().z + spherepos.z
+			enemyObject->getPosition().x + randX,
+			enemyObject->getPosition().y + randY,
+			enemyObject->getPosition().z + randZ
 		};
 
 		//爆発パーティクル
