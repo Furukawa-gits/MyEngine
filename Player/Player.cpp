@@ -572,7 +572,7 @@ void Player::targetUpdata()
 
 	//リリース時のみマウスカーソル固定
 #ifdef _DEBUG
-	//SetCursorPos(mouseOffsetX, mouseOffsetY);
+	SetCursorPos(mouseOffsetX, mouseOffsetY);
 #else
 	SetCursorPos(mouseOffsetX, mouseOffsetY);
 #endif // DEBUG

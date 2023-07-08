@@ -407,9 +407,9 @@ void Boss::bossDeathMove()
 	{
 #pragma region パーティクル生成
 		//生成位置をランダムで指定
-		float randX = (float)(rand() % 60) - 30;
-		float randY = (float)(rand() % 60) - 30;
-		float randZ = (float)(rand() % 60) - 30;
+		float randX = (float)(rand() % 40) - 20;
+		float randY = (float)(rand() % 40) - 20;
+		float randZ = (float)(rand() % 40) - 20;
 		XMFLOAT3 startPos =
 		{
 			enemyObject->getPosition().x + randX,
