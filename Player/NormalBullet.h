@@ -15,15 +15,23 @@ private:
 	std::unique_ptr<SingleParticle> motherParticle;
 
 public:
+	//弾の生存時間
 	int count = 0;
 	const int maxBulletCount = 100;
+
+	//座標・進行ベクトル・速度
 	XMFLOAT3 position = { 0,0,0 };
 	XMFLOAT3 bulletVec = { 0.0f,0.0f,0.0f };
 	float bulletSpeed = 3.0f;
 
+	//生存フラグ
 	bool isAlive = false;
 
+	//コリジョン
 	Sphere bulletCollision;
+
+	//色
+	XMFLOAT4 traceParticleColor = { 0,0,0,0 };
 
 	NormalBullet();
 	~NormalBullet();
