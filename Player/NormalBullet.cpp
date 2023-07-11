@@ -8,22 +8,15 @@ NormalBullet::~NormalBullet()
 {
 }
 
-void NormalBullet::staticInit()
-{
-	SingleParticle::loadTexInMap("effect1.png");
-}
-
-void NormalBullet::staticDestroy()
-{
-}
-
-void NormalBullet::init(XMFLOAT4 color)
+void NormalBullet::init(XMFLOAT4 motherColor, XMFLOAT4 childColor)
 {
 	//親パーティクル生成
 	motherParticle = std::make_unique<SingleParticle>();
 	motherParticle->generate();
 	motherParticle->set(0, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 3.0f, 0.0f, false, true);
-	motherParticle->color = color;
+	motherParticle->color = motherColor;
+
+	this->childColor = childColor;
 
 	bulletCollision.radius = 4.0f;
 }
@@ -56,23 +49,23 @@ void NormalBullet::updata()
 
 	addBulletVec();
 
-	count++;
+	bulletCount++;
 
 	//一定フレームごとにパーティクルを生成
-	if (count % 5 == 0)
+	if (bulletCount % 5 == 0)
 	{
 		SingleParticle newParticle;
 		newParticle.generate();
 		newParticle.set(30, position, { 0,0,0 }, { 0,0,0 }, 2.0f, 0.0f);
-		newParticle.color = { 0,1,0,1 };
+		newParticle.color = childColor;
 		newParticle.isAddBlend = true;
 		particleManagerOnTime::addParticle(newParticle, "effect1.png");
 	}
 
 	//弾の寿命が来たら消滅
-	if (count >= maxBulletCount)
+	if (bulletCount >= maxBulletCount)
 	{
-		count = 0;
+		bulletCount = 0;
 		motherParticle->setIsActive(false);
 		isAlive = false;
 	}

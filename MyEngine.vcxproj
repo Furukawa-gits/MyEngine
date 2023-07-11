@@ -135,6 +135,7 @@
     <ClInclude Include="Player\PlayerHitPointManager.h" />
     <ClInclude Include="Enemy\primitiveEnemy.h" />
     <ClInclude Include="Enemy\TutorialEnemy.h" />
+    <ClInclude Include="Player\PrimitiveBullet.h" />
     <ClInclude Include="Player\uniteBoss.h" />
     <ClInclude Include="Scene\playScene.h" />
     <ClInclude Include="Scene\primitiveScene.h" />
@@ -185,6 +186,7 @@
     <ClCompile Include="Player\PlayerHitPointManager.cpp" />
     <ClCompile Include="Enemy\primitiveEnemy.cpp" />
     <ClCompile Include="Enemy\TutorialEnemy.cpp" />
+    <ClCompile Include="Player\PrimitiveBullet.cpp" />
     <ClCompile Include="Player\uniteBoss.cpp" />
     <ClCompile Include="Scene\playScene.cpp" />
     <ClCompile Include="Scene\primitiveScene.cpp" />

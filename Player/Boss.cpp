@@ -565,7 +565,7 @@ void Boss::bossShot()
 	if (isShot)
 	{
 		std::unique_ptr<NormalBullet> newBullet = std::make_unique<NormalBullet>();
-		newBullet->init({ 1,0,0,1 });
+		newBullet->init({ 1,0,0,1 }, { 1,0,0,1 });
 
 		XMFLOAT3 rampageTargetPos =
 		{
@@ -644,7 +644,7 @@ void Boss::bossHoming()
 	if (isShot)
 	{
 		std::unique_ptr<NormalBullet> newBullet = std::make_unique<NormalBullet>();
-		newBullet->init({ 1,0,0,1 });
+		newBullet->init({ 1,0,0,1 }, { 1,0,0,1 });
 
 		XMFLOAT3 rampageTargetPos =
 		{
@@ -751,7 +751,7 @@ void Boss::bossRampage()
 	if (nextBulletTime % 15 == 0)
 	{
 		std::unique_ptr<NormalBullet> newBullet = std::make_unique<NormalBullet>();
-		newBullet->init({ 1,0,0,1 });
+		newBullet->init({ 1,0,0,1 }, { 1,0,0,1 });
 
 		XMFLOAT3 rampageTargetPos =
 		{

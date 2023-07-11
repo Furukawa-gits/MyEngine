@@ -7,16 +7,13 @@
 
 class PrimitiveBullet
 {
-private:
-	std::unique_ptr<SingleParticle> motherParticle;
-
 public:
 	static void staticInit();
 
 	PrimitiveBullet();
 	~PrimitiveBullet();
 
-	virtual void init() = 0;
+	virtual void init(XMFLOAT4 motherColor, XMFLOAT4 childColor) = 0;
 
 	virtual void updata() = 0;
 
@@ -42,4 +39,11 @@ public:
 
 	//コリジョン
 	Sphere bulletCollision;
+
+	//色
+	XMFLOAT4 childColor = { 0,0,0,0 };
+
+protected:
+	//弾本体のパーティクル
+	std::unique_ptr<SingleParticle> motherParticle;
 };

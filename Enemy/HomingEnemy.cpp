@@ -451,7 +451,7 @@ void HomingEnemy::homing()
 	if (isShot)
 	{
 		std::unique_ptr<NormalBullet> newBullet = std::make_unique<NormalBullet>();
-		newBullet->init({ 1,0,0,1 });
+		newBullet->init({ 1,0,0,1 }, { 1,0,0,1 });
 
 		XMFLOAT3 rampageTargetPos =
 		{

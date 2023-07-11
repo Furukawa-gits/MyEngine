@@ -14,9 +14,6 @@ Player::~Player()
 	delete(followCamera);
 
 	bulletManager.release();
-
-	NormalBullet::staticDestroy();
-	Missile::staticDestroy();
 }
 
 void Player::init(dxinput* input, directX* directx)

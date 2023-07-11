@@ -348,12 +348,15 @@ void uniteParts::partsShotBullet(XMFLOAT3 targetposition)
 	std::uint32_t greenResult = rnd();
 	std::uint32_t blueResult = rnd();
 
-	newBullet->init({
+	XMFLOAT4 setColor =
+	{
 		(float)(redResult % 10) / 10,
 		(float)(greenResult % 10) / 10,
 		(float)(blueResult % 10) / 10,
 		1
-		});
+	};
+
+	newBullet->init(setColor, setColor);
 	newBullet->bulletSpeed = 0.9f;
 	newBullet->set(this->position, targetposition);
 

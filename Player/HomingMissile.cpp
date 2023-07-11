@@ -13,46 +13,20 @@ Missile::~Missile()
 {
 }
 
-void Missile::staticInit()
-{
-	
-}
-
-void Missile::staticDestroy()
-{
-}
-
-void Missile::init()
+void Missile::init(XMFLOAT4 motherColor, XMFLOAT4 childColor)
 {
 	//親パーティクル生成
 	motherParticle = std::make_unique<SingleParticle>();
 	motherParticle->generate();
 	motherParticle->set(0, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 3.0f, 0.0f, false, true);
-	motherParticle->color = { 1,1,0,1 };
+	motherParticle->color = motherColor;
 
-	missileCollision.radius = 3.0f;
+	this->childColor = childColor;
+
+	bulletCollision.radius = 3.0f;
 }
 
-void Missile::setPenemy(Enemy* enemy)
-{
-	enemyPointer = enemy;
-	isTargetSet = true;
-}
-
-void Missile::start(XMFLOAT3 start_pos)
-{
-	if (!isTargetSet || enemyPointer == nullptr)
-	{
-		return;
-	}
-
-	bulletVec = bulletVecIndex[rand() % 8];
-	position = start_pos;
-
-	isAlive = true;
-}
-
-void Missile::update()
+void Missile::updata()
 {
 	//セットされていないミサイルは更新処理を行わない
 	if (!isAlive)
@@ -137,28 +111,7 @@ void Missile::update()
 	//パーティクル更新
 	particleUpdata();
 
-	missileCollision.center = XMLoadFloat3(&position);
-}
-
-void Missile::particleUpdata()
-{
-	//パーティクル用のカウント
-	particleCount++;
-
-	//一定フレームごとにパーティクルを生成
-	if (particleCount % 2 == 0)
-	{
-		SingleParticle newParticle;
-		newParticle.generate();
-		newParticle.set(30, position, { 0,0,0 }, { 0,0,0 }, 3.0f, 0.0f);
-		newParticle.color = { 1,1,0,1 };
-		newParticle.isAddBlend = true;
-		particleManagerOnTime::addParticle(newParticle, "effect1.png");
-	}
-
-	//本体パーティクル更新
-	motherParticle->setPosition(position);
-	motherParticle->updata();
+	bulletCollision.center = XMLoadFloat3(&position);
 }
 
 void Missile::draw(directX* directx)
@@ -170,5 +123,45 @@ void Missile::draw(directX* directx)
 
 	motherParticle->setPiplineAddBlend();
 	motherParticle->drawSpecifyTex("effect1.png");
+}
+
+void Missile::setPenemy(Enemy* enemy)
+{
+	enemyPointer = enemy;
+	isTargetSet = true;
+}
+
+void Missile::start(XMFLOAT3 start_pos)
+{
+	if (!isTargetSet || enemyPointer == nullptr)
+	{
+		return;
+	}
+
+	bulletVec = bulletVecIndex[rand() % 8];
+	position = start_pos;
+
+	isAlive = true;
+}
+
+void Missile::particleUpdata()
+{
+	//パーティクル用のカウント
+	bulletCount++;
+
+	//一定フレームごとにパーティクルを生成
+	if (bulletCount % 2 == 0)
+	{
+		SingleParticle newParticle;
+		newParticle.generate();
+		newParticle.set(30, position, { 0,0,0 }, { 0,0,0 }, 3.0f, 0.0f);
+		newParticle.color = childColor;
+		newParticle.isAddBlend = true;
+		particleManagerOnTime::addParticle(newParticle, "effect1.png");
+	}
+
+	//本体パーティクル更新
+	motherParticle->setPosition(position);
+	motherParticle->updata();
 }
 #pragma endregion

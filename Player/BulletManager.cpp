@@ -4,6 +4,7 @@ dxinput* BulletManager::input = nullptr;
 
 BulletManager::BulletManager()
 {
+	PrimitiveBullet::staticInit();
 }
 
 BulletManager::~BulletManager()
@@ -46,7 +47,7 @@ void BulletManager::updata()
 	//ミサイルの更新(ユニークリスト)
 	for (std::unique_ptr<Missile>& missile : missilesList)
 	{
-		missile->update();
+		missile->updata();
 	}
 }
 
@@ -59,7 +60,7 @@ void BulletManager::addBullet(XMFLOAT3 start, XMFLOAT3 target, int& shotcount, b
 
 	//リスト化
 	std::unique_ptr<NormalBullet> newBullet = std::make_unique<NormalBullet>();
-	newBullet->init({ 0,1,0,1 });
+	newBullet->init({ 0,1,0,1 }, { 0,1,0,1 });
 	newBullet->set(start, target);
 
 	normalBulletsList.push_back(std::move(newBullet));
@@ -71,7 +72,7 @@ void BulletManager::addMissile(Enemy* enemy, int& targetnum, XMFLOAT3 start)
 {
 	//ミサイル追加
 	std::unique_ptr<Missile> newMissile = std::make_unique<Missile>();
-	newMissile->init();
+	newMissile->init({ 1,1,0,1 }, { 1,1,0,1 });
 	newMissile->setPenemy(enemy);
 	newMissile->start(start);
 	missilesList.push_back(std::move(newMissile));
