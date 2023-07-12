@@ -159,6 +159,9 @@
     <ClInclude Include="3D\Object3DSingleLine.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="3D\SplineCurve.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base\DirectX_Base.cpp">
