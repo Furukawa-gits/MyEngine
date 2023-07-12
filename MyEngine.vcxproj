@@ -105,7 +105,7 @@
     <ClInclude Include="3D\CollisionPrimitive.h" />
     <ClInclude Include="3D\Object3DSingleLine.h" />
     <ClInclude Include="3D\ObjectCommon.h" />
-    <ClInclude Include="3D\SplineCurve.h" />
+    <ClInclude Include="Math\SplineCurve.h" />
     <ClInclude Include="Audio\Audio.h" />
     <ClInclude Include="Base\DirectX_Base.h" />
     <ClInclude Include="Base\Fps_Manager.h" />
@@ -156,6 +156,7 @@
     <ClCompile Include="3D\CollisionPrimitive.cpp" />
     <ClCompile Include="3D\Object3DSingleLine.cpp" />
     <ClCompile Include="3D\ObjectCommon.cpp" />
+    <ClCompile Include="Math\SplineCurve.cpp" />
     <ClCompile Include="Audio\Audio.cpp" />
     <ClCompile Include="Base\DirectX_Base.cpp" />
     <ClCompile Include="Base\Fps_Manager.cpp" />
