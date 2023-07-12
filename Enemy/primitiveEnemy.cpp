@@ -10,6 +10,7 @@ bool primitiveEnemy::playerIsAlive = false;
 const XMFLOAT2 primitiveEnemy::defaultRockIconSize = { 0,0 };
 const XMFLOAT2 primitiveEnemy::setRockIconSize = { 0,0 };
 const float primitiveEnemy::decreaseSize = 0;
+Camera* primitiveEnemy::bossCamera = new Camera;
 
 primitiveEnemy::primitiveEnemy()
 {
@@ -33,4 +34,11 @@ void primitiveEnemy::staticDataUpdata(XMFLOAT3 playerpos, XMFLOAT3 playerfront, 
 	playerPosition = playerpos;
 	playerFront = playerfront;
 	playerIsAlive = playerisarive;
+}
+
+void primitiveEnemy::setBossCamera(XMFLOAT3 eye, XMFLOAT3 target)
+{
+	bossCamera->SetEye(eye);
+	bossCamera->SetTarget(target);
+	object3dFBX::SetCamera(bossCamera);
 }

@@ -27,6 +27,7 @@ public:
 
 	static void staticDataInit();
 	static void staticDataUpdata(XMFLOAT3 playerpos, XMFLOAT3 playerfront, bool playerisarive);
+	static void setBossCamera(XMFLOAT3 eye, XMFLOAT3 target);
 
 	virtual void init() = 0;
 
@@ -60,6 +61,7 @@ public:
 	static const XMFLOAT2 defaultRockIconSize;
 	static const XMFLOAT2 setRockIconSize;
 	static const float decreaseSize;
+	static Camera* bossCamera;
 
 	//Ã“I‚Å‚Í‚È‚¢‹¤’Ê•Ï”
 	//“oê‰‰oŠÔ
