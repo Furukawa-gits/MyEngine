@@ -1,5 +1,5 @@
 #pragma once
-#include"../FbxLoder/Quaternion.h"
+#include"Quaternion.h"
 #include<vector>
 
 class SplineCurve

@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include"../FbxLoder/Quaternion.h"
+#include"../Math/Quaternion.h"
 
 /// <summary>
 /// カメラ基本機能
