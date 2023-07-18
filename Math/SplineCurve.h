@@ -1,6 +1,8 @@
 #pragma once
 #include"Quaternion.h"
+#include"RKDVector.h"
 #include<vector>
+#include <array>
 
 class SplineCurve
 {
@@ -8,23 +10,30 @@ public:
 	SplineCurve();
 	~SplineCurve();
 
-	void setSpline(XMFLOAT3* anyposition, int allpointnum, int totalframe);
+	/// <summary>
+	/// 座標をセット
+	/// </summary>
+	/// <param name="anyposition">制御点(始点と終点を加えたもの)</param>
+	/// <param name="allpointnum">制御点の数</param>
+	/// <param name="totalframe">総フレーム</param>
+	void setSpline(RKDVector3* anyposition, int allpointnum, int totalframe);
 
 	void play();
 
-	XMFLOAT3 updata();
+	RKDVector3 updata();
 
 	void reset();
 
-	std::vector<XMFLOAT3> getCurveSubdivisionPoint();
+	//補間中の一点を取得
+	RKDVector3 getCurveSubdivisionPoint(float now);
 
 private:
 
 	//制御点
-	std::vector<XMFLOAT3> controlPoints;
+	std::vector<RKDVector3> controlPoints;
 
 	//現在位置
-	XMFLOAT3 returnPosition;
+	RKDVector3 returnPosition;
 
 	//現在のメイン制御点
 	int nowPlayIndex = 0;
@@ -40,11 +49,15 @@ private:
 	float oneCurveFrame = 0;
 
 	//総フレームに対する現在フレームの割合
-	float nowFramePerTotalFrame = 0;
+	float nowTotalRate = 0;
 
 	//１曲線あたりのフレームに対する現在フレームの割合
-	float nowFramePerOneCurveFrame = 0;
+	float nowOneCurveRate = 0;
 
 	//スプラインカーブ計算
-	XMFLOAT3 splineCurve4(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3);
+	RKDVector3 splineCurve4(
+		const RKDVector3& p0, 
+		const RKDVector3& p1, 
+		const RKDVector3& p2, 
+		const RKDVector3& p3, float& t);
 };
