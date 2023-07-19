@@ -60,18 +60,29 @@ void Missile::start(XMFLOAT3 start_pos)
 
 	RKDVector3 start(start_pos.x, start_pos.y, start_pos.z);
 	RKDVector3 end(enemyPointer->position.x, enemyPointer->position.y, enemyPointer->position.z);
-	RKDVector3 randPoint = 
-	{ 
+	RKDVector3 randPointOne =
+	{
 		(float)(xResult % 30) - 15,
 		(float)(yResult % 30) - 15,
-		(float)(zResult % 30) - 15 
+		(float)(zResult % 30) - 15
+	};
+
+	xResult = rnd();
+	yResult = rnd();
+	zResult = rnd();
+
+	RKDVector3 randPointTwo =
+	{
+		(float)(xResult % 30) - 15,
+		(float)(yResult % 30) - 15,
+		(float)(zResult % 30) - 15
 	};
 
 	std::array<RKDVector3, 6> setPoints;
 	setPoints[0] = start;
 	setPoints[1] = start;
-	setPoints[2] = start + randPoint;
-	setPoints[3] = end + randPoint;
+	setPoints[2] = start + randPointOne;
+	setPoints[3] = end + randPointTwo;
 	setPoints[4] = end;
 	setPoints[5] = end;
 
@@ -119,15 +130,12 @@ void Missile::particleUpdata()
 	particleCount++;
 
 	//一定フレームごとにパーティクルを生成
-	if (particleCount % 2 == 0)
-	{
-		SingleParticle newParticle;
-		newParticle.generate();
-		newParticle.set(30, position, { 0,0,0 }, { 0,0,0 }, 3.0f, 0.0f);
-		newParticle.color = { 1,1,0,1 };
-		newParticle.isAddBlend = true;
-		particleManagerOnTime::addParticle(newParticle, "effect1.png");
-	}
+	SingleParticle newParticle;
+	newParticle.generate();
+	newParticle.set(30, position, { 0,0,0 }, { 0,0,0 }, 3.0f, 0.0f);
+	newParticle.color = { 1,1,0,1 };
+	newParticle.isAddBlend = true;
+	particleManagerOnTime::addParticle(newParticle, "effect1.png");
 
 	//本体パーティクル更新
 	motherParticle->setPosition(position);
