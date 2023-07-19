@@ -28,6 +28,7 @@ public:
 	RKDVector3 operator-()const;
 
 	//代入演算子オーバーロード
+	RKDVector3& operator=(const XMFLOAT3& v);
 	RKDVector3& operator+=(const RKDVector3& v);
 	RKDVector3& operator-=(const RKDVector3& v);
 	RKDVector3& operator*=(float s);

@@ -48,6 +48,12 @@ RKDVector3 RKDVector3::operator-() const
 	return RKDVector3(-1 * x, -1 * y, -1 * z);
 }
 
+RKDVector3& RKDVector3::operator=(const XMFLOAT3& v)
+{
+	RKDVector3 result = RKDVector3(v.x, v.y, v.z);
+	return result;
+}
+
 RKDVector3& RKDVector3::operator+=(const RKDVector3& v)
 {
 	x += v.x;

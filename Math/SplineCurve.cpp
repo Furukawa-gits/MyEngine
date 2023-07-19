@@ -22,7 +22,9 @@ void SplineCurve::setSpline(RKDVector3* anyposition, int allpointnum, int totalf
 	this->totalFrame = totalframe;
 	this->nowFrame = 0;
 
-	this->oneCurveFrame = totalFrame / controlPoints.size() - 2;
+	this->oneCurveFrame = totalFrame / (controlPoints.size() - 3);
+
+	this->startPosition = controlPoints[0];
 }
 
 void SplineCurve::play()
@@ -32,7 +34,7 @@ void SplineCurve::play()
 
 RKDVector3 SplineCurve::updata()
 {
-	if (!isPlay) { return returnPosition; }
+	if (!isPlay) { return startPosition; }
 	if (nowFrame >= totalFrame) { return returnPosition; }
 
 	size_t n = controlPoints.size() - 2;
@@ -72,6 +74,9 @@ RKDVector3 SplineCurve::updata()
 
 void SplineCurve::reset()
 {
+	isPlay = false;
+
+	returnPosition = startPosition;
 }
 
 RKDVector3 SplineCurve::getCurveSubdivisionPoint(float now)

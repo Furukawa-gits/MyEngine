@@ -1,7 +1,7 @@
 #include"HomingMissile.h"
 #include"../3D/Collision.h"
 #include"../3D/3Dobject.h"
-
+#include <random>
 
 #pragma region ミサイル
 
@@ -15,7 +15,7 @@ Missile::~Missile()
 
 void Missile::staticInit()
 {
-	
+
 }
 
 void Missile::staticDestroy()
@@ -50,6 +50,38 @@ void Missile::start(XMFLOAT3 start_pos)
 	position = start_pos;
 
 	isAlive = true;
+
+	std::random_device seed;
+	std::mt19937 rnd(seed());
+
+	std::uint32_t xResult = rnd();
+	std::uint32_t yResult = rnd();
+	std::uint32_t zResult = rnd();
+
+	RKDVector3 start(start_pos.x, start_pos.y, start_pos.z);
+	RKDVector3 end(enemyPointer->position.x, enemyPointer->position.y, enemyPointer->position.z);
+	RKDVector3 randPoint = 
+	{ 
+		(float)(xResult % 30) - 15,
+		(float)(yResult % 30) - 15,
+		(float)(zResult % 30) - 15 
+	};
+
+	std::array<RKDVector3, 6> setPoints;
+	setPoints[0] = start;
+	setPoints[1] = start;
+	setPoints[2] = start + randPoint;
+	setPoints[3] = end + randPoint;
+	setPoints[4] = end;
+	setPoints[5] = end;
+
+	missileCurve.setSpline(setPoints.data(), 6, toEnemyMaxFrame);
+	missileCurve.play();
+
+	for (int i = 0; i < toEnemyMaxFrame; i++)
+	{
+		missilePositionts.push_back(missileCurve.updata());
+	}
 }
 
 void Missile::update()
@@ -60,79 +92,20 @@ void Missile::update()
 		return;
 	}
 
+	if (aliveFrame >= toEnemyMaxFrame)
+	{
+		isAlive = false;
+	}
+
 	//ミサイルが当たる前にターゲットがいなくなれば次フレームから更新しない
 	if (enemyPointer->isAlive == false)
 	{
 		isAlive = false;
 	}
 
-	//ターゲットへのベクトル
-	XMFLOAT3 toEnemy = {
-		enemyPointer->position.x - position.x,
-		enemyPointer->position.y - position.y,
-		enemyPointer->position.z - position.z
-	};
+	position = missilePositionts[aliveFrame];
 
-	//ベクトルを正規化
-	XMFLOAT3 missileVecNml = normalized(bulletVec);
-
-	//現在の進行方向との内積
-	float dotEneBullet =
-		toEnemy.x * bulletVec.x +
-		toEnemy.y * bulletVec.y +
-		toEnemy.z * bulletVec.z;
-
-	//ベクトルの外積を計算
-	XMFLOAT3 clossBulletVec = {
-		missileVecNml.x * dotEneBullet,
-		missileVecNml.y * dotEneBullet,
-		missileVecNml.z * dotEneBullet
-	};
-
-	//ミサイルの進行ベクトルをターゲットの方に曲げるベクトルを計算
-	XMFLOAT3 centripetalAccel = {
-		position.x - clossBulletVec.x,
-		position.y - clossBulletVec.y,
-		position.z - clossBulletVec.z
-	};
-
-	XMFLOAT3 centriToEnemy = {
-		enemyPointer->position.x - centripetalAccel.x,
-		enemyPointer->position.y - centripetalAccel.y,
-		enemyPointer->position.z - centripetalAccel.z
-	};
-
-	float centriToEnemyMagnitude = returnScaler(centriToEnemy);
-	if (centriToEnemyMagnitude > 1.0f)
-	{
-		centriToEnemy = normalized(centriToEnemy);
-	}
-
-	//曲げる力に補正を入れる
-	XMFLOAT3 Force = {
-		centriToEnemy.x * 2.3f,
-		centriToEnemy.y * 2.3f,
-		centriToEnemy.z * 2.3f
-	};
-
-	Force.x += missileVecNml.x * 0.7f;
-	Force.y += missileVecNml.y * 0.7f;
-	Force.z += missileVecNml.z * 0.7f;
-
-	Force.x -= bulletVec.x * 1.2f;
-	Force.y -= bulletVec.y * 1.2f;
-	Force.z -= bulletVec.z * 1.2f;
-
-	//ミサイルの進行方向を曲げる
-	bulletVec.x += Force.x;
-	bulletVec.y += Force.y;
-	bulletVec.z += Force.z;
-
-	bulletVec.x *= 1.5f;
-	bulletVec.y *= 1.5f;
-	bulletVec.z *= 1.5f;
-
-	addBulletVec();
+	aliveFrame++;
 
 	//パーティクル更新
 	particleUpdata();

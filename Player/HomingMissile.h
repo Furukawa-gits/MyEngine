@@ -2,6 +2,7 @@
 #include"../FbxLoder/Object3d_FBX.h"
 #include"../Base/DirectX_Base.h"
 #include"Enemy.h"
+#include"../Math/SplineCurve.h"
 
 #include<memory>
 
@@ -18,6 +19,16 @@ private:
 
 	//パーティクル生成の為のカウント
 	int particleCount = 0;
+
+	//敵に到達するまでのフレーム数
+	static const int toEnemyMaxFrame = 30;
+
+	int aliveFrame = 0;
+
+	//スプライン曲線
+	SplineCurve missileCurve;
+
+	std::vector<RKDVector3> missilePositionts;
 
 public:
 

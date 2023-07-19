@@ -35,6 +35,9 @@ private:
 	//現在位置
 	RKDVector3 returnPosition;
 
+	//初期位置
+	RKDVector3 startPosition;
+
 	//現在のメイン制御点
 	int nowPlayIndex = 0;
 
