@@ -56,8 +56,5 @@ public:
 
 	void setPenemy(Enemy* enemy);
 	void start(XMFLOAT3 start_pos);
-	/// <summary>
-	/// �ʏ�e�ƈႢ�A�����������̂Ńp�[�e�B�N���̍X�V�͕�����
-	/// </summary>
 	void particleUpdata();
 };

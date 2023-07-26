@@ -3,8 +3,6 @@
 #include"../3D/3Dobject.h"
 #include <random>
 
-#pragma region �~�T�C��
-
 Missile::Missile()
 {
 }
@@ -13,16 +11,7 @@ Missile::~Missile()
 {
 }
 
-void Missile::staticInit()
-{
-
-}
-
-void Missile::staticDestroy()
-{
-}
-
-void Missile::init()
+void Missile::init(XMFLOAT4 motherColor, XMFLOAT4 childColor)
 {
 	//�e�p�[�e�B�N������
 	motherParticle = std::make_unique<SingleParticle>();
@@ -97,7 +86,7 @@ void Missile::start(XMFLOAT3 start_pos)
 	}
 }
 
-void Missile::update()
+void Missile::updata()
 {
 	//�Z�b�g����Ă��Ȃ��~�T�C���͍X�V������s��Ȃ�
 	if (!isAlive)
@@ -123,7 +112,7 @@ void Missile::update()
 	//�p�[�e�B�N���X�V
 	particleUpdata();
 
-	missileCollision.center = XMLoadFloat3(&position);
+	bulletCollision.center = XMLoadFloat3(&position);
 }
 
 void Missile::particleUpdata()
@@ -154,44 +143,3 @@ void Missile::draw(directX* directx)
 	motherParticle->setPiplineAddBlend();
 	motherParticle->drawSpecifyTex("effect1.png");
 }
-
-void Missile::setPenemy(Enemy* enemy)
-{
-	enemyPointer = enemy;
-	isTargetSet = true;
-}
-
-void Missile::start(XMFLOAT3 start_pos)
-{
-	if (!isTargetSet || enemyPointer == nullptr)
-	{
-		return;
-	}
-
-	bulletVec = bulletVecIndex[rand() % 8];
-	position = start_pos;
-
-	isAlive = true;
-}
-
-void Missile::particleUpdata()
-{
-	//�p�[�e�B�N���p�̃J�E���g
-	bulletCount++;
-
-	//���t���[�����ƂɃp�[�e�B�N���𐶐�
-	if (bulletCount % 2 == 0)
-	{
-		SingleParticle newParticle;
-		newParticle.generate();
-		newParticle.set(30, position, { 0,0,0 }, { 0,0,0 }, 3.0f, 0.0f);
-		newParticle.color = childColor;
-		newParticle.isAddBlend = true;
-		particleManagerOnTime::addParticle(newParticle, "effect1.png");
-	}
-
-	//�{�̃p�[�e�B�N���X�V
-	motherParticle->setPosition(position);
-	motherParticle->updata();
-}
-#pragma endregion
