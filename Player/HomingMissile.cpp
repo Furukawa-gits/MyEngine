@@ -13,7 +13,7 @@ Missile::~Missile()
 
 void Missile::init(XMFLOAT4 motherColor, XMFLOAT4 childColor)
 {
-	//�e�p�[�e�B�N������
+	//弾の本体パーティクル初期化
 	motherParticle = std::make_unique<SingleParticle>();
 	motherParticle->generate();
 	motherParticle->set(0, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 3.0f, 0.0f, false, true);
@@ -42,15 +42,19 @@ void Missile::start(XMFLOAT3 start_pos)
 
 	isAlive = true;
 
+#pragma region 制御点を設定
+	//乱数のシード値を決定
 	std::random_device seed;
 	std::mt19937 rnd(seed());
-
 	std::uint32_t xResult = rnd();
 	std::uint32_t yResult = rnd();
 	std::uint32_t zResult = rnd();
 
+	//初期位置にプレイヤー位置・終端位置に敵の位置を設定
 	RKDVector3 start(start_pos.x, start_pos.y, start_pos.z);
 	RKDVector3 end(enemyPointer->position.x, enemyPointer->position.y, enemyPointer->position.z);
+
+	//2個目の制御点のオフセット(ランダム)
 	RKDVector3 randPointOne =
 	{
 		(float)(xResult % 30) - 15,
@@ -58,17 +62,19 @@ void Missile::start(XMFLOAT3 start_pos)
 		(float)(zResult % 30) - 15
 	};
 
+	//3個目の制御点のオフセット(ランダム)
 	xResult = rnd();
 	yResult = rnd();
 	zResult = rnd();
-
 	RKDVector3 randPointTwo =
 	{
 		(float)(xResult % 30) - 15,
 		(float)(yResult % 30) - 15,
 		(float)(zResult % 30) - 15
 	};
+#pragma endregion 制御点を設定
 
+	//制御点をまとめる
 	std::array<RKDVector3, 6> setPoints;
 	setPoints[0] = start;
 	setPoints[1] = start;
@@ -77,9 +83,11 @@ void Missile::start(XMFLOAT3 start_pos)
 	setPoints[4] = end;
 	setPoints[5] = end;
 
+	//スプライン曲線にセット
 	missileCurve.setSpline(setPoints.data(), 6, toEnemyMaxFrame);
 	missileCurve.play();
 
+	//スプライン曲線状の通過点を保存
 	for (int i = 0; i < toEnemyMaxFrame; i++)
 	{
 		missilePositionts.push_back(missileCurve.updata());
@@ -88,7 +96,6 @@ void Missile::start(XMFLOAT3 start_pos)
 
 void Missile::updata()
 {
-	//�Z�b�g����Ă��Ȃ��~�T�C���͍X�V������s��Ȃ�
 	if (!isAlive)
 	{
 		return;
@@ -99,17 +106,16 @@ void Missile::updata()
 		isAlive = false;
 	}
 
-	//�~�T�C����������O�Ƀ^�[�Q�b�g�����Ȃ��Ȃ�Ύ��t���[������X�V���Ȃ�
 	if (enemyPointer->isAlive == false)
 	{
 		isAlive = false;
 	}
 
+	//フレームに応じた通過点をセット
 	position = missilePositionts[aliveFrame];
-
 	aliveFrame++;
 
-	//�p�[�e�B�N���X�V
+	//パーティクル更新
 	particleUpdata();
 
 	bulletCollision.center = XMLoadFloat3(&position);
@@ -117,10 +123,7 @@ void Missile::updata()
 
 void Missile::particleUpdata()
 {
-	//�p�[�e�B�N���p�̃J�E���g
-	particleCount++;
-
-	//���t���[�����ƂɃp�[�e�B�N���𐶐�
+	//パーティクル生成
 	SingleParticle newParticle;
 	newParticle.generate();
 	newParticle.set(30, position, { 0,0,0 }, { 0,0,0 }, 3.0f, 0.0f);
@@ -128,7 +131,7 @@ void Missile::particleUpdata()
 	newParticle.isAddBlend = true;
 	particleManagerOnTime::addParticle(newParticle, "effect1.png");
 
-	//�{�̃p�[�e�B�N���X�V
+	//パーティクル更新
 	motherParticle->setPosition(position);
 	motherParticle->updata();
 }

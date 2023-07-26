@@ -5,27 +5,27 @@
 
 #include<memory>
 
-//�z�[�~���O�~�T�C��
+//追尾弾
 class Missile :
 	public PrimitiveBullet
 {
 private:
 
 	/// <summary>
-	/// �e�̖{�̂ƂȂ�p�[�e�B�N��
-	/// <para>�e�̐����Ɉˑ�����̂ł����͎��Ԍo�߂ŏ����Ȃ�</para>
+	/// 弾の本体パーティクル
+	/// <para>パーティクル側の寿命フレームで消えない</para>
 	/// </summary>
 	std::unique_ptr<SingleParticle> motherParticle;
 
-	//�p�[�e�B�N�������ׂ̈̃J�E���g
+	//パーティクル生成用のカウント
 	int particleCount = 0;
 
-	//�G�ɓ��B����܂ł̃t���[����
+	//敵に当たるまでの最大フレーム
 	static const int toEnemyMaxFrame = 30;
 
 	int aliveFrame = 0;
 
-	//�X�v���C���Ȑ�
+	//スプライン曲線
 	SplineCurve missileCurve;
 
 	std::vector<RKDVector3> missilePositionts;
