@@ -52,7 +52,10 @@ void Missile::start(XMFLOAT3 start_pos)
 
 	//初期位置にプレイヤー位置・終端位置に敵の位置を設定
 	RKDVector3 start(start_pos.x, start_pos.y, start_pos.z);
-	RKDVector3 end(enemyPointer->position.x, enemyPointer->position.y, enemyPointer->position.z);
+	RKDVector3 end(
+		enemyPointer->position.x, 
+		enemyPointer->position.y,
+		enemyPointer->position.z);
 
 	//2個目の制御点のオフセット(ランダム)
 	RKDVector3 randPointOne =
