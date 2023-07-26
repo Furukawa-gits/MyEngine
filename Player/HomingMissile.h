@@ -1,13 +1,35 @@
 #pragma once
 #include"PrimitiveBullet.h"
 #include"Enemy.h"
+#include"../Math/SplineCurve.h"
 
 #include<memory>
 
-//ƒz[ƒ~ƒ“ƒOƒ~ƒTƒCƒ‹
+//ï¿½zï¿½[ï¿½~ï¿½ï¿½ï¿½Oï¿½~ï¿½Tï¿½Cï¿½ï¿½
 class Missile :
 	public PrimitiveBullet
 {
+private:
+
+	/// <summary>
+	/// ï¿½eï¿½Ì–{ï¿½Ì‚Æ‚È‚ï¿½pï¿½[ï¿½eï¿½Bï¿½Nï¿½ï¿½
+	/// <para>ï¿½eï¿½Ìï¿½ï¿½ï¿½ï¿½ÉˆË‘ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚Å‚ï¿½ï¿½ï¿½ï¿½Â‚Íï¿½ï¿½ÔŒoï¿½ß‚Åï¿½ï¿½ï¿½ï¿½È‚ï¿½</para>
+	/// </summary>
+	std::unique_ptr<SingleParticle> motherParticle;
+
+	//ï¿½pï¿½[ï¿½eï¿½Bï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìˆ×‚ÌƒJï¿½Eï¿½ï¿½ï¿½g
+	int particleCount = 0;
+
+	//ï¿½Gï¿½É“ï¿½ï¿½Bï¿½ï¿½ï¿½ï¿½Ü‚Å‚Ìƒtï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½
+	static const int toEnemyMaxFrame = 30;
+
+	int aliveFrame = 0;
+
+	//ï¿½Xï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Èï¿½
+	SplineCurve missileCurve;
+
+	std::vector<RKDVector3> missilePositionts;
+
 public:
 
 	Enemy* enemyPointer = nullptr;
@@ -35,7 +57,7 @@ public:
 	void setPenemy(Enemy* enemy);
 	void start(XMFLOAT3 start_pos);
 	/// <summary>
-	/// ’Êí’e‚Æˆá‚¢Aˆ—‚ª‘½‚¢‚Ì‚Åƒp[ƒeƒBƒNƒ‹‚ÌXV‚Í•ª‚¯‚é
+	/// ï¿½Êï¿½eï¿½Æˆá‚¢ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚Åƒpï¿½[ï¿½eï¿½Bï¿½Nï¿½ï¿½ï¿½ÌXï¿½Vï¿½Í•ï¿½ï¿½ï¿½ï¿½ï¿½
 	/// </summary>
 	void particleUpdata();
 };

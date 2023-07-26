@@ -103,7 +103,10 @@
     <ClInclude Include="3D\3Dobject.h" />
     <ClInclude Include="3D\Collision.h" />
     <ClInclude Include="3D\CollisionPrimitive.h" />
+    <ClInclude Include="3D\Object3DSingleLine.h" />
     <ClInclude Include="3D\ObjectCommon.h" />
+    <ClInclude Include="Math\RKDVector.h" />
+    <ClInclude Include="Math\SplineCurve.h" />
     <ClInclude Include="Audio\Audio.h" />
     <ClInclude Include="Base\DirectX_Base.h" />
     <ClInclude Include="Base\Fps_Manager.h" />
@@ -119,7 +122,7 @@
     <ClInclude Include="FbxLoder\FbxLoader.h" />
     <ClInclude Include="FbxLoder\Model.h" />
     <ClInclude Include="FbxLoder\Object3d_FBX.h" />
-    <ClInclude Include="FbxLoder\Quaternion.h" />
+    <ClInclude Include="Math\Quaternion.h" />
     <ClInclude Include="Input\dxInput.h" />
     <ClInclude Include="Light\Light.h" />
     <ClInclude Include="Particle\Particle.h" />
@@ -154,7 +157,10 @@
     <ClCompile Include="3D\3Dobject.cpp" />
     <ClCompile Include="3D\Collision.cpp" />
     <ClCompile Include="3D\CollisionPrimitive.cpp" />
+    <ClCompile Include="3D\Object3DSingleLine.cpp" />
     <ClCompile Include="3D\ObjectCommon.cpp" />
+    <ClCompile Include="Math\RKDVector.cpp" />
+    <ClCompile Include="Math\SplineCurve.cpp" />
     <ClCompile Include="Audio\Audio.cpp" />
     <ClCompile Include="Base\DirectX_Base.cpp" />
     <ClCompile Include="Base\Fps_Manager.cpp" />
@@ -169,7 +175,7 @@
     <ClCompile Include="FbxLoder\FbxLoader.cpp" />
     <ClCompile Include="FbxLoder\Model.cpp" />
     <ClCompile Include="FbxLoder\Object3d_FBX.cpp" />
-    <ClCompile Include="FbxLoder\Quaternion.cpp" />
+    <ClCompile Include="Math\Quaternion.cpp" />
     <ClCompile Include="Input\dxInput.cpp" />
     <ClCompile Include="Light\Light.cpp" />
     <ClCompile Include="main.cpp" />
@@ -203,6 +209,7 @@
     <None Include="Resources\shaders\OBJ.hlsli" />
     <None Include="Resources\shaders\Particle.hlsli" />
     <None Include="Resources\shaders\PostEffectBace.hlsli" />
+    <None Include="Resources\shaders\SingleLine3D.hlsli" />
     <None Include="Resources\shaders\Sprite.hlsli" />
   </ItemGroup>
   <ItemGroup>
@@ -285,6 +292,14 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\SingleLine3DPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\SingleLine3DVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Resources\shaders\SpritePS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

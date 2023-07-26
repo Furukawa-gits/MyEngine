@@ -1,9 +1,9 @@
 #include"HomingMissile.h"
 #include"../3D/Collision.h"
 #include"../3D/3Dobject.h"
+#include <random>
 
-
-#pragma region ƒ~ƒTƒCƒ‹
+#pragma region ï¿½~ï¿½Tï¿½Cï¿½ï¿½
 
 Missile::Missile()
 {
@@ -13,9 +13,18 @@ Missile::~Missile()
 {
 }
 
-void Missile::init(XMFLOAT4 motherColor, XMFLOAT4 childColor)
+void Missile::staticInit()
 {
-	//eƒp[ƒeƒBƒNƒ‹¶¬
+
+}
+
+void Missile::staticDestroy()
+{
+}
+
+void Missile::init()
+{
+	//ï¿½eï¿½pï¿½[ï¿½eï¿½Bï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	motherParticle = std::make_unique<SingleParticle>();
 	motherParticle->generate();
 	motherParticle->set(0, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 3.0f, 0.0f, false, true);
@@ -26,92 +35,113 @@ void Missile::init(XMFLOAT4 motherColor, XMFLOAT4 childColor)
 	bulletCollision.radius = 3.0f;
 }
 
-void Missile::updata()
+void Missile::setPenemy(Enemy* enemy)
 {
-	//ƒZƒbƒg‚³‚ê‚Ä‚¢‚È‚¢ƒ~ƒTƒCƒ‹‚ÍXVˆ—‚ğs‚í‚È‚¢
+	enemyPointer = enemy;
+	isTargetSet = true;
+}
+
+void Missile::start(XMFLOAT3 start_pos)
+{
+	if (!isTargetSet || enemyPointer == nullptr)
+	{
+		return;
+	}
+
+	bulletVec = bulletVecIndex[rand() % 8];
+	position = start_pos;
+
+	isAlive = true;
+
+	std::random_device seed;
+	std::mt19937 rnd(seed());
+
+	std::uint32_t xResult = rnd();
+	std::uint32_t yResult = rnd();
+	std::uint32_t zResult = rnd();
+
+	RKDVector3 start(start_pos.x, start_pos.y, start_pos.z);
+	RKDVector3 end(enemyPointer->position.x, enemyPointer->position.y, enemyPointer->position.z);
+	RKDVector3 randPointOne =
+	{
+		(float)(xResult % 30) - 15,
+		(float)(yResult % 30) - 15,
+		(float)(zResult % 30) - 15
+	};
+
+	xResult = rnd();
+	yResult = rnd();
+	zResult = rnd();
+
+	RKDVector3 randPointTwo =
+	{
+		(float)(xResult % 30) - 15,
+		(float)(yResult % 30) - 15,
+		(float)(zResult % 30) - 15
+	};
+
+	std::array<RKDVector3, 6> setPoints;
+	setPoints[0] = start;
+	setPoints[1] = start;
+	setPoints[2] = start + randPointOne;
+	setPoints[3] = end + randPointTwo;
+	setPoints[4] = end;
+	setPoints[5] = end;
+
+	missileCurve.setSpline(setPoints.data(), 6, toEnemyMaxFrame);
+	missileCurve.play();
+
+	for (int i = 0; i < toEnemyMaxFrame; i++)
+	{
+		missilePositionts.push_back(missileCurve.updata());
+	}
+}
+
+void Missile::update()
+{
+	//ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½~ï¿½Tï¿½Cï¿½ï¿½ï¿½ÍXï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½È‚ï¿½
 	if (!isAlive)
 	{
 		return;
 	}
 
-	//ƒ~ƒTƒCƒ‹‚ª“–‚½‚é‘O‚Éƒ^[ƒQƒbƒg‚ª‚¢‚È‚­‚È‚ê‚ÎŸƒtƒŒ[ƒ€‚©‚çXV‚µ‚È‚¢
+	if (aliveFrame >= toEnemyMaxFrame)
+	{
+		isAlive = false;
+	}
+
+	//ï¿½~ï¿½Tï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½Éƒ^ï¿½[ï¿½Qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½È‚ï¿½Îï¿½ï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½È‚ï¿½
 	if (enemyPointer->isAlive == false)
 	{
 		isAlive = false;
 	}
 
-	//ƒ^[ƒQƒbƒg‚Ö‚ÌƒxƒNƒgƒ‹
-	XMFLOAT3 toEnemy = {
-		enemyPointer->position.x - position.x,
-		enemyPointer->position.y - position.y,
-		enemyPointer->position.z - position.z
-	};
+	position = missilePositionts[aliveFrame];
 
-	//ƒxƒNƒgƒ‹‚ğ³‹K‰»
-	XMFLOAT3 missileVecNml = normalized(bulletVec);
+	aliveFrame++;
 
-	//Œ»İ‚Ìis•ûŒü‚Æ‚Ì“àÏ
-	float dotEneBullet =
-		toEnemy.x * bulletVec.x +
-		toEnemy.y * bulletVec.y +
-		toEnemy.z * bulletVec.z;
-
-	//ƒxƒNƒgƒ‹‚ÌŠOÏ‚ğŒvZ
-	XMFLOAT3 clossBulletVec = {
-		missileVecNml.x * dotEneBullet,
-		missileVecNml.y * dotEneBullet,
-		missileVecNml.z * dotEneBullet
-	};
-
-	//ƒ~ƒTƒCƒ‹‚ÌisƒxƒNƒgƒ‹‚ğƒ^[ƒQƒbƒg‚Ì•û‚É‹È‚°‚éƒxƒNƒgƒ‹‚ğŒvZ
-	XMFLOAT3 centripetalAccel = {
-		position.x - clossBulletVec.x,
-		position.y - clossBulletVec.y,
-		position.z - clossBulletVec.z
-	};
-
-	XMFLOAT3 centriToEnemy = {
-		enemyPointer->position.x - centripetalAccel.x,
-		enemyPointer->position.y - centripetalAccel.y,
-		enemyPointer->position.z - centripetalAccel.z
-	};
-
-	float centriToEnemyMagnitude = returnScaler(centriToEnemy);
-	if (centriToEnemyMagnitude > 1.0f)
-	{
-		centriToEnemy = normalized(centriToEnemy);
-	}
-
-	//‹È‚°‚é—Í‚É•â³‚ğ“ü‚ê‚é
-	XMFLOAT3 Force = {
-		centriToEnemy.x * 2.3f,
-		centriToEnemy.y * 2.3f,
-		centriToEnemy.z * 2.3f
-	};
-
-	Force.x += missileVecNml.x * 0.7f;
-	Force.y += missileVecNml.y * 0.7f;
-	Force.z += missileVecNml.z * 0.7f;
-
-	Force.x -= bulletVec.x * 1.2f;
-	Force.y -= bulletVec.y * 1.2f;
-	Force.z -= bulletVec.z * 1.2f;
-
-	//ƒ~ƒTƒCƒ‹‚Ìis•ûŒü‚ğ‹È‚°‚é
-	bulletVec.x += Force.x;
-	bulletVec.y += Force.y;
-	bulletVec.z += Force.z;
-
-	bulletVec.x *= 1.5f;
-	bulletVec.y *= 1.5f;
-	bulletVec.z *= 1.5f;
-
-	addBulletVec();
-
-	//ƒp[ƒeƒBƒNƒ‹XV
+	//ï¿½pï¿½[ï¿½eï¿½Bï¿½Nï¿½ï¿½ï¿½Xï¿½V
 	particleUpdata();
 
-	bulletCollision.center = XMLoadFloat3(&position);
+	missileCollision.center = XMLoadFloat3(&position);
+}
+
+void Missile::particleUpdata()
+{
+	//ï¿½pï¿½[ï¿½eï¿½Bï¿½Nï¿½ï¿½ï¿½pï¿½ÌƒJï¿½Eï¿½ï¿½ï¿½g
+	particleCount++;
+
+	//ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚Éƒpï¿½[ï¿½eï¿½Bï¿½Nï¿½ï¿½ï¿½ğ¶ï¿½
+	SingleParticle newParticle;
+	newParticle.generate();
+	newParticle.set(30, position, { 0,0,0 }, { 0,0,0 }, 3.0f, 0.0f);
+	newParticle.color = { 1,1,0,1 };
+	newParticle.isAddBlend = true;
+	particleManagerOnTime::addParticle(newParticle, "effect1.png");
+
+	//ï¿½{ï¿½Ìƒpï¿½[ï¿½eï¿½Bï¿½Nï¿½ï¿½ï¿½Xï¿½V
+	motherParticle->setPosition(position);
+	motherParticle->updata();
 }
 
 void Missile::draw(directX* directx)
@@ -146,10 +176,10 @@ void Missile::start(XMFLOAT3 start_pos)
 
 void Missile::particleUpdata()
 {
-	//ƒp[ƒeƒBƒNƒ‹—p‚ÌƒJƒEƒ“ƒg
+	//ï¿½pï¿½[ï¿½eï¿½Bï¿½Nï¿½ï¿½ï¿½pï¿½ÌƒJï¿½Eï¿½ï¿½ï¿½g
 	bulletCount++;
 
-	//ˆê’èƒtƒŒ[ƒ€‚²‚Æ‚Éƒp[ƒeƒBƒNƒ‹‚ğ¶¬
+	//ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚Éƒpï¿½[ï¿½eï¿½Bï¿½Nï¿½ï¿½ï¿½ğ¶ï¿½
 	if (bulletCount % 2 == 0)
 	{
 		SingleParticle newParticle;
@@ -160,7 +190,7 @@ void Missile::particleUpdata()
 		particleManagerOnTime::addParticle(newParticle, "effect1.png");
 	}
 
-	//–{‘Ìƒp[ƒeƒBƒNƒ‹XV
+	//ï¿½{ï¿½Ìƒpï¿½[ï¿½eï¿½Bï¿½Nï¿½ï¿½ï¿½Xï¿½V
 	motherParticle->setPosition(position);
 	motherParticle->updata();
 }

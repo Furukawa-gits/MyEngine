@@ -81,7 +81,7 @@
     <ClInclude Include="2D\Debug_Text.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="FbxLoder\Quaternion.h">
+    <ClInclude Include="Math\Quaternion.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Player\Boss.h">
@@ -156,10 +156,13 @@
     <ClInclude Include="Enemy\RampageEnemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy\UsuallyEnemyManager.h">
+    <ClInclude Include="3D\Object3DSingleLine.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Player\PrimitiveBullet.h">
+    <ClInclude Include="Math\SplineCurve.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\RKDVector.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -233,7 +236,7 @@
     <ClCompile Include="2D\Debug_Text.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="FbxLoder\Quaternion.cpp">
+    <ClCompile Include="Math\Quaternion.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Player\Boss.cpp">
@@ -305,10 +308,13 @@
     <ClCompile Include="Enemy\RampageEnemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy\UsuallyEnemyManager.cpp">
+    <ClCompile Include="3D\Object3DSingleLine.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Player\PrimitiveBullet.cpp">
+    <ClCompile Include="Math\SplineCurve.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\RKDVector.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -329,6 +335,7 @@
       <Filter>リソース ファイル</Filter>
     </None>
     <None Include="Resources\shaders\Particle.hlsli" />
+    <None Include="Resources\shaders\SingleLine3D.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\BasicPS.hlsl">
@@ -367,5 +374,7 @@
     <FxCompile Include="Resources\shaders\ParticleGS.hlsl" />
     <FxCompile Include="Resources\shaders\ParticlePS.hlsl" />
     <FxCompile Include="Resources\shaders\ParticleVS.hlsl" />
+    <FxCompile Include="Resources\shaders\SingleLine3DVS.hlsl" />
+    <FxCompile Include="Resources\shaders\SingleLine3DPS.hlsl" />
   </ItemGroup>
 </Project>
