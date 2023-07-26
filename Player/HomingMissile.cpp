@@ -104,13 +104,17 @@ void Missile::updata()
 		return;
 	}
 
+	//敵に到達する前に寿命が尽きた時
 	if (aliveFrame >= toEnemyMaxFrame)
 	{
+		enemyPointer->isTargetSet = false;
+		enemyPointer->isSetMissile = false;
 		isAlive = false;
 	}
 
 	if (enemyPointer->isAlive == false)
 	{
+		enemyPointer = nullptr;
 		isAlive = false;
 	}
 
