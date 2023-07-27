@@ -17,6 +17,8 @@ enum class enemyType
 	shot = 2,
 	homing = 3,
 	rampage = 4,
+	normalBoss = 10,
+	uniteBoss = 100
 };
 
 class primitiveEnemy
@@ -27,6 +29,7 @@ public:
 
 	static void staticDataInit();
 	static void staticDataUpdata(XMFLOAT3 playerpos, XMFLOAT3 playerfront, bool playerisarive);
+	static void setUsingPlayerData(bool* playerisinv,bool* playerisstop,Camera* playercamera);
 	static void setBossCamera(XMFLOAT3 eye, XMFLOAT3 target);
 
 	virtual void init(bool isboss) = 0;
@@ -41,6 +44,8 @@ public:
 
 	virtual void deathMove() = 0;
 
+	virtual void deathMoveBoss() = 0;
+
 	virtual void updataSprite() = 0;
 
 	virtual void draw3D() = 0;
@@ -50,7 +55,7 @@ public:
 	virtual void drawMiniMapIcon() = 0;
 
 public:
-	//静的変数
+	//--------------------------静的変数--------------------------
 	static directX* directx;
 	static std::unique_ptr<Model> staticEnemyModel;
 	static const XMFLOAT3 miniMapPosition;
@@ -58,19 +63,23 @@ public:
 	static XMFLOAT3 playerPosition;
 	static XMFLOAT3 playerFront;
 	static bool playerIsAlive;
+	static bool* playerIsStop;
+	static int* playerIsInvisible;
+	static Camera* playerCamera;
 	static const XMFLOAT2 defaultRockIconSize;
 	static const XMFLOAT2 setRockIconSize;
 	static const float decreaseSize;
 	static Camera* bossCamera;
 
-	//静的ではない共通変数
+	//--------------------------静的ではない共通変数--------------------------
 	//登場演出時間
+	int enemyArrivalMaxTime;
 	int enemyArrivalTime;
-	int enemyArrivaCount;
 
 	//登場演出用変数
 	easingManager arrivalEase;
 	XMFLOAT3 arrivalScale = { 1,1,1 };
+	XMFLOAT3 arrivalMaxScale = { 1,1,1 };
 
 	//オブジェクト
 	std::unique_ptr<object3dFBX> enemyObject;
@@ -112,6 +121,10 @@ public:
 	//この敵がボスかどうか
 	bool isThisBoss = false;
 
+	//ボスだった場合
+	std::unique_ptr<SingleSprite> bossHitPointGauge;//HP
+	XMFLOAT3 bossbaseScale;							//最大サイズ
+
 	//この敵に攻撃が通るかどうか
 	bool isArmor = false;
 
@@ -127,7 +140,7 @@ public:
 
 	//体の色
 	XMFLOAT4 bodyColor = { 1,1,1,1 };
-	
+
 	//プレイヤーの向いている方向と自分の位置との角度
 	float toPlayerAngle = 0.0f;
 

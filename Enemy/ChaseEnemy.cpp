@@ -35,14 +35,33 @@ void ChaseEnemy::init(bool isboss)
 	enemyHeight->size = { 32,3 };
 	enemyHeight->generateSprite("bossHPGauge.png");
 
+	bodyColor = { 0.3f,1,0.3f,1 };
+
 	enemyObject = std::make_unique<object3dFBX>();
 	enemyObject->initialize();
 	enemyObject->SetModel(staticEnemyModel.get());
 	enemyObject->SetScale({ 1.0f,1.0f,1.0f });
+	enemyObject->setColor(bodyColor);
+
+	enemyCollision.radius = 2.0f;
 
 	myEnemyType = enemyType::chase;
 
-	bodyColor = { 0.3f,1,0.3f,1 };
+	isThisBoss = isboss;
+
+	if (isThisBoss)
+	{
+		bossHitPointGauge = std::make_unique<SingleSprite>();
+		bossHitPointGauge->anchorpoint = { 0.5f,0.5f };
+		bossHitPointGauge->size = { 50,20 };
+		bossHitPointGauge->position = { 640,40,0 };
+		bossHitPointGauge->generateSprite("bossHPGauge.png");
+
+		HP = 5;
+		bossbaseScale = { 5,5,5 };
+		enemyCollision.radius = 9.0f;
+		deathRotSpeed = 0.1f;
+	}
 }
 
 void ChaseEnemy::set(XMFLOAT3 pos)
@@ -57,9 +76,9 @@ void ChaseEnemy::set(XMFLOAT3 pos)
 	isChase = false;
 	isWait = true;
 	isDraw = true;
-	enemyArrivalTime = 100;
-	enemyArrivaCount = 0;
-	arrivalEase.set(easingType::easeOut, easingPattern::Quadratic, enemyArrivalTime, 500, 0);
+	enemyArrivalMaxTime = 100;
+	enemyArrivalTime = 0;
+	arrivalEase.set(easingType::easeOut, easingPattern::Quadratic, enemyArrivalMaxTime, 500, 0);
 
 	isAppear = true;
 }
@@ -138,11 +157,11 @@ void ChaseEnemy::arrival()
 
 	isDraw = true;
 
-	enemyArrivaCount++;
+	enemyArrivalTime++;
 
-	arrivalScale.x = (float)enemyArrivaCount / (float)enemyArrivalTime;
-	arrivalScale.y = (float)enemyArrivaCount / (float)enemyArrivalTime;
-	arrivalScale.z = (float)enemyArrivaCount / (float)enemyArrivalTime;
+	arrivalScale.x = (float)enemyArrivalTime / (float)enemyArrivalMaxTime;
+	arrivalScale.y = (float)enemyArrivalTime / (float)enemyArrivalMaxTime;
+	arrivalScale.z = (float)enemyArrivalTime / (float)enemyArrivalMaxTime;
 
 	float rot = arrivalEase.easing();
 
@@ -162,7 +181,7 @@ void ChaseEnemy::arrival()
 		enemyObject->SetPosition(position);
 		enemyObject->SetScale({ 1,1,1 });
 		enemyObject->updata();
-		enemyArrivaCount = 0;
+		enemyArrivalTime = 0;
 		isStop = false;
 		isAlive = true;
 		isAppear = false;
@@ -253,6 +272,10 @@ void ChaseEnemy::deathMove()
 		isDraw = false;
 		fallDownCount = 0;
 	}
+}
+
+void ChaseEnemy::deathMoveBoss()
+{
 }
 
 void ChaseEnemy::updataSprite()

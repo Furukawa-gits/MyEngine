@@ -15,7 +15,7 @@ void UsuallyEnemymanager::init()
 	enemyList.clear();
 }
 
-void UsuallyEnemymanager::addEnemy(enemyType addtype)
+void UsuallyEnemymanager::addUsuallyEnemy(enemyType addtype)
 {
 	//êVÇµÇ≠ê∂ê¨ÇµÇΩenemy
 	unique_ptr<primitiveEnemy> newEnemy = nullptr;

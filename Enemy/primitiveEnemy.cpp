@@ -7,6 +7,9 @@ const float primitiveEnemy::forPlayer = 400.0f;
 XMFLOAT3 primitiveEnemy::playerPosition = { 0,0,0 };
 XMFLOAT3 primitiveEnemy::playerFront = { 0,0,0 };
 bool primitiveEnemy::playerIsAlive = false;
+bool* primitiveEnemy::playerIsStop = nullptr;
+int* primitiveEnemy::playerIsInvisible = nullptr;
+Camera* primitiveEnemy::playerCamera = nullptr;
 const XMFLOAT2 primitiveEnemy::defaultRockIconSize = { 0,0 };
 const XMFLOAT2 primitiveEnemy::setRockIconSize = { 0,0 };
 const float primitiveEnemy::decreaseSize = 0;
@@ -34,6 +37,13 @@ void primitiveEnemy::staticDataUpdata(XMFLOAT3 playerpos, XMFLOAT3 playerfront, 
 	playerPosition = playerpos;
 	playerFront = playerfront;
 	playerIsAlive = playerisarive;
+}
+
+void primitiveEnemy::setUsingPlayerData(bool* playerisinv, bool* playerisstop, Camera* playercamera)
+{
+	playerIsInvisible = playerisinv;
+	playerIsStop = playerisstop;
+	playerCamera = playercamera;
 }
 
 void primitiveEnemy::setBossCamera(XMFLOAT3 eye, XMFLOAT3 target)
