@@ -8,7 +8,7 @@ public:
 	ShotEnemy();
 	~ShotEnemy();
 
-	void init() override;
+	void init(bool isboss) override;
 
 	void set(XMFLOAT3 pos) override;
 

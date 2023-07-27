@@ -4,6 +4,7 @@
 #include"../Math/SplineCurve.h"
 
 #include<memory>
+#include <random>
 
 //追尾弾
 class Missile :
@@ -35,17 +36,6 @@ public:
 	Enemy* enemyPointer = nullptr;
 
 	bool isTargetSet = false;
-
-	XMFLOAT3 bulletVecIndex[8] = {
-		{  30.0f,  0.0f,0.0f },
-		{ -30.0f,  0.0f,0.0f },
-		{   0.0f, 30.0f,0.0f },
-		{   0.0f,-30.0f,0.0f },
-		{  30.0f, 30.0f,0.0f },
-		{  30.0f,-30.0f,0.0f },
-		{ -30.0f, 30.0f,0.0f },
-		{ -30.0f,-30.0f,0.0f }
-	};
 
 	Missile();
 	~Missile();

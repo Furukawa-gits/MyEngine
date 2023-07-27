@@ -1,7 +1,4 @@
 #include"HomingMissile.h"
-#include"../3D/Collision.h"
-#include"../3D/3Dobject.h"
-#include <random>
 
 Missile::Missile()
 {
@@ -22,79 +19,6 @@ void Missile::init(XMFLOAT4 motherColor, XMFLOAT4 childColor)
 	this->childColor = childColor;
 
 	bulletCollision.radius = 3.0f;
-}
-
-void Missile::setPenemy(Enemy* enemy)
-{
-	enemyPointer = enemy;
-	isTargetSet = true;
-}
-
-void Missile::start(XMFLOAT3 start_pos)
-{
-	if (!isTargetSet || enemyPointer == nullptr)
-	{
-		return;
-	}
-
-	bulletVec = bulletVecIndex[rand() % 8];
-	position = start_pos;
-
-	isAlive = true;
-
-#pragma region 制御点を設定
-	//乱数のシード値を決定
-	std::random_device seed;
-	std::mt19937 rnd(seed());
-	std::uint32_t xResult = rnd();
-	std::uint32_t yResult = rnd();
-	std::uint32_t zResult = rnd();
-
-	//初期位置にプレイヤー位置・終端位置に敵の位置を設定
-	RKDVector3 start(start_pos.x, start_pos.y, start_pos.z);
-	RKDVector3 end(
-		enemyPointer->position.x, 
-		enemyPointer->position.y,
-		enemyPointer->position.z);
-
-	//2個目の制御点のオフセット(ランダム)
-	RKDVector3 randPointOne =
-	{
-		(float)(xResult % 30) - 15,
-		(float)(yResult % 30) - 15,
-		(float)(zResult % 30) - 15
-	};
-
-	//3個目の制御点のオフセット(ランダム)
-	xResult = rnd();
-	yResult = rnd();
-	zResult = rnd();
-	RKDVector3 randPointTwo =
-	{
-		(float)(xResult % 30) - 15,
-		(float)(yResult % 30) - 15,
-		(float)(zResult % 30) - 15
-	};
-#pragma endregion 制御点を設定
-
-	//制御点をまとめる
-	std::array<RKDVector3, 6> setPoints;
-	setPoints[0] = start;
-	setPoints[1] = start;
-	setPoints[2] = start + randPointOne;
-	setPoints[3] = end + randPointTwo;
-	setPoints[4] = end;
-	setPoints[5] = end;
-
-	//スプライン曲線にセット
-	missileCurve.setSpline(setPoints.data(), 6, toEnemyMaxFrame);
-	missileCurve.play();
-
-	//スプライン曲線状の通過点を保存
-	for (int i = 0; i < toEnemyMaxFrame; i++)
-	{
-		missilePositionts.push_back(missileCurve.updata());
-	}
 }
 
 void Missile::updata()
@@ -128,6 +52,85 @@ void Missile::updata()
 	bulletCollision.center = XMLoadFloat3(&position);
 }
 
+void Missile::draw(directX* directx)
+{
+	if (!isAlive)
+	{
+		return;
+	}
+
+	motherParticle->setPiplineAddBlend();
+	motherParticle->drawSpecifyTex("effect1.png");
+}
+
+void Missile::setPenemy(Enemy* enemy)
+{
+	enemyPointer = enemy;
+	isTargetSet = true;
+}
+
+void Missile::start(XMFLOAT3 start_pos)
+{
+	if (!this->isTargetSet || this->enemyPointer == nullptr)
+	{
+		return;
+	}
+
+	this->position = start_pos;
+
+	this->isAlive = true;
+
+	//乱数のシード値を決定
+	std::random_device seedNum;
+	std::mt19937 rnd(seedNum());
+	std::uint32_t xResult = rnd();
+	std::uint32_t yResult = rnd();
+	std::uint32_t zResult = rnd();
+
+	//初期位置にプレイヤー位置・終端位置に敵の位置を設定
+	RKDVector3 startPos(start_pos.x, start_pos.y, start_pos.z);
+	RKDVector3 endPos(
+		this->enemyPointer->position.x, 
+		this->enemyPointer->position.y,
+		this->enemyPointer->position.z);
+
+	//2個目の制御点のオフセット(ランダム)
+	RKDVector3 randPointOne(
+		(float)(xResult % 30) - 15,
+		(float)(yResult % 30) - 15,
+		(float)(zResult % 30) - 15
+	);
+
+	//3個目の制御点のオフセット(ランダム)
+	xResult = rnd();
+	yResult = rnd();
+	zResult = rnd();
+	RKDVector3 randPointTwo(
+		(float)(xResult % 30) - 15,
+		(float)(yResult % 30) - 15,
+		(float)(zResult % 30) - 15
+	);
+
+	//制御点をまとめる
+	std::array<RKDVector3, 6> setPoints = {};
+	setPoints[0] = startPos;
+	setPoints[1] = startPos;
+	setPoints[2] = startPos + randPointOne;
+	setPoints[3] = endPos + randPointTwo;
+	setPoints[4] = endPos;
+	setPoints[5] = endPos;
+
+	//スプライン曲線にセット
+	this->missileCurve.setSpline(setPoints.data(), 6, this->toEnemyMaxFrame);
+	this->missileCurve.play();
+
+	//スプライン曲線状の通過点を保存
+	for (int i = 0; i < toEnemyMaxFrame; i++)
+	{
+		this->missilePositionts.push_back(this->missileCurve.updata());
+	}
+}
+
 void Missile::particleUpdata()
 {
 	//パーティクル生成
@@ -141,15 +144,4 @@ void Missile::particleUpdata()
 	//パーティクル更新
 	motherParticle->setPosition(position);
 	motherParticle->updata();
-}
-
-void Missile::draw(directX* directx)
-{
-	if (!isAlive)
-	{
-		return;
-	}
-
-	motherParticle->setPiplineAddBlend();
-	motherParticle->drawSpecifyTex("effect1.png");
 }

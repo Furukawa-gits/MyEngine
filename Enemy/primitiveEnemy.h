@@ -29,7 +29,7 @@ public:
 	static void staticDataUpdata(XMFLOAT3 playerpos, XMFLOAT3 playerfront, bool playerisarive);
 	static void setBossCamera(XMFLOAT3 eye, XMFLOAT3 target);
 
-	virtual void init() = 0;
+	virtual void init(bool isboss) = 0;
 
 	virtual void set(XMFLOAT3 pos) = 0;
 

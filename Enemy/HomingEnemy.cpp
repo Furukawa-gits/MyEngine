@@ -8,7 +8,7 @@ HomingEnemy::~HomingEnemy()
 {
 }
 
-void HomingEnemy::init()
+void HomingEnemy::init(bool isboss)
 {
 	rockTarget = std::make_unique<SingleSprite>();
 	rockTarget->anchorpoint = { 0.5f,0.5f };

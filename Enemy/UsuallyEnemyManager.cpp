@@ -17,8 +17,8 @@ void UsuallyEnemymanager::init()
 
 void UsuallyEnemymanager::addEnemy(enemyType addtype)
 {
+	//新しく生成したenemy
 	unique_ptr<primitiveEnemy> newEnemy = nullptr;
-	//primitiveEnemy* newEnemy = nullptr;
 
 	//ランダムで初期位置を決める
 	std::random_device seed;
@@ -28,14 +28,14 @@ void UsuallyEnemymanager::addEnemy(enemyType addtype)
 	std::uint32_t yResult = rnd();
 	std::uint32_t zResult = rnd();
 
-	XMFLOAT3 startPos;
+	XMFLOAT3 startPos = {};
 
+	//生成する敵のタイプによって派生クラスを代入・初期位置を決定
 	switch (addtype)
 	{
 	case enemyType::tutorial:
 
 		newEnemy = std::make_unique<TutorialEnemy>();
-		//newEnemy = new TutorialEnemy;
 
 		startPos =
 		{
@@ -48,7 +48,6 @@ void UsuallyEnemymanager::addEnemy(enemyType addtype)
 	case enemyType::chase:
 
 		newEnemy = std::make_unique<ChaseEnemy>();
-		//newEnemy = new TutorialEnemy;
 
 		startPos =
 		{
@@ -61,7 +60,6 @@ void UsuallyEnemymanager::addEnemy(enemyType addtype)
 	case enemyType::shot:
 
 		newEnemy = std::make_unique<ShotEnemy>();
-		//newEnemy = new TutorialEnemy;
 
 		startPos =
 		{
@@ -74,7 +72,6 @@ void UsuallyEnemymanager::addEnemy(enemyType addtype)
 	case enemyType::homing:
 
 		newEnemy = std::make_unique<HomingEnemy>();
-		//newEnemy = new TutorialEnemy;
 
 		startPos =
 		{
@@ -87,7 +84,6 @@ void UsuallyEnemymanager::addEnemy(enemyType addtype)
 	case enemyType::rampage:
 
 		newEnemy = std::make_unique<RampageEnemy>();
-		//newEnemy = new TutorialEnemy;
 
 		startPos =
 		{
@@ -98,7 +94,8 @@ void UsuallyEnemymanager::addEnemy(enemyType addtype)
 		break;
 	}
 
-	newEnemy->init();
+	//マネージャーに追加
+	newEnemy->init(false);
 	newEnemy->set(startPos);
 
 	enemyList.push_back(std::move(newEnemy));

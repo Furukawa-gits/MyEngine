@@ -1,5 +1,4 @@
 #pragma once
-#include"Quaternion.h"
 #include"RKDVector.h"
 #include<vector>
 #include <array>
