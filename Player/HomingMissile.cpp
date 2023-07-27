@@ -80,14 +80,13 @@ void Missile::start(XMFLOAT3 start_pos)
 
 	this->isAlive = true;
 
-	//乱数のシード値を決定
 	std::random_device seedNum;
 	std::mt19937 rnd(seedNum());
+
 	std::uint32_t xResult = rnd();
 	std::uint32_t yResult = rnd();
 	std::uint32_t zResult = rnd();
 
-	//初期位置にプレイヤー位置・終端位置に敵の位置を設定
 	RKDVector3 startPos(start_pos.x, start_pos.y, start_pos.z);
 	RKDVector3 endPos(
 		this->enemyPointer->position.x, 
@@ -105,6 +104,7 @@ void Missile::start(XMFLOAT3 start_pos)
 	xResult = rnd();
 	yResult = rnd();
 	zResult = rnd();
+
 	RKDVector3 randPointTwo(
 		(float)(xResult % 30) - 15,
 		(float)(yResult % 30) - 15,

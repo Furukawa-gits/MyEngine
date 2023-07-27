@@ -26,7 +26,6 @@ private:
 
 	int aliveFrame = 0;
 
-	//スプライン曲線
 	SplineCurve missileCurve;
 
 	std::vector<RKDVector3> missilePositionts;
