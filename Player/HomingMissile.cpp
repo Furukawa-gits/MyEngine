@@ -30,7 +30,6 @@ void Missile::updata()
 		return;
 	}
 
-	//敵に到達する前に寿命が尽きた時
 	if (aliveFrame >= toEnemyMaxFrame)
 	{
 		enemyPointer->isTargetSet = false;
@@ -44,7 +43,6 @@ void Missile::updata()
 		isAlive = false;
 	}
 
-	//フレームに応じた通過点をセット
 	position = missilePositionts[aliveFrame];
 	aliveFrame++;
 
@@ -126,7 +124,6 @@ void Missile::start(XMFLOAT3 start_pos)
 	this->missileCurve.setSpline(setPoints.data(), 6, this->toEnemyMaxFrame);
 	this->missileCurve.play();
 
-	//スプライン曲線状の通過点を保存
 	for (int i = 0; i < toEnemyMaxFrame; i++)
 	{
 		this->missilePositionts.push_back(this->missileCurve.updata());
