@@ -2,6 +2,7 @@
 
 Missile::Missile()
 {
+	motherParticle = std::make_unique<SingleParticle>();
 }
 
 Missile::~Missile()
@@ -10,8 +11,7 @@ Missile::~Missile()
 
 void Missile::init(XMFLOAT4 motherColor, XMFLOAT4 childColor)
 {
-	//弾の本体パーティクル初期化
-	motherParticle = std::make_unique<SingleParticle>();
+	
 	motherParticle->generate();
 	motherParticle->set(0, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 3.0f, 0.0f, false, true);
 	motherParticle->color = motherColor;
@@ -19,6 +19,8 @@ void Missile::init(XMFLOAT4 motherColor, XMFLOAT4 childColor)
 	this->childColor = childColor;
 
 	bulletCollision.radius = 3.0f;
+
+	particleUpdata();
 }
 
 void Missile::updata()

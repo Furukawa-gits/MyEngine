@@ -27,7 +27,7 @@ public:
 	void deathMove() override;
 
 	//チュートリアル用なのでボス用撃墜処理はナシ
-	//void deathMoveBoss() override;
+	void deathMoveBoss() override;
 
 	//UIスプライト更新
 	void updataSprite() override;

@@ -252,6 +252,10 @@ void TutorialEnemy::deathMove()
 	}
 }
 
+void TutorialEnemy::deathMoveBoss()
+{
+}
+
 void TutorialEnemy::updataSprite()
 {
 	XMFLOAT2 targetPos = enemyObject->worldToScleen();

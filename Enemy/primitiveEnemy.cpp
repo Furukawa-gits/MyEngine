@@ -39,7 +39,7 @@ void primitiveEnemy::staticDataUpdata(XMFLOAT3 playerpos, XMFLOAT3 playerfront, 
 	playerIsAlive = playerisarive;
 }
 
-void primitiveEnemy::setUsingPlayerData(bool* playerisinv, bool* playerisstop, Camera* playercamera)
+void primitiveEnemy::setUsingPlayerData(int* playerisinv, bool* playerisstop, Camera* playercamera)
 {
 	playerIsInvisible = playerisinv;
 	playerIsStop = playerisstop;
