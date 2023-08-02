@@ -14,9 +14,6 @@ Player::~Player()
 	delete(followCamera);
 
 	bulletManager.release();
-
-	NormalBullet::staticDestroy();
-	Missile::staticDestroy();
 }
 
 void Player::init(dxinput* input, directX* directx)
@@ -801,7 +798,7 @@ void Player::draw3D(directX* directx)
 
 	bulletManager->draw(directx);
 
-	testline->draw();
+	//testline->draw();
 }
 
 void Player::draw2D(directX* directx, int targetnum)

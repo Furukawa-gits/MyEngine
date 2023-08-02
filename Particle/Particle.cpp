@@ -484,6 +484,14 @@ void SingleParticle::loadTexInMap(const std::string& filepath)
 	texDescMap.insert({ filepath,testdescHeap });
 }
 
+SingleParticle::SingleParticle()
+{
+}
+
+SingleParticle::~SingleParticle()
+{
+}
+
 void SingleParticle::generate()
 {
 	HRESULT result = S_FALSE;

@@ -8,7 +8,7 @@ TutorialEnemy::~TutorialEnemy()
 {
 }
 
-void TutorialEnemy::init()
+void TutorialEnemy::init(bool isboss)
 {
 	rockTarget = std::make_unique<SingleSprite>();
 	rockTarget->anchorpoint = { 0.5f,0.5f };
@@ -35,14 +35,17 @@ void TutorialEnemy::init()
 	enemyHeight->size = { 32,3 };
 	enemyHeight->generateSprite("bossHPGauge.png");
 
+	bodyColor = { 1,1,1,1 };
+
 	enemyObject = std::make_unique<object3dFBX>();
 	enemyObject->initialize();
 	enemyObject->SetModel(staticEnemyModel.get());
 	enemyObject->SetScale({ 1.0f,1.0f,1.0f });
+	enemyObject->setColor(bodyColor);
+
+	enemyCollision.radius = 2.0f;
 
 	myEnemyType = enemyType::tutorial;
-
-	bodyColor = { 1,1,1,1 };
 }
 
 void TutorialEnemy::set(XMFLOAT3 pos)
@@ -53,9 +56,9 @@ void TutorialEnemy::set(XMFLOAT3 pos)
 	isAlive = false;
 	isTargetSet = false;
 	isDraw = true;
-	enemyArrivalTime = 100;
-	enemyArrivaCount = 0;
-	arrivalEase.set(easingType::easeOut, easingPattern::Quadratic, enemyArrivalTime, 500, 0);
+	enemyArrivalMaxTime = 100;
+	enemyArrivalTime = 0;
+	arrivalEase.set(easingType::easeOut, easingPattern::Quadratic, enemyArrivalMaxTime, 500, 0);
 
 	isAppear = true;
 }
@@ -134,11 +137,11 @@ void TutorialEnemy::arrival()
 
 	isDraw = true;
 
-	enemyArrivaCount++;
+	enemyArrivalTime++;
 
-	arrivalScale.x = (float)enemyArrivaCount / (float)enemyArrivalTime;
-	arrivalScale.y = (float)enemyArrivaCount / (float)enemyArrivalTime;
-	arrivalScale.z = (float)enemyArrivaCount / (float)enemyArrivalTime;
+	arrivalScale.x = (float)enemyArrivalTime / (float)enemyArrivalMaxTime;
+	arrivalScale.y = (float)enemyArrivalTime / (float)enemyArrivalMaxTime;
+	arrivalScale.z = (float)enemyArrivalTime / (float)enemyArrivalMaxTime;
 
 	float rot = arrivalEase.easing();
 
@@ -158,7 +161,7 @@ void TutorialEnemy::arrival()
 		enemyObject->SetPosition(position);
 		enemyObject->SetScale({ 1,1,1 });
 		enemyObject->updata();
-		enemyArrivaCount = 0;
+		enemyArrivalTime = 0;
 		isStop = false;
 		isAlive = true;
 		isAppear = false;
@@ -247,6 +250,10 @@ void TutorialEnemy::deathMove()
 		isDraw = false;
 		fallDownCount = 0;
 	}
+}
+
+void TutorialEnemy::deathMoveBoss()
+{
 }
 
 void TutorialEnemy::updataSprite()

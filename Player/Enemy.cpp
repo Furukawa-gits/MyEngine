@@ -282,7 +282,7 @@ void Enemy::shot()
 	if (isShot)
 	{
 		std::unique_ptr<NormalBullet> newBullet = std::make_unique<NormalBullet>();
-		newBullet->init({ 1,0,0,1 });
+		newBullet->init({ 1,0,0,1 }, { 1,0,0,1 });
 
 		XMFLOAT3 rampageTargetPos =
 		{
@@ -354,7 +354,7 @@ void Enemy::homing()
 	if (isShot)
 	{
 		std::unique_ptr<NormalBullet> newBullet = std::make_unique<NormalBullet>();
-		newBullet->init({ 1,0,0,1 });
+		newBullet->init({ 1,0,0,1 }, { 1,0,0,1 });
 
 		XMFLOAT3 rampageTargetPos =
 		{
@@ -459,7 +459,7 @@ void Enemy::rampage()
 	if (nextBulletTime % 10 == 0)
 	{
 		std::unique_ptr<NormalBullet> newBullet = std::make_unique<NormalBullet>();
-		newBullet->init({ 1,0,0,1 });
+		newBullet->init({ 1,0,0,1 }, { 1,0,0,1 });
 
 		XMFLOAT3 rampageTargetPos =
 		{

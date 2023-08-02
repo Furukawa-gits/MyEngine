@@ -118,6 +118,7 @@
     <ClInclude Include="Enemy\HomingEnemy.h" />
     <ClInclude Include="Enemy\RampageEnemy.h" />
     <ClInclude Include="Enemy\ShotEnemy.h" />
+    <ClInclude Include="Enemy\UsuallyEnemyManager.h" />
     <ClInclude Include="FbxLoder\FbxLoader.h" />
     <ClInclude Include="FbxLoder\Model.h" />
     <ClInclude Include="FbxLoder\Object3d_FBX.h" />
@@ -137,6 +138,7 @@
     <ClInclude Include="Player\PlayerHitPointManager.h" />
     <ClInclude Include="Enemy\primitiveEnemy.h" />
     <ClInclude Include="Enemy\TutorialEnemy.h" />
+    <ClInclude Include="Player\PrimitiveBullet.h" />
     <ClInclude Include="Player\uniteBoss.h" />
     <ClInclude Include="Scene\playScene.h" />
     <ClInclude Include="Scene\primitiveScene.h" />
@@ -169,6 +171,7 @@
     <ClCompile Include="Enemy\HomingEnemy.cpp" />
     <ClCompile Include="Enemy\RampageEnemy.cpp" />
     <ClCompile Include="Enemy\ShotEnemy.cpp" />
+    <ClCompile Include="Enemy\UsuallyEnemyManager.cpp" />
     <ClCompile Include="FbxLoder\FbxLoader.cpp" />
     <ClCompile Include="FbxLoder\Model.cpp" />
     <ClCompile Include="FbxLoder\Object3d_FBX.cpp" />
@@ -189,6 +192,7 @@
     <ClCompile Include="Player\PlayerHitPointManager.cpp" />
     <ClCompile Include="Enemy\primitiveEnemy.cpp" />
     <ClCompile Include="Enemy\TutorialEnemy.cpp" />
+    <ClCompile Include="Player\PrimitiveBullet.cpp" />
     <ClCompile Include="Player\uniteBoss.cpp" />
     <ClCompile Include="Scene\playScene.cpp" />
     <ClCompile Include="Scene\primitiveScene.cpp" />

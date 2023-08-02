@@ -48,7 +48,7 @@ void checkHitManager::checkBulletEnemy(NormalBullet* bullet, Enemy* enemy)
 
 	if (Collision::checkSphere2Sphere(bullet->bulletCollision, enemy->enemyCollision))
 	{
-		bullet->count = 0;
+		bullet->bulletCount = 0;
 		bullet->isAlive = false;
 
 		enemy->HP--;
@@ -98,7 +98,7 @@ void checkHitManager::checkMissilesEnemy(list<unique_ptr<Missile>>* missilesList
 
 		if (newmissile->enemyPointer->isAlive == true && newmissile->isAlive == true)
 		{
-			if (Collision::checkSphere2Sphere(newmissile->missileCollision, newmissile->enemyPointer->enemyCollision))
+			if (Collision::checkSphere2Sphere(newmissile->bulletCollision, newmissile->enemyPointer->enemyCollision))
 			{
 				if (newmissile->enemyPointer->isThisBoss)
 				{
@@ -144,11 +144,11 @@ void checkHitManager::checkBulletEnemyRampage(NormalBullet* playerbullet, Normal
 
 	if (Collision::checkSphere2Sphere(playerbullet->bulletCollision, rampagebullet->bulletCollision))
 	{
-		playerbullet->count = 0;
+		playerbullet->bulletCount = 0;
 		playerbullet->isAlive = false;
 
 		rampagebullet->isAlive = false;
-		rampagebullet->count = 0;
+		rampagebullet->bulletCount = 0;
 	}
 }
 
@@ -186,7 +186,7 @@ void checkHitManager::checkPlayerEnemyRampage(Player* player, NormalBullet* ramp
 	{
 		player->hitPointManager.Damage(1);
 		rampagebullet->isAlive = false;
-		rampagebullet->count = 0;
+		rampagebullet->bulletCount = 0;
 	}
 }
 

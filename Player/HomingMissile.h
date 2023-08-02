@@ -1,31 +1,31 @@
 #pragma once
-#include"../FbxLoder/Object3d_FBX.h"
-#include"../Base/DirectX_Base.h"
+#include"PrimitiveBullet.h"
 #include"Enemy.h"
 #include"../Math/SplineCurve.h"
 
 #include<memory>
+#include <random>
 
-//ƒz[ƒ~ƒ“ƒOƒ~ƒTƒCƒ‹
-class Missile
+//è¿½å°¾å¼¾
+class Missile :
+	public PrimitiveBullet
 {
 private:
 
 	/// <summary>
-	/// ’e‚Ì–{‘Ì‚Æ‚È‚éƒp[ƒeƒBƒNƒ‹
-	/// <para>’e‚Ì¶‘¶‚ÉˆË‘¶‚·‚é‚Ì‚Å‚±‚¢‚Â‚ÍŠÔŒo‰ß‚ÅÁ‚¦‚È‚¢</para>
+	/// å¼¾ã®æœ¬ä½“ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
+	/// <para>ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«å´ã®å¯¿å‘½ãƒ•ãƒ¬ãƒ¼ãƒ ã§æ¶ˆãˆãªã„</para>
 	/// </summary>
 	std::unique_ptr<SingleParticle> motherParticle;
 
-	//ƒp[ƒeƒBƒNƒ‹¶¬‚Ìˆ×‚ÌƒJƒEƒ“ƒg
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ç”Ÿæˆç”¨ã®ã‚«ã‚¦ãƒ³ãƒˆ
 	int particleCount = 0;
 
-	//“G‚É“’B‚·‚é‚Ü‚Å‚ÌƒtƒŒ[ƒ€”
+	//æ•µã«å½“ãŸã‚‹ã¾ã§ã®æœ€å¤§ãƒ•ãƒ¬ãƒ¼ãƒ 
 	static const int toEnemyMaxFrame = 30;
 
 	int aliveFrame = 0;
 
-	//ƒXƒvƒ‰ƒCƒ“‹Èü
 	SplineCurve missileCurve;
 
 	std::vector<RKDVector3> missilePositionts;
@@ -33,43 +33,17 @@ private:
 public:
 
 	Enemy* enemyPointer = nullptr;
-	XMFLOAT3 position = { 0,0,0 };
-	XMFLOAT3 bulletVec = { 0.0f,0.0f,0.0f };
 
-	bool isAlive = false;
 	bool isTargetSet = false;
-
-	Sphere missileCollision;
-
-	XMFLOAT3 bulletVecIndex[8] = {
-		{  30.0f,  0.0f,0.0f },
-		{ -30.0f,  0.0f,0.0f },
-		{   0.0f, 30.0f,0.0f },
-		{   0.0f,-30.0f,0.0f },
-		{  30.0f, 30.0f,0.0f },
-		{  30.0f,-30.0f,0.0f },
-		{ -30.0f, 30.0f,0.0f },
-		{ -30.0f,-30.0f,0.0f }
-	};
 
 	Missile();
 	~Missile();
 
-	static void staticInit();
-	static void staticDestroy();
-	void init();
+	void init(XMFLOAT4 motherColor, XMFLOAT4 childColor) override;
+	void updata() override;
+	void draw(directX* directx) override;
+
 	void setPenemy(Enemy* enemy);
 	void start(XMFLOAT3 start_pos);
-	void update();
-	/// <summary>
-	/// ’Êí’e‚Æˆá‚¢Aˆ—‚ª‘½‚¢‚Ì‚Åƒp[ƒeƒBƒNƒ‹‚ÌXV‚Í•ª‚¯‚é
-	/// </summary>
 	void particleUpdata();
-	void addBulletVec()
-	{
-		position.x += bulletVec.x;
-		position.y += bulletVec.y;
-		position.z += bulletVec.z;
-	}
-	void draw(directX* directx);
 };

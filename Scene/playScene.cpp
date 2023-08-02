@@ -332,14 +332,14 @@ void playScene::updata()
 			{
 				//ボス出現
 				normalBoss->bossSet({ 0,5,0 });
-				isBoss = true;
 			}
 			else
 			{
 				//ユニットボス出現
 				UniteBoss->uniteBossSet();
-				isBoss = true;
 			}
+
+			isBoss = true;
 		}
 		//でなければ次の敵軍
 		else

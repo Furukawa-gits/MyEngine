@@ -49,6 +49,9 @@ public:
 
 	static void loadTexInMap(const std::string& filepath);
 
+	SingleParticle();
+	~SingleParticle();
+
 	void generate();
 
 	void loadTexture(const std::string& filepath);
@@ -128,9 +131,9 @@ public:
 	// 頂点バッファ
 	ComPtr<ID3D12Resource> vertBuff;
 	// 頂点データ配列
-	VertexPos vertices;
+	VertexPos vertices = {};
 	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView;
+	D3D12_VERTEX_BUFFER_VIEW vbView = {};
 
 private:
 	// 静的メンバ変数
