@@ -37,6 +37,9 @@ void primitiveEnemy::staticDataUpdata(XMFLOAT3 playerpos, XMFLOAT3 playerfront, 
 	playerPosition = playerpos;
 	playerFront = playerfront;
 	playerIsAlive = playerisarive;
+
+	//ボス専用カメラ更新
+	bossCamera->Update();
 }
 
 void primitiveEnemy::setUsingPlayerData(int* playerisinv, bool* playerisstop, Camera* playercamera)

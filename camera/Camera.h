@@ -120,14 +120,12 @@ public: // メンバ関数
 	/// </summary>
 	/// <param name="move">移動量</param>
 	void MoveEyeVector(const XMFLOAT3& move);
-	void MoveEyeVector(const XMVECTOR& move);
 
 	/// <summary>
 	/// ベクトルによる移動
 	/// </summary>
 	/// <param name="move">移動量</param>
 	void MoveVector(const XMFLOAT3& move);
-	void MoveVector(const XMVECTOR& move);
 
 protected: // メンバ変数
 	// ビュー行列
