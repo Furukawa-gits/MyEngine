@@ -105,6 +105,8 @@
     <ClInclude Include="3D\CollisionPrimitive.h" />
     <ClInclude Include="3D\Object3DSingleLine.h" />
     <ClInclude Include="3D\ObjectCommon.h" />
+    <ClInclude Include="Enemy\UniteBossMainBody.h" />
+    <ClInclude Include="Enemy\UniteBossSubParts.h" />
     <ClInclude Include="Math\RKDVector.h" />
     <ClInclude Include="Math\SplineCurve.h" />
     <ClInclude Include="Audio\Audio.h" />
@@ -159,6 +161,8 @@
     <ClCompile Include="3D\CollisionPrimitive.cpp" />
     <ClCompile Include="3D\Object3DSingleLine.cpp" />
     <ClCompile Include="3D\ObjectCommon.cpp" />
+    <ClCompile Include="Enemy\UniteBossMainBody.cpp" />
+    <ClCompile Include="Enemy\UniteBossSubParts.cpp" />
     <ClCompile Include="Math\RKDVector.cpp" />
     <ClCompile Include="Math\SplineCurve.cpp" />
     <ClCompile Include="Audio\Audio.cpp" />
