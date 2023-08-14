@@ -74,7 +74,6 @@ void ShotEnemy::set(XMFLOAT3 pos)
 	//É{ÉXÇæÇ¡ÇΩèÍçá
 	if (isThisBoss)
 	{
-		HP = 5;
 		bossbaseScale = { 5,5,5 };
 		enemyCollision.radius = 9.0f;
 		deathRotSpeed = 0.1f;

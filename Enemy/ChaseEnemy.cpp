@@ -76,9 +76,28 @@ void ChaseEnemy::set(XMFLOAT3 pos)
 	isChase = false;
 	isWait = true;
 	isDraw = true;
-	enemyArrivalMaxTime = 100;
 	enemyArrivalTime = 0;
-	arrivalEase.set(easingType::easeOut, easingPattern::Quadratic, enemyArrivalMaxTime, 500, 0);
+
+	//ボスだった場合
+	if (isThisBoss)
+	{
+		bossbaseScale = { 5,5,5 };
+		enemyCollision.radius = 9.0f;
+		deathRotSpeed = 0.1f;
+		enemyArrivalMaxTime = 300;
+		arrivalEase.set(easingType::easeOut, easingPattern::Quadratic, enemyArrivalMaxTime, 1000, 0);
+		arrivalMaxScale = { 5,5,5 };
+		//演出用カメラをセット
+		bossCamera->SetEye({ pos.x - 10,pos.y - 10,pos.z + 10 });
+		bossCamera->SetTarget({ pos.x + 5,pos.y + 5,pos.z - 5 });
+		object3dFBX::SetCamera(bossCamera);
+	}
+	else
+	{
+		enemyArrivalMaxTime = 100;
+		arrivalEase.set(easingType::easeOut, easingPattern::Quadratic, enemyArrivalMaxTime, 500, 0);
+		arrivalMaxScale = { 1,1,1 };
+	}
 
 	isAppear = true;
 }
@@ -276,6 +295,79 @@ void ChaseEnemy::deathMove()
 
 void ChaseEnemy::deathMoveBoss()
 {
+	if (isAlive || isAppear)
+	{
+		return;
+	}
+
+	*playerIsStop = true;
+	*playerIsInvisible = 1;
+
+	position = enemyObject->getPosition();
+
+	XMFLOAT3 setvec =
+	{
+		position.x - 35,
+		position.y,
+		position.z,
+	};
+
+	bossCamera->SetEye(setvec);
+	bossCamera->SetTarget(enemyObject->getPosition());
+	bossCamera->Update();
+
+	object3dFBX::SetCamera(bossCamera);
+	SingleParticle::setCamera(bossCamera);
+
+	//撃墜演出のカウント
+	fallDownCount++;
+
+	scale = 1.0f - ((float)fallDownCount / ((float)maxFallCount * 3));
+
+	rot.x += deathRotSpeed;
+	rot.y += deathRotSpeed;
+	rot.z += deathRotSpeed;
+	enemyObject->setRotMatrix(rot.x, rot.y, rot.z);
+	enemyObject->SetScale({
+		arrivalMaxScale.x * scale,
+		arrivalMaxScale.y * scale,
+		arrivalMaxScale.z * scale });
+
+	//一定間隔でエフェクト
+	if (fallDownCount % 20 == 0)
+	{
+#pragma region パーティクル生成
+		//生成位置をランダムで指定
+		float randX = (float)(rand() % 40) - 20;
+		float randY = (float)(rand() % 40) - 20;
+		float randZ = (float)(rand() % 40) - 20;
+		XMFLOAT3 startPos =
+		{
+			enemyObject->getPosition().x + randX,
+			enemyObject->getPosition().y + randY,
+			enemyObject->getPosition().z + randZ
+		};
+
+		//爆発パーティクル
+		SingleParticle newbp;
+		newbp.generate();
+		newbp.set(50, startPos, { 0,0,0 }, { 0,0,0 }, 0.2, 9.0);
+		particleManagerOnTime::addParticle(newbp, "bomb.png");
+
+		//黒煙パーティクル
+		SingleParticle newsp;
+		newsp.generate();
+		newsp.set(50, startPos, { 0,0,0 }, { 0,0,0 }, 0.2, 5.0);
+		particleManagerOnTime::addParticle(newsp, "smoke.png");
+#pragma endregion パーティクル生成
+	}
+
+	//落ちきったら
+	if (fallDownCount >= maxFallCount * 3)
+	{
+		isDraw = false;
+		fallDownCount = 0;
+	}
 }
 
 void ChaseEnemy::updataSprite()

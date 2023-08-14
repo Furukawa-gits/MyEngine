@@ -52,6 +52,7 @@ private:
 
 	//射撃用
 	bool isShot = false;//射撃フラグ
+	int nextShotMaxTime = 0;//次の射撃までの待機時間
 	int nextShotTime = 0;//次の射撃までの待機時間
 	bool isInRange = false;//射程範囲内かどうか
 

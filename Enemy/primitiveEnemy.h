@@ -54,6 +54,12 @@ public:
 
 	virtual void drawMiniMapIcon() = 0;
 
+	void setHitPoint(int hp)
+	{
+		HP = hp;
+		return;
+	}
+
 public:
 	//--------------------------Ã“I•Ï”--------------------------
 	static directX* directx;
