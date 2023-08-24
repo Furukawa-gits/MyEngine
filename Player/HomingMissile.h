@@ -2,6 +2,7 @@
 #include"PrimitiveBullet.h"
 #include"Enemy.h"
 #include"../Math/SplineCurve.h"
+#include"../3D/Object3DSingleLine.h"
 
 #include<memory>
 #include <random>
@@ -35,6 +36,8 @@ public:
 	Enemy* enemyPointer = nullptr;
 
 	bool isTargetSet = false;
+
+	std::list<std::unique_ptr<Object3DSingleLine>> missileLineList;
 
 	Missile();
 	~Missile();

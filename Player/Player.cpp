@@ -504,6 +504,8 @@ void Player::setStaging(bool isclear)
 //更新
 void Player::updata()
 {
+	Object3DSingleLine::setCamera(followCamera);
+
 	//弾の更新
 	bulletManager->updata();
 
@@ -798,7 +800,7 @@ void Player::draw3D(directX* directx)
 
 	bulletManager->draw(directx);
 
-	//testline->draw();
+	testline->draw();
 }
 
 void Player::draw2D(directX* directx, int targetnum)

@@ -72,7 +72,7 @@ void BulletManager::addMissile(Enemy* enemy, int& targetnum, XMFLOAT3 start)
 {
 	//ƒ~ƒTƒCƒ‹’Ç‰Á
 	std::unique_ptr<Missile> newMissile = std::make_unique<Missile>();
-	newMissile->init({ 1,1,0,1 }, { 1,1,0,1 });
+	newMissile->init({ 0,1,1,1 }, { 1,1,0,1 });
 	newMissile->setPenemy(enemy);
 	newMissile->start(start);
 	missilesList.push_back(std::move(newMissile));

@@ -61,6 +61,11 @@ void Missile::draw(directX* directx)
 
 	motherParticle->setPiplineAddBlend();
 	motherParticle->drawSpecifyTex("effect1.png");
+
+	for (std::unique_ptr<Object3DSingleLine>& newline : missileLineList)
+	{
+		newline->draw();
+	}
 }
 
 void Missile::setPenemy(Enemy* enemy)
@@ -128,6 +133,19 @@ void Missile::start(XMFLOAT3 start_pos)
 	{
 		this->missilePositionts.push_back(this->missileCurve.updata());
 	}
+
+	std::vector<RKDVector3>::iterator it = missilePositionts.begin();
+	std::advance(it, 1);
+
+	for (int i = 1; i < missilePositionts.size() - 1; i++)
+	{
+		std::unique_ptr<Object3DSingleLine> line = std::make_unique<Object3DSingleLine>();
+		line->init();
+		line->setPoints(missilePositionts[i - 1], missilePositionts[i]);
+		line->setColor({ 0,1,1,1 });
+
+		missileLineList.push_back(std::move(line));
+	}
 }
 
 void Missile::particleUpdata()
@@ -143,4 +161,9 @@ void Missile::particleUpdata()
 	//パーティクル更新
 	motherParticle->setPosition(position);
 	motherParticle->updata();
+
+	for (std::unique_ptr<Object3DSingleLine>& newline : missileLineList)
+	{
+		newline->updata();
+	}
 }
