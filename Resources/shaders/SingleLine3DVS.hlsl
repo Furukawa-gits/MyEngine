@@ -3,6 +3,6 @@
 VSOutput main(float4 Pos : POSITION)
 {
 	VSOutput output;
-	output.svpos = mul(projMat, Pos);
+	output.svpos = mul(mul(projMat,startMat), Pos);
 	return output;
 }

@@ -245,8 +245,8 @@ void Object3DSingleLine::updata()
 	result = this->constBuff->Map(0, nullptr, (void**)&constMap);
 	constMap->color = color;
 	constMap->viewproj = camera->GetViewProjectionMatrix();
-	constMap->startMat = matStart * camera->GetProjectionMatrix();
-	constMap->endMat = matEnd * camera->GetProjectionMatrix();
+	constMap->startMat = XMMatrixIdentity();
+	constMap->endMat = matEnd;
 	this->constBuff->Unmap(0, nullptr);
 }
 

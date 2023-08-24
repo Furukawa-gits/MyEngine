@@ -504,6 +504,8 @@ void Player::setStaging(bool isclear)
 //更新
 void Player::updata()
 {
+	Object3DSingleLine::setCamera(followCamera);
+
 	//弾の更新
 	bulletManager->updata();
 
