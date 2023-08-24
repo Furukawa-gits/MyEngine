@@ -197,6 +197,5 @@ public:
 
 	//-------------------ŒŸØ—p------------------------------
 
-	//ü
-	std::unique_ptr<Object3DSingleLine> testline;
+	
 };

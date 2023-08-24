@@ -58,8 +58,6 @@ void Player::init(dxinput* input, directX* directx)
 	//------------------------ŒŸØ-------------------------
 	Object3DSingleLine::setStaticData(directx);
 	Object3DSingleLine::setCamera(followCamera);
-	testline = std::make_unique<Object3DSingleLine>();
-	testline->init();
 }
 
 void Player::loadUISprite()
@@ -552,9 +550,6 @@ void Player::updata()
 	{
 		setStaging(false);
 	}
-
-	testline->setPoints(playerObject->getPosition(), {0,0,0});
-	testline->updata();
 }
 
 void Player::targetUpdata()
@@ -799,8 +794,6 @@ void Player::draw3D(directX* directx)
 	}
 
 	bulletManager->draw(directx);
-
-	testline->draw();
 }
 
 void Player::draw2D(directX* directx, int targetnum)

@@ -40,6 +40,10 @@ public:
 	static void setStaticData(directX* dx);
 	static void CreateGraphicsPipeline();
 
+	/// <summary>
+	/// カメラセット
+	/// </summary>
+	/// <param name="cmr">カメラのポインター</param>
 	static void setCamera(Camera* cmr) { camera = cmr; }
 
 	//メンバ関数
