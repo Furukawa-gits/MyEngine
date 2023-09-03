@@ -151,12 +151,12 @@ void Missile::start(XMFLOAT3 start_pos)
 void Missile::particleUpdata()
 {
 	//パーティクル生成
-	SingleParticle newParticle;
+	/*SingleParticle newParticle;
 	newParticle.generate();
 	newParticle.set(30, position, { 0,0,0 }, { 0,0,0 }, 3.0f, 0.0f);
 	newParticle.color = { 1,1,0,1 };
 	newParticle.isAddBlend = true;
-	particleManagerOnTime::addParticle(newParticle, "effect1.png");
+	particleManagerOnTime::addParticle(newParticle, "effect1.png");*/
 
 	//パーティクル更新
 	motherParticle->setPosition(position);
